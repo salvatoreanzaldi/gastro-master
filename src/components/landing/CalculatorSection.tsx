@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calculator } from "lucide-react";
 
 const CalculatorSection = () => {
-  const [orders, setOrders] = useState(500);
-  const [avgCart, setAvgCart] = useState(25);
-  const [commission, setCommission] = useState(20);
+  const [orders, setOrders] = useState(300);
+  const [avgCart, setAvgCart] = useState(30);
+  const [commission, setCommission] = useState(15);
 
   const monthlyRevenue = orders * avgCart;
   const monthlyLoss = Math.round(monthlyRevenue * (commission / 100));

@@ -7,9 +7,11 @@ import ProblemSection from "@/components/landing/ProblemSection";
 import SolutionSection from "@/components/landing/SolutionSection";
 import MockupShowcase from "@/components/landing/MockupShowcase";
 import DifferentiationSection from "@/components/landing/DifferentiationSection";
+import FounderTrustSection from "@/components/landing/FounderTrustSection";
 import RiskReversalSection from "@/components/landing/RiskReversalSection";
 import SwitchOfferSection from "@/components/landing/SwitchOfferSection";
 import ReferencesSection from "@/components/landing/ReferencesSection";
+import PartnerSection from "@/components/landing/PartnerSection";
 import KassensystemSection from "@/components/landing/KassensystemSection";
 import PricingSection from "@/components/landing/PricingSection";
 import FAQSection from "@/components/landing/FAQSection";
@@ -29,9 +31,11 @@ const Index = () => {
       <SolutionSection />
       <MockupShowcase />
       <DifferentiationSection />
+      <FounderTrustSection />
       <RiskReversalSection />
       <SwitchOfferSection />
       <ReferencesSection />
+      <PartnerSection />
       <KassensystemSection />
       <PricingSection />
       <FAQSection />

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Monitor, Receipt, Wifi, BarChart3 } from "lucide-react";
+import kassenhardware from "@/assets/kassenhardware.png";
 
 const features = [
   { icon: Monitor, title: "Modernes POS-System", desc: "Intuitive Bedienoberfläche für schnellen Service." },
@@ -29,6 +30,21 @@ const KassensystemSection = () => {
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Shop, App und Kasse – nahtlos verbunden. Ein Anbieter, ein System, volle Kontrolle.
           </p>
+        </motion.div>
+
+        {/* POS Hardware Image */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="flex justify-center mb-14"
+        >
+          <img
+            src={kassenhardware}
+            alt="Gastro Master Kassensystem – POS Hardware mit Drucker und Kartenleser"
+            className="w-full max-w-2xl object-contain"
+          />
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
