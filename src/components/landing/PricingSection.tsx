@@ -25,7 +25,7 @@ const packages = [
       "Webshop (provisionsfrei)",
       "Unbegrenzte Bestellungen",
       "2.500 Flyer mit QR-Code",
-      "Digitale Stempelkarte",
+      "Kundenpunkte-System",
       "Bis 3 Postfächer",
     ],
   },
@@ -74,7 +74,7 @@ const packages = [
   },
 ];
 
-type FeatureStatus = true | false | "optional" | "inkl.";
+type FeatureStatus = true | false | string;
 
 interface ComparisonRow {
   label: string;
@@ -101,14 +101,14 @@ const comparison: ComparisonGroup[] = [
     rows: [
       { label: "Unbegrenzte Bestellungen", values: [false, true, true, true, true] },
       { label: "Push-Benachrichtigungen", values: [false, false, true, true, true] },
-      { label: "Flyer DIN A6 mit QR-Code", values: [false, "2.500" as any, "5.000" as any, "10.000" as any, "n. A." as any] },
+      { label: "Flyer DIN A6 mit QR-Code", values: [false, "2.500", "5.000", "10.000", "n. A."] },
     ],
   },
   {
     group: "Zahlungen & Kundenbindung",
     rows: [
       { label: "PayPal & Stripe Einrichtung", values: [false, true, true, true, true] },
-      { label: "Digitale Stempelkarte / Punkte", values: [false, true, true, true, true] },
+      { label: "Kundenpunkte-System", values: [false, true, true, true, true] },
       { label: "Trinkgeld-Funktion", values: [false, true, true, true, true] },
       { label: "Dashboard", values: [false, true, true, true, true] },
     ],
@@ -116,30 +116,30 @@ const comparison: ComparisonGroup[] = [
   {
     group: "Kasse & Zusatzfunktionen",
     rows: [
-      { label: "Kassenschnittstelle", values: [false, "optional" as any, "optional" as any, "optional" as any, "optional" as any] },
-      { label: "58 mm Bondrucker", values: [false, "optional" as any, "optional" as any, "optional" as any, "optional" as any] },
-      { label: "Cloud-Kasse (TSE-konform)", values: [false, false, false, "inkl." as any, "inkl." as any] },
-      { label: "Transaktionsumlage", values: [false, false, false, "inkl." as any, "inkl." as any] },
+      { label: "Kassenschnittstelle", values: [false, "optional", "optional", "optional", "optional"] },
+      { label: "58 mm Bondrucker", values: [false, "optional", "optional", "optional", "optional"] },
+      { label: "Cloud-Kasse (TSE-konform)", values: [false, false, false, "inkl.", "inkl."] },
+      { label: "Transaktionsumlage", values: [false, false, false, "inkl.", "inkl."] },
     ],
   },
   {
     group: "Domain & E-Mail",
     rows: [
       { label: "Wunsch-Domain", values: [true, true, true, true, true] },
-      { label: "Postfächer", values: ["2" as any, "3" as any, "4" as any, "5" as any, "n. A." as any] },
+      { label: "Postfächer", values: ["2", "3", "4", "5", "n. A."] },
     ],
   },
   {
     group: "Umsetzung & Vertrag",
     rows: [
-      { label: "Umsetzungsdauer", values: ["7–10 T." as any, "10–14 T." as any, "2–3 W." as any, "2–3 W." as any, "individuell" as any] },
+      { label: "Umsetzungsdauer", values: ["7–10 T.", "10–14 T.", "2–3 W.", "2–3 W.", "individuell"] },
       { label: "Jederzeit kündbar (3 Mon.)", values: [true, true, true, true, false] },
       { label: "Rahmenvertrag", values: [false, false, false, false, true] },
     ],
   },
 ];
 
-const renderCell = (val: FeatureStatus | string) => {
+const renderCell = (val: FeatureStatus) => {
   if (val === true) return <Check className="w-4 h-4 text-cyan-brand mx-auto" />;
   if (val === false) return <Minus className="w-4 h-4 text-muted-foreground/30 mx-auto" />;
   return <span className="text-xs font-medium text-foreground">{String(val)}</span>;
@@ -155,7 +155,6 @@ const PricingSection = () => {
   return (
     <section className="section-padding bg-background" id="preise">
       <div className="container-tight">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -200,15 +199,19 @@ const PricingSection = () => {
                 </p>
               </div>
 
-              {/* Price */}
               <div className="mb-5">
                 {pkg.price ? (
-                  <div className="flex items-baseline gap-1">
-                    <span className={`text-xs ${pkg.highlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>ab</span>
-                    <span className={`text-3xl font-black ${pkg.highlight ? "text-primary-foreground" : "text-foreground"}`}>
-                      {pkg.price}€
+                  <div>
+                    <div className="flex items-baseline gap-1">
+                      <span className={`text-xs ${pkg.highlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>ab</span>
+                      <span className={`text-3xl font-black ${pkg.highlight ? "text-primary-foreground" : "text-foreground"}`}>
+                        {pkg.price}€
+                      </span>
+                      <span className={`text-xs ${pkg.highlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>/Monat</span>
+                    </div>
+                    <span className={`text-[10px] ${pkg.highlight ? "text-primary-foreground/35" : "text-muted-foreground/60"}`}>
+                      zzgl. MwSt.
                     </span>
-                    <span className={`text-xs ${pkg.highlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>/mtl.</span>
                   </div>
                 ) : (
                   <span className={`text-xl font-bold ${pkg.highlight ? "text-primary-foreground" : "text-foreground"}`}>
@@ -217,17 +220,15 @@ const PricingSection = () => {
                 )}
               </div>
 
-              {/* Key features */}
               <ul className="space-y-2 mb-6 flex-1">
                 {pkg.keyFeatures.map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <Check className={`w-4 h-4 shrink-0 mt-0.5 ${pkg.highlight ? "text-cyan-brand" : "text-cyan-brand"}`} />
+                    <Check className="w-4 h-4 shrink-0 mt-0.5 text-cyan-brand" />
                     <span className={`text-sm leading-snug ${pkg.highlight ? "text-primary-foreground/80" : "text-foreground"}`}>{f}</span>
                   </li>
                 ))}
               </ul>
 
-              {/* Timeline */}
               <p className={`text-[11px] mb-4 ${pkg.highlight ? "text-primary-foreground/40" : "text-muted-foreground"}`}>
                 Umsetzung: {pkg.timeline}
               </p>
@@ -246,7 +247,7 @@ const PricingSection = () => {
           ))}
         </div>
 
-        {/* Toggle comparison table */}
+        {/* Toggle comparison */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -262,26 +263,16 @@ const PricingSection = () => {
           </button>
         </motion.div>
 
-        {/* Comparison table — desktop */}
         {showTable && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-10"
-          >
-            {/* Desktop table */}
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
+            {/* Desktop */}
             <div className="hidden lg:block overflow-x-auto rounded-2xl border border-border bg-surface-light">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left py-4 px-5 font-semibold text-muted-foreground w-[220px]">Feature</th>
                     {packages.map((pkg) => (
-                      <th
-                        key={pkg.name}
-                        className={`py-4 px-3 text-center font-bold text-xs ${
-                          pkg.highlight ? "text-cyan-brand" : "text-foreground"
-                        }`}
-                      >
+                      <th key={pkg.name} className={`py-4 px-3 text-center font-bold text-xs ${pkg.highlight ? "text-cyan-brand" : "text-foreground"}`}>
                         <div className="flex flex-col items-center gap-0.5">
                           {pkg.highlight && <Star className="w-3 h-3 text-amber fill-amber" />}
                           {pkg.name}
@@ -292,7 +283,7 @@ const PricingSection = () => {
                 </thead>
                 <tbody>
                   {comparison.map((group) => (
-                    <>
+                    <>{/* Fragment for group */}
                       <tr key={group.group}>
                         <td colSpan={6} className="pt-5 pb-2 px-5 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                           {group.group}
@@ -314,52 +305,33 @@ const PricingSection = () => {
               </table>
             </div>
 
-            {/* Mobile: stacked cards per package */}
+            {/* Mobile stacked */}
             <div className="lg:hidden space-y-6">
               {packages.map((pkg) => (
-                <div
-                  key={pkg.name}
-                  className={`rounded-2xl border p-5 ${
-                    pkg.highlight ? "border-cyan-brand/30 bg-gradient-navy text-primary-foreground" : "border-border bg-surface-light"
-                  }`}
-                >
+                <div key={pkg.name} className={`rounded-2xl border p-5 ${pkg.highlight ? "border-cyan-brand/30 bg-gradient-navy text-primary-foreground" : "border-border bg-surface-light"}`}>
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h4 className={`font-bold text-lg ${pkg.highlight ? "text-primary-foreground" : "text-foreground"}`}>
-                        {pkg.name}
-                      </h4>
+                      <h4 className={`font-bold text-lg ${pkg.highlight ? "text-primary-foreground" : "text-foreground"}`}>{pkg.name}</h4>
                       {pkg.price ? (
-                        <span className={`text-sm ${pkg.highlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>
-                          ab {pkg.price}€/mtl.
-                        </span>
+                        <span className={`text-sm ${pkg.highlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>ab {pkg.price}€/Monat zzgl. MwSt.</span>
                       ) : (
-                        <span className={`text-sm ${pkg.highlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>
-                          Auf Anfrage
-                        </span>
+                        <span className={`text-sm ${pkg.highlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>Auf Anfrage</span>
                       )}
                     </div>
                     {pkg.highlight && (
-                      <span className="bg-gradient-amber text-primary text-[10px] font-bold px-2.5 py-1 rounded-full">
-                        Beliebteste Wahl
-                      </span>
+                      <span className="bg-gradient-amber text-primary text-[10px] font-bold px-2.5 py-1 rounded-full">Beliebteste Wahl</span>
                     )}
                   </div>
                   {comparison.map((group) => (
                     <div key={group.group} className="mb-3">
-                      <p className={`text-[10px] font-bold uppercase tracking-wider mb-1.5 ${
-                        pkg.highlight ? "text-primary-foreground/40" : "text-muted-foreground"
-                      }`}>
-                        {group.group}
-                      </p>
+                      <p className={`text-[10px] font-bold uppercase tracking-wider mb-1.5 ${pkg.highlight ? "text-primary-foreground/40" : "text-muted-foreground"}`}>{group.group}</p>
                       <div className="space-y-1.5">
                         {group.rows.map((row) => {
                           const val = row.values[packages.indexOf(pkg)];
                           if (val === false) return null;
                           return (
                             <div key={row.label} className="flex items-center justify-between text-sm">
-                              <span className={pkg.highlight ? "text-primary-foreground/70" : "text-foreground"}>
-                                {row.label}
-                              </span>
+                              <span className={pkg.highlight ? "text-primary-foreground/70" : "text-foreground"}>{row.label}</span>
                               <span>{renderCell(val)}</span>
                             </div>
                           );
@@ -373,18 +345,9 @@ const PricingSection = () => {
           </motion.div>
         )}
 
-        {/* Notes */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center space-y-1"
-        >
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center">
           <p className="text-muted-foreground text-xs">
-            Einrichtung einmalig je nach Umfang ab 400 € bis 1.600 € netto. Zahlungsgebühren (PayPal / Stripe) fallen separat an.
-          </p>
-          <p className="text-muted-foreground text-xs">
-            Alle Preise zzgl. MwSt. Hardware und Sonderanforderungen werden individuell besprochen.
+            Alle Preise zzgl. MwSt. Einrichtung einmalig je nach Umfang ab 400 € bis 1.600 € netto. Zahlungsgebühren (PayPal / Stripe) fallen separat an. Hardware und Sonderanforderungen werden individuell besprochen.
           </p>
         </motion.div>
       </div>
