@@ -1,7 +1,20 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import logoBurgerBrothers from "@/assets/logo-burger-brothers.png";
+import logoTake from "@/assets/logo-take.png";
+import logoEtManus from "@/assets/logo-et-manus.png";
+import logoIlSorriso from "@/assets/logo-il-sorriso.png";
+import logoKojoSushi from "@/assets/logo-kojo-sushi.png";
+import logoArtemis from "@/assets/logo-artemis.png";
 
-const references = ["Burger Brothers", "TAKE The Good Food", "Et Manus", "Pizzeria Il Sorriso", "Kojo Sushi", "Artemis Grill"];
+const customers = [
+  { src: logoBurgerBrothers, alt: "Burger Brothers" },
+  { src: logoTake, alt: "TAKE The Good Food" },
+  { src: logoEtManus, alt: "Et Manus" },
+  { src: logoIlSorriso, alt: "Pizzeria Il Sorriso" },
+  { src: logoKojoSushi, alt: "Kojo Sushi" },
+  { src: logoArtemis, alt: "Artemis Grill" },
+];
 
 const TrustSection = () => (
   <section className="bg-surface-light section-padding">
@@ -30,11 +43,11 @@ const TrustSection = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="flex flex-wrap justify-center gap-4 md:gap-8"
+        className="flex flex-wrap justify-center items-center gap-8 md:gap-12"
       >
-        {references.map((name) => (
-          <div key={name} className="px-6 py-3 rounded-xl bg-background border border-border shadow-sm text-foreground font-semibold text-sm md:text-base">
-            {name}
+        {customers.map((c) => (
+          <div key={c.alt} className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+            <img src={c.src} alt={c.alt} className="h-10 md:h-12 w-auto max-w-[140px] object-contain" />
           </div>
         ))}
       </motion.div>

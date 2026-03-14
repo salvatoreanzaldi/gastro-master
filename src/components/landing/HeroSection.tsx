@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Star, Users, ShieldCheck } from "lucide-react";
 import logo from "@/assets/logo-gastro-master.jpg";
-import takeMenu from "@/assets/take-menu.jpeg";
-import takeFilialen from "@/assets/take-filialen.jpeg";
+import heroPOS from "@/assets/hero-pos-system.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -19,7 +18,6 @@ const HeroSection = () => {
 
   return (
     <section className="relative overflow-hidden bg-gradient-navy min-h-screen flex items-center">
-      {/* Subtle gradient overlay */}
       <div className="absolute inset-0 opacity-20" style={{
         background: "radial-gradient(ellipse at 70% 50%, hsl(196, 100%, 40%), transparent 60%)"
       }} />
@@ -69,25 +67,18 @@ const HeroSection = () => {
             </motion.div>
           </div>
 
-          {/* Right: Phone Mockups */}
+          {/* Right: POS System Hero Image */}
           <motion.div
             initial={{ opacity: 0, x: 60 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
             className="relative flex justify-center lg:justify-end"
           >
-            <div className="relative">
-              {/* Main phone */}
-              <div className="relative z-10 w-[260px] md:w-[280px] rounded-[2.5rem] border-[8px] border-gray-800 bg-gray-900 shadow-2xl shadow-black/40 overflow-hidden">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-gray-800 rounded-b-2xl z-20" />
-                <img src={takeMenu} alt="TAKE The Good Food App – Menü" className="w-full" />
-              </div>
-              {/* Second phone behind */}
-              <div className="absolute -left-16 top-12 w-[220px] md:w-[240px] rounded-[2.5rem] border-[8px] border-gray-800 bg-gray-900 shadow-2xl shadow-black/40 overflow-hidden -rotate-6 opacity-80">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-5 bg-gray-800 rounded-b-2xl z-20" />
-                <img src={takeFilialen} alt="TAKE The Good Food App – Filialen" className="w-full" />
-              </div>
-            </div>
+            <img
+              src={heroPOS}
+              alt="Gastro Master POS-System – Kasse, App & Bondrucker"
+              className="w-full max-w-[560px] object-contain drop-shadow-2xl"
+            />
           </motion.div>
         </div>
       </div>
