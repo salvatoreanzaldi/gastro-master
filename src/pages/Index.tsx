@@ -11,6 +11,7 @@ import POSSection from "@/components/landing/POSSection";
 import TransaktionsUmlageSection from "@/components/landing/TransaktionsUmlageSection";
 import DifferentiationSection from "@/components/landing/DifferentiationSection";
 import FounderTrustSection from "@/components/landing/FounderTrustSection";
+import ProcessSection from "@/components/landing/ProcessSection";
 import RiskReversalSection from "@/components/landing/RiskReversalSection";
 import SwitchOfferSection from "@/components/landing/SwitchOfferSection";
 import ReferencesSection from "@/components/landing/ReferencesSection";
@@ -39,6 +40,7 @@ const Index = () => {
       <TransaktionsUmlageSection />
       <DifferentiationSection />
       <FounderTrustSection />
+      <ProcessSection />
       <RiskReversalSection />
       <SwitchOfferSection />
       <ReferencesSection />
