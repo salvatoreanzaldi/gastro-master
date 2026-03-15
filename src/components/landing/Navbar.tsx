@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X, Moon, Sun } from "lucide-react";
 import logo from "@/assets/logo-gastro-master.jpg";
 
 const navLinks = [
@@ -13,12 +13,17 @@ const navLinks = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
 
   const scrollToForm = () => {
     setMobileOpen(false);
@@ -40,6 +45,13 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
+          <button
+            onClick={() => setDark(!dark)}
+            className="w-9 h-9 rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 backdrop-blur-sm flex items-center justify-center text-primary-foreground/60 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-all"
+            aria-label="Dark Mode umschalten"
+          >
+            {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
           <button onClick={scrollToForm}
             className="bg-gradient-amber text-primary font-bold px-5 py-2.5 rounded-xl text-sm hover:scale-[1.02] transition-transform inline-flex items-center gap-1.5">
             Kostenlose Beratung
@@ -48,9 +60,18 @@ const Navbar = () => {
         </div>
 
         {/* Mobile toggle */}
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden text-primary-foreground">
-          {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center gap-3 md:hidden">
+          <button
+            onClick={() => setDark(!dark)}
+            className="w-9 h-9 rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 flex items-center justify-center text-primary-foreground/60"
+            aria-label="Dark Mode umschalten"
+          >
+            {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="text-primary-foreground">
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
