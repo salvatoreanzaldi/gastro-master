@@ -20,7 +20,7 @@ const MockupShowcase = () => {
     target: sectionRef,
     offset: ["start end", "end start"],
   });
-  const x = useTransform(scrollYProgress, [0, 1], [80, -120]);
+  const x = useTransform(scrollYProgress, [0, 1], [160, -200]);
 
   return (
     <section ref={sectionRef} className="section-padding bg-gradient-navy relative overflow-hidden">
@@ -43,21 +43,34 @@ const MockupShowcase = () => {
           </p>
         </motion.div>
 
-        <motion.div style={{ x }} className="flex gap-5 md:gap-6 justify-center">
+        <motion.div style={{ x }} className="flex gap-6 md:gap-8 justify-center">
           {screens.map((screen, i) => (
             <motion.div
               key={screen.label}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 60, scale: 0.85, rotateY: 15 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, rotateY: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="text-center flex-shrink-0"
+              transition={{ delay: i * 0.12, duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+              className="text-center flex-shrink-0 group"
             >
-              <div className="relative mx-auto w-[140px] md:w-[180px] rounded-[2rem] border-[6px] border-gray-700 bg-gray-900 shadow-2xl shadow-black/40 overflow-hidden mb-4">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-3.5 bg-gray-700 rounded-b-xl z-10" />
-                <img src={screen.img} alt={screen.label} className="w-full" />
+              {/* iPhone frame */}
+              <div className="relative mx-auto w-[140px] md:w-[190px] rounded-[2.2rem] bg-gradient-to-b from-[#2a2a2e] via-[#1a1a1e] to-[#0e0e10] p-[3px] shadow-2xl shadow-black/50 group-hover:shadow-cyan-brand/10 group-hover:-translate-y-2 transition-all duration-500">
+                {/* Inner bezel */}
+                <div className="rounded-[2rem] bg-gradient-to-b from-[#3a3a3e] via-[#1c1c20] to-[#0c0c0e] p-[2px]">
+                  <div className="rounded-[1.85rem] overflow-hidden bg-black relative">
+                    {/* Dynamic Island */}
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[60px] md:w-[72px] h-[18px] md:h-[22px] bg-black rounded-full z-10" />
+                    {/* Screen */}
+                    <img src={screen.img} alt={screen.label} className="w-full" />
+                  </div>
+                </div>
+                {/* Side button hints */}
+                <div className="absolute right-[-2px] top-[25%] w-[2px] h-6 bg-[#3a3a3e] rounded-l-sm" />
+                <div className="absolute left-[-2px] top-[20%] w-[2px] h-4 bg-[#3a3a3e] rounded-r-sm" />
+                <div className="absolute left-[-2px] top-[30%] w-[2px] h-8 bg-[#3a3a3e] rounded-r-sm" />
+                <div className="absolute left-[-2px] top-[40%] w-[2px] h-8 bg-[#3a3a3e] rounded-r-sm" />
               </div>
-              <p className="text-primary-foreground/60 text-xs md:text-sm font-medium">{screen.label}</p>
+              <p className="text-primary-foreground/60 text-xs md:text-sm font-medium mt-4">{screen.label}</p>
             </motion.div>
           ))}
         </motion.div>

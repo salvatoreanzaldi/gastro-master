@@ -4,25 +4,25 @@ import { MessageSquareText, CalendarCheck, UtensilsCrossed, Rocket } from "lucid
 const steps = [
   {
     icon: MessageSquareText,
-    step: "01",
+    num: "1",
     title: "Kostenloses Erstgespräch",
     desc: "Du meldest dich bei uns – wir lernen dein Restaurant kennen und beraten dich unverbindlich.",
   },
   {
     icon: CalendarCheck,
-    step: "02",
+    num: "2",
     title: "Strategieberatung & Planung",
     desc: "Gemeinsam planen wir dein Setup: Webshop, App, Kasse – exakt auf deinen Betrieb zugeschnitten.",
   },
   {
     icon: UtensilsCrossed,
-    step: "03",
+    num: "3",
     title: "Speisekarte & Einrichtung",
     desc: "Du gibst uns deine Speisekarte und Infos – wir kümmern uns um die komplette Einrichtung.",
   },
   {
     icon: Rocket,
-    step: "04",
+    num: "4",
     title: "Dein System geht live",
     desc: "In 2–4 Wochen ist alles fertig eingerichtet und einsatzbereit.",
   },
@@ -61,28 +61,30 @@ const ProcessSection = () => {
             </button>
           </motion.div>
 
-          {/* Right: vertical compact cards */}
+          {/* Right: vertical cards with big background numbers */}
           <div className="space-y-4">
             {steps.map((s, i) => (
               <motion.div
-                key={s.step}
+                key={s.num}
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="flex items-start gap-4 bg-surface-light border border-border rounded-2xl p-5 hover:shadow-md transition-shadow"
+                className="relative group"
               >
-                <div className="w-12 h-12 rounded-xl bg-background border border-border flex items-center justify-center flex-shrink-0">
-                  <s.icon className="w-5 h-5 text-cyan-brand" />
+                {/* Big background number */}
+                <div className="absolute -left-2 md:-left-4 top-1/2 -translate-y-1/2 text-[5rem] md:text-[6rem] font-black leading-none select-none pointer-events-none text-deep-navy/[0.08] group-hover:text-cyan-brand/[0.08] transition-colors duration-500 dark:text-primary-foreground/[0.04] dark:group-hover:text-cyan-brand/[0.06]">
+                  {s.num}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-bold text-cyan-brand uppercase tracking-wider">
-                      Schritt {s.step}
-                    </span>
+                {/* Card */}
+                <div className="relative flex items-start gap-4 bg-surface-light border border-border rounded-2xl p-5 group-hover:shadow-md group-hover:border-cyan-brand/20 transition-all duration-300 ml-6 md:ml-8">
+                  <div className="w-11 h-11 rounded-xl bg-background border border-border flex items-center justify-center flex-shrink-0 group-hover:border-cyan-brand/30 group-hover:shadow-sm group-hover:shadow-cyan-brand/10 transition-all duration-300">
+                    <s.icon className="w-5 h-5 text-cyan-brand" />
                   </div>
-                  <h3 className="text-base font-bold text-foreground mb-1">{s.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-bold text-foreground mb-1">{s.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
+                  </div>
                 </div>
               </motion.div>
             ))}

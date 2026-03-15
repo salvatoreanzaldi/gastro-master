@@ -17,31 +17,31 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-navy min-h-screen flex items-center">
+    <section className="relative overflow-hidden bg-gradient-navy min-h-[85vh] flex items-center">
       <div className="absolute inset-0 opacity-20" style={{
         background: "radial-gradient(ellipse at 70% 50%, hsl(196, 100%, 40%), transparent 60%)"
       }} />
 
-      <div className="container-tight section-padding relative z-10 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="container-tight px-5 md:px-8 lg:px-16 py-20 md:py-16 relative z-10 w-full">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           {/* Left: Copy */}
           <div>
-            <motion.div initial="hidden" animate="visible" custom={0} variants={fadeUp} className="flex items-center gap-3 mb-8">
+            <motion.div initial="hidden" animate="visible" custom={0} variants={fadeUp} className="flex items-center gap-3 mb-6">
               <img src={logo} alt="Gastro Master Logo" className="w-10 h-10 rounded-lg" />
               <span className="text-primary-foreground/80 font-medium text-sm tracking-wide uppercase">Gastro Master</span>
             </motion.div>
 
             <motion.h1 initial="hidden" animate="visible" custom={1} variants={fadeUp}
-              className="text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-[1.08] mb-6">
+              className="text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-[1.08] mb-5">
               Hör auf, Provision auf deinen eigenen Umsatz zu zahlen.
             </motion.h1>
 
             <motion.p initial="hidden" animate="visible" custom={2} variants={fadeUp}
-              className="text-lg md:text-xl text-primary-foreground/70 mb-8 max-w-lg leading-relaxed">
+              className="text-lg md:text-xl text-primary-foreground/70 mb-7 max-w-lg leading-relaxed">
               Dein eigener Webshop & deine eigene App – damit deine Kunden direkt bei dir bestellen. Ohne Plattform-Provisionen. Mehr Gewinn ab Tag eins.
             </motion.p>
 
-            <motion.div initial="hidden" animate="visible" custom={3} variants={fadeUp} className="flex flex-col sm:flex-row gap-4 mb-10">
+            <motion.div initial="hidden" animate="visible" custom={3} variants={fadeUp} className="flex flex-col sm:flex-row gap-4 mb-8">
               <button onClick={scrollToForm}
                 className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-amber/20 flex items-center justify-center gap-2">
                 Kostenlose Beratung
@@ -77,7 +77,7 @@ const HeroSection = () => {
             <img
               src={heroPOS}
               alt="Gastro Master POS-System – Kasse, App & Bondrucker"
-              className="w-full max-w-[560px] object-contain drop-shadow-2xl"
+              className="w-full max-w-[600px] object-contain drop-shadow-2xl"
             />
           </motion.div>
         </div>
