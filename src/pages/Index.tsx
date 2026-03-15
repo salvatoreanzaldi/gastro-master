@@ -12,6 +12,7 @@ import POSSection from "@/components/landing/POSSection";
 import PickUpScreenSection from "@/components/landing/PickUpScreenSection";
 import TransaktionsUmlageSection from "@/components/landing/TransaktionsUmlageSection";
 import DifferentiationSection from "@/components/landing/DifferentiationSection";
+import VideoTestimonialSection from "@/components/landing/VideoTestimonialSection";
 import FounderTrustSection from "@/components/landing/FounderTrustSection";
 import MomentumSection from "@/components/landing/MomentumSection";
 import ProcessSection from "@/components/landing/ProcessSection";
@@ -44,6 +45,7 @@ const Index = () => {
       <PickUpScreenSection />
       <TransaktionsUmlageSection />
       <DifferentiationSection />
+      <VideoTestimonialSection />
       <FounderTrustSection />
       <MomentumSection />
       <ProcessSection />
