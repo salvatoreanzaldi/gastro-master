@@ -24,7 +24,7 @@ const steps = [
     icon: Rocket,
     step: "04",
     title: "Dein System geht live",
-    desc: "In 2–4 Wochen ist dein Gastro Master Bestellsystem fertig eingerichtet und einsatzbereit.",
+    desc: "In 2–4 Wochen ist alles fertig eingerichtet und einsatzbereit.",
   },
 ];
 
@@ -36,65 +36,58 @@ const ProcessSection = () => {
   return (
     <section className="section-padding bg-background">
       <div className="container-tight">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-14"
-        >
-          <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">
-            So einfach geht's
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
-            Unser Ablauf
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Vom ersten Gespräch bis zum fertigen System – wir begleiten dich persönlich durch jeden Schritt.
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-4 gap-6 md:gap-8 mb-12">
-          {steps.map((s, i) => (
-            <motion.div
-              key={s.step}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.12 }}
-              className="relative text-center"
-            >
-              {/* Connector line on desktop */}
-              {i < steps.length - 1 && (
-                <div className="hidden md:block absolute top-10 left-[60%] w-[80%] h-px bg-border" />
-              )}
-
-              <div className="relative z-10 inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-surface-light border border-border mb-5 mx-auto">
-                <s.icon className="w-8 h-8 text-cyan-brand" />
-              </div>
-
-              <div className="text-xs font-bold text-cyan-brand uppercase tracking-wider mb-2">
-                Schritt {s.step}
-              </div>
-              <h3 className="text-lg font-bold text-foreground mb-2">{s.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <button
-            onClick={scrollToForm}
-            className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-base hover:scale-[1.02] transition-transform shadow-lg shadow-amber/20 inline-flex items-center gap-2"
+        <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-start">
+          {/* Left: heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            Jetzt Erstgespräch vereinbaren
-            <Rocket className="w-5 h-5" />
-          </button>
-        </motion.div>
+            <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">
+              So einfach geht's
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
+              Unser Ablauf
+            </h2>
+            <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+              Vom ersten Gespräch bis zum fertigen System – wir begleiten dich persönlich durch jeden Schritt.
+            </p>
+            <button
+              onClick={scrollToForm}
+              className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-base hover:scale-[1.02] transition-transform shadow-lg shadow-amber/20 inline-flex items-center gap-2"
+            >
+              Jetzt Erstgespräch vereinbaren
+              <Rocket className="w-5 h-5" />
+            </button>
+          </motion.div>
+
+          {/* Right: vertical compact cards */}
+          <div className="space-y-4">
+            {steps.map((s, i) => (
+              <motion.div
+                key={s.step}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="flex items-start gap-4 bg-surface-light border border-border rounded-2xl p-5 hover:shadow-md transition-shadow"
+              >
+                <div className="w-12 h-12 rounded-xl bg-background border border-border flex items-center justify-center flex-shrink-0">
+                  <s.icon className="w-5 h-5 text-cyan-brand" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-bold text-cyan-brand uppercase tracking-wider">
+                      Schritt {s.step}
+                    </span>
+                  </div>
+                  <h3 className="text-base font-bold text-foreground mb-1">{s.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

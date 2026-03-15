@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Monitor, Truck, QrCode, ShoppingBag } from "lucide-react";
 import kassenhardware from "@/assets/kassenhardware.png";
+import selforderTerminals from "@/assets/selfordering-terminals.png";
 
 const addons = [
   {
@@ -37,6 +38,7 @@ const addons = [
       "Software-Funktionalität bereits inklusive",
     ],
     premium: true,
+    image: selforderTerminals,
   },
 ];
 
@@ -131,12 +133,16 @@ const POSSection = () => {
                   : "bg-background border-border"
               }`}
             >
-              <div className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 ${
-                addon.premium ? "text-cyan-brand" : "text-cyan-brand"
-              }`}>
+              <div className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand`}>
                 <addon.icon className="w-3.5 h-3.5" />
                 {addon.label}
               </div>
+
+              {addon.image && (
+                <div className="mb-4 -mx-2">
+                  <img src={addon.image} alt={addon.title} className="w-full max-h-48 object-contain" />
+                </div>
+              )}
 
               <h4 className={`text-lg font-bold mb-1 ${addon.premium ? "text-primary-foreground" : "text-foreground"}`}>
                 {addon.title}
@@ -148,7 +154,7 @@ const POSSection = () => {
               <ul className="space-y-2 flex-1">
                 {addon.points.map((p) => (
                   <li key={p} className="flex items-start gap-2">
-                    <Check className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${addon.premium ? "text-cyan-brand" : "text-cyan-brand"}`} />
+                    <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-cyan-brand" />
                     <span className={`text-sm ${addon.premium ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{p}</span>
                   </li>
                 ))}
