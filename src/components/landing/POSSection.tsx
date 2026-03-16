@@ -1,46 +1,7 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Monitor, Truck, QrCode, ShoppingBag } from "lucide-react";
+import { ArrowRight, Check, Truck, QrCode, ShoppingBag, MapPin } from "lucide-react";
 import kassenhardware from "@/assets/kassenhardware.png";
 import selforderTerminals from "@/assets/selfordering-terminals.png";
-
-const addons = [
-  {
-    icon: Truck,
-    label: "Add-on",
-    title: "Fahrer-App mit GPS",
-    price: "+10 € / Monat pro Fahrer",
-    points: [
-      "GPS-Tracking für alle Fahrer",
-      "Transparenz im Lieferbetrieb",
-      "Sinnvoll für Betriebe mit eigenem Lieferdienst",
-    ],
-  },
-  {
-    icon: QrCode,
-    label: "Add-on",
-    title: "Bar-System / QR-Code Tischsystem",
-    price: "+50 € / Monat für 5 Tische, +5 € je weiterem Tisch",
-    points: [
-      "QR-Code-Bestellung am Tisch",
-      "Modernes Inhouse-Erlebnis",
-      "Ideal für Restaurants mit Tischservice",
-    ],
-  },
-  {
-    icon: ShoppingBag,
-    label: "Add-on",
-    title: "Self-Ordering & Hardware",
-    price: "Hardware auf Anfrage",
-    points: [
-      "Pick-Up Screen & Küchenmonitor",
-      "Self-Checkout Terminals",
-      "Counter, Freestanding, Outdoor-Varianten",
-      "Software-Funktionalität bereits inklusive",
-    ],
-    premium: true,
-    image: selforderTerminals,
-  },
-];
 
 const POSSection = () => {
   const scrollToForm = () => {
@@ -50,125 +11,140 @@ const POSSection = () => {
   return (
     <section className="section-padding bg-surface-light" id="kasse">
       <div className="container-tight">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-14"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
           <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">Eigenständig buchbar</span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
-            Die Gastro Master Cloud-Kasse
-          </h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">Die Gastro Master Cloud-Kasse</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             TSE-konforme Kassensoftware für Restaurants, Lieferdienste und Gastronomiebetriebe – auch ohne Webshop oder App buchbar.
           </p>
         </motion.div>
 
         {/* Main POS product */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-gradient-navy rounded-3xl border border-cyan-brand/20 overflow-hidden mb-10"
-        >
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          className="bg-gradient-navy rounded-3xl border border-cyan-brand/20 overflow-hidden mb-10">
           <div className="grid md:grid-cols-2 gap-0 items-center">
             <div className="p-8 md:p-12">
-              <div className="inline-block bg-cyan-brand/10 text-cyan-brand text-xs font-bold px-3 py-1 rounded-full mb-4">
-                Cloud-Kassensoftware
-              </div>
-              <h3 className="text-2xl md:text-3xl font-black text-primary-foreground mb-2">
-                ab 69 € / Monat
-              </h3>
+              <div className="inline-block bg-cyan-brand/10 text-cyan-brand text-xs font-bold px-3 py-1 rounded-full mb-4">Cloud-Kassensoftware</div>
+              <h3 className="text-2xl md:text-3xl font-black text-primary-foreground mb-2">ab 69 € / Monat</h3>
               <p className="text-primary-foreground/40 text-xs mb-6">zzgl. MwSt.</p>
-
               <ul className="space-y-3 mb-8">
-                {[
-                  "TSE-konforme Cloud-Kassensoftware",
-                  "Monatlich kündbar",
-                  "Läuft auf Windows-Computern",
-                  "Cloud-Backoffice & Auswertungen",
-                  "Service am Tisch, Lieferung & Abholung",
-                  "Persönlicher Support per WhatsApp",
-                  "Modular erweiterbar durch Add-ons",
-                ].map((item) => (
+                {["TSE-konforme Cloud-Kassensoftware","Monatlich kündbar","Läuft auf Windows-Computern","Cloud-Backoffice & Auswertungen","Service am Tisch, Lieferung & Abholung","Persönlicher Support per WhatsApp","Modular erweiterbar durch Add-ons"].map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <Check className="w-4 h-4 text-cyan-brand shrink-0 mt-0.5" />
                     <span className="text-primary-foreground/80 text-sm">{item}</span>
                   </li>
                 ))}
               </ul>
-
-              <button
-                onClick={scrollToForm}
-                className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2"
-              >
+              <button onClick={scrollToForm}
+                className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
                 Kassensystem beraten lassen
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
-
             <div className="flex justify-center p-8 md:p-12">
-              <img
-                src={kassenhardware}
-                alt="Gastro Master Cloud-Kasse – POS Hardware"
-                className="w-full max-w-md object-contain"
-              />
+              <img src={kassenhardware} alt="Gastro Master Cloud-Kasse – POS Hardware" className="w-full max-w-md object-contain" />
             </div>
           </div>
         </motion.div>
 
-        {/* Add-ons */}
+        {/* Add-ons - balanced 3 columns */}
         <div className="grid md:grid-cols-3 gap-5">
-          {addons.map((addon, i) => (
-            <motion.div
-              key={addon.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className={`rounded-2xl border p-7 flex flex-col ${
-                addon.premium
-                  ? "bg-gradient-navy border-cyan-brand/20 text-primary-foreground"
-                  : "bg-background border-border"
-              }`}
-            >
-              <div className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand`}>
-                <addon.icon className="w-3.5 h-3.5" />
-                {addon.label}
-              </div>
-
-              {addon.image && (
-                <div className="mb-4 -mx-2">
-                  <img src={addon.image} alt={addon.title} className="w-full max-h-48 object-contain" />
+          {/* Fahrer-App with mini map */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0 }}
+            className="rounded-2xl border border-border bg-background p-7 flex flex-col">
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand">
+              <Truck className="w-3.5 h-3.5" /> Add-on
+            </div>
+            {/* Mini Frankfurt map visual */}
+            <div className="mb-4 rounded-xl overflow-hidden border border-border bg-surface-light aspect-[4/3] relative">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-full h-full bg-gradient-to-br from-surface-light to-background">
+                  {/* Stylized map grid */}
+                  <svg viewBox="0 0 200 150" className="w-full h-full opacity-20">
+                    <line x1="20" y1="30" x2="180" y2="30" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
+                    <line x1="20" y1="60" x2="180" y2="60" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
+                    <line x1="20" y1="90" x2="180" y2="90" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
+                    <line x1="20" y1="120" x2="180" y2="120" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
+                    <line x1="50" y1="10" x2="50" y2="140" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
+                    <line x1="100" y1="10" x2="100" y2="140" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
+                    <line x1="150" y1="10" x2="150" y2="140" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
+                  </svg>
+                  {/* Route line */}
+                  <svg viewBox="0 0 200 150" className="absolute inset-0 w-full h-full">
+                    <path d="M40,110 Q60,80 80,70 Q100,60 130,45 Q150,35 170,50" fill="none" stroke="hsl(196, 100%, 40%)" strokeWidth="2.5" strokeDasharray="6 4" opacity="0.7"/>
+                    <circle cx="40" cy="110" r="5" fill="hsl(196, 100%, 40%)" opacity="0.9"/>
+                    <circle cx="130" cy="45" r="4" fill="hsl(34, 100%, 47%)" opacity="0.9"/>
+                    <circle cx="170" cy="50" r="5" fill="hsl(196, 100%, 40%)" opacity="0.9"/>
+                  </svg>
+                  <div className="absolute bottom-2 right-2">
+                    <MapPin className="w-5 h-5 text-cyan-brand" />
+                  </div>
+                  <div className="absolute top-2 left-2 text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wider">Frankfurt</div>
                 </div>
-              )}
+              </div>
+            </div>
+            <h4 className="text-lg font-bold text-foreground mb-1">Fahrer-App mit GPS</h4>
+            <p className="text-xs text-muted-foreground mb-5">+10 € / Monat pro Fahrer zzgl. MwSt.</p>
+            <ul className="space-y-2 flex-1">
+              {["GPS-Tracking für alle Fahrer","Transparenz im Lieferbetrieb","Sinnvoll für Betriebe mit eigenem Lieferdienst"].map(p => (
+                <li key={p} className="flex items-start gap-2">
+                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-cyan-brand" />
+                  <span className="text-sm text-muted-foreground">{p}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
 
-              <h4 className={`text-lg font-bold mb-1 ${addon.premium ? "text-primary-foreground" : "text-foreground"}`}>
-                {addon.title}
-              </h4>
-              <p className={`text-xs mb-5 ${addon.premium ? "text-primary-foreground/50" : "text-muted-foreground"}`}>
-                {addon.price} {!addon.premium && "zzgl. MwSt."}
-              </p>
+          {/* QR-Code Tischsystem */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+            className="rounded-2xl border border-border bg-background p-7 flex flex-col">
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand">
+              <QrCode className="w-3.5 h-3.5" /> Add-on
+            </div>
+            {/* QR Code visual */}
+            <div className="mb-4 rounded-xl overflow-hidden border border-border bg-surface-light aspect-[4/3] flex items-center justify-center">
+              <div className="text-center">
+                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://gastro-master.de/kontakt/&bgcolor=f8fafc&color=0c2340`}
+                  alt="QR-Code – gastro-master.de/kontakt" className="w-24 h-24 md:w-28 md:h-28 mx-auto rounded-lg" />
+                <p className="text-[9px] text-muted-foreground/60 mt-2 font-medium">gastro-master.de/kontakt</p>
+              </div>
+            </div>
+            <h4 className="text-lg font-bold text-foreground mb-1">Bar-System / QR-Code Tischsystem</h4>
+            <p className="text-xs text-muted-foreground mb-5">+50 € / Monat für 5 Tische, +5 € je weiterem Tisch zzgl. MwSt.</p>
+            <ul className="space-y-2 flex-1">
+              {["QR-Code-Bestellung am Tisch","Modernes Inhouse-Erlebnis","Ideal für Restaurants mit Tischservice"].map(p => (
+                <li key={p} className="flex items-start gap-2">
+                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-cyan-brand" />
+                  <span className="text-sm text-muted-foreground">{p}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
 
-              <ul className="space-y-2 flex-1">
-                {addon.points.map((p) => (
-                  <li key={p} className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-cyan-brand" />
-                    <span className={`text-sm ${addon.premium ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
+          {/* Self-Ordering & Hardware */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+            className="rounded-2xl border border-cyan-brand/20 bg-gradient-navy p-7 flex flex-col text-primary-foreground">
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand">
+              <ShoppingBag className="w-3.5 h-3.5" /> Add-on
+            </div>
+            <div className="mb-4 -mx-2">
+              <img src={selforderTerminals} alt="Self-Ordering Terminals" className="w-full max-h-40 object-contain" />
+            </div>
+            <h4 className="text-lg font-bold mb-1">Self-Ordering & Hardware</h4>
+            <p className="text-xs text-primary-foreground/50 mb-5">Hardware auf Anfrage</p>
+            <ul className="space-y-2 flex-1">
+              {["Pick-Up Screen & Küchenmonitor","Self-Checkout Terminals","Counter, Freestanding, Outdoor-Varianten","Software-Funktionalität bereits inklusive"].map(p => (
+                <li key={p} className="flex items-start gap-2">
+                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-cyan-brand" />
+                  <span className="text-sm text-primary-foreground/70">{p}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
         </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center text-muted-foreground text-xs mt-8"
-        >
+        <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+          className="text-center text-muted-foreground text-xs mt-8">
           Alle Preise zzgl. MwSt. Hardware und Sonderanforderungen nach Bedarf.
         </motion.p>
       </div>

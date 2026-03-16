@@ -17,7 +17,6 @@ import FounderTrustSection from "@/components/landing/FounderTrustSection";
 import MomentumSection from "@/components/landing/MomentumSection";
 import ProcessSection from "@/components/landing/ProcessSection";
 import RiskReversalSection from "@/components/landing/RiskReversalSection";
-import SwitchOfferSection from "@/components/landing/SwitchOfferSection";
 import ReferencesSection from "@/components/landing/ReferencesSection";
 import PartnerSection from "@/components/landing/PartnerSection";
 import FAQSection from "@/components/landing/FAQSection";
@@ -50,7 +49,6 @@ const Index = () => {
       <MomentumSection />
       <ProcessSection />
       <RiskReversalSection />
-      <SwitchOfferSection />
       <ReferencesSection />
       <PartnerSection />
       <FAQSection />
