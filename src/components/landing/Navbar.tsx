@@ -40,6 +40,9 @@ const Navbar = () => {
         <a href="#" className="flex items-center gap-2 flex-shrink-0">
           <img src={logo} alt="Gastro Master" className={`rounded-lg transition-all duration-700 ${scrolled ? "w-6 h-6" : "w-8 h-8"}`} />
           <span className={`text-primary-foreground font-bold transition-all duration-700 ${scrolled ? "text-sm" : "text-lg"}`}>Gastro Master</span>
+          <span className={`inline-flex items-center rounded-full bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/25 font-medium transition-all duration-700 ${scrolled ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"}`}>
+            Lokal Editiert
+          </span>
         </a>
 
         {/* Desktop links */}

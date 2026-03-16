@@ -1,73 +1,90 @@
-# Welcome to your Lovable project
+# 🍽️ Gastro Master – Direct Launch
 
-## Project info
+> Die provisionsfreie Bestell-Plattform für Gastronomiebetriebe. Eigener Webshop & eigene App – Kunden bestellen direkt, ohne Plattform-Provisionen.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+![Homepage Screenshot](docs/screenshots/homepage-2026-03-16.png)
 
-## How can I edit this code?
+## ⚡ Tech-Stack
 
-There are several ways of editing your application.
+| Technologie | Beschreibung |
+|---|---|
+| [Vite](https://vitejs.dev/) | Blitzschnelles Build-Tool & Dev-Server |
+| [React 18](https://react.dev/) | UI-Library mit funktionalen Komponenten |
+| [TypeScript](https://www.typescriptlang.org/) | Statische Typisierung für sauberen Code |
+| [Tailwind CSS v3](https://tailwindcss.com/) | Utility-First CSS mit Custom Design Tokens |
+| [shadcn/ui](https://ui.shadcn.com/) | Hochwertige, zugängliche UI-Komponenten (Radix) |
+| [Framer Motion](https://www.framer.com/motion/) | Flüssige Animationen & Transitions |
+| [Lucide React](https://lucide.dev/) | Moderne Icon-Library |
 
-**Use Lovable**
+## 🚀 Schnellstart
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+```bash
+# Dependencies installieren
+npm install
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Entwicklungsserver starten
 npm run dev
+
+# Production Build
+npm run build
+
+# Tests ausführen
+npm test
 ```
 
-**Edit a file directly in GitHub**
+## 📁 Projektstruktur
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+src/
+├── components/
+│   ├── landing/        # 26 Landing-Page Sektionen (AIDA-Modell)
+│   └── ui/             # 49 shadcn/ui Komponenten
+├── hooks/              # Custom React Hooks
+├── lib/                # Utilities (cn, etc.)
+├── pages/              # Index + NotFound
+├── assets/             # Logo & Bilder
+└── test/               # Unit Tests (Vitest)
+```
 
-**Use GitHub Codespaces**
+## 🎨 Design-System
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Das Projekt nutzt ein eigenes HSL-basiertes Farbsystem im Dark-Theme-Stil:
 
-## What technologies are used for this project?
+- **Primär:** Deep Navy Hintergründe mit hellen Vordergrund-Texten
+- **Akzente:** Cyan-Brand & Cyan-Mid für interaktive Elemente
+- **CTAs:** Amber-Gradient (`bg-gradient-amber`) für Call-to-Actions
+- **Font:** [Outfit](https://fonts.google.com/specimen/Outfit) – modern, clean, professionell
+- **Border-Radius:** `rounded-xl` bis `rounded-2xl` für moderne Optik
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📓 Projekt-Logbuch
 
-## How can I deploy this project?
+### 16. März 2026 – Umzug von Lovable & Vibe-Coding Setup
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+**Was wurde erreicht:**
 
-## Can I connect a custom domain to my Lovable project?
+1. **Migration von Lovable → Lokale Entwicklung**
+   - Projekt erfolgreich von der Lovable-Plattform in die lokale Entwicklungsumgebung übertragen
+   - Dev-Server läuft stabil auf `localhost:8080`
 
-Yes, you can!
+2. **Codebase-Analyse & Verständnis**
+   - Vollständige Analyse der Projektstruktur: 24 Landing-Sektionen im AIDA-Modell, 49 UI-Komponenten, eigenes HSL-Farbsystem
+   - Dokumentation des Tech-Stacks und aller Design-Tokens
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+3. **Vibe-Coding System eingerichtet**
+   - `.cursorules` erstellt mit Regeln für autonomes Arbeiten, Design-Konventionen und Git-Commit-Standards
+   - No-Terminal Policy, Auto-Skill-Search und Portfolio-Mode aktiviert
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+4. **Erster Proof-of-Concept: "Lokal Editiert" Badge**
+   - Subtiler Emerald-Green Badge im Navbar neben dem Logo eingefügt
+   - Smooth Scroll-Transition, passt sich der Navbar-Verkleinerung an
+   - Beweis, dass lokale Änderungen sofort im Browser sichtbar sind
+
+![Aktueller Stand der Homepage – 16. März 2026](docs/screenshots/homepage-2026-03-16.png)
+
+---
+
+## 📄 Lizenz
+
+Proprietär – Alle Rechte vorbehalten.
