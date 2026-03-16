@@ -17,7 +17,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-navy min-h-[85vh] flex items-center">
+    <section className="relative overflow-hidden bg-gradient-navy min-h-[75vh] flex items-center">
       <div className="absolute inset-0 opacity-20" style={{
         background: "radial-gradient(ellipse at 70% 50%, hsl(196, 100%, 40%), transparent 60%)"
       }} />
