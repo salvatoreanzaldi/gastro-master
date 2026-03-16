@@ -17,20 +17,15 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-navy min-h-[85vh] flex items-center">
+    <section className="relative overflow-hidden bg-gradient-navy min-h-[75vh] flex items-center">
       <div className="absolute inset-0 opacity-20" style={{
         background: "radial-gradient(ellipse at 70% 50%, hsl(196, 100%, 40%), transparent 60%)"
       }} />
 
-      <div className="container-tight px-5 md:px-8 lg:px-16 py-20 md:py-16 relative z-10 w-full">
+      <div className="container-tight px-5 md:px-8 lg:px-16 py-14 md:py-12 relative z-10 w-full">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           {/* Left: Copy */}
           <div>
-            <motion.div initial="hidden" animate="visible" custom={0} variants={fadeUp} className="flex items-center gap-3 mb-6">
-              <img src={logo} alt="Gastro Master Logo" className="w-10 h-10 rounded-lg" />
-              <span className="text-primary-foreground/80 font-medium text-sm tracking-wide uppercase">Gastro Master</span>
-            </motion.div>
-
             <motion.h1 initial="hidden" animate="visible" custom={1} variants={fadeUp}
               className="text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-[1.08] mb-5">
               Hör auf, Provision auf deinen eigenen Umsatz zu zahlen.
