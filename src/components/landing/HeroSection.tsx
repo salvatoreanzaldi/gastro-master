@@ -26,11 +26,6 @@ const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           {/* Left: Copy */}
           <div>
-            <motion.div initial="hidden" animate="visible" custom={0} variants={fadeUp} className="flex items-center gap-3 mb-6">
-              <img src={logo} alt="Gastro Master Logo" className="w-10 h-10 rounded-lg" />
-              <span className="text-primary-foreground/80 font-medium text-sm tracking-wide uppercase">Gastro Master</span>
-            </motion.div>
-
             <motion.h1 initial="hidden" animate="visible" custom={1} variants={fadeUp}
               className="text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-[1.08] mb-5">
               Hör auf, Provision auf deinen eigenen Umsatz zu zahlen.
