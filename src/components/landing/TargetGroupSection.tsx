@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Truck, Building2, ChefHat, Store, CakeSlice, Pizza, Drumstick, IceCream, Croissant, Layers, ArrowRight } from "lucide-react";
+import { Truck, Building2, ChefHat, Store, CakeSlice, Pizza, Drumstick, IceCream, Croissant, ArrowRight } from "lucide-react";
 
 import imgPizzeria from "@/assets/target-pizzeria.png";
 import imgAsiatisch from "@/assets/target-asiatisch.png";
@@ -57,7 +57,6 @@ const subContent: Record<string, TargetContent> = {
   "franchise-sub": { title: "Franchise-Lieferdienst", subtitle: "Einheitlich bestellen – überall", text: "Du betreibst mehrere Standorte mit Lieferdienst? Verwalte alles zentral und spare massiv.", img: imgFranchise },
 };
 
-// Build auto-rotation sequence: all subs first, then non-lieferdienst main groups
 const autoSequence = [
   ...deliverySubcategories.map(s => ({ group: "lieferdienst", sub: s.id })),
   ...mainGroups.filter(g => g.id !== "lieferdienst").map(g => ({ group: g.id, sub: null })),
@@ -90,7 +89,6 @@ const TargetGroupSection = () => {
   const handleGroupClick = (id: string) => {
     setActiveGroup(id);
     if (id === "lieferdienst") setActiveSub("pizzeria");
-    // Find matching auto index
     const idx = autoSequence.findIndex(s => s.group === id && (id === "lieferdienst" ? s.sub === "pizzeria" : true));
     if (idx >= 0) setAutoIndex(idx);
     startAuto();
@@ -129,55 +127,57 @@ const TargetGroupSection = () => {
           ))}
         </div>
 
-        {/* Sub-selector for Lieferdienst */}
-        <AnimatePresence>
-          {showSubs && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-              <div className="flex flex-wrap justify-center gap-2 mb-8">
-                {deliverySubcategories.map(s => (
-                  <button key={s.id} onClick={() => handleSubClick(s.id)}
-                    className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border ${
-                      activeSub === s.id ? "bg-cyan-brand/10 text-cyan-brand border-cyan-brand/30" : "bg-surface-light text-muted-foreground border-border hover:border-cyan-brand/20 hover:text-foreground"
-                    }`}>
-                    <s.icon className="w-3.5 h-3.5" />
-                    {s.label}
+        {/* Fixed-height container to prevent page jumping */}
+        <div className="min-h-[52px] mb-8">
+          <AnimatePresence>
+            {showSubs && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {deliverySubcategories.map(s => (
+                    <button key={s.id} onClick={() => handleSubClick(s.id)}
+                      className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border ${
+                        activeSub === s.id ? "bg-cyan-brand/10 text-cyan-brand border-cyan-brand/30" : "bg-surface-light text-muted-foreground border-border hover:border-cyan-brand/20 hover:text-foreground"
+                      }`}>
+                      <s.icon className="w-3.5 h-3.5" />
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Content - fixed height container */}
+        <div className="min-h-[400px] md:min-h-[320px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={showSubs ? activeSub : activeGroup}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.35 }}
+              className="bg-surface-light border border-border rounded-3xl overflow-hidden max-w-4xl mx-auto"
+            >
+              <div className="grid md:grid-cols-2 gap-0">
+                <div className="relative aspect-[4/3] md:aspect-auto overflow-hidden">
+                  <img src={displayContent.img} alt={displayContent.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-surface-light/20 hidden md:block" />
+                </div>
+                <div className="p-8 md:p-10 flex flex-col justify-center">
+                  <h3 className="text-2xl md:text-3xl font-black text-foreground mb-2">{displayContent.title}</h3>
+                  <p className="text-cyan-brand font-semibold mb-4 text-sm">{displayContent.subtitle}</p>
+                  <p className="text-muted-foreground leading-relaxed mb-6">{displayContent.text}</p>
+                  <button onClick={scrollToForm}
+                    className="bg-gradient-amber text-primary font-bold px-6 py-3 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2 self-start">
+                    Jetzt beraten lassen
+                    <ArrowRight className="w-4 h-4" />
                   </button>
-                ))}
+                </div>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Content */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={showSubs ? activeSub : activeGroup}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.35 }}
-            className="bg-surface-light border border-border rounded-3xl overflow-hidden max-w-4xl mx-auto"
-          >
-            <div className="grid md:grid-cols-2 gap-0">
-              {/* Image */}
-              <div className="relative aspect-[4/3] md:aspect-auto overflow-hidden">
-                <img src={displayContent.img} alt={displayContent.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-surface-light/20 hidden md:block" />
-              </div>
-              {/* Text */}
-              <div className="p-8 md:p-10 flex flex-col justify-center">
-                <h3 className="text-2xl md:text-3xl font-black text-foreground mb-2">{displayContent.title}</h3>
-                <p className="text-cyan-brand font-semibold mb-4 text-sm">{displayContent.subtitle}</p>
-                <p className="text-muted-foreground leading-relaxed mb-6">{displayContent.text}</p>
-                <button onClick={scrollToForm}
-                  className="bg-gradient-amber text-primary font-bold px-6 py-3 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2 self-start">
-                  Jetzt beraten lassen
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+          </AnimatePresence>
+        </div>
       </div>
     </section>
   );

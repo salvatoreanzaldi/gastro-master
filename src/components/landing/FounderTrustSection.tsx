@@ -4,6 +4,7 @@ import { Linkedin } from "lucide-react";
 import ceoPortrait from "@/assets/ceo-rene-ebert.png";
 import sanjayaPortrait from "@/assets/team-sanjaya-pattiyage.png";
 import salvatorePortrait from "@/assets/team-salvatore-anzaldi.png";
+import andrejPortrait from "@/assets/team-andrej-krutsch.png";
 
 const leaders = [
   {
@@ -28,6 +29,14 @@ const leaders = [
     focus: "Kundenberatung",
     img: salvatorePortrait,
     bio: "Mehrjährige Vertriebserfahrung. Zuvor im Verkauf mechanischer Luxusuhren bei einem führenden Online-Anbieter wie CHRONEXT tätig – und weiß, dass jede einzelne Komponente zählt.",
+    linkedin: "#",
+  },
+  {
+    name: "Andrej Krutsch",
+    role: "Service Customer Manager",
+    focus: "Kundenbetreuung",
+    img: andrejPortrait,
+    bio: "Zuvor in leitenden Positionen im Lebensmitteleinzelhandel tätig, unter anderem bei Rewe. Bringt fundierte Erfahrung in Kundenservice und Betriebsorganisation mit.",
     linkedin: "#",
   },
 ];
@@ -118,7 +127,7 @@ const FounderTrustSection = () => (
         </p>
       </motion.div>
 
-      <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-5xl mx-auto">
         {leaders.map((person, i) => (
           <FlipCard key={person.name} person={person} index={i} />
         ))}

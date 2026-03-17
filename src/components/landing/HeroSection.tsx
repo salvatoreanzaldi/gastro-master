@@ -22,7 +22,7 @@ const HeroSection = () => {
         background: "radial-gradient(ellipse at 70% 50%, hsl(196, 100%, 40%), transparent 60%)"
       }} />
 
-      <div className="container-tight px-5 md:px-8 lg:px-16 py-14 md:py-12 relative z-10 w-full">
+      <div className="container-tight px-5 md:px-8 lg:px-16 pt-24 md:pt-28 pb-14 md:pb-12 relative z-10 w-full">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           {/* Left: Copy */}
           <div>

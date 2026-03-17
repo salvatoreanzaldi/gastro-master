@@ -3,21 +3,26 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, TrendingUp } from "lucide-react";
 import partnerPaypal from "@/assets/partner-paypal.png";
 import partnerStripe from "@/assets/partner-stripe.png";
+import payApple from "@/assets/pay-apple.jpeg";
+import payGoogle from "@/assets/pay-google.png";
+import payVisa from "@/assets/pay-visa.png";
+import payMastercard from "@/assets/pay-mastercard.png";
+import payKlarna from "@/assets/pay-klarna.png";
 
-const paymentMethods = [
+const paymentLogos = [
   { name: "PayPal", img: partnerPaypal },
   { name: "Stripe", img: partnerStripe },
+  { name: "Apple Pay", img: payApple },
+  { name: "Google Pay", img: payGoogle },
+  { name: "Visa", img: payVisa },
+  { name: "MasterCard", img: payMastercard },
+  { name: "Klarna", img: payKlarna },
 ];
-
-const badges = ["Apple Pay", "Google Pay", "Visa", "MasterCard", "Klarna"];
 
 const TransaktionsUmlageSection = () => {
   const [orders, setOrders] = useState(300);
   const [avgCart, setAvgCart] = useState(30);
 
-  // PayPal: 2,99% + 0,39€ per transaction
-  // Stripe: 1,5% + 0,25€ per transaction
-  // Assume 50/50 split for estimate
   const paypalFee = orders * 0.5 * (avgCart * 0.0299 + 0.39);
   const stripeFee = orders * 0.5 * (avgCart * 0.015 + 0.25);
   const totalFees = Math.round(paypalFee + stripeFee);
@@ -31,11 +36,7 @@ const TransaktionsUmlageSection = () => {
       <div className="container-tight">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Copy */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <div className="inline-flex items-center gap-2 text-cyan-brand mb-4">
               <TrendingUp className="w-5 h-5" />
               <span className="text-sm font-semibold uppercase tracking-wider">Optionales Add-on für Shop & App</span>
@@ -62,35 +63,28 @@ const TransaktionsUmlageSection = () => {
               ))}
             </ul>
 
-            {/* Payment logos */}
-            <div className="flex items-center gap-4 flex-wrap mb-8">
-              {paymentMethods.map((pm) => (
-                <img key={pm.name} src={pm.img} alt={pm.name} className="h-7 object-contain opacity-70" />
-              ))}
-              {badges.map((b) => (
-                <span key={b} className="text-[11px] font-semibold text-muted-foreground bg-surface-light border border-border rounded-full px-3 py-1">
-                  {b}
-                </span>
+            {/* Payment logos - grayscale to color on hover */}
+            <div className="flex items-center gap-5 flex-wrap mb-8">
+              {paymentLogos.map((pm) => (
+                <img
+                  key={pm.name}
+                  src={pm.img}
+                  alt={pm.name}
+                  className="h-9 md:h-10 object-contain grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-400 cursor-pointer"
+                />
               ))}
             </div>
 
-            <button
-              onClick={scrollToForm}
-              className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2"
-            >
+            <button onClick={scrollToForm}
+              className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
               Kostenlose Beratung
               <ArrowRight className="w-4 h-4" />
             </button>
           </motion.div>
 
           {/* Right: Mini Calculator */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.15 }}
-            className="bg-surface-light border border-border rounded-2xl p-7 md:p-9"
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.15 }}
+            className="bg-surface-light border border-border rounded-2xl p-7 md:p-9">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-6">Gebühren-Rechner</p>
 
             <div className="space-y-6 mb-8">
@@ -99,22 +93,14 @@ const TransaktionsUmlageSection = () => {
                   <span className="text-muted-foreground">Bestellungen / Monat</span>
                   <span className="font-bold text-foreground">{orders}</span>
                 </div>
-                <input
-                  type="range" min={50} max={2000} step={50} value={orders}
-                  onChange={(e) => setOrders(Number(e.target.value))}
-                  className="w-full accent-cyan-brand"
-                />
+                <input type="range" min={50} max={2000} step={50} value={orders} onChange={(e) => setOrders(Number(e.target.value))} className="w-full accent-cyan-brand" />
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-muted-foreground">⌀ Warenkorb</span>
                   <span className="font-bold text-foreground">{avgCart} €</span>
                 </div>
-                <input
-                  type="range" min={10} max={80} step={1} value={avgCart}
-                  onChange={(e) => setAvgCart(Number(e.target.value))}
-                  className="w-full accent-cyan-brand"
-                />
+                <input type="range" min={10} max={80} step={1} value={avgCart} onChange={(e) => setAvgCart(Number(e.target.value))} className="w-full accent-cyan-brand" />
               </div>
             </div>
 
