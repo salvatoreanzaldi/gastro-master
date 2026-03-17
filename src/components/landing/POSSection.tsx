@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Truck, QrCode, ShoppingBag, MapPin } from "lucide-react";
+import { ArrowRight, Check, Truck, QrCode, ShoppingBag } from "lucide-react";
 import kassenhardware from "@/assets/kassenhardware.png";
 import selforderTerminals from "@/assets/selfordering-terminals.png";
+import addonFrankfurt from "@/assets/addon-frankfurt.png";
+import addonQrcode from "@/assets/addon-qrcode.png";
 
 const POSSection = () => {
   const scrollToForm = () => {
@@ -49,39 +51,14 @@ const POSSection = () => {
 
         {/* Add-ons - balanced 3 columns */}
         <div className="grid md:grid-cols-3 gap-5">
-          {/* Fahrer-App with mini map */}
+          {/* Fahrer-App with Frankfurt image */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0 }}
             className="rounded-2xl border border-border bg-background p-7 flex flex-col">
             <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand">
               <Truck className="w-3.5 h-3.5" /> Add-on
             </div>
-            {/* Mini Frankfurt map visual */}
-            <div className="mb-4 rounded-xl overflow-hidden border border-border bg-surface-light aspect-[4/3] relative">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-full h-full bg-gradient-to-br from-surface-light to-background">
-                  {/* Stylized map grid */}
-                  <svg viewBox="0 0 200 150" className="w-full h-full opacity-20">
-                    <line x1="20" y1="30" x2="180" y2="30" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
-                    <line x1="20" y1="60" x2="180" y2="60" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
-                    <line x1="20" y1="90" x2="180" y2="90" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
-                    <line x1="20" y1="120" x2="180" y2="120" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
-                    <line x1="50" y1="10" x2="50" y2="140" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
-                    <line x1="100" y1="10" x2="100" y2="140" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
-                    <line x1="150" y1="10" x2="150" y2="140" stroke="currentColor" strokeWidth="1" className="text-foreground"/>
-                  </svg>
-                  {/* Route line */}
-                  <svg viewBox="0 0 200 150" className="absolute inset-0 w-full h-full">
-                    <path d="M40,110 Q60,80 80,70 Q100,60 130,45 Q150,35 170,50" fill="none" stroke="hsl(196, 100%, 40%)" strokeWidth="2.5" strokeDasharray="6 4" opacity="0.7"/>
-                    <circle cx="40" cy="110" r="5" fill="hsl(196, 100%, 40%)" opacity="0.9"/>
-                    <circle cx="130" cy="45" r="4" fill="hsl(34, 100%, 47%)" opacity="0.9"/>
-                    <circle cx="170" cy="50" r="5" fill="hsl(196, 100%, 40%)" opacity="0.9"/>
-                  </svg>
-                  <div className="absolute bottom-2 right-2">
-                    <MapPin className="w-5 h-5 text-cyan-brand" />
-                  </div>
-                  <div className="absolute top-2 left-2 text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wider">Frankfurt</div>
-                </div>
-              </div>
+            <div className="mb-4 rounded-xl overflow-hidden border border-border bg-surface-light aspect-[4/3] flex items-center justify-center p-4">
+              <img src={addonFrankfurt} alt="Fahrer-App – GPS Tracking in Frankfurt" className="w-full h-full object-contain" />
             </div>
             <h4 className="text-lg font-bold text-foreground mb-1">Fahrer-App mit GPS</h4>
             <p className="text-xs text-muted-foreground mb-5">+10 € / Monat pro Fahrer zzgl. MwSt.</p>
@@ -101,13 +78,8 @@ const POSSection = () => {
             <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand">
               <QrCode className="w-3.5 h-3.5" /> Add-on
             </div>
-            {/* QR Code visual */}
             <div className="mb-4 rounded-xl overflow-hidden border border-border bg-surface-light aspect-[4/3] flex items-center justify-center">
-              <div className="text-center">
-                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://gastro-master.de/kontakt/&bgcolor=f8fafc&color=0c2340`}
-                  alt="QR-Code – gastro-master.de/kontakt" className="w-24 h-24 md:w-28 md:h-28 mx-auto rounded-lg" />
-                <p className="text-[9px] text-muted-foreground/60 mt-2 font-medium">gastro-master.de/kontakt</p>
-              </div>
+              <img src={addonQrcode} alt="QR-Code Tischsystem – Bar-Bestellung" className="w-full h-full object-cover rounded-xl" />
             </div>
             <h4 className="text-lg font-bold text-foreground mb-1">Bar-System / QR-Code Tischsystem</h4>
             <p className="text-xs text-muted-foreground mb-5">+50 € / Monat für 5 Tische, +5 € je weiterem Tisch zzgl. MwSt.</p>
