@@ -5,8 +5,9 @@ import ceoPortrait from "@/assets/ceo-rene-ebert.png";
 import sanjayaPortrait from "@/assets/team-sanjaya-pattiyage.png";
 import salvatorePortrait from "@/assets/team-salvatore-anzaldi.png";
 import andrejPortrait from "@/assets/team-andrej-krutsch.png";
+import mohammadPortrait from "@/assets/team-mohammad-motakalemi.png";
 
-const leaders = [
+const founders = [
   {
     name: "René Ebert",
     role: "Gründer & CEO",
@@ -23,6 +24,9 @@ const leaders = [
     bio: "Langjähriger IT-Spezialist mit Erfahrung in Technologie- und Führungsrollen bei international führenden Unternehmen wie Procter & Gamble. Fokus auf Produkt, Systeme und skalierbare Technologie.",
     linkedin: "#",
   },
+];
+
+const team = [
   {
     name: "Salvatore Anzaldi",
     role: "Vertriebsleiter",
@@ -39,9 +43,19 @@ const leaders = [
     bio: "Zuvor in leitenden Positionen im Lebensmitteleinzelhandel tätig, unter anderem bei Rewe. Bringt fundierte Erfahrung in Kundenservice und Betriebsorganisation mit.",
     linkedin: "#",
   },
+  {
+    name: "Mohammad Motakalemi",
+    role: "Vertrieb",
+    focus: "Gastronomie-Expertise",
+    img: mohammadPortrait,
+    bio: "Ehemaliger Gastronom, der durch seine eigene positive Erfahrung als Kunde den Weg ins Team fand. Er kennt die Herausforderungen der Branche aus erster Hand.",
+    linkedin: "#",
+  },
 ];
 
-const FlipCard = ({ person, index }: { person: typeof leaders[0]; index: number }) => {
+type Person = typeof founders[0];
+
+const FlipCard = ({ person, index }: { person: Person; index: number }) => {
   const [flipped, setFlipped] = useState(false);
 
   return (
@@ -50,13 +64,13 @@ const FlipCard = ({ person, index }: { person: typeof leaders[0]; index: number 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.12 }}
-      className="perspective-[1200px] cursor-pointer"
+      className="perspective-[1200px] cursor-pointer w-full"
       onClick={() => setFlipped(!flipped)}
       onMouseEnter={() => setFlipped(true)}
       onMouseLeave={() => setFlipped(false)}
     >
       <div
-        className="relative w-full transition-transform duration-700 preserve-3d"
+        className="relative w-full transition-transform duration-700"
         style={{
           transformStyle: "preserve-3d",
           transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
@@ -64,7 +78,7 @@ const FlipCard = ({ person, index }: { person: typeof leaders[0]; index: number 
         }}
       >
         {/* Front */}
-        <div className="absolute inset-0 backface-hidden" style={{ backfaceVisibility: "hidden" }}>
+        <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
           <div className="h-full rounded-3xl overflow-hidden border-2 border-border bg-background shadow-xl hover:shadow-2xl transition-shadow duration-500">
             <div className="relative w-full h-56 md:h-64 overflow-hidden">
               <img
@@ -127,9 +141,17 @@ const FounderTrustSection = () => (
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-5xl mx-auto">
-        {leaders.map((person, i) => (
+      {/* Row 1: Founders (2 CEOs) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto mb-5">
+        {founders.map((person, i) => (
           <FlipCard key={person.name} person={person} index={i} />
+        ))}
+      </div>
+
+      {/* Row 2: Team (3 members) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+        {team.map((person, i) => (
+          <FlipCard key={person.name} person={person} index={i + 2} />
         ))}
       </div>
     </div>

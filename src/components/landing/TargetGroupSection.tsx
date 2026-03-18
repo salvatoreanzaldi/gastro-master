@@ -127,29 +127,23 @@ const TargetGroupSection = () => {
           ))}
         </div>
 
-        {/* Fixed-height container to prevent page jumping */}
-        <div className="min-h-[52px] mb-8">
-          <AnimatePresence>
-            {showSubs && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {deliverySubcategories.map(s => (
-                    <button key={s.id} onClick={() => handleSubClick(s.id)}
-                      className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border ${
-                        activeSub === s.id ? "bg-cyan-brand/10 text-cyan-brand border-cyan-brand/30" : "bg-surface-light text-muted-foreground border-border hover:border-cyan-brand/20 hover:text-foreground"
-                      }`}>
-                      <s.icon className="w-3.5 h-3.5" />
-                      {s.label}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        {/* Fixed-height container for subcategories — always reserves space */}
+        <div className="h-[52px] mb-8">
+          <div className={`flex flex-wrap justify-center gap-2 transition-opacity duration-200 ${showSubs ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+            {deliverySubcategories.map(s => (
+              <button key={s.id} onClick={() => handleSubClick(s.id)}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border ${
+                  activeSub === s.id ? "bg-cyan-brand/10 text-cyan-brand border-cyan-brand/30" : "bg-surface-light text-muted-foreground border-border hover:border-cyan-brand/20 hover:text-foreground"
+                }`}>
+                <s.icon className="w-3.5 h-3.5" />
+                {s.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Content - fixed height container */}
-        <div className="min-h-[400px] md:min-h-[320px]">
+        <div className="h-[400px] md:h-[340px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={showSubs ? activeSub : activeGroup}

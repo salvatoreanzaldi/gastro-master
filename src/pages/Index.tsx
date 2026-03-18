@@ -14,6 +14,7 @@ import TransaktionsUmlageSection from "@/components/landing/TransaktionsUmlageSe
 import DifferentiationSection from "@/components/landing/DifferentiationSection";
 import VideoTestimonialSection from "@/components/landing/VideoTestimonialSection";
 import FounderTrustSection from "@/components/landing/FounderTrustSection";
+import LanguageBadgeSection from "@/components/landing/LanguageBadgeSection";
 import MomentumSection from "@/components/landing/MomentumSection";
 import ProcessSection from "@/components/landing/ProcessSection";
 import RiskReversalSection from "@/components/landing/RiskReversalSection";
