@@ -47,6 +47,7 @@ const Index = () => {
       <DifferentiationSection />
       <VideoTestimonialSection />
       <FounderTrustSection />
+      <LanguageBadgeSection />
       <MomentumSection />
       <ProcessSection />
       <RiskReversalSection />
