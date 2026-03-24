@@ -3,6 +3,79 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Truck, Building2, ChefHat, Store, CakeSlice, Pizza, Drumstick, IceCream, Croissant, Layers, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+// Pizzeria logos
+import logoAmanda from "@/assets/Logo Amanda.png";
+import logoIlPunto from "@/assets/Logo Il Punto.png";
+import logoLaPeperoni from "@/assets/Logo - La Peperoni.png";
+import logoPimanzo from "@/assets/Logo - Pizzeria Pimanzo.png";
+import logoIlSorriso from "@/assets/Logo-Il_Sorriso-Pizzeria.png";
+// Asiatisch logos
+import logoHaLong from "@/assets/Logo - Ha Long Asia.png";
+import logoKojoSushi from "@/assets/Logo - Kojo Sushi.png";
+import logoSushiDeLux from "@/assets/Logo - Sushi De Lux.png";
+import logoTokyoSushi from "@/assets/Logo - Tokyo Sushi Bar.png";
+import logoPhyo7 from "@/assets/Logo Phyo 7 Sushi.png";
+// Indisch logos
+import logoIndianChili from "@/assets/Logo - Indian Chili.png";
+import logoIndianZaika from "@/assets/Logo - Indian Zaika .png";
+import logoStyleOfIndia from "@/assets/Logo - Style Of India.png";
+import logoTajMahal from "@/assets/Logo - Taj Mahal Masala.png";
+import logoRoyalIndia from "@/assets/Logo _ Royal India.png";
+// Burger logos
+import logoBBSmash from "@/assets/Logo - BB Smash It Burger.png";
+import logoChickenChill from "@/assets/Logo - Chicken and Chill.png";
+import logoHabibi from "@/assets/Logo - Habibi Chicken.png";
+import logoJoesBurger from "@/assets/Logo - Joe's Burger.png";
+import logoSmashFlat from "@/assets/Logo - Smash Burger & Flat.png";
+// Franchise logos
+import logoBurgerBrothers from "@/assets/logo-burger-brothers.png";
+import logoTake from "@/assets/logo-take.png";
+import logoEtManus from "@/assets/logo-et-manus.png";
+import logoBigOneBite from "@/assets/Logo - Big One Bite.png";
+import logoPomPom from "@/assets/Logo - Pom Pom.png";
+
+const darkBgLogos = new Set(["BB Smash It Burger", "Joe's Burger", "Smash Burger & Flat"]);
+
+const largeLogos = new Set(["Big One Bite"]);
+
+const customerLogos: Record<string, { src: string; alt: string }[]> = {
+  pizzeria: [
+    { src: logoAmanda, alt: "Ristorante Amanda" },
+    { src: logoIlPunto, alt: "Il Punto" },
+    { src: logoLaPeperoni, alt: "La Peperoni" },
+    { src: logoPimanzo, alt: "Pizzeria Pimanzo" },
+    { src: logoIlSorriso, alt: "Il Sorriso Pizzeria" },
+  ],
+  asiatisch: [
+    { src: logoHaLong, alt: "Ha Long Asia" },
+    { src: logoKojoSushi, alt: "Kojo Sushi" },
+    { src: logoSushiDeLux, alt: "Sushi De Lux" },
+    { src: logoTokyoSushi, alt: "Tokyo Sushi Bar" },
+    { src: logoPhyo7, alt: "Phyo 7 Sushi" },
+  ],
+  indisch: [
+    { src: logoIndianChili, alt: "Indian Chili" },
+    { src: logoIndianZaika, alt: "Indian Zaika" },
+    { src: logoStyleOfIndia, alt: "Style Of India" },
+    { src: logoTajMahal, alt: "Taj Mahal Masala" },
+    { src: logoRoyalIndia, alt: "Royal India" },
+  ],
+  burger: [
+    { src: logoBBSmash, alt: "BB Smash It Burger" },
+    { src: logoChickenChill, alt: "Chicken and Chill" },
+    { src: logoHabibi, alt: "Habibi Chicken" },
+    { src: logoJoesBurger, alt: "Joe's Burger" },
+    { src: logoSmashFlat, alt: "Smash Burger & Flat" },
+  ],
+  franchise: [
+    { src: logoBurgerBrothers, alt: "Burger Brothers" },
+    { src: logoTake, alt: "Take The Good Food" },
+    { src: logoEtManus, alt: "Et Manus" },
+    { src: logoBigOneBite, alt: "Big One Bite" },
+    { src: logoPomPom, alt: "Pom Pom Chicken" },
+  ],
+};
+
 import imgPizzeria from "@/assets/target-pizzeria.png";
 import imgAsiatisch from "@/assets/target-asiatisch.png";
 import imgIndisch from "@/assets/target-indisch.png";
@@ -180,6 +253,37 @@ const TargetGroupSection = () => {
             </div>
           </motion.div>
         </AnimatePresence>
+
+        {/* Customer logo strip – fixed height to prevent layout shift */}
+        <div className="mt-8 max-w-4xl mx-auto" style={{ minHeight: "7rem" }}>
+          {(() => {
+            const activeLogos = showSubs ? customerLogos[activeSub] : customerLogos[activeGroup];
+            const logoKey = showSubs ? activeSub : activeGroup;
+            return (
+          <motion.div
+            key={logoKey}
+            animate={{ opacity: activeLogos ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <p className="text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-5">
+              Unsere Kunden
+            </p>
+            <div className="grid grid-cols-5 gap-4 md:gap-8 items-center w-full">
+              {(activeLogos ?? []).map((logo) => (
+                <div key={logo.alt} className="flex items-center justify-center">
+                  <img
+                    src={logo.src}
+                    alt={logo.alt}
+                    className={`w-full object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 ${largeLogos.has(logo.alt) ? "h-16 md:h-20" : "h-12 md:h-14"}`}
+                    style={darkBgLogos.has(logo.alt) ? { background: "#1f2937", borderRadius: "8px", padding: "6px 10px" } : undefined}
+                  />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+            );
+          })()}
+        </div>
       </div>
     </section>
   );

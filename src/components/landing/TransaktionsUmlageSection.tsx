@@ -3,14 +3,22 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, TrendingUp } from "lucide-react";
 import partnerPaypal from "@/assets/partner-paypal.png";
 import partnerStripe from "@/assets/partner-stripe.png";
+import payApple from "@/assets/pay-apple.jpeg";
+import payGoogle from "@/assets/pay-google.png";
+import payVisa from "@/assets/pay-visa.png";
+import payMastercard from "@/assets/pay-mastercard.png";
+import payKlarna from "@/assets/pay-klarna.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const paymentMethods = [
   { name: "PayPal", img: partnerPaypal },
   { name: "Stripe", img: partnerStripe },
+  { name: "Apple Pay", img: payApple },
+  { name: "Google Pay", img: payGoogle },
+  { name: "Visa", img: payVisa },
+  { name: "MasterCard", img: payMastercard },
+  { name: "Klarna", img: payKlarna },
 ];
-
-const badges = ["Apple Pay", "Google Pay", "Visa", "MasterCard", "Klarna"];
 
 const TransaktionsUmlageSection = () => {
   const { t } = useLanguage();
@@ -55,14 +63,14 @@ const TransaktionsUmlageSection = () => {
               ))}
             </ul>
 
-            <div className="flex items-center gap-4 flex-wrap mb-8">
+            <div className="flex items-center gap-5 flex-wrap mb-8">
               {paymentMethods.map((pm) => (
-                <img key={pm.name} src={pm.img} alt={pm.name} className="h-7 object-contain opacity-70" />
-              ))}
-              {badges.map((b) => (
-                <span key={b} className="text-[11px] font-semibold text-muted-foreground bg-surface-light border border-border rounded-full px-3 py-1">
-                  {b}
-                </span>
+                <img
+                  key={pm.name}
+                  src={pm.img}
+                  alt={pm.name}
+                  className="h-9 object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
               ))}
             </div>
 

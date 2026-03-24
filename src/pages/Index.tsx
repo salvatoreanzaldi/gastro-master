@@ -9,6 +9,7 @@ import ProblemSection from "@/components/landing/ProblemSection";
 import SolutionSection from "@/components/landing/SolutionSection";
 import MockupShowcase from "@/components/landing/MockupShowcase";
 import PricingSection from "@/components/landing/PricingSection";
+import GlassyPricingSection from "@/components/landing/GlassyPricingSection";
 import POSSection from "@/components/landing/POSSection";
 import PickUpScreenSection from "@/components/landing/PickUpScreenSection";
 import TransaktionsUmlageSection from "@/components/landing/TransaktionsUmlageSection";
@@ -42,14 +43,15 @@ const Index = () => {
       <SolutionSection />
       <MockupShowcase />
       {/* DESIRE */}
-      <PricingSection />
+      {/* <PricingSection /> */}
+      <GlassyPricingSection />
       <POSSection />
       <PickUpScreenSection />
       <TransaktionsUmlageSection />
       <DifferentiationSection />
       <VideoTestimonialSection />
       <FounderTrustSection />
-      <LanguageBadgeSection />
+      {/* <LanguageBadgeSection /> */}
       <MomentumSection />
       <ProcessSection />
       <RiskReversalSection />

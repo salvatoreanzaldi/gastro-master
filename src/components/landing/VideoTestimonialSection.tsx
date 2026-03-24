@@ -71,7 +71,7 @@ const VideoTestimonialSection = () => {
 
         {/* Desktop: 3 cards */}
         <div className="hidden md:block">
-          <AnimatePresence mode="popLayout" custom={direction}>
+          <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={current}
               initial={{ opacity: 0, x: direction * 120 }}

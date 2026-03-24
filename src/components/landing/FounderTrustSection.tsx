@@ -158,7 +158,7 @@ const FounderTrustSection = () => {
             {t.founder.langSub}
           </p>
 
-          <div className="flex flex-nowrap justify-center gap-3 overflow-x-auto pb-1 scrollbar-none">
+          <div className="flex flex-wrap justify-center gap-3 py-3">
             {languages.map((lang, i) => (
               <motion.div
                 key={lang.label}

@@ -341,7 +341,6 @@ export const translations = {
         { id: "burger", label: "Burger & Chicken", content: { title: "Burger & Chicken ohne Provision", subtitle: "Fast-Food-Bestellungen direkt über dich", text: "Burger-Restaurants und Chicken-Shops gehören zu den stärksten Lieferkategorien. Hol dir deine Marge zurück." } },
         { id: "eis", label: "Eis & Dessert", content: { title: "Süße Bestellungen, voller Gewinn", subtitle: "Eis, Waffeln & Desserts direkt liefern", text: "Eisdielen und Dessert-Shops mit Lieferung boomen. Nutze deinen eigenen Webshop für Vorbestellungen." } },
         { id: "baeckerei-sub", label: "Bäckerei", content: { title: "Bäckerei mit Lieferservice", subtitle: "Brötchen, Kuchen & Co. vorbestellen lassen", text: "Lass deine Kunden morgens bequem vorbestellen und liefere frisch – oder biete Click & Collect an." } },
-        { id: "franchise-sub", label: "Franchise", content: { title: "Franchise-Lieferdienst", subtitle: "Einheitlich bestellen – überall", text: "Du betreibst mehrere Standorte mit Lieferdienst? Verwalte alles zentral und spare massiv." } },
       ],
     },
 
@@ -688,7 +687,6 @@ export const translations = {
         { id: "burger", label: "Burger & Chicken", content: { title: "Burger & Chicken Without Commission", subtitle: "Fast-food orders direct through you", text: "Burger restaurants and chicken shops are among the strongest delivery categories. Take back your margin." } },
         { id: "eis", label: "Ice Cream & Desserts", content: { title: "Sweet Orders, Full Profit", subtitle: "Ice cream, waffles & desserts delivered direct", text: "Ice cream parlours and dessert shops with delivery are booming. Use your own webshop for pre-orders." } },
         { id: "baeckerei-sub", label: "Bakery", content: { title: "Bakery With Delivery Service", subtitle: "Let customers pre-order rolls, cakes & more", text: "Let customers conveniently pre-order in the morning and deliver fresh — or offer click & collect." } },
-        { id: "franchise-sub", label: "Franchise", content: { title: "Franchise Delivery Service", subtitle: "Consistent ordering — everywhere", text: "Running multiple delivery locations? Manage everything centrally and save massively." } },
       ],
     },
 
