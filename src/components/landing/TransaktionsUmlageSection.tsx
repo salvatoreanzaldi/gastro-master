@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, TrendingUp } from "lucide-react";
 import partnerPaypal from "@/assets/partner-paypal.png";
 import partnerStripe from "@/assets/partner-stripe.png";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const paymentMethods = [
   { name: "PayPal", img: partnerPaypal },
@@ -12,12 +13,10 @@ const paymentMethods = [
 const badges = ["Apple Pay", "Google Pay", "Visa", "MasterCard", "Klarna"];
 
 const TransaktionsUmlageSection = () => {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState(300);
   const [avgCart, setAvgCart] = useState(30);
 
-  // PayPal: 2,99% + 0,39€ per transaction
-  // Stripe: 1,5% + 0,25€ per transaction
-  // Assume 50/50 split for estimate
   const paypalFee = orders * 0.5 * (avgCart * 0.0299 + 0.39);
   const stripeFee = orders * 0.5 * (avgCart * 0.015 + 0.25);
   const totalFees = Math.round(paypalFee + stripeFee);
@@ -38,23 +37,17 @@ const TransaktionsUmlageSection = () => {
           >
             <div className="inline-flex items-center gap-2 text-cyan-brand mb-4">
               <TrendingUp className="w-5 h-5" />
-              <span className="text-sm font-semibold uppercase tracking-wider">Optionales Add-on für Shop & App</span>
+              <span className="text-sm font-semibold uppercase tracking-wider">{t.transaktion.badge}</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
-              Mehr Gewinn mit Transaktions-Umlage
+              {t.transaktion.headline}
             </h2>
             <p className="text-muted-foreground text-lg mb-8 leading-relaxed max-w-lg">
-              Gib Zahlungsgebühren strategisch weiter – und schütze deine Marge. Dein eigenes PayPal- und Stripe-Konto, volle Kontrolle über dein Geld.
+              {t.transaktion.sub}
             </p>
 
             <ul className="space-y-3 mb-8">
-              {[
-                "Eigenes PayPal-Geschäftskonto",
-                "Eigenes Stripe-Konto",
-                "Du behältst volle Kontrolle über das Geld",
-                "Gebühren strategisch an Kunden weitergeben",
-                "Mehr Zahlungsmethoden ohne Margenverlust",
-              ].map((item) => (
+              {t.transaktion.features.map((item) => (
                 <li key={item} className="flex items-start gap-3">
                   <Check className="w-4 h-4 text-cyan-brand shrink-0 mt-0.5" />
                   <span className="text-foreground text-sm">{item}</span>
@@ -62,7 +55,6 @@ const TransaktionsUmlageSection = () => {
               ))}
             </ul>
 
-            {/* Payment logos */}
             <div className="flex items-center gap-4 flex-wrap mb-8">
               {paymentMethods.map((pm) => (
                 <img key={pm.name} src={pm.img} alt={pm.name} className="h-7 object-contain opacity-70" />
@@ -78,7 +70,7 @@ const TransaktionsUmlageSection = () => {
               onClick={scrollToForm}
               className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2"
             >
-              Kostenlose Beratung
+              {t.transaktion.cta}
               <ArrowRight className="w-4 h-4" />
             </button>
           </motion.div>
@@ -91,12 +83,12 @@ const TransaktionsUmlageSection = () => {
             transition={{ delay: 0.15 }}
             className="bg-surface-light border border-border rounded-2xl p-7 md:p-9"
           >
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-6">Gebühren-Rechner</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-6">{t.transaktion.calcBadge}</p>
 
             <div className="space-y-6 mb-8">
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">Bestellungen / Monat</span>
+                  <span className="text-muted-foreground">{t.transaktion.calcOrders}</span>
                   <span className="font-bold text-foreground">{orders}</span>
                 </div>
                 <input
@@ -107,7 +99,7 @@ const TransaktionsUmlageSection = () => {
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">⌀ Warenkorb</span>
+                  <span className="text-muted-foreground">{t.transaktion.calcCart}</span>
                   <span className="font-bold text-foreground">{avgCart} €</span>
                 </div>
                 <input
@@ -119,14 +111,14 @@ const TransaktionsUmlageSection = () => {
             </div>
 
             <div className="bg-background border border-border rounded-xl p-5 mb-4">
-              <p className="text-muted-foreground text-xs mb-1">Geschätzte monatliche Zahlungsgebühren</p>
+              <p className="text-muted-foreground text-xs mb-1">{t.transaktion.calcResult}</p>
               <p className="text-3xl font-black text-foreground">~{totalFees.toLocaleString("de-DE")} €</p>
             </div>
 
             <div className="space-y-2 text-[11px] text-muted-foreground">
               <p>PayPal: 2,99 % + 0,39 € pro Transaktion</p>
               <p>Stripe (Apple Pay, Google Pay, Visa, MC, Klarna): 1,5 % + 0,25 € pro Bestellung</p>
-              <p className="pt-1 text-cyan-brand font-medium">→ Diese Gebühren kannst du mit der Transaktions-Umlage strategisch weitergeben.</p>
+              <p className="pt-1 text-cyan-brand font-medium">{t.transaktion.calcNote}</p>
             </div>
           </motion.div>
         </div>

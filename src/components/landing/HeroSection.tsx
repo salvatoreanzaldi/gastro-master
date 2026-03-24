@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Star, Users, ShieldCheck } from "lucide-react";
-import logo from "@/assets/logo-gastro-master.jpg";
 import heroPOS from "@/assets/hero-pos-system.png";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -12,6 +12,7 @@ const fadeUp = {
 };
 
 const HeroSection = () => {
+  const { t } = useLanguage();
   const scrollToForm = () => {
     document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -22,24 +23,24 @@ const HeroSection = () => {
         background: "radial-gradient(ellipse at 70% 50%, hsl(196, 100%, 40%), transparent 60%)"
       }} />
 
-      <div className="container-tight px-5 md:px-8 lg:px-16 py-14 md:py-12 relative z-10 w-full">
+      <div className="container-tight px-5 md:px-8 lg:px-16 pt-28 pb-14 md:pt-32 md:pb-12 relative z-10 w-full">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           {/* Left: Copy */}
           <div>
             <motion.h1 initial="hidden" animate="visible" custom={1} variants={fadeUp}
               className="text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-[1.08] mb-5">
-              Hör auf, Provision auf deinen eigenen Umsatz zu zahlen.
+              {t.hero.headline}
             </motion.h1>
 
             <motion.p initial="hidden" animate="visible" custom={2} variants={fadeUp}
               className="text-lg md:text-xl text-primary-foreground/70 mb-7 max-w-lg leading-relaxed">
-              Dein eigener Webshop & deine eigene App – damit deine Kunden direkt bei dir bestellen. Ohne Plattform-Provisionen. Mehr Gewinn ab Tag eins.
+              {t.hero.sub}
             </motion.p>
 
             <motion.div initial="hidden" animate="visible" custom={3} variants={fadeUp} className="flex flex-col sm:flex-row gap-4 mb-8">
               <button onClick={scrollToForm}
                 className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-amber/20 flex items-center justify-center gap-2">
-                Kostenlose Beratung
+                {t.hero.cta}
                 <ArrowRight className="w-5 h-5" />
               </button>
             </motion.div>
@@ -49,15 +50,15 @@ const HeroSection = () => {
               className="flex flex-wrap gap-6 text-primary-foreground/60 text-sm">
               <span className="flex items-center gap-2">
                 <Star className="w-4 h-4 text-amber" fill="currentColor" />
-                5,0 Sterne bei Google
+                {t.hero.trust1}
               </span>
               <span className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-cyan-brand" />
-                700+ Kunden
+                {t.hero.trust2}
               </span>
               <span className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-cyan-brand" />
-                0 % Provision
+                {t.hero.trust3}
               </span>
             </motion.div>
           </div>

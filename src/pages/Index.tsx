@@ -1,4 +1,5 @@
 import Navbar from "@/components/landing/Navbar";
+import HeroScrollSection from "@/components/landing/HeroScrollSection";
 import HeroSection from "@/components/landing/HeroSection";
 import TrustSection from "@/components/landing/TrustSection";
 import TargetGroupSection from "@/components/landing/TargetGroupSection";
@@ -29,7 +30,8 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       {/* ATTENTION */}
-      <HeroSection />
+      <HeroScrollSection />
+      {/* <HeroSection /> */}
       <TrustSection />
       {/* INTEREST */}
       <TargetGroupSection />

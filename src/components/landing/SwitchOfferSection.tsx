@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Gift } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const SwitchOfferSection = () => {
+  const { t } = useLanguage();
   const scrollToForm = () => {
     document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -20,17 +22,17 @@ const SwitchOfferSection = () => {
         >
           <div className="inline-flex items-center gap-2 bg-amber/20 text-amber rounded-full px-5 py-2 mb-6">
             <Gift className="w-5 h-5" />
-            <span className="font-semibold text-sm">Wechselangebot</span>
+            <span className="font-semibold text-sm">{t.switchOffer.badge}</span>
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-primary-foreground mb-6">
-            50 % Rabatt beim Wechsel
+            {t.switchOffer.headline}
           </h2>
           <p className="text-primary-foreground/70 text-lg mb-8 max-w-lg mx-auto leading-relaxed">
-            Du hast noch ein aktives Abo bei einem anderen Anbieter? Kein Problem – du zahlst bei uns nur die Hälfte, solange dein altes Abo noch läuft.
+            {t.switchOffer.sub}
           </p>
           <button onClick={scrollToForm}
             className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
-            Angebot sichern
+            {t.switchOffer.cta}
             <ArrowRight className="w-5 h-5" />
           </button>
         </motion.div>
