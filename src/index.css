@@ -107,6 +107,16 @@
   }
 }
 
+@keyframes mesh-move {
+  0%   { background-position: 0% 0%, 100% 100%; }
+  100% { background-position: 100% 50%, 0% 50%; }
+}
+
+@keyframes wave-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
 @layer utilities {
   .text-gradient-brand {
     @apply bg-clip-text text-transparent;
@@ -126,5 +136,13 @@
   }
   .container-tight {
     @apply max-w-6xl mx-auto;
+  }
+  .mesh-gradient {
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 20%, #055FB6 0%, transparent 60%),
+      radial-gradient(ellipse 70% 50% at 90% 80%, #007DCF 0%, transparent 55%),
+      #0A264A;
+    background-size: 200% 200%;
+    animation: mesh-move 10s ease infinite alternate;
   }
 }

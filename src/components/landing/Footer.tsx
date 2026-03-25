@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import logoWide from "@/assets/logo-gastro-master-wide.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -37,33 +38,96 @@ const Footer = () => {
   return (
     <footer className="bg-gradient-navy border-t border-primary-foreground/10 px-5 md:px-8 lg:px-16 py-12">
       <div className="container-tight">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <a href="#" className="flex items-center">
-            <img src={logoWide} alt="Gastro Master" className="h-7 md:h-8 w-auto" />
-          </a>
 
-          <div className="flex items-center gap-3">
-            {socialLinks.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={s.label}
-                className="w-9 h-9 rounded-xl border border-primary-foreground/10 bg-primary-foreground/5 flex items-center justify-center text-primary-foreground/40 hover:text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/20 transition-all duration-300"
-              >
-                {s.icon}
-              </a>
-            ))}
+        {/* Top row */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+
+          {/* Brand + Social */}
+          <div>
+            <Link to="/" className="inline-flex items-center mb-5">
+              <img src={logoWide} alt="Gastro Master" className="h-7 md:h-8 w-auto" />
+            </Link>
+            <div className="flex items-center gap-3">
+              {socialLinks.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className="w-9 h-9 rounded-xl border border-primary-foreground/10 bg-primary-foreground/5 flex items-center justify-center text-primary-foreground/40 hover:text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/20 transition-all duration-300"
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
           </div>
 
-          <div className="flex flex-wrap gap-6 text-primary-foreground/50 text-sm">
-            <a href="#" className="hover:text-primary-foreground transition-colors">{t.footer.impressum}</a>
-            <a href="#" className="hover:text-primary-foreground transition-colors">{t.footer.datenschutz}</a>
-            <a href="#" className="hover:text-primary-foreground transition-colors">{t.footer.agb}</a>
+          {/* Produkte */}
+          <div>
+            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">Produkte</h4>
+            <ul className="space-y-2.5">
+              {[
+                { label: "Online Shop",          to: "/produkte/webshop"            },
+                { label: "App System",           to: "/produkte/app"                },
+                { label: "Webseite",             to: "/produkte/webseite"           },
+                { label: "Kassensystem",         to: "/produkte/kassensystem"       },
+                { label: "Transaktions-Umlage",  to: "/produkte/transaktionsumlage" },
+              ].map(item => (
+                <li key={item.to}>
+                  <Link to={item.to} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Lösungen */}
+          <div>
+            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">Lösungen</h4>
+            <ul className="space-y-2.5">
+              {[
+                { label: "Lieferdienst gründen", to: "/loesungen/lieferservice-gruenden" },
+                { label: "Franchise",            to: "/loesungen/franchise"              },
+                { label: "Restaurant",           to: "/loesungen/restaurant"             },
+                { label: "Lieferdienst",         to: "/loesungen/lieferdienst"           },
+                { label: "Café & Bäckerei",      to: "/loesungen/cafe-baeckerei"         },
+              ].map(item => (
+                <li key={item.to}>
+                  <Link to={item.to} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Rechtliches */}
+          <div>
+            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">Rechtliches</h4>
+            <ul className="space-y-2.5">
+              <li>
+                <Link to="/impressum" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t.footer.impressum}
+                </Link>
+              </li>
+              <li>
+                <Link to="/datenschutz" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t.footer.datenschutz}
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t.footer.agb}
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-        <div className="mt-8 pt-6 border-t border-primary-foreground/10 text-center text-primary-foreground/30 text-sm">
+
+        {/* Bottom bar */}
+        <div className="pt-6 border-t border-primary-foreground/10 text-center text-primary-foreground/30 text-sm">
           © {new Date().getFullYear()} Gastro Master. {t.footer.rights}
         </div>
       </div>
