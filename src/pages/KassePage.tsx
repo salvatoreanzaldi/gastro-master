@@ -31,6 +31,9 @@ import qrImg            from "@/assets/QR-Code System Mock Up.png";
 import selfOrderTermImg from "@/assets/selfordering-terminals.png";
 import selbstBestellenImg from "@/assets/15 - Selbst bestellen.png";
 import ordermanImg      from "@/assets/Orderman MockUp.png";
+import teamReneImg      from "@/assets/ceo-rene-ebert.png";
+import teamSalvatoreImg from "@/assets/team-salvatore-anzaldi.png";
+import teamAndrejImg    from "@/assets/team-andrej-krutsch.png";
 import logoKojo         from "@/assets/logo-kojo-sushi.png";
 import logoIlSorriso    from "@/assets/logo-il-sorriso.png";
 import logoArtemis      from "@/assets/logo-artemis.png";
@@ -213,15 +216,20 @@ const alternatingSections = [
     cta: false,
   },
   {
-    headline: "Eine Lizenz. Bis zu 4 Kassen.",
-    sub: "Wachse ohne zusätzliche Lizenzkosten.",
-    text1: "Mit einer einzigen Kassenlizenz kannst du bis zu 4 Kassen-Terminals in deinem Betrieb betreiben. Ideal für Restaurants mit Theke und Sitzbereich, Betriebe mit mehreren Stationen oder Franchise-Konzepte.",
-    text2: "Alle Terminals sind in Echtzeit synchronisiert – Lagerbestände, Preisänderungen und Menü-Updates sind sofort auf allen Geräten sichtbar. Einmal einrichten, überall aktuell.",
-    checks: ["Bis zu 4 Terminals mit einer Lizenz", "Echtzeit-Synchronisierung aller Geräte", "Zentrale Menü- und Preisverwaltung", "Keine versteckten Mehrkosten pro Terminal"],
-    img: lizenzImg,
+    headline: "Service-Vorteil durch Orderman.",
+    sub: "Mobile Bestellaufnahme – schneller, fehlerfreier Service",
+    text1: "Kein Zettel, kein Rufen zur Kasse: Dein Servicepersonal nimmt Bestellungen direkt am Tisch per Handheld auf – und die Bestellung landet in Sekunden in Küche und Bar. Keine Übertragungsfehler, kein Zeitverlust, kein Chaos in der Stoßzeit.",
+    text2: "Restaurants mit mobilem Orderman-System reduzieren Bestellfehler um bis zu 80 % und schaffen deutlich mehr Tischumschläge – mit demselben Personal, ohne Mehraufwand.",
+    checks: [
+      "Mobile Bestellaufnahme per Handheld oder Tablet am Tisch",
+      "Bestellung sofort fehlerfrei in Küche & Bar – kein Rufen",
+      "Bis zu 80 % weniger Bestellfehler im laufenden Betrieb",
+      "Mehr Tischumschläge in der Stoßzeit – gleiches Personal",
+    ],
+    img: ordermanImg,
     imgLeft: true,
     bg: "#0A264A",
-    cta: false,
+    cta: true,
   },
   {
     headline: "Alle Zahlungen. Dein Terminal.",
@@ -232,6 +240,7 @@ const alternatingSections = [
     img: zahlungenImg,
     imgLeft: false,
     bg: "#081628",
+    light: true,
     cta: false,
   },
 ];
@@ -276,6 +285,108 @@ const slideVariants = {
   enter: (d: number) => ({ opacity: 0, x: d * 50 }),
   center: { opacity: 1, x: 0 },
   exit: (d: number) => ({ opacity: 0, x: d * -50 }),
+};
+
+// ─── Team CTA Section ─────────────────────────────────────────────────────────
+const teamMembers = [
+  { img: teamReneImg,      name: "René Ebert",       role: "Gründer & Geschäftsführer" },
+  { img: teamSalvatoreImg, name: "Salvatore Anzaldi", role: "Head of Sales" },
+  { img: teamAndrejImg,    name: "Andrej Krutsch",    role: "Head of Operations" },
+];
+
+const TeamCTASection = () => {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setCurrent(c => (c + 1) % teamMembers.length), 4000);
+    return () => clearInterval(t);
+  }, []);
+
+  const member = teamMembers[current];
+
+  return (
+    <section className="bg-[#F0F4F8] dark:bg-[#060e1a] px-5 md:px-8 lg:px-16 py-20 md:py-28">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="bg-white dark:bg-[#0d1f35] rounded-3xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/40 grid lg:grid-cols-2"
+        >
+          {/* Left: Text */}
+          <div className="p-10 md:p-14 flex flex-col justify-center">
+            <span className="bg-[#0A264A]/[0.07] dark:bg-white/10 text-[#0A264A] dark:text-white text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full inline-block mb-8 w-fit">
+              Jetzt durchstarten
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight mb-6">
+              Buche jetzt dein<br />kostenloses Beratungsgespräch.
+            </h2>
+            <p className="font-bold text-[#0A264A] dark:text-white text-sm mb-3">Das erwartet dich:</p>
+            <p className="text-[#0A264A]/60 dark:text-white/55 text-base leading-relaxed mb-5">
+              Im kostenlosen Erstgespräch entwickelt einer unserer Experten ein individuelles Konzept für dein neues Kassensystem – kostenlos, unverbindlich und auf deinen Betrieb zugeschnitten. Danach entscheidest du frei, ob du es mit uns umsetzen möchtest.
+            </p>
+            <p className="text-[#0A264A]/40 dark:text-white/35 text-sm leading-relaxed mb-10">
+              Deine Informationen werden ausschließlich für die Kontaktaufnahme verwendet und nicht gespeichert.
+            </p>
+            <motion.button
+              onClick={() => { window.location.href = "/#kontakt"; }}
+              whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2 }}
+              className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group w-fit"
+            >
+              Kostenlose Beratung anfragen
+              <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
+            </motion.button>
+          </div>
+
+          {/* Right: Team Slideshow */}
+          <div className="relative min-h-[380px] lg:min-h-auto overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={current}
+                src={member.img}
+                alt={member.name}
+                initial={{ opacity: 0, scale: 1.04 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+              />
+            </AnimatePresence>
+            {/* Name overlay */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-8 py-7">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <p className="text-white font-bold text-lg leading-tight">{member.name}</p>
+                  <p className="text-white/70 text-sm">{member.role}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            {/* Dots */}
+            <div className="absolute top-5 right-5 flex gap-2">
+              {teamMembers.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  className={`rounded-full transition-all duration-300 ${
+                    i === current ? "w-5 h-2 bg-white" : "w-2 h-2 bg-white/40 hover:bg-white/70"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
 };
 
 const FeatureSlideshow = () => {
@@ -932,7 +1043,7 @@ const KassePage = () => (
     {alternatingSections.map((sec) => (
       <section
         key={sec.headline}
-        className={`px-5 md:px-8 lg:px-16 py-28 md:py-44 ${
+        className={`px-5 md:px-8 lg:px-16 py-16 md:py-24 ${
           sec.light
             ? "bg-white dark:bg-[#081628]"
             : ""
@@ -985,12 +1096,16 @@ const KassePage = () => (
                 ))}
               </ul>
               {sec.cta && (
-                <button
+                <motion.button
                   onClick={() => { window.location.href = "/#kontakt"; }}
-                  className="bg-amber-brand text-white font-bold px-8 py-4 rounded-xl text-base inline-flex items-center gap-3 hover:opacity-90 transition-opacity shadow-lg shadow-amber-brand/20"
+                  whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ duration: 0.2 }}
+                  className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group"
                 >
-                  Kostenlose Beratung anfragen <ArrowRight className="w-5 h-5" />
-                </button>
+                  Kostenlose Beratung anfragen
+                  <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
+                </motion.button>
               )}
             </motion.div>
           </div>
@@ -998,7 +1113,10 @@ const KassePage = () => (
       </section>
     ))}
 
-    {/* ── S9: FAQ ────────────────────────────────────────────── */}
+    {/* ── S9: TEAM CTA ───────────────────────────────────────── */}
+    <TeamCTASection />
+
+    {/* ── S10: FAQ ───────────────────────────────────────────── */}
     <section className="bg-[#081628] px-5 md:px-8 lg:px-16 py-32 md:py-44">
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-[1fr_2fr] gap-16 md:gap-24">
@@ -1030,32 +1148,6 @@ const KassePage = () => (
             {faqs.map(faq => <FaqItem key={faq.q} {...faq} />)}
           </motion.div>
         </div>
-      </div>
-    </section>
-
-    {/* ── S10: CTA ───────────────────────────────────────────── */}
-    <section className="bg-gradient-amber px-5 md:px-8 lg:px-16 py-28 md:py-40">
-      <div className="max-w-6xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#0A264A] leading-tight mb-6">
-            Deine Kasse.<br />Dein Betrieb.
-          </h2>
-          <p className="text-[#0A264A]/60 text-xl mb-12 max-w-xl mx-auto leading-relaxed">
-            Starte mit dem Kassensystem, das mit deiner Gastronomie wächst – TSE-konform, Cloud-basiert und persönlich betreut.
-          </p>
-          <button
-            onClick={() => { window.location.href = "/#kontakt"; }}
-            className="bg-[#0A264A] text-white font-bold px-10 py-5 rounded-xl text-lg inline-flex items-center gap-3 hover:bg-[#0A264A]/90 transition-colors shadow-2xl shadow-[#0A264A]/20"
-          >
-            Kostenloses Beratungsgespräch
-            <ArrowRight className="w-5 h-5" />
-          </button>
-        </motion.div>
       </div>
     </section>
 

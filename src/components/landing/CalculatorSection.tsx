@@ -18,70 +18,115 @@ const CalculatorSection = () => {
   };
 
   return (
-    <section className="section-padding bg-gradient-navy relative overflow-hidden" id="rechner">
-      <div className="absolute inset-0 opacity-10" style={{
-        background: "radial-gradient(ellipse at 30% 50%, hsl(196, 100%, 40%), transparent 60%)"
-      }} />
+    <section
+      className="section-padding bg-white dark:bg-[#060810] relative overflow-hidden"
+      id="rechner"
+    >
+      {/* Subtle background glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(0,125,207,0.06), transparent 60%)" }}
+      />
+
       <div className="container-tight relative z-10">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-10"
+        >
           <div className="inline-flex items-center gap-2 text-cyan-brand mb-4">
             <Calculator className="w-5 h-5" />
             <span className="text-sm font-semibold uppercase tracking-wider">{t.calculator.badge}</span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-primary-foreground mb-4">{t.calculator.headline}</h2>
-          <p className="text-primary-foreground/60 text-lg max-w-xl mx-auto">{t.calculator.sub}</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white mb-4">
+            {t.calculator.headline}
+          </h2>
+          <p className="text-[#0A264A]/55 dark:text-white/55 text-lg max-w-xl mx-auto">
+            {t.calculator.sub}
+          </p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-          className="max-w-5xl mx-auto bg-primary-foreground/5 backdrop-blur-sm border border-primary-foreground/10 rounded-3xl p-8 md:p-12">
-
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="max-w-5xl mx-auto bg-white/70 dark:bg-white/[0.04] backdrop-blur-xl border border-[#0A264A]/10 dark:border-white/10 rounded-3xl p-8 md:p-12 shadow-xl shadow-[#0A264A]/8 dark:shadow-black/40"
+        >
           <div className="grid md:grid-cols-3 gap-8 mb-10">
             <div>
-              <label className="block text-primary-foreground/70 text-sm font-medium mb-2">{t.calculator.labelOrders}</label>
-              <input type="range" min={50} max={3000} step={50} value={orders} onChange={(e) => setOrders(Number(e.target.value))} className="w-full accent-cyan-brand mb-2" />
-              <div className="text-3xl font-black text-primary-foreground">{orders}</div>
+              <label className="block text-[#0A264A]/65 dark:text-white/65 text-sm font-medium mb-2">
+                {t.calculator.labelOrders}
+              </label>
+              <input
+                type="range" min={50} max={3000} step={50} value={orders}
+                onChange={(e) => setOrders(Number(e.target.value))}
+                className="w-full accent-cyan-brand mb-2"
+              />
+              <div className="text-3xl font-black text-[#0A264A] dark:text-white">{orders}</div>
             </div>
             <div>
-              <label className="block text-primary-foreground/70 text-sm font-medium mb-2">{t.calculator.labelCart}</label>
-              <input type="range" min={10} max={80} step={1} value={avgCart} onChange={(e) => setAvgCart(Number(e.target.value))} className="w-full accent-cyan-brand mb-2" />
-              <div className="text-3xl font-black text-primary-foreground">{avgCart} €</div>
+              <label className="block text-[#0A264A]/65 dark:text-white/65 text-sm font-medium mb-2">
+                {t.calculator.labelCart}
+              </label>
+              <input
+                type="range" min={10} max={80} step={1} value={avgCart}
+                onChange={(e) => setAvgCart(Number(e.target.value))}
+                className="w-full accent-cyan-brand mb-2"
+              />
+              <div className="text-3xl font-black text-[#0A264A] dark:text-white">{avgCart} €</div>
             </div>
             <div>
-              <label className="block text-primary-foreground/70 text-sm font-medium mb-2">{t.calculator.labelCommission}</label>
-              <input type="range" min={10} max={35} step={1} value={commission} onChange={(e) => setCommission(Number(e.target.value))} className="w-full accent-cyan-brand mb-2" />
-              <div className="text-3xl font-black text-primary-foreground">{commission} %</div>
+              <label className="block text-[#0A264A]/65 dark:text-white/65 text-sm font-medium mb-2">
+                {t.calculator.labelCommission}
+              </label>
+              <input
+                type="range" min={10} max={35} step={1} value={commission}
+                onChange={(e) => setCommission(Number(e.target.value))}
+                className="w-full accent-cyan-brand mb-2"
+              />
+              <div className="text-3xl font-black text-[#0A264A] dark:text-white">{commission} %</div>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="bg-primary-foreground/8 border border-primary-foreground/10 rounded-2xl p-5 text-center">
-              <p className="text-primary-foreground/50 text-[11px] font-bold uppercase tracking-widest mb-2">{t.calculator.cardRevenue}</p>
-              <p className="text-2xl md:text-3xl font-black text-primary-foreground">
+            <div className="bg-[#0A264A]/[0.05] dark:bg-white/[0.06] border border-[#0A264A]/10 dark:border-white/10 rounded-2xl p-5 text-center">
+              <p className="text-[#0A264A]/45 dark:text-white/45 text-[11px] font-bold uppercase tracking-widest mb-2">
+                {t.calculator.cardRevenue}
+              </p>
+              <p className="text-2xl md:text-3xl font-black text-[#0A264A] dark:text-white">
                 {monthlyRevenue.toLocaleString("de-DE")} €
               </p>
             </div>
-            <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-5 text-center">
-              <p className="text-primary-foreground/50 text-[11px] font-bold uppercase tracking-widest mb-2">{t.calculator.cardMonth}</p>
-              <p className="text-2xl md:text-3xl font-black text-destructive">
+            <div className="bg-red-500/[0.08] dark:bg-red-500/10 border border-red-500/20 rounded-2xl p-5 text-center">
+              <p className="text-[#0A264A]/45 dark:text-white/45 text-[11px] font-bold uppercase tracking-widest mb-2">
+                {t.calculator.cardMonth}
+              </p>
+              <p className="text-2xl md:text-3xl font-black text-red-500 dark:text-red-400">
                 {monthlyLoss.toLocaleString("de-DE")} €
               </p>
             </div>
-            <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-5 text-center">
-              <p className="text-primary-foreground/50 text-[11px] font-bold uppercase tracking-widest mb-2">{t.calculator.cardYear}</p>
-              <p className="text-2xl md:text-3xl font-black text-destructive">
+            <div className="bg-red-500/[0.08] dark:bg-red-500/10 border border-red-500/20 rounded-2xl p-5 text-center">
+              <p className="text-[#0A264A]/45 dark:text-white/45 text-[11px] font-bold uppercase tracking-widest mb-2">
+                {t.calculator.cardYear}
+              </p>
+              <p className="text-2xl md:text-3xl font-black text-red-500 dark:text-red-400">
                 {yearlyLoss.toLocaleString("de-DE")} €
               </p>
             </div>
           </div>
 
           <div className="text-center">
-            <p className="text-primary-foreground/70 mb-6 text-base md:text-lg">
+            <p className="text-[#0A264A]/65 dark:text-white/65 mb-6 text-base md:text-lg">
               {t.calculator.savingsText}{" "}
               <strong className="text-cyan-brand">{yearlyLoss.toLocaleString("de-DE")} €</strong>
               {" "}{t.calculator.savingsSuffix}
             </p>
-            <button onClick={scrollToForm}
-              className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
+            <button
+              onClick={scrollToForm}
+              className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2"
+            >
               {t.calculator.cta}
               <ArrowRight className="w-5 h-5" />
             </button>

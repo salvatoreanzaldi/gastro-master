@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, TrendingUp } from "lucide-react";
 import partnerPaypal from "@/assets/partner-paypal.png";
 import partnerStripe from "@/assets/partner-stripe.png";
-import payApple from "@/assets/pay-apple.jpeg";
+import payApple from "@/assets/Logo - Apple Pay.png";
 import payGoogle from "@/assets/pay-google.png";
 import payVisa from "@/assets/pay-visa.png";
 import payMastercard from "@/assets/pay-mastercard.png";
