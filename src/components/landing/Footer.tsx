@@ -103,9 +103,9 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Rechtliches */}
+          {/* Weiteres */}
           <div>
-            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">Rechtliches</h4>
+            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">Weiteres</h4>
             <ul className="space-y-2.5">
               <li>
                 <Link to="/impressum" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
@@ -120,6 +120,16 @@ const Footer = () => {
               <li>
                 <Link to="/agb" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
                   {t.footer.agb}
+                </Link>
+              </li>
+              <li>
+                <Link to="/kontakt" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t.footer.kontakt}
+                </Link>
+              </li>
+              <li>
+                <Link to="/downloads" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t.footer.downloads}
                 </Link>
               </li>
             </ul>

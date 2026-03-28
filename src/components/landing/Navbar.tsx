@@ -32,9 +32,12 @@ const languages: { code: LangCode; label: string; flag: string }[] = [
 
 const Navbar = () => {
   const { t, lang, setLang } = useLanguage();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
+  // Helle Seiten ohne Hero-Hintergrund brauchen immer die sichtbare (aktive) Navbar
+  const alwaysActive = ["/impressum", "/datenschutz", "/agb", "/kontakt", "/downloads"].includes(pathname);
   const [scrolled, setScrolled]             = useState(false);
-  const active = scrolled;
+  const active = alwaysActive || scrolled;
   const [mobileOpen, setMobileOpen]         = useState(false);
   const [dark, setDark]                     = useState(false);
   const [langOpen, setLangOpen]             = useState(false);
