@@ -35,9 +35,10 @@ const Navbar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   // Helle Seiten ohne Hero-Hintergrund brauchen immer die sichtbare (aktive) Navbar
-  const alwaysActive = ["/impressum", "/datenschutz", "/agb", "/kontakt", "/downloads"].includes(pathname);
+  const alwaysVisible = ["/impressum", "/datenschutz", "/agb", "/kontakt", "/downloads"].includes(pathname);
   const [scrolled, setScrolled]             = useState(false);
-  const active = alwaysActive || scrolled;
+  const active = scrolled;          // steuert schmal/weit
+  const visibleBg = alwaysVisible || scrolled; // steuert Hintergrund-Sichtbarkeit
   const [mobileOpen, setMobileOpen]         = useState(false);
   const [dark, setDark]                     = useState(false);
   const [langOpen, setLangOpen]             = useState(false);
@@ -102,8 +103,11 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed z-50 transition-all duration-700 ease-out rounded-2xl border border-primary-foreground/10 py-3 ${active
-        ? "top-2 left-[10%] right-[10%] md:left-[15%] md:right-[15%] lg:left-[20%] lg:right-[20%] bg-surface-navy/85 backdrop-blur-2xl shadow-2xl shadow-black/25"
-        : "top-3 left-3 right-3 md:top-4 md:left-6 md:right-6 bg-primary-foreground/5 backdrop-blur-md"
+        ? "top-2 left-[10%] right-[10%] md:left-[15%] md:right-[15%] lg:left-[20%] lg:right-[20%]"
+        : "top-3 left-3 right-3 md:top-4 md:left-6 md:right-6"
+      } ${visibleBg
+        ? "bg-surface-navy/85 backdrop-blur-2xl shadow-2xl shadow-black/25"
+        : "bg-primary-foreground/5 backdrop-blur-md"
       }`}>
       <div className="flex items-center justify-between px-4 md:px-5">
 
