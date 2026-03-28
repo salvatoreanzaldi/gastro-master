@@ -91,7 +91,7 @@ const MockupShowcase = () => {
 
   // Detect mobile once at mount for container height
   const [containerHeight] = useState(() =>
-    typeof window !== "undefined" && window.innerWidth < 768 ? "200vh" : "330vh"
+    typeof window !== "undefined" && window.innerWidth < 768 ? "200vh" : "270vh"
   );
 
   // scrollYProgress 0→1 maps to the full height of the scroll container
@@ -105,8 +105,7 @@ const MockupShowcase = () => {
 
   return (
     /* Tall scroll container – gives the sticky section room to animate */
-    <div className="overflow-x-hidden">
-      <div ref={containerRef} style={{ height: containerHeight }}>
+    <div ref={containerRef} style={{ height: containerHeight }}>
       <section className="sticky top-0 h-screen bg-gradient-navy overflow-hidden flex flex-col">
         {/* Background glow */}
         <div
@@ -155,7 +154,6 @@ const MockupShowcase = () => {
           ))}
         </div>
       </section>
-      </div>
     </div>
   );
 };
