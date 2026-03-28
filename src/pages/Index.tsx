@@ -55,7 +55,7 @@ const Index = () => {
       {/* <LanguageBadgeSection /> */}
       <MomentumSection />
       <ProcessSection />
-      <RiskReversalSection />
+      {/* <RiskReversalSection /> */}
       <ReferencesSection />
       <PartnerSection />
       <FAQSection />
