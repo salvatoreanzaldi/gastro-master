@@ -54,7 +54,7 @@ const Index = () => {
       <FounderTrustSection />
       {/* <LanguageBadgeSection /> */}
       <MomentumSection />
-      <ProcessSection />
+      {/* <ProcessSection /> */}
       <RiskReversalSection />
       <ReferencesSection />
       <PartnerSection />
