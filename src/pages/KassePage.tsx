@@ -326,11 +326,35 @@ const TeamCTASection = () => {
             <p className="text-[#0A264A]/60 dark:text-white/55 text-base leading-relaxed mb-5">
               Im kostenlosen Erstgespräch entwickelt einer unserer Experten ein individuelles Konzept für dein neues Kassensystem – kostenlos, unverbindlich und auf deinen Betrieb zugeschnitten. Danach entscheidest du frei, ob du es mit uns umsetzen möchtest.
             </p>
-            <p className="text-[#0A264A]/40 dark:text-white/35 text-sm leading-relaxed mb-10">
+            <p className="text-[#0A264A]/40 dark:text-white/35 text-sm leading-relaxed mb-4">
               Deine Informationen werden ausschließlich für die Kontaktaufnahme verwendet und nicht gespeichert.
             </p>
+            {/* Language pills */}
+            <div className="flex flex-wrap gap-2 mb-10">
+              {[
+                { label: "Deutsch",       flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
+                { label: "Englisch",      flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
+                { label: "Italienisch",   flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
+                { label: "Persisch",      flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
+                { label: "Russisch",      flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
+                { label: "Singhalesisch", flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+              ].map((lang, i) => (
+                <motion.div
+                  key={lang.label}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.05 + i * 0.06, duration: 0.3, ease: "easeOut" }}
+                  whileHover={{ scale: 1.08, y: -2 }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${lang.color}`}
+                >
+                  <span className="text-lg leading-none">{lang.flag}</span>
+                  {lang.label}
+                </motion.div>
+              ))}
+            </div>
             <motion.button
-              onClick={() => { window.location.href = "/#kontakt"; }}
+              onClick={() => { window.location.href = "/kontakt"; }}
               whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2 }}
@@ -700,7 +724,7 @@ const KassePage = () => (
             className="flex flex-col sm:flex-row gap-4"
           >
             <button
-              onClick={() => { window.location.href = "/#kontakt"; }}
+              onClick={() => { window.location.href = "/kontakt"; }}
               className="bg-gradient-amber text-[#0A264A] font-bold px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
             >
               Jetzt kostenlos beraten lassen
@@ -1097,7 +1121,7 @@ const KassePage = () => (
               </ul>
               {sec.cta && (
                 <motion.button
-                  onClick={() => { window.location.href = "/#kontakt"; }}
+                  onClick={() => { window.location.href = "/kontakt"; }}
                   whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ duration: 0.2 }}
@@ -1133,7 +1157,7 @@ const KassePage = () => (
               Weitere Fragen? Ruf uns an oder schreib uns – wir antworten innerhalb von 24 Stunden.
             </p>
             <button
-              onClick={() => { window.location.href = "/#kontakt"; }}
+              onClick={() => { window.location.href = "/kontakt"; }}
               className="mt-8 text-cyan-brand text-sm font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all"
             >
               Direkt anfragen <ArrowRight className="w-4 h-4" />

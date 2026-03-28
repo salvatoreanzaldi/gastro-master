@@ -42,7 +42,7 @@ const ProductHero = ({ badge, headline, subline, ctaLabel, mockupSrc }: ProductH
           </p>
 
           <button
-            onClick={() => { window.location.href = "/#kontakt"; }}
+            onClick={() => { window.location.href = "/kontakt"; }}
             className="bg-gradient-amber text-[#0A264A] font-bold px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
           >
             {ctaLabel}

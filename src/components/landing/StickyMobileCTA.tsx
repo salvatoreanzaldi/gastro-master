@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const StickyMobileCTA = () => {
   const { t } = useLanguage();
   const scrollToForm = () => {
-    document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
+    window.location.href = "/kontakt";
   };
 
   return (

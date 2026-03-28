@@ -30,7 +30,7 @@ const TransaktionsUmlageSection = () => {
   const totalFees = Math.round(paypalFee + stripeFee);
 
   const scrollToForm = () => {
-    document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
+    window.location.href = "/kontakt";
   };
 
   return (

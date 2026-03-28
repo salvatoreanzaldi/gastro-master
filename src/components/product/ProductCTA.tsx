@@ -23,7 +23,7 @@ const ProductCTA = ({ headline, sub, buttonLabel }: ProductCTAProps) => (
           {sub}
         </p>
         <button
-          onClick={() => { window.location.href = "/#kontakt"; }}
+          onClick={() => { window.location.href = "/kontakt"; }}
           className="bg-[#0A264A] text-white font-bold px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 hover:bg-[#0A264A]/90 transition-colors shadow-xl shadow-[#0A264A]/25"
         >
           {buttonLabel}

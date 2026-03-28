@@ -16,6 +16,8 @@ const KassePage                  = lazy(() => import("@/pages/KassePage"));
 const TransaktionsumlagePage     = lazy(() => import("@/pages/TransaktionsumlagePage"));
 const Impressum                  = lazy(() => import("@/pages/Impressum"));
 const Datenschutz                = lazy(() => import("@/pages/Datenschutz"));
+const AGB                        = lazy(() => import("@/pages/AGB"));
+const Kontakt                    = lazy(() => import("@/pages/Kontakt"));
 const LieferserviceGruendenPage  = lazy(() => import("@/pages/LieferserviceGruendenPage"));
 const FranchisePage              = lazy(() => import("@/pages/FranchisePage"));
 const RestaurantPage             = lazy(() => import("@/pages/RestaurantPage"));
@@ -48,6 +50,8 @@ const App = () => (
               <Route path="/loesungen/cafe-baeckerei"    element={<CafeBaeckereiPage />} />
               <Route path="/impressum"                   element={<Impressum />} />
               <Route path="/datenschutz"                 element={<Datenschutz />} />
+              <Route path="/agb"                         element={<AGB />} />
+              <Route path="/kontakt"                     element={<Kontakt />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

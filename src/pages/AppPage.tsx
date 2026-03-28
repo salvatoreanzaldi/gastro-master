@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from "framer-motion";
 import {
   ArrowRight, Plus, Minus, CheckCircle2,
-  Bell, Star, RefreshCw, Users, ChevronLeft, ChevronRight,
-  CreditCard, MapPin, Smartphone,
+  Bell, Star, RefreshCw, Users,
+  CreditCard, MapPin, Smartphone, Palette, type LucideIcon,
 } from "lucide-react";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
@@ -11,18 +11,13 @@ import CalculatorSection from "@/components/landing/CalculatorSection";
 import TargetGroupSection from "@/components/landing/TargetGroupSection";
 
 // ─── Assets ──────────────────────────────────────────────────────────────────
-import takeLogoImg   from "@/assets/logo-take.png";
-import takeLogin     from "@/assets/take-benutzerkonto.jpeg";
-import takeOrder     from "@/assets/take-bestellart.jpeg";
-import takeBranches  from "@/assets/take-filialen.jpeg";
-import takeMenu      from "@/assets/take-menu.jpeg";
-import takeSplash    from "@/assets/take-startbild.jpeg";
 import iosIcon          from "@/assets/IOS 26 icon.png";
 import androidIcon      from "@/assets/Android Icon.png";
-import heroGastroMaster from "@/assets/Hero - Gastro Master.PNG";
-import heroEtManus      from "@/assets/Hero - Et Manus.PNG";
-import heroDT           from "@/assets/Hero - DT.PNG";
-import heroBaeckerei    from "@/assets/Hero - Bäckerei Zimmer.PNG";
+import phone1 from "@/assets/1 - Mock Up Small.png";
+import phone2 from "@/assets/2 - Mock Up - Medium.png";
+import phone3 from "@/assets/3 - Mock Up - Large.png";
+import phone4 from "@/assets/4 - Mock Up Medium.png";
+import phone5 from "@/assets/5 - Mock Up Small.png";
 import logoKojo      from "@/assets/logo-kojo-sushi.png";
 import logoIlSorriso from "@/assets/logo-il-sorriso.png";
 import logoBurger    from "@/assets/logo-burger-brothers.png";
@@ -36,10 +31,21 @@ import mockLogin     from "@/assets/Mock Up - Registrierung.png";
 import mockPush      from "@/assets/Mock Up - Push.png";
 import mockZahlung   from "@/assets/Mock Up - Zahlung.png";
 import mockAppStore  from "@/assets/Mock Up - App Store.png";
+import mockBranding  from "@/assets/Mock Up - Branding Hero.png";
 import payGoogle     from "@/assets/pay-google.png";
 import payVisa       from "@/assets/pay-visa.png";
 import payMastercard from "@/assets/pay-mastercard.png";
 import payKlarna     from "@/assets/pay-klarna.png";
+import appVideo          from "@/assets/App Werbe Video.mp4";
+import iconAppStore      from "@/assets/Icon - Apple App Store.png";
+import iconGooglePlay    from "@/assets/Icon - Google Play Store.png";
+import socialInstagram from "@/assets/Icon - Instagram.png";
+import socialFacebook  from "@/assets/Icon - Facebook.png";
+import socialTikTok    from "@/assets/Icon - TikTok.png";
+import socialYoutube   from "@/assets/Icon - Youtube.png";
+import teamReneImg      from "@/assets/ceo-rene-ebert.png";
+import teamSalvatoreImg from "@/assets/team-salvatore-anzaldi.png";
+import teamAndrejImg    from "@/assets/team-andrej-krutsch.png";
 
 // ─── FAQ ─────────────────────────────────────────────────────────────────────
 const faqs = [
@@ -49,15 +55,15 @@ const faqs = [
   },
   {
     q: "Was kostet eine eigene Gastro-App?",
-    a: "Die Gastro Master App inklusive Webshop kostet 150 € pro Monat (netto). Darin enthalten sind App-Hosting, App Store-Verwaltung, laufende Updates und Support. Es gibt keine Provision pro Bestellung – nur den festen Monatsbeitrag. Den Webshop ohne App gibt es bereits ab 79 € / Monat.",
+    a: "Die Gastro Master App inklusive Webshop kostet 149 € pro Monat (netto). Darin enthalten sind App-Hosting, App Store-Verwaltung, laufende Updates und Support. Es gibt keine Provision pro Bestellung – nur den festen Monatsbeitrag. Den Webshop ohne App gibt es bereits ab 79 € / Monat.",
   },
   {
     q: "Läuft die App unter meinem eigenen Namen im App Store?",
-    a: "Ja, absolut. Deine App wird unter deinem Betriebsnamen, mit deinem Logo und deinen Farben im Apple App Store und Google Play Store veröffentlicht. Kein Gastro Master-Branding ist für deine Kunden sichtbar. Das nennt sich White-Label-App.",
+    a: "Ja, absolut. Deine App wird unter deinem Betriebsnamen, mit deinem Logo und deinen Farben im Apple App Store und Google Play Store veröffentlicht. Kein Gastro Master-Branding ist für deine Kunden sichtbar.",
   },
   {
     q: "Kann ich die App auch für mehrere Standorte nutzen?",
-    a: "Ja. Die Gastro Master App ist für Einzelbetriebe und Franchise-Konzepte mit mehreren Standorten geeignet. Kunden wählen direkt in der App ihren Standort aus und bestellen dort. TAKE – The Good Food betreibt 4 Standorte in Düsseldorf und Mönchengladbach – alle über eine einzige eigenbrandete App.",
+    a: "Ja. Die Gastro Master App ist für Einzelbetriebe und Franchise-Konzepte mit mehreren Standorten geeignet. Kunden wählen direkt in der App ihren Standort aus und bestellen dort. Die Plattform ist auf bis zu 100 Standorte ausgelegt – viele unserer Kunden betreiben bereits 10 oder mehr Filialen über eine einzige eigenbrandete App.",
   },
   {
     q: "Gibt es Push Notifications und ein Kundenbindungsprogramm?",
@@ -199,71 +205,75 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
   );
 };
 
-// ─── Hero Phone Spread (Apple-Style) ─────────────────────────────────────────
-const heroPhones = [
-  { img: heroGastroMaster, alt: "Gastro Master App" },
-  { img: heroEtManus,      alt: "Et Manus – Burger & Hot Dog App" },
-  { img: takeSplash,       alt: "TAKE – The Good Food App" },
-  { img: heroDT,           alt: "D&T Restaurants App" },
-  { img: heroBaeckerei,    alt: "Bäckerei Zimmer App" },
+// ─── Hero Phone Spread (Scroll-driven) ───────────────────────────────────────
+const heroPhoneData = [
+  { src: phone1, alt: "Gastro Master App",         targetX: -330, targetScale: 0.80, zIndex: 1 },
+  { src: phone2, alt: "Et Manus Burger App",        targetX: -165, targetScale: 0.90, zIndex: 3 },
+  { src: phone3, alt: "TAKE – The Good Food App",   targetX:    0, targetScale: 1.00, zIndex: 5 },
+  { src: phone4, alt: "D&T Restaurants App",        targetX:  165, targetScale: 0.90, zIndex: 3 },
+  { src: phone5, alt: "Bäckerei Zimmer App",        targetX:  330, targetScale: 0.80, zIndex: 1 },
 ];
 
-const phoneSpread = [
-  { x: -370, scale: 0.80, zIndex: 1 },
-  { x: -185, scale: 0.90, zIndex: 3 },
-  { x:    0, scale: 1.00, zIndex: 5 },
-  { x:  185, scale: 0.90, zIndex: 3 },
-  { x:  370, scale: 0.80, zIndex: 1 },
-];
+function PhoneScrollItem({
+  src, alt, targetX, targetScale, zIndex, spread,
+}: {
+  src: string; alt: string; targetX: number; targetScale: number; zIndex: number;
+  spread: MotionValue<number>;
+}) {
+  const x     = useTransform(spread, [0, 250], [targetX * 0.55, targetX]);
+  const scale = useTransform(spread, [0, 250], [targetScale * 0.92, targetScale]);
+  return (
+    <motion.div
+      style={{ x, scale, zIndex, position: "absolute" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.9, delay: 0.3 }}
+    >
+      <img
+        src={src}
+        alt={alt}
+        className="w-[190px] md:w-[220px] lg:w-[260px] object-contain drop-shadow-2xl"
+        loading="eager"
+      />
+    </motion.div>
+  );
+}
 
-const HeroPhoneSpread = () => (
-  <div className="relative h-[420px] md:h-[480px] w-full flex items-center justify-center overflow-visible">
-    {/* Glow beneath center phone */}
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[480px] bg-cyan-brand/12 blur-[90px] rounded-full pointer-events-none z-0" />
-    {heroPhones.map((phone, i) => (
-      <motion.div
-        key={i}
-        initial={{ x: phoneSpread[i].x * 0.04, scale: 0.76, opacity: 0 }}
-        animate={{ x: phoneSpread[i].x, scale: phoneSpread[i].scale, opacity: 1 }}
-        transition={{ delay: 0.5, duration: 2.4, ease: [0.25, 1, 0.5, 1] }}
-        style={{ zIndex: phoneSpread[i].zIndex, position: "absolute" }}
-      >
-        <div className="w-[148px] md:w-[168px] lg:w-[190px] rounded-[1rem] overflow-hidden border-[3px] border-white/18 shadow-2xl shadow-black/70 aspect-[9/19.5]">
-          <img
-            src={phone.img}
-            alt={phone.alt}
-            className="w-full h-full object-cover object-top"
-            loading="eager"
-          />
-        </div>
-      </motion.div>
-    ))}
-  </div>
-);
+function HeroPhoneSpread() {
+  const { scrollY } = useScroll();
+  return (
+    <div className="relative h-[420px] md:h-[480px] w-full flex items-center justify-center overflow-visible">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[480px] bg-cyan-brand/12 blur-[90px] rounded-full pointer-events-none z-0" />
+      {heroPhoneData.map((p, i) => (
+        <PhoneScrollItem key={i} spread={scrollY} {...p} />
+      ))}
+    </div>
+  );
+}
 
 // ─── Take Screenshots (TAKE Case Study) ──────────────────────────────────────
-const takeSlides = [
-  { img: takeSplash,   alt: "TAKE App – Splash Screen" },
-  { img: takeLogin,    alt: "TAKE App – Benutzerkonto" },
-  { img: takeOrder,    alt: "TAKE App – Bestellart wählen" },
-  { img: takeBranches, alt: "TAKE App – 4 Standorte" },
-  { img: takeMenu,     alt: "TAKE App – Speisekarte" },
-];
 
 // ─── Feature Cards with Screenshots ──────────────────────────────────────────
 const featureCards: {
   img: string | null;
   imgAlt?: string;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: LucideIcon;
   title: string;
   text: string;
 }[] = [
   {
-    img: mockMenu,
-    imgAlt: "Gastro Master App – Dynamische Speisekarte",
-    icon: RefreshCw,
-    title: "Dynamische Speisekarte",
-    text: "Preise, Gerichte und Verfügbarkeiten in Echtzeit ändern – kein Entwickler, kein Ticket, kein Warten.",
+    img: mockPush,
+    imgAlt: "Gastro Master App – Push Notifications",
+    icon: Bell,
+    title: "Push Notifications",
+    text: "Erinnere deine Kunden an Angebote, neue Gerichte und Aktionen – direkt auf ihr Smartphone. Kostenlos, in Echtzeit.",
+  },
+  {
+    img: mockBranding,
+    imgAlt: "Gastro Master App – Eigenes Branding, Logo und Farben",
+    icon: Palette,
+    title: "100 % Dein Branding",
+    text: "Dein Logo, deine Farben, dein Name – die App sieht aus wie deine Marke. Kein fremdes Logo, kein Fremdbranding. Deine Kunden sehen nur dich.",
   },
   {
     img: mockLieferart,
@@ -280,18 +290,18 @@ const featureCards: {
     text: "Alle Filialen in einer App. Kunden wählen ihren Standort – du steuerst alles zentral.",
   },
   {
+    img: mockMenu,
+    imgAlt: "Gastro Master App – Dynamische Speisekarte",
+    icon: RefreshCw,
+    title: "Dynamische Speisekarte",
+    text: "Preise, Gerichte und Verfügbarkeiten in Echtzeit ändern – kein Entwickler, kein Ticket, kein Warten.",
+  },
+  {
     img: mockLogin,
     imgAlt: "Gastro Master App – Kunden-Login & Registrierung",
     icon: Star,
     title: "Kunden-Login & Treue",
     text: "Bestellhistorie, Punkte sammeln, Prämien einlösen – direkt in der App. Stammkunden kommen öfter.",
-  },
-  {
-    img: mockPush,
-    imgAlt: "Gastro Master App – Push Notifications",
-    icon: Bell,
-    title: "Push Notifications",
-    text: "Erinnere deine Kunden an Angebote, neue Gerichte und Aktionen – direkt auf ihr Smartphone. Kostenlos, in Echtzeit.",
   },
   {
     img: mockZahlung,
@@ -307,12 +317,6 @@ const featureCards: {
     title: "Deine App im App Store",
     text: "Deine App erscheint unter deinem Namen im Apple App Store und Google Play Store – vollständig eigenes Branding, 0 % Gastro Master sichtbar für deine Kunden.",
   },
-];
-
-const featurePills = [
-  { icon: Bell,       label: "Push Notifications", iosAndroid: false },
-  { icon: CreditCard, label: "Online-Bezahlung",   iosAndroid: false },
-  { icon: null,       label: "iOS & Android",      iosAndroid: true  },
 ];
 
 // ─── Testimonials ─────────────────────────────────────────────────────────────
@@ -331,6 +335,233 @@ const steps = [
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
+const appTeamMembers = [
+  { img: teamReneImg,      name: "René Ebert",       role: "Gründer & Geschäftsführer" },
+  { img: teamSalvatoreImg, name: "Salvatore Anzaldi", role: "Head of Sales" },
+  { img: teamAndrejImg,    name: "Andrej Krutsch",    role: "Head of Operations" },
+];
+
+const AppTeamCTA = () => {
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setCurrent(c => (c + 1) % appTeamMembers.length), 4000);
+    return () => clearInterval(t);
+  }, []);
+  const member = appTeamMembers[current];
+  return (
+    <section className="bg-[#F0F4F8] dark:bg-[#060e1a] px-5 md:px-8 lg:px-16 py-20 md:py-28">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="bg-white dark:bg-[#0d1f35] rounded-3xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/40 grid lg:grid-cols-2"
+        >
+          {/* Left: Text */}
+          <div className="p-10 md:p-14 flex flex-col justify-center">
+            <span className="bg-[#0A264A]/[0.07] dark:bg-white/10 text-[#0A264A] dark:text-white text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full inline-block mb-8 w-fit">
+              Jetzt durchstarten
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight mb-6">
+              Buche jetzt dein<br />kostenloses Beratungsgespräch.
+            </h2>
+            <p className="font-bold text-[#0A264A] dark:text-white text-sm mb-3">Das erwartet dich:</p>
+            <p className="text-[#0A264A]/60 dark:text-white/55 text-base leading-relaxed mb-5">
+              In einem kostenlosen Erstgespräch entwickelt einer unserer App-Experten ein individuelles Konzept für deine eigene Bestell-App – mit deinem Branding, deiner Speisekarte und 0 % Provision. Unverbindlich und komplett kostenlos.
+            </p>
+            <p className="text-[#0A264A]/40 dark:text-white/35 text-sm leading-relaxed mb-4">
+              Deine App kann bereits in 2–3 Wochen live im Apple App Store und Google Play Store sein. Keine Programmierkenntnisse nötig – wir übernehmen alles.
+            </p>
+            {/* Language pills */}
+            <div className="flex flex-wrap gap-2 mb-10">
+              {[
+                { label: "Deutsch",       flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
+                { label: "Englisch",      flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
+                { label: "Italienisch",   flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
+                { label: "Persisch",      flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
+                { label: "Russisch",      flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
+                { label: "Singhalesisch", flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+              ].map((lang, i) => (
+                <motion.div
+                  key={lang.label}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.05 + i * 0.06, duration: 0.3, ease: "easeOut" }}
+                  whileHover={{ scale: 1.08, y: -2 }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${lang.color}`}
+                >
+                  <span className="text-lg leading-none">{lang.flag}</span>
+                  {lang.label}
+                </motion.div>
+              ))}
+            </div>
+            <motion.button
+              onClick={() => { window.location.href = "/kontakt"; }}
+              whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2 }}
+              className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group w-fit"
+            >
+              Kostenlose Beratung anfragen
+              <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
+            </motion.button>
+          </div>
+
+          {/* Right: Team Slideshow */}
+          <div className="relative min-h-[380px] lg:min-h-auto overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={current}
+                src={member.img}
+                alt={member.name}
+                initial={{ opacity: 0, scale: 1.04 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+              />
+            </AnimatePresence>
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-8 py-7">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <p className="text-white font-bold text-lg leading-tight">{member.name}</p>
+                  <p className="text-white/70 text-sm">{member.role}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <div className="absolute top-5 right-5 flex gap-2">
+              {appTeamMembers.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  className={`rounded-full transition-all duration-300 ${
+                    i === current ? "w-5 h-2 bg-white" : "w-2 h-2 bg-white/40 hover:bg-white/70"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Video Section (iPhone Mockup + Play Button) ─────────────────────────────
+const VideoSection = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+
+  const toggle = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play();
+      setPlaying(true);
+    } else {
+      v.pause();
+      setPlaying(false);
+    }
+  };
+
+  return (
+    <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-16 md:py-24">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
+
+          {/* iPhone Mockup with Video */}
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+            className="flex justify-center"
+          >
+            {/* iPhone frame */}
+            <div className="relative w-[260px] md:w-[300px]">
+              {/* Outer shell */}
+              <div className="relative rounded-[44px] bg-[#1a1a1a] p-[10px] shadow-[0_40px_100px_rgba(0,0,0,0.45),inset_0_0_0_1px_rgba(255,255,255,0.12)]">
+                {/* Side button highlights */}
+                <div className="absolute -right-[3px] top-[100px] w-[3px] h-[40px] bg-[#2a2a2a] rounded-r-sm" />
+                <div className="absolute -left-[3px] top-[90px] w-[3px] h-[32px] bg-[#2a2a2a] rounded-l-sm" />
+                <div className="absolute -left-[3px] top-[134px] w-[3px] h-[32px] bg-[#2a2a2a] rounded-l-sm" />
+
+                {/* Screen bezel */}
+                <div className="rounded-[36px] overflow-hidden bg-black relative aspect-[9/19.5]">
+                  {/* Dynamic Island */}
+                  <div className="absolute top-3 left-1/2 -translate-x-1/2 w-[88px] h-[28px] bg-black rounded-full z-20 flex items-center justify-center">
+                    <div className="w-3 h-3 rounded-full bg-[#1a1a1a] border border-[#2a2a2a]" />
+                  </div>
+
+                  {/* Video */}
+                  <video
+                    ref={videoRef}
+                    src={appVideo}
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                    onEnded={() => setPlaying(false)}
+                  />
+
+                  {/* Play/Pause overlay */}
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center z-10 cursor-pointer transition-all duration-300 ${playing ? "bg-transparent opacity-0 hover:opacity-100" : "bg-black/40"}`}
+                    onClick={toggle}
+                  >
+                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center shadow-xl">
+                      {playing ? (
+                        <svg className="w-6 h-6 text-white fill-white" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                      ) : (
+                        <svg className="w-6 h-6 text-white fill-white ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Glow below phone */}
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-12 bg-cyan-brand/20 blur-2xl rounded-full pointer-events-none" />
+            </div>
+          </motion.div>
+
+          {/* Text */}
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Deine App in Aktion</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-5">
+              Sieh deine App in&nbsp;Aktion.
+            </h2>
+            <p className="text-[#0A264A]/55 dark:text-white/50 text-lg leading-relaxed mb-8">
+              Über 700 Gastronomen in Deutschland nutzen bereits ihre eigene White-Label Bestell-App – mit eigenem Logo, eigenem Branding und 0&nbsp;% Provision. Sieh selbst, wie einfach und überzeugend eine eigene Bestell-App für deine Gäste ist.
+            </p>
+            <motion.button
+              onClick={() => { window.location.href = "/kontakt"; }}
+              whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2 }}
+              className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group"
+            >
+              Kostenlose Beratung
+              <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
+            </motion.button>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const AppPage = () => {
   useEffect(() => {
     document.title = "Eigene Bestell-App für die Gastronomie – 0 % Provision | Gastro Master";
@@ -368,7 +599,7 @@ const AppPage = () => {
         </div>
 
         {/* ── 5 iPhone Mockups – full width ── */}
-        <div className="relative z-10 w-full">
+        <div className="relative z-10 w-full mt-6 md:mt-8">
           <HeroPhoneSpread />
         </div>
 
@@ -377,14 +608,14 @@ const AppPage = () => {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.8, duration: 0.9, ease: [0.25, 1, 0.5, 1] }}
-          className="max-w-2xl mx-auto px-5 text-center relative z-10 pt-2 pb-4 flex flex-col items-center gap-6"
+          className="max-w-2xl mx-auto px-5 text-center relative z-10 pt-8 md:pt-10 pb-4 flex flex-col items-center gap-6"
         >
           <p className="text-lg md:text-xl text-white/60 leading-relaxed">
             Über 700 Gastronomen bestellen bereits über ihre eigene App – inklusive iOS & Android App, Webshop und eigenem Branding.
           </p>
 
           <motion.button
-            onClick={() => { window.location.href = "/#kontakt"; }}
+            onClick={() => { window.location.href = "/kontakt"; }}
             whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
             whileTap={{ scale: 0.97 }}
             transition={{ duration: 0.2 }}
@@ -440,11 +671,159 @@ const AppPage = () => {
         </div>
       </section>
 
-      {/* ── S3: VERGLEICH ───────────────────────────────────────── */}
-      <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 py-12 md:py-16">
-        <div className="max-w-6xl mx-auto">
+      {/* ── S3: VIDEO ───────────────────────────────────────────── */}
+      <VideoSection />
 
-          {/* Headline */}
+      {/* ── S4: FEATURES ────────────────────────────────────────── */}
+      <section className="bg-white dark:bg-[#111827] px-5 md:px-8 lg:px-16 pt-12 md:pt-16 pb-8 md:pb-10">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-8 md:mb-10 max-w-2xl"
+          >
+            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Funktionsumfang</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-5">
+              Was deine Gastro Master Bestell-App kann.
+            </h2>
+            <p className="text-[#0A264A]/55 dark:text-white/50 text-lg leading-relaxed">
+              Deine App – mit deinem Namen, deinem Branding und den Funktionen, die Lieferdienste und Restaurants im Alltag wirklich brauchen.
+            </p>
+          </motion.div>
+
+          {/* 8 Feature Cards */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-7">
+            {featureCards.map((f, i) => (
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.07, duration: 0.5 }}
+                className="group bg-[#0A264A]/[0.04] dark:bg-[#1f2937] border border-[#0A264A]/10 dark:border-white/[0.08] rounded-2xl overflow-hidden hover:border-cyan-brand/30 transition-all duration-300"
+              >
+                {f.img ? (
+                  <div className="aspect-[9/14] overflow-hidden bg-white dark:bg-black">
+                    <img
+                      src={f.img}
+                      alt={f.imgAlt}
+                      className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-[9/14] flex items-center justify-center bg-cyan-brand/10 dark:bg-cyan-brand/5">
+                    <f.icon className="w-12 h-12 text-cyan-brand opacity-60" strokeWidth={1.5} />
+                  </div>
+                )}
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <f.icon className="w-4 h-4 text-cyan-brand flex-shrink-0" strokeWidth={2} />
+                    <h3 className="text-[#0A264A] dark:text-white font-bold text-sm leading-snug">{f.title}</h3>
+                  </div>
+                  <p className="text-[#0A264A]/55 dark:text-white/45 text-sm leading-relaxed">{f.text}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── S5: DEMO ────────────────────────────────────────────── */}
+      <section className="bg-[#F0F4F8] dark:bg-[#111827] border-y border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-10 md:py-14">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
+            <div className="text-center md:text-left">
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">Demo verfügbar</span>
+              <h2 className="text-2xl md:text-3xl font-black text-[#0A264A] dark:text-white leading-tight mb-2">
+                Erlebe die App selbst – einfach herunterladen.
+              </h2>
+              <p className="text-[#0A264A]/55 dark:text-white/50 text-base leading-relaxed max-w-xl">
+                Unsere Demo-App ist im Apple App Store und Google Play Store verfügbar. Lade sie herunter und erlebe die Bestellerfahrung deiner zukünftigen Kunden – direkt auf deinem Smartphone.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 flex-shrink-0">
+              <a
+                href="https://apps.apple.com/us/app/gastro-master-app/id1459431720"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:scale-105 transition-transform duration-200"
+              >
+                <img src={iconAppStore} alt="Download im App Store" className="h-14 object-contain" />
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.epitglobal.gastromasterapp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:scale-105 transition-transform duration-200"
+              >
+                <img src={iconGooglePlay} alt="Jetzt bei Google Play" className="h-14 object-contain" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── S6: SOCIAL MEDIA ─────────────────────────────────────── */}
+      <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 py-14 md:py-20">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16"
+          >
+            {/* Text */}
+            <div className="flex-1">
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4 block">Social Media Integration</span>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white leading-tight mb-4">
+                Deine Social-Media-Kanäle direkt in deiner App.
+              </h2>
+              <p className="text-white/60 text-base md:text-lg leading-relaxed max-w-xl">
+                Verbinde Instagram, Facebook und TikTok mit deiner eigenen Bestell-App – und bleib mit deinen Gästen in Kontakt, auch nach der Bestellung. Mehr Reichweite, mehr Stammkunden, mehr Umsatz: Wer dir folgt, bestellt wieder. Eine starke Social-Media-Präsenz erhöht nachweislich die Wiederbestellrate und stärkt deine Marke langfristig.
+              </p>
+            </div>
+
+            {/* Icons 2×2 Grid */}
+            <div className="grid grid-cols-2 gap-5 flex-shrink-0">
+              {[
+                { src: socialInstagram, alt: "Instagram", label: "Instagram" },
+                { src: socialFacebook,  alt: "Facebook",  label: "Facebook"  },
+                { src: socialTikTok,    alt: "TikTok",    label: "TikTok"    },
+                { src: socialYoutube,   alt: "YouTube",   label: "YouTube"   },
+              ].map((s, i) => (
+                <motion.div
+                  key={s.alt}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.08 + i * 0.08, duration: 0.45 }}
+                  whileHover={{ scale: 1.1, y: -3 }}
+                  className="flex flex-col items-center gap-2 group cursor-default"
+                >
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-white/20 blur-2xl scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full" />
+                    <img
+                      src={s.src}
+                      alt={s.alt}
+                      className="relative w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
+                    />
+                  </div>
+                  <span className="text-white/50 text-xs font-medium group-hover:text-white/85 transition-colors duration-200">{s.label}</span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── S7: TARGET GROUP ────────────────────────────────────── */}
+      <TargetGroupSection />
+
+      {/* ── S8: VERGLEICH ───────────────────────────────────────── */}
+      <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-12 md:py-16">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -452,21 +831,18 @@ const AppPage = () => {
             className="text-center mb-8 md:mb-10"
           >
             <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Vergleich</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight">
               Alle Vorteile auf einen Blick.
             </h2>
-            <p className="text-white/45 mt-5 text-lg leading-relaxed max-w-2xl mx-auto">
+            <p className="text-[#0A264A]/55 dark:text-white/45 mt-5 text-lg leading-relaxed max-w-2xl mx-auto">
               Wer über Lieferando, Wolt oder Uber Eats verkauft, zahlt bis zu 30 % Provision – jeden Monat, automatisch, ohne Verhandlung. Mit Gastro Master behältst du 100 % deines Umsatzes.
             </p>
           </motion.div>
 
-          {/* Comparison Cards */}
           <div className="grid md:grid-cols-2 gap-5">
-
-            {/* LEFT – Andere Plattformen */}
             <GlowCard
               glowRgb="239,68,68"
-              className="rounded-3xl border border-red-500/20 bg-gradient-to-br from-[#1a0a0a]/80 to-[#0d0808]/60 backdrop-blur-xl p-6 md:p-8"
+              className="rounded-3xl border border-red-400/40 bg-gradient-to-br from-red-100 to-red-50 dark:from-[#1a0a0a]/80 dark:to-[#0d0808]/60 backdrop-blur-xl p-6 md:p-8"
               motionProps={{
                 initial: { opacity: 0, x: -24 },
                 whileInView: { opacity: 1, x: 0 },
@@ -474,8 +850,8 @@ const AppPage = () => {
                 transition: { duration: 0.65, ease: [0.25, 0.1, 0.25, 1] },
               }}
             >
-              <div className="absolute -top-16 -left-16 w-48 h-48 bg-red-500/15 blur-[60px] rounded-full pointer-events-none" />
-              <h3 className="text-xl md:text-2xl font-black text-white mb-5 relative z-10">
+              <div className="absolute -top-16 -left-16 w-48 h-48 bg-red-500/10 dark:bg-red-500/15 blur-[60px] rounded-full pointer-events-none" />
+              <h3 className="text-xl md:text-2xl font-black text-[#0A264A] dark:text-white mb-5 relative z-10">
                 Andere Lieferplattformen
               </h3>
               <ul className="space-y-3 relative z-10">
@@ -495,18 +871,17 @@ const AppPage = () => {
                     className="flex items-start gap-3.5"
                   >
                     <span className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500/15 border border-red-500/30 flex items-center justify-center mt-0.5">
-                      <span className="text-red-400 text-xs font-black leading-none">✕</span>
+                      <span className="text-red-500 dark:text-red-400 text-xs font-black leading-none">✕</span>
                     </span>
-                    <span className="text-white/65 text-sm md:text-base leading-snug">{item}</span>
+                    <span className="text-[#0A264A]/70 dark:text-white/65 text-sm md:text-base leading-snug">{item}</span>
                   </motion.li>
                 ))}
               </ul>
             </GlowCard>
 
-            {/* RIGHT – Mit Gastro Master */}
             <GlowCard
               glowRgb="34,197,94"
-              className="rounded-3xl border border-emerald-500/25 bg-gradient-to-br from-[#071a10]/80 to-[#040f0a]/60 backdrop-blur-xl p-6 md:p-8"
+              className="rounded-3xl border border-emerald-400/40 bg-gradient-to-br from-emerald-100 to-emerald-50 dark:from-[#071a10]/80 dark:to-[#040f0a]/60 backdrop-blur-xl p-6 md:p-8"
               motionProps={{
                 initial: { opacity: 0, x: 24 },
                 whileInView: { opacity: 1, x: 0 },
@@ -514,8 +889,8 @@ const AppPage = () => {
                 transition: { duration: 0.65, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] },
               }}
             >
-              <div className="absolute -top-16 -right-16 w-48 h-48 bg-emerald-500/12 blur-[60px] rounded-full pointer-events-none" />
-              <h3 className="text-xl md:text-2xl font-black text-white mb-5 relative z-10">
+              <div className="absolute -top-16 -right-16 w-48 h-48 bg-emerald-500/10 dark:bg-emerald-500/12 blur-[60px] rounded-full pointer-events-none" />
+              <h3 className="text-xl md:text-2xl font-black text-[#0A264A] dark:text-white mb-5 relative z-10">
                 Mit Gastro Master
               </h3>
               <ul className="space-y-3 relative z-10">
@@ -535,9 +910,9 @@ const AppPage = () => {
                     className="flex items-start gap-3.5"
                   >
                     <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mt-0.5">
-                      <span className="text-emerald-400 text-xs font-black leading-none">✓</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 text-xs font-black leading-none">✓</span>
                     </span>
-                    <span className="text-white/65 text-sm md:text-base leading-snug">{item}</span>
+                    <span className="text-[#0A264A]/70 dark:text-white/65 text-sm md:text-base leading-snug">{item}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -546,13 +921,80 @@ const AppPage = () => {
         </div>
       </section>
 
+      {/* ── S9: CALCULATOR ──────────────────────────────────────── */}
       <CalculatorSection />
 
-      {/* ── PREISE ──────────────────────────────────────────────── */}
+      {/* ── S10: TESTIMONIALS ───────────────────────────────────── */}
+      <section className="bg-[#081628] px-5 md:px-8 lg:px-16 py-24 md:py-36">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16 md:mb-20"
+          >
+            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Social Proof</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
+              700+ Gastronomen, die bereits ihre eigene App betreiben.
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-5 mb-16">
+            {testimonials.map((t, i) => (
+              <motion.div
+                key={t.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-7"
+              >
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, j) => (
+                    <Star key={j} className="w-4 h-4 fill-[#FBA200] text-[#FBA200]" />
+                  ))}
+                </div>
+                <p className="text-white/70 text-base leading-relaxed mb-6 italic">"{t.quote}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-cyan-brand/20 border border-cyan-brand/30 flex items-center justify-center flex-shrink-0">
+                    <span className="text-cyan-brand text-xs font-black">{t.initials}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-semibold text-sm">{t.name}</p>
+                    <p className="text-white/40 text-xs">{t.restaurant}</p>
+                  </div>
+                  <img src={t.logo} alt={t.restaurant} className="h-6 object-contain opacity-50 flex-shrink-0" loading="lazy" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { value: "700+",       label: "aktive Gastro Master Kunden" },
+              { value: "0 %",        label: "Provision auf Direktbestellungen" },
+              { value: "2–3 Wo.",    label: "bis zur fertigen App im Store" },
+              { value: "149 € / Mo", label: "App + Webshop, netto" },
+            ].map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.07, duration: 0.5 }}
+                className="text-center bg-white/[0.03] border border-white/[0.06] rounded-2xl py-6 px-4"
+              >
+                <p className="text-2xl md:text-3xl font-black text-white mb-1.5 leading-none">{s.value}</p>
+                <p className="text-white/40 text-xs leading-snug">{s.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── S11: PREISE ─────────────────────────────────────────── */}
       <section className="bg-white dark:bg-[#111827] px-5 md:px-8 lg:px-16 py-12 md:py-16">
         <div className="max-w-6xl mx-auto">
-
-          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -568,26 +1010,23 @@ const AppPage = () => {
             </p>
           </motion.div>
 
-          {/* Haupt-Paket – volle Breite */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55 }}
-            className="rounded-2xl bg-[#0A264A] border border-cyan-brand/20 p-8 md:p-10 mb-5"
+            className="rounded-2xl bg-[#0A264A] border border-cyan-brand/20 p-8 md:p-10 mb-5 overflow-hidden"
           >
             <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-12">
-              {/* Preis */}
               <div className="md:w-64 flex-shrink-0">
                 <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">Hauptpaket</span>
                 <h3 className="text-white font-black text-2xl mb-3">App + Webshop</h3>
                 <div className="flex items-end gap-2">
-                  <span className="text-[#ED8400] font-black text-5xl leading-none">150 €</span>
+                  <span className="text-[#ED8400] font-black text-5xl leading-none">149 €</span>
                   <span className="text-white/40 text-sm mb-1">/ Monat (netto)</span>
                 </div>
               </div>
 
-              {/* Feature-Liste – einzelne Spalte */}
               <div className="flex-1">
                 <ul className="space-y-2.5">
                   {[
@@ -607,7 +1046,6 @@ const AppPage = () => {
                 </ul>
               </div>
 
-              {/* iOS & Android Icons – eigene Spalte, zentriert zwischen Features und Button */}
               <div className="flex-shrink-0 flex items-center gap-5">
                 {[
                   { src: iosIcon,     alt: "Apple App Store"   },
@@ -624,10 +1062,9 @@ const AppPage = () => {
                 ))}
               </div>
 
-              {/* CTA */}
               <div className="flex-shrink-0">
                 <motion.button
-                  onClick={() => { window.location.href = "/#kontakt"; }}
+                  onClick={() => { window.location.href = "/kontakt"; }}
                   whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ duration: 0.2 }}
@@ -639,10 +1076,7 @@ const AppPage = () => {
             </div>
           </motion.div>
 
-          {/* 3 Add-ons */}
           <div className="grid md:grid-cols-3 gap-5">
-
-            {/* Add-on 1: Website */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -667,7 +1101,6 @@ const AppPage = () => {
               </button>
             </motion.div>
 
-            {/* Add-on 2: Transaktionsumlage */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -680,11 +1113,10 @@ const AppPage = () => {
               <p className="text-[#0A264A]/55 dark:text-white/50 text-sm leading-relaxed mb-5 flex-1">
                 Die Transaktionsgebühren der Zahlungsanbieter trägt nicht du als Betreiber – sondern dein Kunde. Die Gebühr wird transparent beim Checkout ausgewiesen. Du erhältst deinen vollen Umsatz, ohne versteckte Kosten.
               </p>
-              {/* Payment Logos */}
               <div className="flex flex-wrap items-center gap-4 mb-5">
                 {[
-                  { src: payPaypal,     alt: "PayPal",      h: "h-9"  },
-                  { src: payApple,      alt: "Apple Pay",   h: "h-9"  },
+                  { src: payPaypal,     alt: "PayPal",      h: "h-12" },
+                  { src: payApple,      alt: "Apple Pay",   h: "h-12" },
                   { src: payGoogle,     alt: "Google Pay",  h: "h-7"  },
                   { src: payVisa,       alt: "Visa",        h: "h-7"  },
                   { src: payMastercard, alt: "Mastercard",  h: "h-7"  },
@@ -708,7 +1140,6 @@ const AppPage = () => {
               </button>
             </motion.div>
 
-            {/* Add-on 3: QR-Code Flyer */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -730,99 +1161,12 @@ const AppPage = () => {
               </p>
               <FlyerPriceList />
             </motion.div>
-
           </div>
         </div>
       </section>
 
-      {/* ── S4: FEATURES ────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-[#111827] px-5 md:px-8 lg:px-16 py-12 md:py-16">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-8 md:mb-10 max-w-2xl"
-          >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Funktionsumfang</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-5">
-              Was deine Gastro Master Bestell-App kann.
-            </h2>
-            <p className="text-[#0A264A]/55 dark:text-white/50 text-lg leading-relaxed">
-              Deine App – mit deinem Namen, deinem Branding und den Funktionen, die Lieferdienste und Restaurants im Alltag wirklich brauchen.
-            </p>
-          </motion.div>
-
-          {/* 7 Feature Cards */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-7">
-            {featureCards.map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07, duration: 0.5 }}
-                className="group bg-[#0A264A]/[0.04] dark:bg-[#1f2937] border border-[#0A264A]/10 dark:border-white/[0.08] rounded-2xl overflow-hidden hover:border-cyan-brand/30 transition-all duration-300"
-              >
-                {/* Screenshot oder Icon-Container */}
-                {f.img ? (
-                  <div className="aspect-[9/14] overflow-hidden bg-white dark:bg-black">
-                    <img
-                      src={f.img}
-                      alt={f.imgAlt}
-                      className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  </div>
-                ) : (
-                  <div className="aspect-[9/14] flex items-center justify-center bg-cyan-brand/10 dark:bg-cyan-brand/5">
-                    <f.icon className="w-12 h-12 text-cyan-brand opacity-60" strokeWidth={1.5} />
-                  </div>
-                )}
-                {/* Text */}
-                <div className="p-5">
-                  <div className="flex items-center gap-2 mb-2">
-                    <f.icon className="w-4 h-4 text-cyan-brand flex-shrink-0" strokeWidth={2} />
-                    <h3 className="text-[#0A264A] dark:text-white font-bold text-sm leading-snug">{f.title}</h3>
-                  </div>
-                  <p className="text-[#0A264A]/55 dark:text-white/45 text-sm leading-relaxed">{f.text}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Feature Pills */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-wrap gap-3 justify-center"
-          >
-            {featurePills.map(p => (
-              <div
-                key={p.label}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#0A264A]/[0.06] dark:bg-white/[0.07] border border-[#0A264A]/10 dark:border-white/10 text-[#0A264A]/70 dark:text-white/60 text-sm"
-              >
-                {p.iosAndroid ? (
-                  <>
-                    <img src={iosIcon}     alt="iOS"     className="w-3.5 h-3.5 object-contain" />
-                    <img src={androidIcon} alt="Android" className="w-3.5 h-3.5 object-contain" />
-                  </>
-                ) : (
-                  p.icon && <p.icon className="w-3.5 h-3.5 text-cyan-brand" strokeWidth={2} />
-                )}
-                {p.label}
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── TARGET GROUP ────────────────────────────────────────── */}
-      <TargetGroupSection />
-
-      {/* ── S5: HOW IT WORKS ────────────────────────────────────── */}
-      <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 py-24 md:py-36">
+      {/* ── S12: HOW IT WORKS ───────────────────────────────────── */}
+      <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-24 md:py-36">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -831,10 +1175,10 @@ const AppPage = () => {
             className="text-center mb-20 md:mb-28"
           >
             <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">So einfach geht's</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight">
               In 3 Schritten zu deiner eigenen Gastro-App.
             </h2>
-            <p className="text-white/45 mt-5 text-lg max-w-xl mx-auto leading-relaxed">
+            <p className="text-[#0A264A]/55 dark:text-white/45 mt-5 text-lg max-w-xl mx-auto leading-relaxed">
               Du musst kein Entwickler sein. Wir übernehmen alles – du gibst die Richtung vor.
             </p>
           </motion.div>
@@ -846,134 +1190,18 @@ const AppPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12, duration: 0.6 }}
-                className="relative"
+                className="relative group"
               >
-                <span className="text-[80px] md:text-[96px] font-black text-white/[0.05] leading-none block mb-5 select-none">{step.num}</span>
-                <div className="w-8 h-8 rounded-lg bg-cyan-brand/15 border border-cyan-brand/30 flex items-center justify-center mb-4 -mt-10 relative z-10">
-                  <span className="text-cyan-brand text-xs font-black">{parseInt(step.num)}</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-4 leading-snug">{step.title}</h3>
-                <p className="text-white/50 leading-relaxed text-base">{step.text}</p>
+                <span className="text-[96px] md:text-[112px] font-black leading-none block mb-3 select-none text-cyan-brand/25 group-hover:text-cyan-brand/60 transition-colors duration-300 group-hover:drop-shadow-[0_0_40px_rgba(0,125,207,0.7)]">{step.num}</span>
+                <h3 className="text-xl font-bold text-[#0A264A] dark:text-white mb-4 leading-snug -mt-4">{step.title}</h3>
+                <p className="text-[#0A264A]/60 dark:text-white/50 leading-relaxed text-base">{step.text}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── S6: TAKE CASE STUDY + TESTIMONIALS ──────────────────── */}
-      <section className="bg-[#081628] px-5 md:px-8 lg:px-16 py-24 md:py-36">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16 md:mb-20"
-          >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Social Proof</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
-              700+ Gastronomen, die bereits ihre eigene App betreiben.
-            </h2>
-          </motion.div>
-
-          {/* TAKE Case Study — Visual Story */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="bg-[#0A264A]/50 border border-white/[0.08] rounded-3xl p-8 md:p-12 mb-16"
-          >
-            {/* Logo + Headline */}
-            <div className="flex flex-col md:flex-row md:items-center gap-5 mb-8">
-              <img src={takeLogoImg} alt="TAKE – The Good Food Logo" className="h-10 object-contain" loading="lazy" />
-              <div>
-                <p className="text-white font-black text-xl md:text-2xl leading-tight">4 Standorte. Eine App. Komplett eigenes Branding.</p>
-              </div>
-            </div>
-
-            {/* Location Badges */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              {[
-                "📍 Düsseldorf – Flügelstraße",
-                "📍 Düsseldorf – Bolkerstraße",
-                "📍 MG – Waldnieler Str.",
-                "📍 MG – Wilhelm-Schiffer-Str.",
-              ].map(loc => (
-                <span key={loc} className="rounded-full bg-white/10 border border-white/10 px-3 py-1.5 text-white/70 text-sm">
-                  {loc}
-                </span>
-              ))}
-            </div>
-
-            {/* Horizontal Screenshot Scroll */}
-            <div className="overflow-x-auto pb-2">
-              <div className="flex gap-4 w-max">
-                {[takeSplash, takeLogin, takeOrder, takeBranches, takeMenu].map((img, i) => (
-                  <div key={i} className="w-[110px] md:w-[130px] flex-shrink-0 rounded-[1.8rem] overflow-hidden border-[4px] border-white/10 shadow-lg shadow-black/30 aspect-[9/19]">
-                    <img src={img} alt={`TAKE App Screenshot ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Testimonials 2x2 */}
-          <div className="grid md:grid-cols-2 gap-5 mb-16">
-            {testimonials.map((t, i) => (
-              <motion.div
-                key={t.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-7"
-              >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, j) => (
-                    <Star key={j} className="w-4 h-4 fill-[#FBA200] text-[#FBA200]" />
-                  ))}
-                </div>
-                <p className="text-white/70 text-base leading-relaxed mb-6 italic">"{t.quote}"</p>
-                <div className="flex items-center gap-3">
-                  {/* Initialen Avatar */}
-                  <div className="w-10 h-10 rounded-full bg-cyan-brand/20 border border-cyan-brand/30 flex items-center justify-center flex-shrink-0">
-                    <span className="text-cyan-brand text-xs font-black">{t.initials}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-semibold text-sm">{t.name}</p>
-                    <p className="text-white/40 text-xs">{t.restaurant}</p>
-                  </div>
-                  <img src={t.logo} alt={t.restaurant} className="h-6 object-contain opacity-50 flex-shrink-0" loading="lazy" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Trust Numbers */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { value: "700+",       label: "aktive Gastro Master Kunden" },
-              { value: "0 %",        label: "Provision auf Direktbestellungen" },
-              { value: "2–3 Wo.",    label: "bis zur fertigen App im Store" },
-              { value: "150 € / Mo", label: "App + Webshop, netto" },
-            ].map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07, duration: 0.5 }}
-                className="text-center bg-white/[0.03] border border-white/[0.06] rounded-2xl py-6 px-4"
-              >
-                <p className="text-2xl md:text-3xl font-black text-white mb-1.5 leading-none">{s.value}</p>
-                <p className="text-white/40 text-xs leading-snug">{s.label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── S7: FAQ ─────────────────────────────────────────────── */}
+      {/* ── S13: FAQ ────────────────────────────────────────────── */}
       <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 py-24 md:py-36">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-[1fr_2fr] gap-16 md:gap-24">
@@ -990,7 +1218,7 @@ const AppPage = () => {
                 Weitere Fragen? Ruf uns an oder schreib uns – wir antworten innerhalb von 24 Stunden.
               </p>
               <button
-                onClick={() => { window.location.href = "/#kontakt"; }}
+                onClick={() => { window.location.href = "/kontakt"; }}
                 className="mt-8 text-cyan-brand text-sm font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all"
               >
                 Direkt anfragen <ArrowRight className="w-4 h-4" />
@@ -1008,51 +1236,8 @@ const AppPage = () => {
         </div>
       </section>
 
-      {/* ── S8: FINAL CTA ───────────────────────────────────────── */}
-      <section className="bg-[#081628] px-5 md:px-8 lg:px-16 py-24 md:py-36 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0A264A] via-[#081628] to-[#020c1b] pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#007DCF]/8 blur-[150px] rounded-full pointer-events-none" />
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-          >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-6 block">Jetzt starten</span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.06] mb-6">
-              Bereit, endlich ohne<br className="hidden md:block" /> Provision zu verkaufen?
-            </h2>
-            <p className="text-white/50 text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
-              Mehr als 700 Gastronomen haben den Schritt gemacht. Deine eigene Bestell-App, im App Store unter deinem Namen, in 2–3 Wochen live.
-            </p>
-            <motion.button
-              onClick={() => { window.location.href = "/#kontakt"; }}
-              whileHover={{ scale: 1.05, boxShadow: "0 0 40px 12px rgba(237,132,0,0.5), 0 0 80px 20px rgba(237,132,0,0.2)" }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.2 }}
-              className="bg-[#ED8400] text-white font-black px-10 py-5 rounded-xl text-lg inline-flex items-center gap-3 shadow-xl shadow-[#ED8400]/30 group mb-8"
-            >
-              Jetzt kostenlose Demo anfragen
-              <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
-            </motion.button>
-            <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 mb-12">
-              {["Keine Langzeitbindung", "Keine Einrichtungsgebühr", "Persönliche Beratung auf Deutsch"].map(t => (
-                <span key={t} className="flex items-center gap-1.5 text-white/40 text-sm">
-                  <CheckCircle2 className="w-4 h-4 text-cyan-brand" strokeWidth={2} /> {t}
-                </span>
-              ))}
-            </div>
-            <p className="text-white/30 text-sm">
-              Du möchtest die App erst ausprobieren?{" "}
-              <a href="https://apps.apple.com/us/app/gastro-master-app/id1459431720" target="_blank" rel="noopener noreferrer" className="text-cyan-brand hover:text-cyan-brand/80 underline transition-colors">Demo-App im App Store</a>{" "}
-              oder{" "}
-              <a href="https://play.google.com/store/apps/details?id=com.epitglobal.gastromasterapp" target="_blank" rel="noopener noreferrer" className="text-cyan-brand hover:text-cyan-brand/80 underline transition-colors">Google Play Store</a>{" "}
-              kostenlos herunterladen.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      {/* ── S14: FINAL CTA ──────────────────────────────────────── */}
+      <AppTeamCTA />
 
       <Footer />
     </div>

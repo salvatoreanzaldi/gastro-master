@@ -246,7 +246,7 @@ export const translations = {
       plans: [
         { id: "beginner", name: "Beginner", tagline: "Erste Online-Präsenz", price: "49", duration: "7–10 Tage" },
         { id: "basic", name: "Basic", tagline: "Reiner Webshop", price: "79", duration: "10–14 Tage" },
-        { id: "standard", name: "Standard", tagline: "Webshop + App", price: "150", duration: "2–3 Wochen", popular: true },
+        { id: "standard", name: "Standard", tagline: "Webshop + App", price: "149", duration: "2–3 Wochen", popular: true },
         { id: "pro", name: "Pro", tagline: "Shop + App + Kasse", price: "219", duration: "2–3 Wochen" },
         { id: "enterprise", name: "Enterprise", tagline: "Franchise / Mehr-Standorte", price: "Auf Anfrage", duration: "Nach Projektumfang" },
       ],
@@ -597,7 +597,7 @@ export const translations = {
       plans: [
         { id: "beginner", name: "Beginner", tagline: "Your First Online Presence", price: "49", duration: "7–10 days" },
         { id: "basic", name: "Basic", tagline: "Online Shop Only", price: "79", duration: "10–14 days" },
-        { id: "standard", name: "Standard", tagline: "Shop + App", price: "150", duration: "2–3 weeks", popular: true },
+        { id: "standard", name: "Standard", tagline: "Shop + App", price: "149", duration: "2–3 weeks", popular: true },
         { id: "pro", name: "Pro", tagline: "Shop + App + POS", price: "219", duration: "2–3 weeks" },
         { id: "enterprise", name: "Enterprise", tagline: "Franchise / Multi-Location", price: "Custom", duration: "By project scope" },
       ],

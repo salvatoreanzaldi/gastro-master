@@ -118,9 +118,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                <Link to="/agb" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
                   {t.footer.agb}
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

@@ -18,7 +18,7 @@ const PickUpScreenSection = () => {
   }, []);
 
   const scrollToForm = () => {
-    document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
+    window.location.href = "/kontakt";
   };
 
   const featureItems = [

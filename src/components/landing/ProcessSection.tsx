@@ -7,7 +7,7 @@ const stepIcons = [MessageSquareText, CalendarCheck, UtensilsCrossed, Rocket];
 const ProcessSection = () => {
   const { t } = useLanguage();
   const scrollToForm = () => {
-    document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
+    window.location.href = "/kontakt";
   };
 
   return (

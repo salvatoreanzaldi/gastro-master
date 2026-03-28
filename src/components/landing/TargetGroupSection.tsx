@@ -173,7 +173,7 @@ const TargetGroupSection = () => {
   };
 
   const scrollToForm = () => {
-    document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
+    window.location.href = "/kontakt";
   };
 
   return (

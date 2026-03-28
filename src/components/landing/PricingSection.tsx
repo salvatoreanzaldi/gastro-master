@@ -79,7 +79,7 @@ const PricingSection = () => {
   const [showTable, setShowTable] = useState(false);
 
   const scrollToForm = () => {
-    document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
+    window.location.href = "/kontakt";
   };
 
   const packageFeaturesMap = t.pricing.packageFeatures as Record<string, readonly string[]>;

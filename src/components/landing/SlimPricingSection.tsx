@@ -3,16 +3,47 @@ import { useRef, useEffect, useState } from "react";
 import { RippleButton } from "@/components/ui/multi-type-ripple-buttons";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+// ── 3 Pakete (A/B-Test-Variante: Beginner + Pro ausgeblendet, neue Namen) ─────
+
+const SLIM_PLANS = [
+  {
+    id: "basic",
+    name: "Starter",
+    tagline: "Reiner Webshop",
+    priceMonthly: "79",
+    priceYearly: "69",
+    duration: "10–14 Tage",
+    popular: false,
+  },
+  {
+    id: "standard",
+    name: "Business",
+    tagline: "Webshop + App",
+    priceMonthly: "149",
+    priceYearly: "129",
+    duration: "2–3 Wochen",
+    popular: true,
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    tagline: "Franchise / Mehr-Standorte",
+    priceMonthly: null,
+    priceYearly: null,
+    duration: "Nach Projektumfang",
+    popular: false,
+  },
+] as const;
+
 // ── WebGL Shader ──────────────────────────────────────────────────────────────
 
-const ShaderCanvas = () => {
+const SlimShaderCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bgRef = useRef<[number, number, number]>([0.05, 0.08, 0.18]);
   const bgLocRef = useRef<WebGLUniformLocation | null>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const progRef = useRef<WebGLProgram | null>(null);
 
-  // Sync dark/light background color into the shader
   useEffect(() => {
     const update = () => {
       const isDark = document.documentElement.classList.contains("dark");
@@ -58,7 +89,6 @@ const ShaderCanvas = () => {
       }
       void main(){
         vec2 uv=gl_FragCoord.xy/iResolution.xy;
-        // Correct aspect ratio so circle stays round
         float aspect=iResolution.x/iResolution.y;
         uv.x=(uv.x-0.5)*aspect+0.5;
         float mask=0.;
@@ -121,7 +151,7 @@ const ShaderCanvas = () => {
 
 // ── Check icon ────────────────────────────────────────────────────────────────
 
-const CheckIcon = ({ dark }: { dark: boolean }) => (
+const SlimCheckIcon = ({ dark }: { dark: boolean }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
     className={dark ? "text-cyan-400" : "text-cyan-600"}>
@@ -131,19 +161,23 @@ const CheckIcon = ({ dark }: { dark: boolean }) => (
 
 // ── Card ──────────────────────────────────────────────────────────────────────
 
-interface GlassyCardProps {
-  name: string; tagline: string; price: string; features: string[];
+interface SlimCardProps {
+  name: string; tagline: string;
+  price: string | null; yearlyPrice: string | null;
+  isYearly: boolean;
+  features: string[];
   duration: string; popular?: boolean; isDark: boolean;
   onCta: () => void; ctaLabel: string; fromLabel: string;
   perMonthLabel: string; vatNote: string; durationLabel: string;
   onRequestLabel: string; index: number;
 }
 
-const GlassyCard = ({
-  name, tagline, price, features, duration, popular, isDark,
+const SlimCard = ({
+  name, tagline, price, yearlyPrice, isYearly, features, duration, popular, isDark,
   onCta, ctaLabel, fromLabel, perMonthLabel, vatNote, durationLabel, onRequestLabel, index
-}: GlassyCardProps) => {
-  const hasPrice = price !== "Auf Anfrage" && price !== "Custom Pricing" && price !== "Custom";
+}: SlimCardProps) => {
+  const displayPrice = isYearly && yearlyPrice ? yearlyPrice : price;
+  const hasPrice = displayPrice !== null;
 
   const cardBase = isDark
     ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10 hover:from-white/14 hover:border-white/20"
@@ -191,12 +225,32 @@ const GlassyCard = ({
       <div className="mb-5">
         {hasPrice ? (
           <>
-            <div className="flex items-baseline gap-1">
+            <div className="flex items-baseline gap-1.5">
               <span className={`text-xs ${textSecondary}`}>{fromLabel}</span>
-              <span className={`text-4xl font-black ${textPrimary}`}>{price}€</span>
+              <motion.span
+                key={displayPrice}
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                className={`text-4xl font-black ${textPrimary}`}
+              >
+                {displayPrice}€
+              </motion.span>
+              {isYearly && yearlyPrice && price && (
+                <span className={`text-sm line-through ${textMuted}`}>{price}€</span>
+              )}
               <span className={`text-xs ${textSecondary}`}>{perMonthLabel}</span>
             </div>
             <span className={`text-[10px] ${textMuted}`}>{vatNote}</span>
+            {isYearly && yearlyPrice ? (
+              <p className={`text-[10px] mt-1 ${textMuted}`}>
+                Monatlich abgerechnet · 12 Monate Laufzeit
+              </p>
+            ) : (
+              <p className={`text-[10px] mt-1 ${textMuted}`}>
+                3 Monate Kündigungsfrist
+              </p>
+            )}
           </>
         ) : (
           <span className={`text-xl font-bold ${textPrimary}`}>{onRequestLabel}</span>
@@ -208,7 +262,7 @@ const GlassyCard = ({
       <ul className="flex flex-col gap-2 mb-6 flex-1">
         {features.map((f) => (
           <li key={f} className={`flex items-start gap-2 text-sm ${isDark ? "text-white/80" : "text-gray-700"}`}>
-            <span className="mt-0.5 shrink-0"><CheckIcon dark={isDark} /></span>
+            <span className="mt-0.5 shrink-0"><SlimCheckIcon dark={isDark} /></span>
             {f}
           </li>
         ))}
@@ -232,11 +286,12 @@ const GlassyCard = ({
 
 // ── Section ───────────────────────────────────────────────────────────────────
 
-const GlassyPricingSection = () => {
+const SlimPricingSection = () => {
   const { t } = useLanguage();
   const [isDark, setIsDark] = useState(
     () => document.documentElement.classList.contains("dark")
   );
+  const [isYearly, setIsYearly] = useState(false);
 
   useEffect(() => {
     const obs = new MutationObserver(() => {
@@ -257,17 +312,19 @@ const GlassyPricingSection = () => {
   const subCol     = isDark ? "text-white/60" : "text-gray-500";
   const noteCol    = isDark ? "text-white/30" : "text-gray-400";
   const badgeCol   = isDark ? "text-cyan-400" : "text-cyan-600";
+  const textPrimary   = isDark ? "text-white"    : "text-gray-900";
+  const textSecondary = isDark ? "text-white/50" : "text-gray-500";
 
   return (
-    <section className={`section-padding relative overflow-hidden ${sectionBg}`}>
-      <ShaderCanvas />
+    <section className={`section-padding relative overflow-hidden ${sectionBg}`} id="preise-slim">
+      <SlimShaderCanvas />
 
       <div className="container-tight relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-6"
         >
           <span className={`text-sm font-semibold uppercase tracking-wider mb-3 block ${badgeCol}`}>
             Transparente Preise
@@ -280,21 +337,68 @@ const GlassyPricingSection = () => {
           </p>
         </motion.div>
 
-        <div className="flex flex-col lg:flex-row gap-4 items-stretch justify-center">
-          {t.pricing.plans.map((pkg, i) => {
-            const features = packageFeaturesMap[pkg.id] ?? [];
-            const hasPrice = pkg.price !== "Auf Anfrage" && pkg.price !== "Custom Pricing" && pkg.price !== "Custom";
+        {/* ── Billing Toggle ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="flex items-center justify-center gap-5 mb-8"
+        >
+          {/* Monatlich label */}
+          <div className="text-right">
+            <p className={`text-sm font-bold transition-colors duration-200 ${!isYearly ? textPrimary : textSecondary}`}>
+              Monatlich
+            </p>
+            <p className={`text-sm transition-colors duration-200 ${!isYearly ? textSecondary : isDark ? "text-white/25" : "text-gray-300"}`}>
+              3 Mon. Kündigungsfrist
+            </p>
+          </div>
+
+          {/* Toggle pill */}
+          <button
+            onClick={() => setIsYearly(!isYearly)}
+            aria-label="Abrechnungszeitraum wechseln"
+            className={`relative w-14 h-7 rounded-full transition-colors duration-300 flex-shrink-0 ${
+              isYearly ? "bg-cyan-500" : isDark ? "bg-white/20" : "bg-black/20"
+            }`}
+          >
+            <motion.span
+              className="absolute top-1 w-5 h-5 rounded-full bg-white shadow-md"
+              animate={{ left: isYearly ? 32 : 4 }}
+              transition={{ type: "spring", stiffness: 280, damping: 26 }}
+            />
+          </button>
+
+          {/* Jährlich label */}
+          <div className="text-left">
+            <p className={`text-sm font-bold transition-colors duration-200 ${isYearly ? textPrimary : textSecondary}`}>
+              Jährlich
+            </p>
+            <p className={`text-sm transition-colors duration-200 ${isYearly ? textSecondary : isDark ? "text-white/25" : "text-gray-300"}`}>
+              Monatliche Abrechnung
+            </p>
+          </div>
+        </motion.div>
+
+        {/* ── Cards ── */}
+        <div className="flex flex-col lg:flex-row gap-4 items-stretch justify-center max-w-4xl mx-auto">
+          {SLIM_PLANS.map((plan, i) => {
+            const features = packageFeaturesMap[plan.id] ?? [];
+            const hasPrice = plan.priceMonthly !== null;
             return (
-              <GlassyCard
-                key={pkg.id}
+              <SlimCard
+                key={plan.id}
                 index={i}
                 isDark={isDark}
-                name={pkg.name}
-                tagline={pkg.tagline}
-                price={pkg.price}
+                name={plan.name}
+                tagline={plan.tagline}
+                price={plan.priceMonthly}
+                yearlyPrice={plan.priceYearly}
+                isYearly={isYearly}
                 features={features as string[]}
-                duration={pkg.duration}
-                popular={!!pkg.popular}
+                duration={plan.duration}
+                popular={plan.popular}
                 onCta={scrollToForm}
                 ctaLabel={hasPrice ? t.pricing.ctaPrimary : t.pricing.ctaSecondary}
                 fromLabel={t.pricing.from}
@@ -320,4 +424,4 @@ const GlassyPricingSection = () => {
   );
 };
 
-export default GlassyPricingSection;
+export default SlimPricingSection;

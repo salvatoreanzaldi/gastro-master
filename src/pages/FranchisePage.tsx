@@ -33,7 +33,7 @@ const FranchisePage = () => (
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.5 }}
         >
           <button
-            onClick={() => { window.location.href = "/#kontakt"; }}
+            onClick={() => { window.location.href = "/kontakt"; }}
             className="bg-gradient-amber text-[#0A264A] font-bold px-10 py-5 rounded-xl text-lg inline-flex items-center gap-3 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
           >
             Kostenloses Beratungsgespräch
