@@ -259,7 +259,7 @@ const ProduktePage = () => {
               </p>
 
               <motion.div
-                whileHover={{ scale: 1.03, boxShadow: "0 0 32px 8px rgba(237,132,0,0.45)" }}
+                whileHover={{ scale: 1.03, boxShadow: "0 4px 18px 0px rgba(237,132,0,0.45)" }}
                 whileTap={{ scale: 0.97 }}
               >
                 <Link
@@ -503,7 +503,7 @@ const ProduktePage = () => {
                 In einem kostenlosen Beratungsgespräch analysieren wir gemeinsam deinen Betrieb und empfehlen die passende Kombination – ohne Verpflichtung.
               </p>
               <motion.div
-                whileHover={{ scale: 1.03, boxShadow: "0 0 32px 8px rgba(237,132,0,0.45)" }}
+                whileHover={{ scale: 1.03, boxShadow: "0 4px 18px 0px rgba(237,132,0,0.45)" }}
                 whileTap={{ scale: 0.97 }}
                 className="inline-block"
               >
