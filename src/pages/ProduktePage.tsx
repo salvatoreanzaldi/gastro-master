@@ -261,6 +261,7 @@ const ProduktePage = () => {
               <motion.div
                 whileHover={{ scale: 1.03, boxShadow: "0 4px 18px 0px rgba(237,132,0,0.45)" }}
                 whileTap={{ scale: 0.97 }}
+                className="inline-block"
               >
                 <Link
                   to="/kontakt"
