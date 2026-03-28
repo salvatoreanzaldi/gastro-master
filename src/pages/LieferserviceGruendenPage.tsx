@@ -513,14 +513,14 @@ const LieferserviceGruendenPage = () => {
               </p>
               <p className="text-white/50 text-base">
                 Mit Gastro Master zahlst du{" "}
-                <strong className="text-white/80">49 €</strong> — und behältst den Rest.
+                <strong className="text-white/80">79 €/Monat</strong> für den Webshop — und behältst den Rest.
               </p>
             </div>
             <Link
               to="/kontakt"
               className="flex-shrink-0 bg-gradient-amber text-[#0A264A] font-bold px-7 py-3.5 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-amber-500/20"
             >
-              Jetzt kostenlos testen
+              Kostenlose Beratung
               <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
