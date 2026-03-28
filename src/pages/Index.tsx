@@ -25,7 +25,7 @@ import ReferencesSection from "@/components/landing/ReferencesSection";
 import PartnerSection from "@/components/landing/PartnerSection";
 import FAQSection from "@/components/landing/FAQSection";
 import Footer from "@/components/landing/Footer";
-import StickyMobileCTA from "@/components/landing/StickyMobileCTA";
+
 
 const Index = () => {
   return (
@@ -44,7 +44,7 @@ const Index = () => {
       <MockupShowcase />
       {/* DESIRE */}
       {/* <PricingSection /> */}
-      <GlassyPricingSection />
+      {/* <GlassyPricingSection /> */}
       <SlimPricingSection />
       <POSSection />
       <PickUpScreenSection />
@@ -61,7 +61,6 @@ const Index = () => {
       <FAQSection />
       {/* ACTION */}
       <Footer />
-      <StickyMobileCTA />
     </div>
   );
 };

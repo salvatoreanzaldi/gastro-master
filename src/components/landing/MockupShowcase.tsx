@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import takeStartbild from "@/assets/take-startbild.jpeg";
 import takeMenu from "@/assets/take-menu.jpeg";
@@ -9,10 +9,14 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const screenImgs = [takeStartbild, takeMenu, takeFilialen, takeBestellart, takeBenutzerkonto];
 
-// Arc parameters
-const SPACING = 220;   // px between phone centers
-const BEND = 22;       // arc curve coefficient (offset² × BEND = y-shift in px)
-const ROTATE_Y = 14;   // degrees of 3-D tilt per offset unit
+// Arc parameters — desktop defaults
+const SPACING_D = 220;  // px between phone centers
+const BEND_D = 22;      // arc curve coefficient
+const ROTATE_Y_D = 14;  // degrees of 3-D tilt per offset unit
+// Mobile-optimised values (read at runtime to avoid SSR issues)
+const SPACING_M = 130;
+const BEND_M = 6;
+const ROTATE_Y_M = 0;   // no 3-D rotation on mobile for performance
 
 interface PhoneCardProps {
   img: string;
@@ -22,10 +26,14 @@ interface PhoneCardProps {
 }
 
 const PhoneCard = ({ img, label, index, centerIdx }: PhoneCardProps) => {
-  const x      = useTransform(centerIdx, (c) => (index - c) * SPACING);
-  const y      = useTransform(centerIdx, (c) => Math.pow(index - c, 2) * BEND);
+  // Read window.innerWidth at animation time so each frame uses the current value.
+  // This avoids React state/hooks for a pure-motion concern.
+  const isMob = () => typeof window !== "undefined" && window.innerWidth < 768;
+
+  const x      = useTransform(centerIdx, (c) => (index - c) * (isMob() ? SPACING_M : SPACING_D));
+  const y      = useTransform(centerIdx, (c) => Math.pow(index - c, 2) * (isMob() ? BEND_M : BEND_D));
   const scale  = useTransform(centerIdx, (c) => Math.max(1 - Math.abs(index - c) * 0.1, 0.6));
-  const rotY   = useTransform(centerIdx, (c) => (index - c) * ROTATE_Y);
+  const rotY   = useTransform(centerIdx, (c) => (index - c) * (isMob() ? ROTATE_Y_M : ROTATE_Y_D));
   const opacity = useTransform(centerIdx, (c) => Math.max(1 - Math.abs(index - c) * 0.25, 0.18));
 
   return (
@@ -81,6 +89,11 @@ const MockupShowcase = () => {
   const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Detect mobile once at mount for container height
+  const [containerHeight] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth < 768 ? "200vh" : "330vh"
+  );
+
   // scrollYProgress 0→1 maps to the full height of the scroll container
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -92,7 +105,8 @@ const MockupShowcase = () => {
 
   return (
     /* Tall scroll container – gives the sticky section room to animate */
-    <div ref={containerRef} style={{ height: "330vh" }}>
+    <div className="overflow-x-hidden">
+      <div ref={containerRef} style={{ height: containerHeight }}>
       <section className="sticky top-0 h-screen bg-gradient-navy overflow-hidden flex flex-col">
         {/* Background glow */}
         <div
@@ -141,6 +155,7 @@ const MockupShowcase = () => {
           ))}
         </div>
       </section>
+      </div>
     </div>
   );
 };
