@@ -151,7 +151,7 @@ const SCHEMA_PRODUCT_LIST = {
       "name": p.title,
       "url": `https://gastro-master.de${p.href}`,
     })),
-    { "@type": "ListItem", "position": 5, "name": ADD_ON.title, "url": `https://gastro-master.de${ADD_ON.href}` },
+    { "@type": "ListItem", "position": 5, "name": ADD_ONS[0].title, "url": `https://gastro-master.de${ADD_ONS[0].href}` },
   ],
 };
 
