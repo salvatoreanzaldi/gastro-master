@@ -238,6 +238,7 @@ export const translations = {
       onRequest: "Auf Anfrage",
       packageFeatures: {
         beginner: ["Website + Unterseiten", "1 Wunsch-Domain", "2 Postfächer"],
+        webseite: ["Professionelle Restaurant-Website", "Eigene Domain inklusive", "Bildergalerie & Speisekarte", "Kontaktformular & Google Maps", "Mobile-optimiert & SEO-ready", "SSL & Hosting inklusive"],
         basic: ["Webshop (provisionsfrei)", "Unbegrenzte Bestellungen", "2.500 Flyer mit QR-Code", "Kundenpunkte-System", "Bis 3 Postfächer"],
         standard: ["Webshop + native App", "Push-Benachrichtigungen", "Unbegrenzte Bestellungen", "5.000 Flyer mit QR-Code", "Bis 4 Postfächer"],
         pro: ["Alles aus Standard", "Cloud-Kasse (TSE-konform)", "Transaktionsumlage inkl.", "10.000 Flyer mit QR-Code", "Bis 5 Postfächer"],
@@ -590,6 +591,7 @@ export const translations = {
       onRequest: "Custom Pricing",
       packageFeatures: {
         beginner: ["Website + Sub-pages", "1 Custom Domain", "2 Mailboxes"],
+        webseite: ["Professional restaurant website", "Custom domain included", "Photo gallery & menu", "Contact form & Google Maps", "Mobile-optimised & SEO-ready", "SSL & hosting included"],
         basic: ["Webshop (commission-free)", "Unlimited Orders", "2,500 Flyers with QR Code", "Customer Loyalty Points", "Up to 3 Mailboxes"],
         standard: ["Webshop + Native App", "Push Notifications", "Unlimited Orders", "5,000 Flyers with QR Code", "Up to 4 Mailboxes"],
         pro: ["Everything in Standard", "Cloud POS (TSE-compliant)", "Transaction Pass-Through incl.", "10,000 Flyers with QR Code", "Up to 5 Mailboxes"],

@@ -7,6 +7,15 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const SLIM_PLANS = [
   {
+    id: "webseite",
+    name: "Webseite",
+    tagline: "Professionelle Online-Präsenz",
+    priceMonthly: "49",
+    priceYearly: "39",
+    duration: "7–10 Tage",
+    popular: false,
+  },
+  {
     id: "basic",
     name: "Starter",
     tagline: "Reiner Webshop",
@@ -241,13 +250,13 @@ const SlimCard = ({
               )}
               <span className={`text-xs ${textSecondary}`}>{perMonthLabel}</span>
             </div>
-            <span className={`text-[10px] ${textMuted}`}>{vatNote}</span>
+            <span className={`text-xs ${textMuted}`}>{vatNote}</span>
             {isYearly && yearlyPrice ? (
-              <p className={`text-[10px] mt-1 ${textMuted}`}>
+              <p className={`text-xs mt-1 ${textMuted}`}>
                 Monatlich abgerechnet · 12 Monate Laufzeit
               </p>
             ) : (
-              <p className={`text-[10px] mt-1 ${textMuted}`}>
+              <p className={`text-xs mt-1 ${textMuted}`}>
                 3 Monate Kündigungsfrist
               </p>
             )}

@@ -35,7 +35,7 @@ const Navbar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   // Helle Seiten ohne Hero-Hintergrund brauchen immer die sichtbare (aktive) Navbar
-  const alwaysVisible = ["/impressum", "/datenschutz", "/agb", "/kontakt", "/downloads"].includes(pathname);
+  const alwaysVisible = ["/impressum", "/datenschutz", "/agb", "/kontakt", "/preise"].includes(pathname) || pathname.startsWith("/downloads");
   const [scrolled, setScrolled]             = useState(false);
   const active = scrolled;          // steuert schmal/weit
   const visibleBg = alwaysVisible || scrolled; // steuert Hintergrund-Sichtbarkeit
@@ -160,10 +160,10 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Preise anchor link */}
-          <a href="#preise" className="text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
+          {/* Preise page link */}
+          <Link to="/preise" className="text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
             {t.nav.preise}
-          </a>
+          </Link>
 
           {/* Dark mode */}
           <button
@@ -314,11 +314,11 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Anchor links */}
-          <a href="#preise" onClick={() => setMobileOpen(false)}
+          {/* Preise page link */}
+          <Link to="/preise" onClick={() => setMobileOpen(false)}
             className="block text-primary-foreground/70 hover:text-primary-foreground font-medium py-2">
             {t.nav.preise}
-          </a>
+          </Link>
           <button onClick={scrollToForm}
             className="w-full bg-gradient-amber text-white dark:text-[#0A264A] font-bold px-5 py-3 rounded-xl text-base mt-2">
             {t.nav.cta}

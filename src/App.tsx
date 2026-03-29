@@ -28,6 +28,7 @@ const LieferdienstPage           = lazy(() => import("@/pages/LieferdienstPage")
 const CafeBaeckereiPage          = lazy(() => import("@/pages/CafeBaeckereiPage"));
 const LoesungenPage              = lazy(() => import("@/pages/LoesungenPage"));
 const FAQPage                    = lazy(() => import("@/pages/FAQPage"));
+const PreisePage                 = lazy(() => import("@/pages/PreisePage"));
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,7 @@ const App = () => (
               <Route path="/agb"                         element={<AGB />} />
               <Route path="/kontakt"                     element={<Kontakt />} />
               <Route path="/faq"                         element={<FAQPage />} />
+              <Route path="/preise"                      element={<PreisePage />} />
               <Route path="/downloads"                   element={<DownloadsPage />} />
               <Route path="/downloads/druckertreiber"    element={<DruckertreiberPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
