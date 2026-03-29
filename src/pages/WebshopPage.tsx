@@ -470,7 +470,7 @@ const WebshopPage = () => {
 
       {/* ── S2: TRUST BAR ───────────────────────────────────────── */}
       <section className="bg-white dark:bg-[#111827] border-y border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-10 md:py-12">
-        <div className="max-w-6xl mx-auto grid grid-cols-3 gap-8 md:gap-6 items-center">
+        <div className="max-w-6xl mx-auto grid grid-cols-3 gap-3 md:gap-6 items-center">
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}

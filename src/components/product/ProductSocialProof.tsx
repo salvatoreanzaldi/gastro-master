@@ -36,14 +36,14 @@ const ProductSocialProof = ({
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        className="grid grid-cols-5 gap-4 md:gap-10 items-center"
+        className="grid grid-cols-5 gap-2 md:gap-10 items-center"
       >
         {logos.slice(0, 5).map((logo) => (
           <div key={logo.alt} className="flex items-center justify-center">
             <img
               src={logo.src}
               alt={logo.alt}
-              className="h-10 md:h-12 w-full object-contain opacity-40 hover:opacity-65 transition-opacity duration-300"
+              className="h-7 sm:h-10 md:h-12 w-full object-contain opacity-40 hover:opacity-65 transition-opacity duration-300"
             />
           </div>
         ))}

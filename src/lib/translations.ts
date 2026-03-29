@@ -295,6 +295,8 @@ export const translations = {
       impressum: "Impressum",
       datenschutz: "Datenschutz",
       agb: "AGB",
+      kontakt: "Kontakt",
+      downloads: "Downloads",
       rights: "Alle Rechte vorbehalten.",
     },
 
@@ -642,6 +644,8 @@ export const translations = {
       impressum: "Imprint",
       datenschutz: "Privacy Policy",
       agb: "Terms & Conditions",
+      kontakt: "Contact",
+      downloads: "Downloads",
       rights: "All rights reserved.",
     },
 

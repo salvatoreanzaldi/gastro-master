@@ -39,6 +39,7 @@ import logoIlSorriso    from "@/assets/logo-il-sorriso.png";
 import logoArtemis      from "@/assets/logo-artemis.png";
 import logoTake         from "@/assets/logo-take.png";
 import logoBurger       from "@/assets/logo-burger-brothers.png";
+import POSSection       from "@/components/landing/POSSection";
 
 // ─── FAQ ─────────────────────────────────────────────────────────────────────
 const faqs = [
@@ -1063,6 +1064,9 @@ const KassePage = () => (
     {/* ── S7b: WAVE FEATURE SECTION (21st.dev test) ─────────── */}
     <WaveFeatureSection />
 
+    {/* ── PREISE: Die Gastro Master Cloud-Kasse ──────────────── */}
+    <POSSection />
+
     {/* ── S8: 4 ALTERNATING DETAIL-SECTIONS ────────────────── */}
     {alternatingSections.map((sec) => (
       <section
@@ -1137,7 +1141,7 @@ const KassePage = () => (
       </section>
     ))}
 
-    {/* ── S9: TEAM CTA ───────────────────────────────────────── */}
+    {/* ── S9: TEAM CTA ──────────────────────────────────────────── */}
     <TeamCTASection />
 
     {/* ── S10: FAQ ───────────────────────────────────────────── */}

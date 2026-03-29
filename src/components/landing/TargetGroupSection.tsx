@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Truck, Building2, ChefHat, Store, CakeSlice, Pizza, Drumstick, IceCream, Croissant, Layers, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 // Pizzeria logos
@@ -122,7 +123,12 @@ const subImgs: Record<string, string> = {
   "franchise-sub": imgFranchise,
 };
 
-const TargetGroupSection = () => {
+interface TargetGroupSectionProps {
+  getSolutionHref?: (group: string, sub: string | null) => string | null;
+  ctaLabel?: string;
+}
+
+const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionProps = {}) => {
   const { t } = useLanguage();
   const [activeGroup, setActiveGroup] = useState("lieferdienst");
   const [activeSub, setActiveSub] = useState("pizzeria");
@@ -244,11 +250,24 @@ const TargetGroupSection = () => {
                 <h3 className="text-2xl md:text-3xl font-black text-foreground mb-2">{displayContent?.title}</h3>
                 <p className="text-cyan-brand font-semibold mb-4 text-sm">{displayContent?.subtitle}</p>
                 <p className="text-muted-foreground leading-relaxed mb-6">{displayContent?.text}</p>
-                <button onClick={scrollToForm}
-                  className="bg-gradient-amber text-primary font-bold px-6 py-3 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2 self-start">
-                  {t.target.cta}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                {(() => {
+                  const href = getSolutionHref
+                    ? getSolutionHref(activeGroup, showSubs ? activeSub : null)
+                    : null;
+                  const label = ctaLabel ?? t.target.cta;
+                  const cls = "bg-gradient-amber text-primary font-bold px-6 py-3 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2 self-start";
+                  return href ? (
+                    <Link to={href} className={cls}>
+                      {label}
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  ) : (
+                    <button onClick={scrollToForm} className={cls}>
+                      {label}
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  );
+                })()}
               </div>
             </div>
           </motion.div>
@@ -268,13 +287,13 @@ const TargetGroupSection = () => {
             <p className="text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-5">
               Unsere Kunden
             </p>
-            <div className="grid grid-cols-5 gap-4 md:gap-8 items-center w-full">
+            <div className="grid grid-cols-5 gap-2 md:gap-8 items-center w-full">
               {(activeLogos ?? []).map((logo) => (
                 <div key={logo.alt} className="flex items-center justify-center">
                   <img
                     src={logo.src}
                     alt={logo.alt}
-                    className={`w-full object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 ${largeLogos.has(logo.alt) ? "h-16 md:h-20" : "h-12 md:h-14"}`}
+                    className={`w-full object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 ${largeLogos.has(logo.alt) ? "h-9 sm:h-16 md:h-20" : "h-7 sm:h-12 md:h-14"}`}
                     style={darkBgLogos.has(logo.alt) ? { background: "#1f2937", borderRadius: "8px", padding: "6px 10px" } : undefined}
                   />
                 </div>

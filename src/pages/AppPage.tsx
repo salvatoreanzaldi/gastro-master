@@ -629,7 +629,7 @@ const AppPage = () => {
 
       {/* ── S2: TRUST BAR ───────────────────────────────────────── */}
       <section className="bg-white dark:bg-[#111827] border-y border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-10 md:py-12">
-        <div className="max-w-6xl mx-auto grid grid-cols-3 gap-8 md:gap-6 items-center">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-6 items-center">
           {/* Links: 0 % */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
@@ -651,8 +651,8 @@ const AppPage = () => {
             className="text-center flex flex-col items-center gap-2"
           >
             <div className="flex items-center gap-4">
-              <img src={iosIcon}     alt="Apple App Store"   className="w-20 h-20 md:w-24 md:h-24 object-contain" />
-              <img src={androidIcon} alt="Google Play Store" className="w-20 h-20 md:w-24 md:h-24 object-contain" />
+              <img src={iosIcon}     alt="Apple App Store"   className="w-14 h-14 md:w-20 md:h-20 object-contain" />
+              <img src={androidIcon} alt="Google Play Store" className="w-14 h-14 md:w-20 md:h-20 object-contain" />
             </div>
             <p className="text-[#0A264A]/45 dark:text-white/40 text-sm leading-snug">App Store & Play Store</p>
           </motion.div>

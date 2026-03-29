@@ -90,8 +90,8 @@ const CalculatorSection = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="bg-white/[0.08] border border-white/15 rounded-2xl p-5 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-8">
+            <div className="bg-white/[0.08] border border-white/15 rounded-2xl p-3 md:p-5 text-center">
               <p className="text-white/50 text-[11px] font-bold uppercase tracking-widest mb-2">
                 {t.calculator.cardRevenue}
               </p>
@@ -99,7 +99,7 @@ const CalculatorSection = () => {
                 {monthlyRevenue.toLocaleString("de-DE")} €
               </p>
             </div>
-            <div className="bg-red-500/[0.15] border border-red-500/30 rounded-2xl p-5 text-center">
+            <div className="bg-red-500/[0.15] border border-red-500/30 rounded-2xl p-3 md:p-5 text-center">
               <p className="text-white/50 text-[11px] font-bold uppercase tracking-widest mb-2">
                 {t.calculator.cardMonth}
               </p>
@@ -107,7 +107,7 @@ const CalculatorSection = () => {
                 {monthlyLoss.toLocaleString("de-DE")} €
               </p>
             </div>
-            <div className="bg-red-500/[0.15] border border-red-500/30 rounded-2xl p-5 text-center">
+            <div className="bg-red-500/[0.15] border border-red-500/30 rounded-2xl p-3 md:p-5 text-center">
               <p className="text-white/50 text-[11px] font-bold uppercase tracking-widest mb-2">
                 {t.calculator.cardYear}
               </p>

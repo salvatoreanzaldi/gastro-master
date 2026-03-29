@@ -2,11 +2,17 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, Building2, ClipboardList, Target, Monitor,
-  ChevronDown, ExternalLink, type LucideIcon,
+  ChevronDown, ExternalLink, ShoppingCart, Smartphone, Globe, Percent,
+  type LucideIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import imgWebshop     from "@/assets/take-startbild.jpeg";
+import imgApp         from "@/assets/Mock Up - Branding Hero.png";
+import imgKasse       from "@/assets/hero-pos-system.png";
+import imgWebseite    from "@/assets/Hero - Gastro Master.PNG";
+import imgTransaktion from "@/assets/9 - Zahlungsmethoden.png";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -45,99 +51,99 @@ interface FaqItem {
 export const STATS: StatItem[] = [
   {
     value: "6,1 Mrd. €",
-    label: "Online Food Delivery Umsatz Deutschland (2023)",
+    label: "Online-Bestellungen Deutschland (2023)",
     source: "Statista",
     href: "https://de.statista.com/prognosen/642308/online-food-delivery-umsatz-in-deutschland",
   },
   {
     value: "9,9 Mrd. €",
-    label: "Prognostizierter Umsatz bis 2028 — Wachstum +62 %",
+    label: "Erwarteter Umsatz bis 2028 — 62\u202f% Wachstum",
     source: "Statista",
     href: "https://de.statista.com/prognosen/642308/online-food-delivery-umsatz-in-deutschland",
   },
   {
     value: "bis 30 %",
-    label: "Provision Lieferando bei Plattform-Fahrern",
+    label: "Provision, die Lieferando von dir nimmt",
     source: "Berliner Abendblatt",
     href: "https://berliner-abendblatt.de/berlin-news/lieferando-hoehere-provisionen-fuer-restaurants-id162852",
   },
   {
-    value: "20–60 €",
-    label: "Kosten für die Gewerbeanmeldung eines Lieferdienstes",
-    source: "gewerbeanmeldung.de",
-    href: "https://www.gewerbeanmeldung.de/gewerbe-anmelden/lieferservice",
+    value: "ab 69 €",
+    label: "pro Monat — eigenes Bestellsystem, sofort startklar",
+    source: "Gastro Master",
+    href: "https://gastro-master.de/produkte/webshop",
   },
 ];
 
 export const STEPS: StepItem[] = [
   {
     num: "01",
-    icon: Building2,
-    title: "Geschäftsmodell wählen",
-    text: "Eigene Produktion, Ghost Kitchen oder Vermittlung? Jedes Modell hat andere Anforderungen an Kapital, Fläche und Personal. Ghost Kitchens liefern ohne Gastraum — mit 60–80 % niedrigeren Mietkosten.",
-    highlight: "Ghost Kitchens: 60–80 % niedrigere Mietkosten vs. klassisches Restaurant",
-  },
-  {
-    num: "02",
-    icon: ClipboardList,
-    title: "Gewerbe anmelden & Rechtliches klären",
-    text: "Du benötigst: Gewerbeanmeldung beim Gewerbeamt (20–60 €), Lebensmittelhygiene-Schulung nach HACCP-Standard und ein Gesundheitszeugnis vom Gesundheitsamt für alle Personen mit Lebensmittelkontakt.",
-    highlight: "Kosten: 20–60 €. Dauer: 1–2 Wochen. Kein Führerschein oder Gaststättenkonzession nötig.",
-  },
-  {
-    num: "03",
-    icon: Target,
-    title: "Spezialisierung statt breites Angebot",
-    text: "Spezialisten gewinnen: Ein Lieferdienst für vegane Bowls baut schneller Stammkunden auf als ein generischer Anbieter. Nischenpositionierung schützt vor dem Preiskampf mit Plattformen.",
-    highlight: "Empfehlung zum Start: 1 Küchen-Kategorie, 8–12 Gerichte, 1 Liefergebiet.",
-  },
-  {
-    num: "04",
     icon: Monitor,
-    title: "Technik & Bestellsystem aufbauen",
-    text: "Hier entscheidet sich, ob du auf ewig Provision zahlst oder 100 % deines Umsatzes behältst. Mit Gastro Master bekommst du eigenen Webshop, App und Kassensystem — ohne technisches Vorwissen, live in 2–3 Wochen.",
+    title: "Dein Bestellsystem einrichten",
+    text: "Hier entscheidest du: Provision für immer — oder ab jetzt 0 %? Mit Gastro Master bekommst du Webshop, App und Kassensystem. Kein Vorwissen nötig, live in 2–3 Wochen.",
     highlight: "0 % Provision ab dem ersten Auftrag. Keine Einrichtungskosten.",
     featured: true,
     products: [
       { label: "Webshop (0 % Provision)", href: "/produkte/webshop" },
       { label: "Bestell-App",             href: "/produkte/app" },
-      { label: "Transaktionsumlage",      href: "/produkte/transaktionsumlage" },
+      { label: "Zahlungsgebühren",         href: "/produkte/transaktionsumlage" },
       { label: "Webseite",                href: "/produkte/webseite" },
     ],
+  },
+  {
+    num: "02",
+    icon: Target,
+    title: "Eine Nische wählen — nicht alles anbieten",
+    text: "Fokus schlägt breites Angebot. Ein Lieferdienst für vegane Bowls gewinnt schneller Stammkunden als ein Rundum-Anbieter. Starte mit einer Küchenkategorie.",
+    highlight: "Empfehlung zum Start: 1 Küchen-Kategorie, 8–12 Gerichte, 1 Liefergebiet.",
+  },
+  {
+    num: "03",
+    icon: Building2,
+    title: "Geschäftsmodell wählen",
+    text: "Eigenproduktion, Ghost Kitchen (Küche ohne Gastraum) oder Vermittlung? Eine Ghost Kitchen spart 60–80 % Mietkosten.",
+    highlight: "Ghost Kitchen: 60–80 % weniger Mietkosten als ein klassisches Restaurant",
+  },
+  {
+    num: "04",
+    icon: ClipboardList,
+    title: "Gewerbe anmelden",
+    text: "Die Gewerbeanmeldung kostet 20–60 € und ist in wenigen Tagen erledigt. Du brauchst außerdem eine Hygiene-Schulung (HACCP) und ein Gesundheitszeugnis. Keine Gaststättenerlaubnis nötig.",
+    highlight: "Kosten: 20–60 €. Dauer: 1–2 Wochen. Kein Führerschein nötig.",
   },
 ];
 
 export const COMPARE_ROWS: CompareRow[] = [
   { label: "Provision pro Bestellung",    own: "0 %",                        ownGood: true,  platform: "13–30 %",                 platformBad: true  },
   { label: "Kundendaten gehören dir",     own: "✓ Vollständig",              ownGood: true,  platform: "✗ Gehören der Plattform", platformBad: true  },
-  { label: "Eigenes Branding & App",      own: "✓ Eigene Domain & App",      ownGood: true,  platform: "✗ Plattform-Branding",    platformBad: true  },
+  { label: "Eigene Marke & App",          own: "✓ Eigene Domain & App",      ownGood: true,  platform: "✗ Plattform-Branding",    platformBad: true  },
   { label: "Preisgestaltung",             own: "✓ Vollständig frei",         ownGood: true,  platform: "Eingeschränkt",            platformBad: false },
-  { label: "Monatliche Fixkosten",        own: "ab 49 €/Monat",             ownGood: true,  platform: "% vom Umsatz (variabel)",  platformBad: false },
-  { label: "Plattform-Sichtbarkeit",      own: "Eigene SEO / Ads",           ownGood: false, platform: "✓ In der Plattform",       platformBad: false },
-  { label: "Direktes Kundenfeedback",     own: "✓ Direkt & vollständig",     ownGood: true,  platform: "Nur über Plattform",       platformBad: false },
-  { label: "Support & Onboarding",        own: "✓ Persönlich (700+ Kunden)", ownGood: true,  platform: "Ticket-System",            platformBad: false },
+  { label: "Monatliche Kosten",           own: "ab 79 €/Monat",             ownGood: true,  platform: "% vom Umsatz (variabel)",  platformBad: false },
+  { label: "Sichtbarkeit",               own: "Eigene Webseite & Werbung",  ownGood: false, platform: "✓ In der Plattform",       platformBad: false },
+  { label: "Kundenbewertungen",           own: "✓ Direkt & vollständig",     ownGood: true,  platform: "Nur über Plattform",       platformBad: false },
+  { label: "Betreuung & Einrichtung",     own: "✓ Persönlich (700+ Kunden)", ownGood: true,  platform: "Ticket-System",            platformBad: false },
 ];
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
+    q: "Lohnt sich ein eigener Lieferdienst 2026?",
+    a: "Ja — der Markt wächst laut Statista von 6,1\u202fMrd.\u202f€ (2023) auf 9,9\u202fMrd.\u202f€ bis 2028. Wer früh ein eigenes System aufbaut, zahlt keine Provision mehr. Dein Bestellsystem kostet ab 79\u202f€/Monat — statt bis zu 30\u202f% auf jeden Auftrag.",
+  },
+  {
     q: "Was kostet es, einen Lieferdienst zu gründen?",
-    a: "Die Gründungskosten variieren je nach Modell. Die Gewerbeanmeldung kostet 20–60 €. Für eine Ghost Kitchen ohne eigene Produktion sind Startkosten ab 2.000–5.000 € realistisch. Das Bestellsystem (Webshop + App) ist ab 49 €/Monat erhältlich. Das größte Sparpotenzial liegt im laufenden Betrieb: Kein Plattformanteil von 13–30 % auf jeden Auftrag.",
+    a: "Das hängt davon ab, wie du starten willst. Die Gewerbeanmeldung kostet 20–60 €. Für eine Ghost Kitchen (Küche ohne Gastraum) sind Startkosten ab 2.000–5.000 € realistisch. Das Bestellsystem (Webshop + App) kostet ab 69 €/Monat. Das meiste Geld sparst du im laufenden Betrieb: keine Gebühren von 13–30 % auf jeden Auftrag.",
   },
   {
     q: "Brauche ich ein Restaurant, um einen Lieferdienst zu starten?",
-    a: "Nein. Du kannst als sogenannte Ghost Kitchen starten — eine Küche, die ausschließlich für die Lieferung produziert, ohne Gastraum. Das spart erhebliche Mietkosten und macht den Einstieg deutlich günstiger. Wichtig ist nur eine Gewerbeanmeldung und die Einhaltung der Lebensmittelhygiene-Vorschriften.",
+    a: "Nein. Du kannst als Ghost Kitchen starten — das ist eine Küche ohne Gastraum, nur für Lieferungen. Das spart viel Miete und macht den Start günstiger. Du brauchst nur eine Gewerbeanmeldung und musst die Hygiene-Regeln für Lebensmittel einhalten.",
   },
   {
     q: "Wie viel Provision nimmt Lieferando?",
-    a: "Lieferando verlangt 13 % Provision, wenn du deine eigenen Fahrer einsetzt. Nutzt du die Lieferando-Fahrer, steigt die Provision auf bis zu 30 % pro Bestellung. Bei Wolt und Uber Eats liegen die Sätze ähnlich: 15–30 % je nach Vertrag und Service-Level. Quelle: Berliner Abendblatt, leaf-systems.eu.",
-  },
-  {
-    q: "Lohnt sich ein eigener Lieferdienst 2026?",
-    a: "Ja — der Markt wächst laut Statista von 6,1 Mrd. € (2023) auf prognostizierte 9,9 Mrd. € bis 2028. Wer früh ein eigenes System aufbaut, profitiert doppelt: vom Marktwachstum und vom Wegfall der Plattformprovisionen. Mit einem eigenen Bestellsystem zahlst du ab 49 €/Monat statt bis zu 30 % Provision.",
+    a: "Lieferando nimmt 13\u202f% Provision, wenn du eigene Fahrer hast. Mit Lieferando-Fahrern steigt das auf bis zu 30\u202f% pro Bestellung. Bei Wolt und Uber Eats sind es ähnlich 15–30\u202f%. Quelle: Berliner Abendblatt.",
   },
   {
     q: "Welche Genehmigungen brauche ich für einen Lieferdienst?",
-    a: "Du benötigst: (1) Gewerbeanmeldung beim lokalen Gewerbeamt (20–60 €), (2) Lebensmittelhygiene-Schulung nach HACCP-Standard (online möglich, ca. 20–50 €), (3) Gesundheitszeugnis vom Gesundheitsamt für alle Personen mit Lebensmittelkontakt (einmalig, ca. 30 €). Eine Gaststättenerlaubnis ist für reine Lieferdienste ohne Gastraum nicht erforderlich.",
+    a: "Du brauchst: (1) Gewerbeanmeldung beim Gewerbeamt (20–60\u202f€), (2) Hygiene-Schulung (HACCP) — online möglich, ca.\u202f20–50\u202f€, (3) Gesundheitszeugnis für alle, die mit Lebensmitteln arbeiten (ca.\u202f30\u202f€). Eine Gaststättenerlaubnis brauchst du nicht, wenn du nur lieferst.",
   },
 ];
 
@@ -221,7 +227,7 @@ const LieferserviceGruendenPage = () => {
             transition={{ duration: 0.4 }}
             className="inline-block px-3 py-1 rounded-full bg-cyan-brand/15 text-cyan-brand text-xs font-bold uppercase tracking-widest mb-6"
           >
-            Ratgeber 2026 · Lieferdienst gründen
+            Lieferdienst gründen 2026
           </motion.span>
 
           {/* H1 */}
@@ -231,9 +237,9 @@ const LieferserviceGruendenPage = () => {
             transition={{ delay: 0.1, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
             className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.05] tracking-tight mb-6"
           >
-            Eigenen Lieferdienst gründen —{" "}
+            Starte deinen eigenen Lieferdienst —{" "}
             <span className="text-gradient-brand">
-              der komplette Leitfaden für 2026
+              ohne Lieferando, ohne 30&nbsp;% Provision
             </span>
           </motion.h1>
 
@@ -244,38 +250,16 @@ const LieferserviceGruendenPage = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed mb-8"
           >
-            Ohne Lieferando. Ohne 30 % Provision. Mit einem eigenen System, das dir gehört.
-            Dieser Leitfaden erklärt dir Schritt für Schritt, wie du deinen Lieferdienst aufbaust —
-            von der Gewerbeanmeldung bis zum ersten Auftrag.
+            Du bekommst dein eigenes Bestellsystem — keine Provision, kein Vorwissen nötig,
+            live in 2–3 Wochen. So wie 700+ Gastronomen vor dir.
           </motion.p>
-
-          {/* GEO Definition Block */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="border-l-2 border-cyan-brand bg-white/[0.05] rounded-r-xl px-5 py-4 max-w-2xl mb-10"
-          >
-            <span className="text-cyan-brand text-[10px] font-bold uppercase tracking-widest block mb-1.5">
-              Definition
-            </span>
-            <p className="text-white/60 text-sm leading-relaxed">
-              Ein eigener Lieferdienst ermöglicht es Gründern, ohne hohe Fixkosten in den
-              boomenden Food-Delivery-Markt einzusteigen — unabhängig von Plattformen wie
-              Lieferando, Wolt oder Uber Eats. Statt 15–30 % Provision zu zahlen, behältst
-              du{" "}
-              <strong className="text-white/85 font-semibold">
-                100 % deines Umsatzes.
-              </strong>
-            </p>
-          </motion.div>
 
           {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="flex flex-wrap items-center gap-4"
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="flex flex-wrap items-center gap-4 mb-8"
           >
             <Link
               to="/kontakt"
@@ -288,8 +272,43 @@ const LieferserviceGruendenPage = () => {
               href="#steps"
               className="text-white/50 text-sm font-medium inline-flex items-center gap-1.5 hover:text-white/70 transition-colors"
             >
-              Zur Anleitung ↓
+              In 4 Schritten zum Lieferdienst ↓
             </a>
+          </motion.div>
+
+          {/* Trust Pills */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.5 }}
+            className="flex flex-wrap gap-3 mb-10"
+          >
+            {["0 % Provision", "700+ Kunden", "In 2–3 Wochen live", "Persönlicher Support"].map((pill) => (
+              <span
+                key={pill}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.07] border border-white/[0.10] text-white/65 text-xs font-medium"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-brand flex-shrink-0" />
+                {pill}
+              </span>
+            ))}
+          </motion.div>
+
+          {/* GEO Definition Block — kompakter */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55, duration: 0.5 }}
+            className="border-l-2 border-cyan-brand/50 bg-white/[0.04] rounded-r-lg px-4 py-3 max-w-2xl"
+          >
+            <span className="text-cyan-brand/70 text-[10px] font-bold uppercase tracking-widest block mb-1">
+              Definition
+            </span>
+            <p className="text-white/45 text-xs leading-relaxed">
+              Eigener Lieferdienst bedeutet: Kunden bestellen auf deiner Webseite oder App.
+              Du zahlst keine Provision an Lieferando oder Wolt.{" "}
+              <strong className="text-white/65 font-semibold">Du behältst 100&nbsp;% deines Umsatzes.</strong>
+            </p>
           </motion.div>
         </div>
       </section>
@@ -303,10 +322,10 @@ const LieferserviceGruendenPage = () => {
               Marktdaten
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white tracking-tight mb-3">
-              Food Delivery Deutschland — Marktüberblick 2026
+              Immer mehr Menschen bestellen online — das ist deine Chance
             </h2>
             <p className="text-[#0A264A]/50 dark:text-white/50 text-lg">
-              Warum jetzt der richtige Zeitpunkt ist, deinen eigenen Lieferdienst zu starten
+              Der Markt wächst. Wer jetzt startet, ist früh dabei.
             </p>
           </div>
 
@@ -355,10 +374,212 @@ const LieferserviceGruendenPage = () => {
               </motion.div>
             ))}
           </div>
+
+          {/* Mini CTA */}
+          <div className="text-center mt-10">
+            <Link
+              to="/kontakt"
+              className="inline-flex items-center gap-2 text-[#0A264A] dark:text-white font-semibold text-sm hover:gap-3 transition-all duration-200"
+            >
+              Jetzt eigenen Lieferdienst aufbauen
+              <ArrowRight className="w-4 h-4 text-cyan-brand" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ── S3: SCHRITT-FÜR-SCHRITT ─────────────────────────────────────────── */}
+      {/* ── S3: PRODUKT-BUNDLE ────────────────────────────────────────────────── */}
+      <section className="bg-[#0A264A] py-20 md:py-28 px-5 md:px-8 lg:px-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="inline-block px-3 py-1 rounded-full bg-cyan-brand/15 text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4">
+              Komplettlösung · Gastro Master
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
+              Alles was du brauchst — aus einer Hand
+            </h2>
+            <p className="text-white/50 text-lg max-w-xl mx-auto">
+              Fünf Produkte, die perfekt zusammenpassen. Du entscheidest, was du brauchst.
+            </p>
+          </div>
+
+          {/* Top 3 — large image cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            {[
+              { img: imgWebshop,  title: "Online Shop",   tagline: "So sieht dein Online Shop aus",               href: "/produkte/webshop" },
+              { img: imgApp,      title: "Bestell-App",   tagline: "Deine eigene Bestell-App",                    href: "/produkte/app"     },
+              { img: imgKasse,    title: "Kassensystem",  tagline: "Dein Kassensystem — übersichtlich & einfach", href: "/produkte/kassensystem" },
+            ].map(({ img, title, tagline, href }, i) => (
+              <motion.div
+                key={href}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08, duration: 0.4 }}
+                className="bg-white/[0.06] border border-white/[0.10] rounded-2xl overflow-hidden hover:border-cyan-brand/30 transition-all duration-300 group"
+              >
+                <div className="relative overflow-hidden h-48">
+                  <img src={img} alt={title} className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A]/80 via-transparent to-transparent" />
+                </div>
+                <div className="p-5">
+                  <p className="text-white font-bold text-base mb-1">{title}</p>
+                  <p className="text-white/55 text-xs mb-3">{tagline}</p>
+                  <Link to={href} className="inline-flex items-center gap-1 text-cyan-brand text-xs font-semibold hover:gap-2 transition-all duration-200">
+                    Mehr erfahren <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Bottom 2 — centered */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {[
+              { img: imgWebseite,    title: "Webseite",           tagline: "Deine Webseite — gefunden auf Google",      href: "/produkte/webseite"          },
+              { img: imgTransaktion, title: "Zahlungsgebühren weitergeben", tagline: "Deine Kunden zahlen die Gebühren — automatisch",  href: "/produkte/transaktionsumlage"},
+            ].map(({ img, title, tagline, href }, i) => (
+              <motion.div
+                key={href}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.24 + i * 0.08, duration: 0.4 }}
+                className="bg-white/[0.06] border border-white/[0.10] rounded-2xl overflow-hidden hover:border-cyan-brand/30 transition-all duration-300 group"
+              >
+                <div className="relative overflow-hidden h-40">
+                  <img src={img} alt={title} className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A]/80 via-transparent to-transparent" />
+                </div>
+                <div className="p-5">
+                  <p className="text-white font-bold text-base mb-1">{title}</p>
+                  <p className="text-white/55 text-xs mb-3">{tagline}</p>
+                  <Link to={href} className="inline-flex items-center gap-1 text-cyan-brand text-xs font-semibold hover:gap-2 transition-all duration-200">
+                    Mehr erfahren <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              to="/kontakt"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-amber text-[#0A264A] font-bold text-base shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition-transform"
+            >
+              Kostenlos beraten lassen
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── S4: VERGLEICHSTABELLE ───────────────────────────────────────────── */}
+      <section className="bg-white dark:bg-[#111111] py-24 md:py-32 px-5 md:px-8 lg:px-16">
+        <div className="max-w-5xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <span className="inline-block px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-widest mb-4">
+              Vergleich
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white tracking-tight mb-3">
+              Was ist besser: Eigenes System oder Lieferando?
+            </h2>
+            <p className="text-[#0A264A]/50 dark:text-white/50 text-lg max-w-xl mx-auto">
+              Warum 700+ Gastronomen auf ihr eigenes Bestellsystem gewechselt haben
+            </p>
+          </div>
+
+          {/* Table — horizontal scroll on mobile */}
+          <div className="overflow-x-auto rounded-2xl border border-[#0A264A]/[0.08] dark:border-white/[0.08] shadow-lg">
+            <table className="w-full min-w-[640px] border-collapse">
+              <thead>
+                <tr>
+                  <th className="bg-[#f8fafc] dark:bg-white/[0.03] text-[#0A264A]/45 dark:text-white/30 font-semibold text-xs uppercase tracking-wider text-left px-6 py-4 w-[38%]">
+                    Kriterium
+                  </th>
+                  <th className="bg-[#0A264A] px-6 py-4 text-center">
+                    <span className="text-cyan-brand text-[10px] font-bold uppercase tracking-widest block mb-0.5">
+                      Empfohlen
+                    </span>
+                    <span className="text-white font-bold text-sm">Eigener Lieferdienst</span>
+                    <span className="text-white/40 text-xs font-normal block">mit Gastro Master</span>
+                  </th>
+                  <th className="bg-[#fff8f0] dark:bg-amber-950/30 px-6 py-4 text-center">
+                    <span className="text-amber-800 dark:text-amber-400 font-bold text-sm">
+                      Lieferando / Wolt / Uber Eats
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARE_ROWS.map((row, i) => (
+                  <tr
+                    key={row.label}
+                    className={i % 2 === 0 ? "bg-white dark:bg-transparent" : "bg-[#fafafa] dark:bg-white/[0.02]"}
+                  >
+                    <td className="px-6 py-4 text-sm text-[#0A264A]/60 dark:text-white/50 font-medium border-b border-[#0A264A]/[0.05] dark:border-white/[0.05]">
+                      {row.label}
+                    </td>
+                    <td className="px-6 py-4 text-center text-sm border-b border-[#0A264A]/[0.05] dark:border-white/[0.05] bg-[#0A264A]/[0.02] dark:bg-white/[0.01]">
+                      <span className={row.ownGood ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-[#0A264A]/55 dark:text-white/45"}>
+                        {row.own}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-center text-sm border-b border-[#0A264A]/[0.05] dark:border-white/[0.05] bg-amber-50/50 dark:bg-amber-950/10">
+                      <span className={row.platformBad ? "text-red-500 font-bold" : "text-[#0A264A]/55 dark:text-white/45"}>
+                        {row.platform}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Savings Callout */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-8 bg-gradient-to-r from-[#0A264A] to-[#0D3266] rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-10"
+          >
+            {/* Left: Rechenbeispiel */}
+            <div className="flex-1">
+              <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-2">
+                Rechenbeispiel
+              </p>
+              <p className="text-white text-xl md:text-2xl font-black leading-snug mb-3">
+                Bei 3.000&nbsp;€ Monatsumsatz zahlst du an Lieferando{" "}
+                <span className="text-amber-400">bis zu 900&nbsp;€ Provision</span> — jeden Monat.
+              </p>
+              <p className="text-white/55 text-sm">
+                Mit Gastro Master: nur 79&nbsp;€/Monat, 0&nbsp;% Provision auf deine Bestellungen.
+              </p>
+            </div>
+            {/* Right: Ersparnis + CTA */}
+            <div className="flex flex-col items-start md:items-end gap-4 shrink-0">
+              <div className="md:text-right">
+                <p className="text-white/50 text-xs uppercase tracking-widest mb-1">
+                  Was du im Jahr sparst
+                </p>
+                <p className="text-5xl font-black text-cyan-brand leading-none">9.852&nbsp;€</p>
+                <p className="text-white/35 text-xs mt-1">bei 3.000&nbsp;€ Monatsumsatz</p>
+              </div>
+              <Link
+                to="/kontakt"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-amber text-[#0A264A] font-bold text-sm whitespace-nowrap hover:scale-[1.02] transition-transform shadow-lg shadow-amber-500/20"
+              >
+                Jetzt starten — 0 % Provision
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── S5: SCHRITT-FÜR-SCHRITT ─────────────────────────────────────────── */}
       <section id="steps" className="bg-[#0A264A] py-24 md:py-32 px-5 md:px-8 lg:px-16">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
@@ -435,99 +656,26 @@ const LieferserviceGruendenPage = () => {
         </div>
       </section>
 
-      {/* ── S4: VERGLEICHSTABELLE ───────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-[#111111] py-24 md:py-32 px-5 md:px-8 lg:px-16">
+      {/* ── TRUST STRIP ─────────────────────────────────────────────────────── */}
+      <section className="bg-[#0A264A] py-8 px-5 md:px-8 lg:px-16 border-y border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <span className="inline-block px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-widest mb-4">
-              Vergleich
-            </span>
-            <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white tracking-tight mb-3">
-              Eigenes System vs. Plattform-Abhängigkeit
-            </h2>
-            <p className="text-[#0A264A]/50 dark:text-white/50 text-lg max-w-xl mx-auto">
-              Warum 700+ Gastronomen Lieferando & Co. den Rücken gekehrt haben
-            </p>
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+            {[
+              { value: "700+",             label: "Gastro-Betriebe vertrauen auf Gastro Master" },
+              { value: "5,0 ★",           label: "Kundenbewertung auf Google" },
+              { value: "TSE-konform",     label: "Alle Systeme TSE-zertifiziert" },
+              { value: "Persönl. Support", label: "Euer Team hilft direkt" },
+            ].map(({ value, label }) => (
+              <div key={label} className="flex items-center gap-2.5">
+                <span className="text-cyan-brand font-black text-lg leading-none">{value}</span>
+                <span className="text-white/40 text-sm leading-snug max-w-[120px]">{label}</span>
+              </div>
+            ))}
           </div>
-
-          {/* Table — horizontal scroll on mobile */}
-          <div className="overflow-x-auto rounded-2xl border border-[#0A264A]/[0.08] dark:border-white/[0.08] shadow-lg">
-            <table className="w-full min-w-[640px] border-collapse">
-              <thead>
-                <tr>
-                  <th className="bg-[#f8fafc] dark:bg-white/[0.03] text-[#0A264A]/45 dark:text-white/30 font-semibold text-xs uppercase tracking-wider text-left px-6 py-4 w-[38%]">
-                    Kriterium
-                  </th>
-                  <th className="bg-[#0A264A] px-6 py-4 text-center">
-                    <span className="text-cyan-brand text-[10px] font-bold uppercase tracking-widest block mb-0.5">
-                      Empfohlen
-                    </span>
-                    <span className="text-white font-bold text-sm">Eigener Lieferdienst</span>
-                    <span className="text-white/40 text-xs font-normal block">mit Gastro Master</span>
-                  </th>
-                  <th className="bg-[#fff8f0] dark:bg-amber-950/30 px-6 py-4 text-center">
-                    <span className="text-amber-800 dark:text-amber-400 font-bold text-sm">
-                      Lieferando / Wolt / Uber Eats
-                    </span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {COMPARE_ROWS.map((row, i) => (
-                  <tr
-                    key={row.label}
-                    className={i % 2 === 0 ? "bg-white dark:bg-transparent" : "bg-[#fafafa] dark:bg-white/[0.02]"}
-                  >
-                    <td className="px-6 py-4 text-sm text-[#0A264A]/60 dark:text-white/50 font-medium border-b border-[#0A264A]/[0.05] dark:border-white/[0.05]">
-                      {row.label}
-                    </td>
-                    <td className="px-6 py-4 text-center text-sm border-b border-[#0A264A]/[0.05] dark:border-white/[0.05] bg-[#0A264A]/[0.02] dark:bg-white/[0.01]">
-                      <span className={row.ownGood ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-[#0A264A]/55 dark:text-white/45"}>
-                        {row.own}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-center text-sm border-b border-[#0A264A]/[0.05] dark:border-white/[0.05] bg-amber-50/50 dark:bg-amber-950/10">
-                      <span className={row.platformBad ? "text-red-500 font-bold" : "text-[#0A264A]/55 dark:text-white/45"}>
-                        {row.platform}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Conversion box */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-8 bg-gradient-to-r from-[#0A264A] to-[#0D3266] rounded-2xl p-7 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
-          >
-            <div>
-              <p className="text-white font-bold text-xl md:text-2xl leading-snug mb-2">
-                Bei 3.000 € Monatsumsatz zahlt Lieferando bis zu{" "}
-                <span className="text-cyan-brand">900 € Provision</span> — jeden Monat.
-              </p>
-              <p className="text-white/50 text-base">
-                Mit Gastro Master zahlst du{" "}
-                <strong className="text-white/80">79 €/Monat</strong> für den Webshop — und behältst den Rest.
-              </p>
-            </div>
-            <Link
-              to="/kontakt"
-              className="flex-shrink-0 bg-gradient-amber text-[#0A264A] font-bold px-7 py-3.5 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-amber-500/20"
-            >
-              Kostenlose Beratung
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
         </div>
       </section>
 
-      {/* ── S5: FAQ ─────────────────────────────────────────────────────────── */}
+      {/* ── S6: FAQ ─────────────────────────────────────────────────────────── */}
       <section className="bg-[#f8fafc] dark:bg-[#0f172a] py-24 md:py-32 px-5 md:px-8 lg:px-16">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
@@ -609,7 +757,7 @@ const LieferserviceGruendenPage = () => {
             className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.1] mb-5"
           >
             Wir helfen dir,{" "}
-            <span className="text-cyan-brand">deinen Lieferdienst zu planen</span>
+            <span className="text-cyan-brand">deinen Lieferdienst zu starten</span>
           </motion.h2>
 
           <motion.p
@@ -619,8 +767,8 @@ const LieferserviceGruendenPage = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-white/55 text-lg leading-relaxed mb-10"
           >
-            700+ Gastronomen haben mit Gastro Master ihre Plattformabhängigkeit beendet.
-            Lass uns gemeinsam herausfinden, welches System für deinen Lieferdienst passt.
+            700+ Gastronomen haben aufgehört, Provision zu zahlen.
+            Wir zeigen dir, was du brauchst — kostenlos und unverbindlich.
           </motion.p>
 
           <motion.div
@@ -633,7 +781,7 @@ const LieferserviceGruendenPage = () => {
               to="/kontakt"
               className="bg-gradient-amber text-[#0A264A] font-bold px-10 py-4 rounded-xl text-base inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-amber-500/20"
             >
-              Kostenloses Erstgespräch vereinbaren
+              Kostenloses Gespräch buchen
               <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
@@ -641,7 +789,7 @@ const LieferserviceGruendenPage = () => {
           {/* Trust row */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 mt-10">
             {[
-              ["0 €", "Einrichtungskosten"],
+              ["0 %", "Provision"],
               ["700+", "aktive Kunden"],
               ["5,0 ★", "Google Bewertung"],
               ["Persönlicher", "Support"],

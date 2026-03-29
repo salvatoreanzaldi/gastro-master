@@ -9,6 +9,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
+const ProduktePage               = lazy(() => import("@/pages/ProduktePage"));
 const WebshopPage                = lazy(() => import("@/pages/WebshopPage"));
 const AppPage                    = lazy(() => import("@/pages/AppPage"));
 const WebseitePage               = lazy(() => import("@/pages/WebseitePage"));
@@ -18,11 +19,15 @@ const Impressum                  = lazy(() => import("@/pages/Impressum"));
 const Datenschutz                = lazy(() => import("@/pages/Datenschutz"));
 const AGB                        = lazy(() => import("@/pages/AGB"));
 const Kontakt                    = lazy(() => import("@/pages/Kontakt"));
+const DownloadsPage              = lazy(() => import("@/pages/DownloadsPage"));
+const DruckertreiberPage         = lazy(() => import("@/pages/DruckertreiberPage"));
 const LieferserviceGruendenPage  = lazy(() => import("@/pages/LieferserviceGruendenPage"));
 const FranchisePage              = lazy(() => import("@/pages/FranchisePage"));
 const RestaurantPage             = lazy(() => import("@/pages/RestaurantPage"));
 const LieferdienstPage           = lazy(() => import("@/pages/LieferdienstPage"));
 const CafeBaeckereiPage          = lazy(() => import("@/pages/CafeBaeckereiPage"));
+const LoesungenPage              = lazy(() => import("@/pages/LoesungenPage"));
+const FAQPage                    = lazy(() => import("@/pages/FAQPage"));
 
 const queryClient = new QueryClient();
 
@@ -37,12 +42,14 @@ const App = () => (
           <Suspense fallback={null}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/produkte"                     element={<ProduktePage />} />
               <Route path="/produkte/webshop"            element={<WebshopPage />} />
               <Route path="/produkte/app"                element={<AppPage />} />
               <Route path="/produkte/bestellapp"         element={<AppPage />} />
               <Route path="/produkte/webseite"           element={<WebseitePage />} />
               <Route path="/produkte/kassensystem"        element={<KassePage />} />
               <Route path="/produkte/transaktionsumlage" element={<TransaktionsumlagePage />} />
+              <Route path="/loesungen"                         element={<LoesungenPage />} />
               <Route path="/loesungen/lieferservice-gruenden" element={<LieferserviceGruendenPage />} />
               <Route path="/loesungen/franchise"         element={<FranchisePage />} />
               <Route path="/loesungen/restaurant"        element={<RestaurantPage />} />
@@ -52,6 +59,9 @@ const App = () => (
               <Route path="/datenschutz"                 element={<Datenschutz />} />
               <Route path="/agb"                         element={<AGB />} />
               <Route path="/kontakt"                     element={<Kontakt />} />
+              <Route path="/faq"                         element={<FAQPage />} />
+              <Route path="/downloads"                   element={<DownloadsPage />} />
+              <Route path="/downloads/druckertreiber"    element={<DruckertreiberPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

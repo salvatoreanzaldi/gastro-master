@@ -128,6 +128,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/faq" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  FAQ
+                </Link>
+              </li>
+              <li>
                 <Link to="/downloads" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
                   {t.footer.downloads}
                 </Link>

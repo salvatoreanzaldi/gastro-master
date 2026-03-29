@@ -148,10 +148,11 @@ const Navbar = () => {
             onMouseEnter={() => { if (loesCloseTimer.current) clearTimeout(loesCloseTimer.current); setLoesDropOpen(true); }}
             onMouseLeave={() => { loesCloseTimer.current = setTimeout(() => setLoesDropOpen(false), 150); }}
           >
-            <button className="flex items-center gap-1 text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
+            <Link to="/loesungen" onClick={() => setLoesDropOpen(false)}
+              className="flex items-center gap-1 text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
               Lösungen
               <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${loesDropOpen ? "rotate-180" : ""}`} />
-            </button>
+            </Link>
             {loesDropOpen && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 w-64 pt-3 z-50">
                 <DropdownMenu items={loesungenItems} onClose={() => setLoesDropOpen(false)} />
@@ -281,13 +282,22 @@ const Navbar = () => {
 
           {/* Lösungen accordion */}
           <div>
-            <button
-              onClick={() => setLoesMobOpen(!loesMobOpen)}
-              className="flex items-center w-full text-primary-foreground/70 hover:text-primary-foreground font-medium py-2 text-left"
-            >
-              Lösungen
-              <ChevronDown className={`w-4 h-4 ml-auto transition-transform duration-200 ${loesMobOpen ? "rotate-180" : ""}`} />
-            </button>
+            <div className="flex items-center">
+              <Link
+                to="/loesungen"
+                onClick={() => setMobileOpen(false)}
+                className="flex-1 text-primary-foreground/70 hover:text-primary-foreground font-medium py-2"
+              >
+                Lösungen
+              </Link>
+              <button
+                onClick={() => setLoesMobOpen(!loesMobOpen)}
+                className="py-2 px-1"
+                aria-label="Lösungen Untermenü"
+              >
+                <ChevronDown className={`w-4 h-4 text-primary-foreground/70 transition-transform duration-200 ${loesMobOpen ? "rotate-180" : ""}`} />
+              </button>
+            </div>
             {loesMobOpen && (
               <div className="pl-4 mt-1 space-y-1 border-l border-white/10 mb-2">
                 {loesungenItems.map(item => {
