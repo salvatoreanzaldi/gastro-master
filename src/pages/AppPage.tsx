@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from "framer-motion";
 import {
   ArrowRight, Plus, Minus, CheckCircle2,
   Bell, Star, RefreshCw, Users,
   CreditCard, MapPin, Smartphone, Palette, type LucideIcon,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import CalculatorSection from "@/components/landing/CalculatorSection";
@@ -51,11 +53,11 @@ import teamAndrejImg    from "@/assets/team-andrej-krutsch.png";
 const faqs = [
   {
     q: "Wie lange dauert die Einrichtung einer eigenen Bestell-App?",
-    a: "In der Regel dauert es 2–3 Wochen, bis deine App live im Apple App Store und Google Play Store verfügbar ist. In dieser Zeit konfigurieren wir gemeinsam mit dir das Design, die Speisekarte, Liefergebiete und Zahlungsmethoden. Du musst nichts selbst programmieren.",
+    a: "In der Regel dauert es 2–3 Wochen, bis deine App live im Apple App Store und Google Play Store verfügbar ist. In dieser Zeit konfigurieren wir gemeinsam mit dir das Design, die Speisekarte, Liefergebiete und Zahlungsmethoden. Du musst nichts selbst programmieren — wer danach [seinen eigenen Lieferdienst aufbauen](/loesungen/lieferservice-gruenden) möchte, kann direkt loslegen.",
   },
   {
     q: "Was kostet eine eigene Gastro-App?",
-    a: "Die Gastro Master App inklusive Webshop kostet 149 € pro Monat (netto). Darin enthalten sind App-Hosting, App Store-Verwaltung, laufende Updates und Support. Es gibt keine Provision pro Bestellung – nur den festen Monatsbeitrag. Den Webshop ohne App gibt es bereits ab 79 € / Monat.",
+    a: "Die Gastro Master App inklusive [Webshop](/produkte/webshop) kostet 149 € pro Monat (netto). Darin enthalten sind App-Hosting, App Store-Verwaltung, laufende Updates und Support. Es gibt keine Provision pro Bestellung – nur den festen Monatsbeitrag. Den Webshop ohne App gibt es bereits ab 79 € / Monat. Alle Pakete und Preise findest du auf der [Preisseite](/preise).",
   },
   {
     q: "Läuft die App unter meinem eigenen Namen im App Store?",
@@ -63,11 +65,11 @@ const faqs = [
   },
   {
     q: "Kann ich die App auch für mehrere Standorte nutzen?",
-    a: "Ja. Die Gastro Master App ist für Einzelbetriebe und Franchise-Konzepte mit mehreren Standorten geeignet. Kunden wählen direkt in der App ihren Standort aus und bestellen dort. Die Plattform ist auf bis zu 100 Standorte ausgelegt – viele unserer Kunden betreiben bereits 10 oder mehr Filialen über eine einzige eigenbrandete App.",
+    a: "Ja. Die Gastro Master App ist für Einzelbetriebe und [Franchise-Konzepte](/loesungen/franchise) mit mehreren Standorten geeignet. Kunden wählen direkt in der App ihren Standort aus und bestellen dort. Die Plattform ist auf bis zu 100 Standorte ausgelegt – viele unserer Kunden betreiben bereits 10 oder mehr Filialen über eine einzige eigenbrandete App.",
   },
   {
     q: "Gibt es Push Notifications und ein Kundenbindungsprogramm?",
-    a: "Ja. Du kannst deinen Kunden jederzeit Push Notifications schicken – für Angebote, neue Gerichte oder Rabattaktionen. Zusätzlich bietet die App ein Kundenpunkte-System: Kunden sammeln Punkte bei jeder Bestellung und lösen sie gegen Prämien ein.",
+    a: "Ja. Du kannst deinen Kunden jederzeit Push Notifications schicken – für Angebote, neue Gerichte oder Rabattaktionen. Zusätzlich bietet die App ein Kundenpunkte-System: Kunden sammeln Punkte bei jeder Bestellung und lösen sie gegen Prämien ein. Alle enthaltenen Funktionen findest du in der [Preisübersicht](/preise).",
   },
   {
     q: "Kann ich die App vor dem Kauf testen?",
@@ -75,9 +77,30 @@ const faqs = [
   },
   {
     q: "Brauche ich technisches Know-how, um die App zu betreiben?",
-    a: "Nein. Die App wird vollständig von uns eingerichtet und gepflegt. Du pflegst deine Speisekarte, Preise und Angebote über ein einfaches Backend – ohne Programmierung. Bei Fragen steht dir unser Support-Team direkt zur Verfügung.",
+    a: "Nein. Die App wird vollständig von uns eingerichtet und gepflegt. Du pflegst deine Speisekarte, Preise und Angebote über ein einfaches Backend – ohne Programmierung. Bei Fragen steht dir unser [Support-Team](/kontakt) direkt zur Verfügung.",
   },
 ];
+
+// ─── Schema ───────────────────────────────────────────────────────────────────
+const SCHEMA_BREADCRUMB = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Gastro Master", item: "https://gastro-master.de" },
+    { "@type": "ListItem", position: 2, name: "Produkte", item: "https://gastro-master.de/produkte" },
+    { "@type": "ListItem", position: 3, name: "Bestell-App", item: "https://gastro-master.de/produkte/app" },
+  ],
+};
+
+const SCHEMA_FAQ_APP = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map(f => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") },
+  })),
+};
 
 // ─── Cursor-Tracking Glow Card ────────────────────────────────────────────────
 const GlowCard = ({
@@ -175,6 +198,13 @@ const FlyerPriceList = () => {
   );
 };
 
+const renderFaqLinks = (text: string): React.ReactNode[] =>
+  text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+    const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (m) return <Link key={i} to={m[2]} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
+    return part;
+  });
+
 const FaqItem = ({ q, a }: { q: string; a: string }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -197,7 +227,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
             transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{a}</p>
+            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a)}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -543,7 +573,7 @@ const VideoSection = () => {
               Sieh deine App in&nbsp;Aktion.
             </h2>
             <p className="text-[#0A264A]/55 dark:text-white/50 text-lg leading-relaxed mb-8">
-              Über 700 Gastronomen in Deutschland nutzen bereits ihre eigene White-Label Bestell-App – mit eigenem Logo, eigenem Branding und 0&nbsp;% Provision. Sieh selbst, wie einfach und überzeugend eine eigene Bestell-App für deine Gäste ist.
+              Über 700 Gastronomen in Deutschland nutzen bereits ihre eigene Bestell-App – mit eigenem Logo, eigenem Branding und 0&nbsp;% Provision. Sieh selbst, wie einfach und überzeugend eine eigene Bestell-App für deine Gäste ist.
             </p>
             <motion.button
               onClick={() => { window.location.href = "/kontakt"; }}
@@ -563,12 +593,16 @@ const VideoSection = () => {
 };
 
 const AppPage = () => {
-  useEffect(() => {
-    document.title = "Eigene Bestell-App für die Gastronomie – 0 % Provision | Gastro Master";
-  }, []);
+  useSeoMeta({
+    title: "Bestell-App Gastronomie — eigene App ab 149 € | Gastro Master",
+    description: "Eigene Bestell-App für die Gastronomie: iOS & Android, eigenes Branding, 0 % Provision, Push-Benachrichtigungen. Ab 149 €/Monat. Jetzt kostenlos beraten lassen.",
+    canonical: "https://gastro-master.de/produkte/app",
+  });
 
   return (
     <div className="min-h-screen bg-[#0A264A]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_FAQ_APP) }} />
       <Navbar />
 
       {/* ── S1: HERO ────────────────────────────────────────────── */}
@@ -592,7 +626,7 @@ const AppPage = () => {
             transition={{ delay: 0.1, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.05] tracking-tight"
           >
-            Deine eigene Bestell App –{" "}
+            Deine Bestell-App für die Gastronomie –{" "}
             <span className="text-gradient-brand">ohne Provision,</span>{" "}
             ohne Abhängigkeit.
           </motion.h1>
@@ -611,7 +645,9 @@ const AppPage = () => {
           className="max-w-2xl mx-auto px-5 text-center relative z-10 pt-8 md:pt-10 pb-4 flex flex-col items-center gap-6"
         >
           <p className="text-lg md:text-xl text-white/60 leading-relaxed">
-            Über 700 Gastronomen bestellen bereits über ihre eigene App – inklusive iOS & Android App, Webshop und eigenem Branding.
+            Über 700 Gastronomen bestellen bereits über ihre eigene App – inklusive iOS & Android App,{" "}
+            <Link to="/produkte/webshop" className="text-cyan-brand/80 underline underline-offset-2 hover:opacity-80 transition-opacity">Webshop</Link>{" "}
+            und eigenem Branding.
           </p>
 
           <motion.button
@@ -688,9 +724,16 @@ const AppPage = () => {
               Was deine Gastro Master Bestell-App kann.
             </h2>
             <p className="text-[#0A264A]/55 dark:text-white/50 text-lg leading-relaxed">
-              Deine App – mit deinem Namen, deinem Branding und den Funktionen, die Lieferdienste und Restaurants im Alltag wirklich brauchen.
+              Deine App – mit deinem Namen, deinem Branding und den Funktionen, die Restaurants im Alltag wirklich brauchen. Besonders ideal für Betriebe, die{" "}
+              <Link to="/loesungen/lieferservice-gruenden" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">einen eigenen Lieferdienst aufbauen</Link>{" "}
+              möchten.
             </p>
           </motion.div>
+
+          {/* GEO stat */}
+          <p className="text-xs text-[#0A264A]/35 dark:text-white/25 mb-6">
+            Laut Statista nutzten 2024 über 36 Millionen Menschen in Deutschland mindestens eine Food-Delivery-App — der direkte Kanal gewinnt. (Quelle: Statista, Online Food Delivery Markt Deutschland 2024)
+          </p>
 
           {/* 8 Feature Cards */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-7">

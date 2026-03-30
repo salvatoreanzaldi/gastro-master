@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, Building2, ClipboardList, Target, Monitor,
@@ -68,7 +69,7 @@ export const STATS: StatItem[] = [
     href: "https://berliner-abendblatt.de/berlin-news/lieferando-hoehere-provisionen-fuer-restaurants-id162852",
   },
   {
-    value: "ab 69 €",
+    value: "ab 79 €",
     label: "pro Monat — eigenes Bestellsystem, sofort startklar",
     source: "Gastro Master",
     href: "https://gastro-master.de/produkte/webshop",
@@ -81,7 +82,7 @@ export const STEPS: StepItem[] = [
     icon: Monitor,
     title: "Dein Bestellsystem einrichten",
     text: "Hier entscheidest du: Provision für immer — oder ab jetzt 0 %? Mit Gastro Master bekommst du Webshop, App und Kassensystem. Kein Vorwissen nötig, live in 2–3 Wochen.",
-    highlight: "0 % Provision ab dem ersten Auftrag. Keine Einrichtungskosten.",
+    highlight: "0 % Provision ab dem ersten Auftrag. Persönliche Einrichtungsbegleitung.",
     featured: true,
     products: [
       { label: "Webshop (0 % Provision)", href: "/produkte/webshop" },
@@ -127,23 +128,23 @@ export const COMPARE_ROWS: CompareRow[] = [
 export const FAQ_ITEMS: FaqItem[] = [
   {
     q: "Lohnt sich ein eigener Lieferdienst 2026?",
-    a: "Ja — der Markt wächst laut Statista von 6,1\u202fMrd.\u202f€ (2023) auf 9,9\u202fMrd.\u202f€ bis 2028. Wer früh ein eigenes System aufbaut, zahlt keine Provision mehr. Dein Bestellsystem kostet ab 79\u202f€/Monat — statt bis zu 30\u202f% auf jeden Auftrag.",
+    a: "Ja — der Markt wächst laut Statista von 6,1\u202fMrd.\u202f€ (2023) auf 9,9\u202fMrd.\u202f€ bis 2028. Wer früh ein eigenes System aufbaut, zahlt keine Provision mehr. Mit einem [digitalen Bestellsystem für Gastronomie](/produkte/webshop) startest du ab 79\u202f€/Monat — statt bis zu 30\u202f% auf jeden Auftrag.",
   },
   {
     q: "Was kostet es, einen Lieferdienst zu gründen?",
-    a: "Das hängt davon ab, wie du starten willst. Die Gewerbeanmeldung kostet 20–60 €. Für eine Ghost Kitchen (Küche ohne Gastraum) sind Startkosten ab 2.000–5.000 € realistisch. Das Bestellsystem (Webshop + App) kostet ab 69 €/Monat. Das meiste Geld sparst du im laufenden Betrieb: keine Gebühren von 13–30 % auf jeden Auftrag.",
+    a: "Das hängt davon ab, wie du starten willst. Die Gewerbeanmeldung kostet 20–60 €. Für eine Ghost Kitchen (Küche ohne Gastraum) sind Startkosten ab 2.000–5.000 € realistisch. Das Bestellsystem — [Webshop](/produkte/webshop) und [eigene Bestell-App](/produkte/app) — kostet ab 79 €/Monat. Das meiste Geld sparst du im laufenden Betrieb: keine Gebühren von 13–30 % auf jeden Auftrag. Alle Kosten im Überblick findest du in der [vollständigen Preisübersicht](/preise).",
   },
   {
     q: "Brauche ich ein Restaurant, um einen Lieferdienst zu starten?",
-    a: "Nein. Du kannst als Ghost Kitchen starten — das ist eine Küche ohne Gastraum, nur für Lieferungen. Das spart viel Miete und macht den Start günstiger. Du brauchst nur eine Gewerbeanmeldung und musst die Hygiene-Regeln für Lebensmittel einhalten.",
+    a: "Nein. Du kannst als Ghost Kitchen starten — das ist eine Küche ohne Gastraum, nur für Lieferungen. Das spart viel Miete und macht den Start günstiger. Du brauchst nur eine Gewerbeanmeldung und musst die Hygiene-Regeln für Lebensmittel einhalten. Wenn du ein bestehendes Restaurant hast, findest du passende Lösungen auf der [Seite für Restaurants](/loesungen/restaurant).",
   },
   {
     q: "Wie viel Provision nimmt Lieferando?",
-    a: "Lieferando nimmt 13\u202f% Provision, wenn du eigene Fahrer hast. Mit Lieferando-Fahrern steigt das auf bis zu 30\u202f% pro Bestellung. Bei Wolt und Uber Eats sind es ähnlich 15–30\u202f%. Quelle: Berliner Abendblatt.",
+    a: "Lieferando nimmt 13\u202f% Provision, wenn du eigene Fahrer hast. Mit Lieferando-Fahrern steigt das auf bis zu 30\u202f% pro Bestellung. Bei Wolt und Uber Eats sind es ähnlich 15–30\u202f%. Quelle: Berliner Abendblatt. Mit einem [eigenen Lieferdienst ohne Provision](/loesungen/lieferdienst) zahlst du stattdessen einen festen Monatsbetrag — ohne Abzüge auf jede Bestellung.",
   },
   {
     q: "Welche Genehmigungen brauche ich für einen Lieferdienst?",
-    a: "Du brauchst: (1) Gewerbeanmeldung beim Gewerbeamt (20–60\u202f€), (2) Hygiene-Schulung (HACCP) — online möglich, ca.\u202f20–50\u202f€, (3) Gesundheitszeugnis für alle, die mit Lebensmitteln arbeiten (ca.\u202f30\u202f€). Eine Gaststättenerlaubnis brauchst du nicht, wenn du nur lieferst.",
+    a: "Du brauchst: (1) Gewerbeanmeldung beim Gewerbeamt (20–60\u202f€), (2) Hygiene-Schulung (HACCP) — online möglich, ca.\u202f20–50\u202f€, (3) Gesundheitszeugnis für alle, die mit Lebensmitteln arbeiten (ca.\u202f30\u202f€). Eine Gaststättenerlaubnis brauchst du nicht, wenn du nur lieferst. Unser Team berät dich kostenlos — schreib uns einfach über das [Kontaktformular](/kontakt).",
   },
 ];
 
@@ -155,8 +156,51 @@ const SCHEMA_FAQ = {
   "mainEntity": FAQ_ITEMS.map((item) => ({
     "@type": "Question",
     "name": item.q,
-    "acceptedAnswer": { "@type": "Answer", "text": item.a },
+    "acceptedAnswer": { "@type": "Answer", "text": item.a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") },
   })),
+};
+
+const SCHEMA_BREADCRUMB = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://gastro-master.de/" },
+    { "@type": "ListItem", "position": 2, "name": "Lösungen", "item": "https://gastro-master.de/loesungen" },
+    { "@type": "ListItem", "position": 3, "name": "Lieferservice gründen", "item": "https://gastro-master.de/loesungen/lieferservice-gruenden" },
+  ],
+};
+
+const SCHEMA_HOWTO = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Eigenen Lieferdienst gründen — in 4 Schritten",
+  "description": "Schritt-für-Schritt Anleitung zum Aufbau eines eigenen Lieferdienstes ohne Plattformabhängigkeit — von der Gewerbeanmeldung bis zum ersten Auftrag.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Bestellsystem einrichten",
+      "text": "Mit Gastro Master bekommst du Webshop, App und Kassensystem. Kein Vorwissen nötig, live in 2–3 Wochen. 0 % Provision ab dem ersten Auftrag.",
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Eine Nische wählen",
+      "text": "Starte mit einer Küchenkategorie, 8–12 Gerichten und einem Liefergebiet. Fokus schlägt breites Angebot.",
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Geschäftsmodell wählen",
+      "text": "Eigenproduktion, Ghost Kitchen (Küche ohne Gastraum) oder Vermittlung wählen. Eine Ghost Kitchen spart 60–80 % Mietkosten.",
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Gewerbe anmelden",
+      "text": "Die Gewerbeanmeldung kostet 20–60 € und ist in wenigen Tagen erledigt. Zusätzlich: Hygiene-Schulung (HACCP) und Gesundheitszeugnis. Keine Gaststättenerlaubnis nötig.",
+    },
+  ],
 };
 
 const SCHEMA_ARTICLE = {
@@ -174,21 +218,24 @@ const SCHEMA_ARTICLE = {
   },
 };
 
+// ─── renderFaqLinks ────────────────────────────────────────────────────────────
+const renderFaqLinks = (text: string): React.ReactNode[] =>
+  text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+    const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (m) return <Link key={i} to={m[2]} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
+    return part;
+  });
+
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 const LieferserviceGruendenPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title =
-      "Lieferdienst gründen 2026 — Kompletter Leitfaden | Gastro Master";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta)
-      meta.setAttribute(
-        "content",
-        "Eigenen Lieferdienst aufbauen ohne Lieferando. Schritt-für-Schritt: Gewerbeanmeldung, Kosten, Bestellsystem — 0 % Provision mit Gastro Master."
-      );
-  }, []);
+  useSeoMeta({
+    title: "Lieferdienst gründen 2026 — Kompletter Leitfaden | Gastro Master",
+    description: "Eigenen Lieferdienst aufbauen ohne Lieferando. Schritt-für-Schritt: Gewerbeanmeldung, Kosten, Bestellsystem — 0 % Provision mit Gastro Master.",
+    canonical: "https://gastro-master.de/loesungen/lieferservice-gruenden",
+  });
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0A264A]">
@@ -200,6 +247,14 @@ const LieferserviceGruendenPage = () => {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_ARTICLE) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_HOWTO) }}
       />
 
       <Navbar />
@@ -406,10 +461,10 @@ const LieferserviceGruendenPage = () => {
           {/* Top 3 — large image cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
             {[
-              { img: imgWebshop,  title: "Online Shop",   tagline: "So sieht dein Online Shop aus",               href: "/produkte/webshop" },
-              { img: imgApp,      title: "Bestell-App",   tagline: "Deine eigene Bestell-App",                    href: "/produkte/app"     },
-              { img: imgKasse,    title: "Kassensystem",  tagline: "Dein Kassensystem — übersichtlich & einfach", href: "/produkte/kassensystem" },
-            ].map(({ img, title, tagline, href }, i) => (
+              { img: imgWebshop,  title: "Online Shop",   alt: "Online Bestellshop für Gastronomie — 0 % Provision mit Gastro Master",  tagline: "So sieht dein Online Shop aus",               href: "/produkte/webshop" },
+              { img: imgApp,      title: "Bestell-App",   alt: "Eigene Bestell-App für Restaurants und Lieferdienste — Gastro Master",   tagline: "Deine eigene Bestell-App",                    href: "/produkte/app"     },
+              { img: imgKasse,    title: "Kassensystem",  alt: "TSE-konformes Kassensystem für Gastronomen — Gastro Master POS",         tagline: "Dein Kassensystem — übersichtlich & einfach", href: "/produkte/kassensystem" },
+            ].map(({ img, title, alt, tagline, href }, i) => (
               <motion.div
                 key={href}
                 initial={{ opacity: 0, y: 20 }}
@@ -419,7 +474,7 @@ const LieferserviceGruendenPage = () => {
                 className="bg-white/[0.06] border border-white/[0.10] rounded-2xl overflow-hidden hover:border-cyan-brand/30 transition-all duration-300 group"
               >
                 <div className="relative overflow-hidden h-48">
-                  <img src={img} alt={title} className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500" />
+                  <img src={img} alt={alt} className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A]/80 via-transparent to-transparent" />
                 </div>
                 <div className="p-5">
@@ -436,9 +491,9 @@ const LieferserviceGruendenPage = () => {
           {/* Bottom 2 — centered */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
             {[
-              { img: imgWebseite,    title: "Webseite",           tagline: "Deine Webseite — gefunden auf Google",      href: "/produkte/webseite"          },
-              { img: imgTransaktion, title: "Zahlungsgebühren weitergeben", tagline: "Deine Kunden zahlen die Gebühren — automatisch",  href: "/produkte/transaktionsumlage"},
-            ].map(({ img, title, tagline, href }, i) => (
+              { img: imgWebseite,    title: "Webseite",           alt: "Professionelle Webseite für Gastronomie — gefunden auf Google",  tagline: "Deine Webseite — gefunden auf Google",      href: "/produkte/webseite"          },
+              { img: imgTransaktion, title: "Zahlungsgebühren weitergeben", alt: "Transaktionsumlage — Zahlungsgebühren transparent an Kunden weitergeben",  tagline: "Deine Kunden zahlen die Gebühren — automatisch",  href: "/produkte/transaktionsumlage"},
+            ].map(({ img, title, alt, tagline, href }, i) => (
               <motion.div
                 key={href}
                 initial={{ opacity: 0, y: 20 }}
@@ -448,7 +503,7 @@ const LieferserviceGruendenPage = () => {
                 className="bg-white/[0.06] border border-white/[0.10] rounded-2xl overflow-hidden hover:border-cyan-brand/30 transition-all duration-300 group"
               >
                 <div className="relative overflow-hidden h-40">
-                  <img src={img} alt={title} className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500" />
+                  <img src={img} alt={alt} className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A]/80 via-transparent to-transparent" />
                 </div>
                 <div className="p-5">
@@ -555,7 +610,10 @@ const LieferserviceGruendenPage = () => {
                 <span className="text-amber-400">bis zu 900&nbsp;€ Provision</span> — jeden Monat.
               </p>
               <p className="text-white/55 text-sm">
-                Mit Gastro Master: nur 79&nbsp;€/Monat, 0&nbsp;% Provision auf deine Bestellungen.
+                Mit Gastro Master: nur 79&nbsp;€/Monat, 0&nbsp;% Provision auf deine Bestellungen.{" "}
+                <Link to="/preise" className="text-cyan-brand/70 underline underline-offset-2 hover:text-cyan-brand transition-colors">
+                  Alle Kosten im Überblick →
+                </Link>
               </p>
             </div>
             {/* Right: Ersparnis + CTA */}
@@ -724,7 +782,7 @@ const LieferserviceGruendenPage = () => {
                       className="overflow-hidden"
                     >
                       <p className="px-6 pb-6 text-sm text-[#0A264A]/65 dark:text-white/55 leading-7 border-t border-[#0A264A]/[0.05] dark:border-white/[0.05] pt-4">
-                        {item.a}
+                        {renderFaqLinks(item.a)}
                       </p>
                     </motion.div>
                   )}

@@ -4,6 +4,7 @@ import { Clock, Lightbulb, Lock, Mail, Phone } from "lucide-react";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import rene     from "@/assets/Rene Ebert - Kontakt.png";
 import salva    from "@/assets/Salvatore Anzaldi - Kontakt.png";
 import andrej   from "@/assets/Andrej Krutsch - Kontakt.png";
@@ -32,6 +33,11 @@ const promises = [
 ];
 
 const Kontakt = () => {
+  useSeoMeta({
+    title: "Kontakt — Kostenlose Beratung für Gastronomen | Gastro Master",
+    description: "Gastro Master kontaktieren – kostenlose Beratung für Gastronomen. Webshop, App, Kassensystem und Webseite für die Gastronomie. Wir melden uns innerhalb von 24 Stunden.",
+    canonical: "https://gastro-master.de/kontakt",
+  });
   const { t } = useLanguage();
   const [form, setForm] = useState({
     name: "", restaurant: "", plz: "", phone: "", email: "", message: "",

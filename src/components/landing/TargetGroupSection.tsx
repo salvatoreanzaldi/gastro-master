@@ -256,16 +256,28 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
                     : null;
                   const label = ctaLabel ?? t.target.cta;
                   const cls = "bg-gradient-amber text-primary font-bold px-6 py-3 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2 self-start";
-                  return href ? (
-                    <Link to={href} className={cls}>
-                      {label}
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  ) : (
-                    <button onClick={scrollToForm} className={cls}>
-                      {label}
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
+                  return (
+                    <div className="flex flex-col gap-3 items-start">
+                      {href ? (
+                        <Link to={href} className={cls}>
+                          {label}
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      ) : (
+                        <button onClick={scrollToForm} className={cls}>
+                          {label}
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      )}
+                      {activeGroup === "lieferdienst" && (
+                        <Link
+                          to="/loesungen/lieferservice-gruenden"
+                          className="text-cyan-brand text-sm font-semibold inline-flex items-center gap-1.5 hover:gap-2.5 transition-all duration-200"
+                        >
+                          eigenen Lieferdienst gründen <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                      )}
+                    </div>
                   );
                 })()}
               </div>

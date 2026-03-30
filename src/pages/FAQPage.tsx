@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   HelpCircle, Truck, Store, UtensilsCrossed, Coffee, Building2,
@@ -33,7 +34,7 @@ const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
 /* ─── Types ──────────────────────────────────────────────── */
 
-interface FAQItem { id: string; q: string; a: string; source?: string; }
+interface FAQItem { id: string; q: string; a: string; source?: string; sourceHref?: string; }
 interface FAQCategory { id: string; label: string; Icon: React.ElementType; items: FAQItem[]; }
 
 /* ─── Data ───────────────────────────────────────────────── */
@@ -46,7 +47,7 @@ const FAQ_CATEGORIES: FAQCategory[] = [
     items: [
       { id: "was-macht-gastro-master", q: "Was macht Gastro Master?", a: "Gastro Master gibt dir dein eigenes digitales System — mit App, Webshop, Kassensystem und Webseite. Du zahlst 0 % Provision und behältst alle Kundendaten. Über 700 Betriebe in Deutschland setzen auf Gastro Master. Schau dir alle [Produkte von Gastro Master](/produkte) an." },
       { id: "unterschied-lieferando", q: "Wie unterscheidet sich Gastro Master von Lieferando & Co.?", a: "Lieferando nimmt 13–30 % Provision auf jede Bestellung — bei Gastro Master zahlst du 0 %. Du bekommst dein eigenes System: eigene App, eigener Webshop, eigenes Branding. Kein Algorithmus entscheidet, ob du sichtbar bist. Den Vergleich findest du auf unserer [Lösungsseite](/loesungen)." },
-      { id: "kosten-allgemein", q: "Wie viel kostet die Nutzung von Gastro Master?", a: "Der Webshop kostet ab 49 €/Monat, das Kassensystem ab 69 €/Monat, die Webseite ab 49 €/Monat. Die App wird individuell kalkuliert — ein kurzes Gespräch genügt. Einrichtungskosten fallen nicht an. Alle Infos auf den [Produktseiten](/produkte)." },
+      { id: "kosten-allgemein", q: "Wie viel kostet die Nutzung von Gastro Master?", a: "Der Webshop kostet ab 49 €/Monat, das Kassensystem ab 69 €/Monat, die Webseite ab 49 €/Monat. Die App wird individuell kalkuliert — ein kurzes Gespräch genügt. Die Einrichtungskosten werden individuell besprochen. Alle Infos auf den [Produktseiten](/produkte)." },
       { id: "mindestvertragslaufzeit", q: "Gibt es eine Mindestvertragslaufzeit?", a: "Es gibt keine langen Laufzeiten — nur eine 3-monatige Kündigungsfrist. Du kannst flexibel kündigen. Bei Fragen erreichst du uns direkt über die [Kontaktseite](/kontakt)." },
       { id: "wie-schnell-live", q: "Wie schnell erhalte ich mein eigenes System?", a: "In der Regel bist du in 2–3 Wochen live. Das gilt für Webshop und App. Das Kassensystem wird individuell eingerichtet. Wir begleiten dich vom ersten Tag an persönlich." },
       { id: "welche-software-restaurant", q: "Welche Software brauche ich für mein Restaurant?", a: "Das hängt von deinem Betrieb ab. Für Online-Bestellungen brauchst du einen [Webshop](/produkte/webshop), für die Abrechnung ein [Kassensystem](/produkte/kassensystem). Beides lässt sich kombinieren. Schau dir unsere [Restaurantlösung](/loesungen/restaurant) an." },
@@ -165,12 +166,12 @@ const FAQ_CATEGORIES: FAQCategory[] = [
     label: "Zahlen & Branchentrends",
     Icon: TrendingUp,
     items: [
-      { id: "liefermarkt-deutschland-2025", q: "Wie groß ist der Online-Liefermarkt in Deutschland 2025?", a: "Der Online-Liefermarkt in Deutschland wird laut Statista 2025 auf rund 18,75 Milliarden Euro geschätzt — mit einem jährlichen Wachstum von 9,4 % bis 2028. Rund 38,9 % der deutschen Haushalte nutzen Essenslieferungen online. Mit einem eigenen [Bestellsystem](/produkte/webshop) profitierst du direkt vom Marktwachstum — ohne Provision.", source: "Statista, Online Food Delivery Outlook Deutschland 2025" },
-      { id: "lieferando-provision-kalkulation", q: "Was kostet Lieferando Restaurants wirklich pro Monat?", a: "Lieferando berechnet 14 % des Bestellwerts plus 0,69 € je Transaktion. Konkret: Bei 500 Bestellungen à 20 € im Monat zahlst du ca. 1.745 € — jeden Monat. Bei 1.000 Bestellungen sind es bereits ca. 3.490 €. Ein eigener [Webshop](/produkte/webshop) mit integriertem Bestellsystem kostet 79 €/Monat — bei 0 % Provision. Die Differenz kann über 40.000 € pro Jahr betragen.", source: "Lieferando Partnerkonditionen, Stand 2025; eigene Kalkulation" },
-      { id: "gastronomiebetriebe-deutschland", q: "Wie viele Gastronomiebetriebe gibt es in Deutschland?", a: "In Deutschland gibt es laut DEHOGA rund 153.545 Restaurants und Bars (Stand 2024). Das gesamte Gastgewerbe umfasst 206.105 Betriebe mit rund 2,2 Millionen Beschäftigten. Der Jahresumsatz der Gastronomie beträgt 64,3 Milliarden Euro — trotzdem liegen die realen Umsätze 2025 noch rund 15 % unter dem Vorkrisenniveau von 2019. Gastro Master unterstützt bereits über 700 dieser Betriebe mit [digitalen Lösungen für die Gastronomie](/loesungen).", source: "DEHOGA Bundesverband; Statistisches Bundesamt, 2025/2026" },
-      { id: "kassenmeldepflicht-fakten", q: "Was ändert sich 2025 für Gastronomen beim Kassensystem?", a: "Zwei wichtige Neuerungen: Erstens gilt seit 1. Juli 2025 die Kassenmeldepflicht — alle Kassen müssen über ELSTER gemeldet werden (§ 146a Abs. 4 AO). Zweitens drohen bei Verstößen gegen KassenSichV und Abgabenordnung Bußgelder bis 25.000 €. Das Gastro Master [Kassensystem](/produkte/kassensystem) ist TSE-zertifiziert, meldereif und gesetzeskonform.", source: "Bundesministerium der Finanzen; § 146a AO; KassenSichV, Stand 2025" },
-      { id: "digitalisierung-gastronomie-2026", q: "Welche Gastronomie-Trends dominieren 2026?", a: "59 % der Gastronomen wollen laut DEHOGA in Digitalisierung investieren. Online-Bestellungen wachsen mit rund 9,4 % pro Jahr — schneller als jede andere Bestellart. Ghost Kitchens — also Küchen ohne eigenen Gastraum, die ausschließlich für Lieferungen produzieren — werden als kostengünstiges Modell beliebter. Wer jetzt eine eigene [App](/produkte/app) oder einen [Webshop](/produkte/webshop) einführt, ist dem Wettbewerb voraus.", source: "DEHOGA Branchenbericht 2024/2025; Statista, Online Food Delivery Outlook Deutschland 2025" },
-      { id: "eigener-shop-vs-lieferando-vergleich", q: "Was sind die strategischen Vorteile eines eigenen Webshops gegenüber Lieferando?", a: "Die Kosten sprechen für sich (siehe Frage oben) — aber die strategischen Vorteile sind genauso wichtig: Kundendaten gehören dir, nicht der Plattform. Du kannst Stammkunden per E-Mail oder [App](/produkte/app) direkt ansprechen und Remarketing betreiben. Du bestimmst Liefergebiet, Öffnungszeiten und Preise selbst — ohne Preisparitätszwang. Und du bist unabhängig von Algorithmen, die entscheiden, wie sichtbar du bist. Mehr auf der [Lieferdienst-Lösungsseite](/loesungen/lieferdienst).", source: "Lieferando Partnervertrag, Preisparitätsbedingungen 2025" },
+      { id: "liefermarkt-deutschland-2025", q: "Wie groß ist der Online-Liefermarkt in Deutschland 2025?", a: "Der Online-Liefermarkt in Deutschland wird laut Statista 2025 auf rund 18,75 Milliarden Euro geschätzt — mit einem jährlichen Wachstum von 9,4 % bis 2028. Rund 38,9 % der deutschen Haushalte nutzen Essenslieferungen online. Mit einem eigenen [Bestellsystem](/produkte/webshop) profitierst du direkt vom Marktwachstum — ohne Provision.", source: "Statista, Online Food Delivery Outlook Deutschland 2025", sourceHref: "https://www.statista.com/outlook/emo/online-food-delivery/germany" },
+      { id: "lieferando-provision-kalkulation", q: "Was kostet Lieferando Restaurants wirklich pro Monat?", a: "Lieferando berechnet 14 % des Bestellwerts plus 0,69 € je Transaktion. Konkret: Bei 500 Bestellungen à 20 € im Monat zahlst du ca. 1.745 € — jeden Monat. Bei 1.000 Bestellungen sind es bereits ca. 3.490 €. Ein eigener [Webshop](/produkte/webshop) mit integriertem Bestellsystem kostet 79 €/Monat — bei 0 % Provision. Die Differenz kann über 40.000 € pro Jahr betragen.", source: "Lieferando Partnerkonditionen, Stand 2025; eigene Kalkulation", sourceHref: "https://www.lieferando.de/partner" },
+      { id: "gastronomiebetriebe-deutschland", q: "Wie viele Gastronomiebetriebe gibt es in Deutschland?", a: "In Deutschland gibt es laut DEHOGA rund 153.545 Restaurants und Bars (Stand 2024). Das gesamte Gastgewerbe umfasst 206.105 Betriebe mit rund 2,2 Millionen Beschäftigten. Der Jahresumsatz der Gastronomie beträgt 64,3 Milliarden Euro — trotzdem liegen die realen Umsätze 2025 noch rund 15 % unter dem Vorkrisenniveau von 2019. Gastro Master unterstützt bereits über 700 dieser Betriebe mit [digitalen Lösungen für die Gastronomie](/loesungen).", source: "DEHOGA Bundesverband; Statistisches Bundesamt, 2025/2026", sourceHref: "https://www.dehoga-bundesverband.de/zahlen-fakten/" },
+      { id: "kassenmeldepflicht-fakten", q: "Was ändert sich 2025 für Gastronomen beim Kassensystem?", a: "Zwei wichtige Neuerungen: Erstens gilt seit 1. Juli 2025 die Kassenmeldepflicht — alle Kassen müssen über ELSTER gemeldet werden (§ 146a Abs. 4 AO). Zweitens drohen bei Verstößen gegen KassenSichV und Abgabenordnung Bußgelder bis 25.000 €. Das Gastro Master [Kassensystem](/produkte/kassensystem) ist TSE-zertifiziert, meldereif und gesetzeskonform.", source: "Bundesministerium der Finanzen; § 146a AO; KassenSichV, Stand 2025", sourceHref: "https://www.gesetze-im-internet.de/ao_1977/__146a.html" },
+      { id: "digitalisierung-gastronomie-2026", q: "Welche Gastronomie-Trends dominieren 2026?", a: "59 % der Gastronomen wollen laut DEHOGA in Digitalisierung investieren. Online-Bestellungen wachsen mit rund 9,4 % pro Jahr — schneller als jede andere Bestellart. Ghost Kitchens — also Küchen ohne eigenen Gastraum, die ausschließlich für Lieferungen produzieren — werden als kostengünstiges Modell beliebter. Wer jetzt eine eigene [App](/produkte/app) oder einen [Webshop](/produkte/webshop) einführt, ist dem Wettbewerb voraus.", source: "DEHOGA Branchenbericht 2024/2025; Statista, Online Food Delivery Outlook Deutschland 2025", sourceHref: "https://www.dehoga-bundesverband.de/zahlen-fakten/" },
+      { id: "eigener-shop-vs-lieferando-vergleich", q: "Was sind die strategischen Vorteile eines eigenen Webshops gegenüber Lieferando?", a: "Die Kosten sprechen für sich (siehe Frage oben) — aber die strategischen Vorteile sind genauso wichtig: Kundendaten gehören dir, nicht der Plattform. Du kannst Stammkunden per E-Mail oder [App](/produkte/app) direkt ansprechen und Remarketing betreiben. Du bestimmst Liefergebiet, Öffnungszeiten und Preise selbst — ohne Preisparitätszwang. Und du bist unabhängig von Algorithmen, die entscheiden, wie sichtbar du bist. Mehr auf der [Lieferdienst-Lösungsseite](/loesungen/lieferdienst).", source: "Lieferando Partnervertrag, Preisparitätsbedingungen 2025", sourceHref: "https://www.lieferando.de/partner" },
     ],
   },
 ];
@@ -219,18 +220,11 @@ const FAQPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    document.title = "FAQ — Häufige Fragen zu Gastro Master | Gastro Master";
-    const content = "Häufige Fragen zu Kassensystem (ab 69 €/Mon.), Webshop (0 % Provision), App & Lieferdienst — mit Branchendaten 2025/2026 und Quellenangaben. 700+ Gastronomen vertrauen Gastro Master.";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", content);
-    else {
-      const m = document.createElement("meta");
-      m.name = "description";
-      m.content = content;
-      document.head.appendChild(m);
-    }
-  }, []);
+  useSeoMeta({
+    title: "FAQ — Häufige Fragen zu Gastro Master | Gastro Master",
+    description: "Häufige Fragen zu Kassensystem (ab 69 €/Mon.), Webshop (0 % Provision), App & Lieferdienst — mit Branchendaten 2025/2026 und Quellenangaben. 700+ Gastronomen vertrauen Gastro Master.",
+    canonical: "https://gastro-master.de/faq",
+  });
 
   const toggleItem = (id: string) => {
     setOpenItems(prev => {
@@ -492,7 +486,19 @@ const FAQItemCard = ({ item, isOpen, onToggle, categoryLabel }: FAQItemCardProps
             </p>
             {item.source && (
               <p className="mt-2 text-[#94A3B8] text-[11px] italic">
-                Quelle: {item.source}
+                Quelle:{" "}
+                {item.sourceHref ? (
+                  <a
+                    href={item.sourceHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2 hover:text-cyan-brand transition-colors"
+                  >
+                    {item.source}
+                  </a>
+                ) : (
+                  item.source
+                )}
               </p>
             )}
           </div>

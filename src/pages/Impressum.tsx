@@ -1,7 +1,14 @@
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
-const Impressum = () => (
+const Impressum = () => {
+  useSeoMeta({
+    title: "Impressum | Gastro Master",
+    description: "Impressum der Gastro Master / Epit Global GmbH gemäß § 5 TMG.",
+    canonical: "https://gastro-master.de/impressum",
+  });
+  return (
   <div className="min-h-screen bg-background">
     <Navbar />
     <main className="section-padding pt-44 md:pt-52">
@@ -84,5 +91,6 @@ const Impressum = () => (
     <Footer />
   </div>
 );
+};
 
 export default Impressum;

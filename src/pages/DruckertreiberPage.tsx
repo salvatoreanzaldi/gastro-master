@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const DRIVERS = [
   { label: "Gastro Master Drucker",        version: "Windows",   url: "https://gastro-master.de/dd/windows.zip",                                                   ext: ".zip" },
@@ -22,7 +23,13 @@ const DownloadIcon = () => (
   </svg>
 );
 
-const DruckertreiberPage = () => (
+const DruckertreiberPage = () => {
+  useSeoMeta({
+    title: "Druckertreiber für Gastro Master Kassensystem | Gastro Master",
+    description: "Druckertreiber für Bon-Drucker und Kassensystem-Hardware von Gastro Master. Kompatibel mit allen gängigen Thermobondrucker-Modellen. Kostenlos herunterladen.",
+    canonical: "https://gastro-master.de/downloads/druckertreiber",
+  });
+  return (
   <div className="min-h-screen bg-background">
     <Navbar />
     <main className="section-padding pt-28 md:pt-32">
@@ -77,6 +84,7 @@ const DruckertreiberPage = () => (
     </main>
     <Footer />
   </div>
-);
+  );
+};
 
 export default DruckertreiberPage;

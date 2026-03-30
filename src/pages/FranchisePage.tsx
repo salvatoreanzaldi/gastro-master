@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -114,7 +115,7 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Was kostet die digitale Infrastruktur für ein Franchise-System?",
-    a: "Die Kosten hängen von der Anzahl der Standorte und dem gewünschten Funktionsumfang ab. Gastro Master arbeitet mit einem festen Monatsbetrag pro Standort — keine versteckten Gebühren, keine Provisionen. Im Gegensatz zur Eigenentwicklung (6–18 Monate, eigenes IT-Team) oder einem Anbieter-Mix (mehrere Abos, keine zentrale Kontrolle) erhalten Sie alles aus einer Hand. Sprechen Sie uns direkt an — wir erstellen ein individuelles Angebot für Ihr [Franchise-System](/loesungen/franchise).",
+    a: "Die Kosten hängen von der Anzahl der Standorte und dem gewünschten Funktionsumfang ab. Gastro Master arbeitet mit einem festen Monatsbetrag pro Standort — keine versteckten Gebühren, keine Provisionen. Im Gegensatz zur Eigenentwicklung (6–18 Monate, eigenes IT-Team) oder einem Anbieter-Mix (mehrere Abos, keine zentrale Kontrolle) erhalten Sie alles aus einer Hand. Alle Optionen und Konditionen finden Sie in der [Preisübersicht](/preise) oder sprechen Sie uns für ein individuelles Angebot an.",
   },
   {
     q: "Wie manage ich Bestellungen über mehrere Franchise-Standorte?",
@@ -147,20 +148,44 @@ const SCHEMA_ARTICLE = {
   publisher: { "@type": "Organization", name: "Gastro Master" },
 };
 
+const SCHEMA_BREADCRUMB = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Startseite", item: "https://gastro-master.de/" },
+    { "@type": "ListItem", position: 2, name: "Lösungen", item: "https://gastro-master.de/loesungen" },
+    { "@type": "ListItem", position: 3, name: "Franchise", item: "https://gastro-master.de/loesungen/franchise" },
+  ],
+};
+
+const SCHEMA_HOWTO = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "In vier Schritten zur digitalen Franchise-Infrastruktur",
+  description: "Gastro Master richtet die komplette digitale Infrastruktur für Ihr Gastro-Franchise ein — von der Beratung bis zum laufenden Support.",
+  step: [
+    { "@type": "HowToStep", position: 1, name: "Beratungsgespräch", text: "Wir analysieren Ihr Konzept, Ihre Standortstruktur und entwickeln gemeinsam die passende digitale Infrastruktur für Ihr Franchise-System." },
+    { "@type": "HowToStep", position: 2, name: "Setup & Branding", text: "Wir richten App, Bestellshop, Kassensystem und Webseite ein — vollständig in Ihrem Corporate Design, einheitlich für alle Standorte." },
+    { "@type": "HowToStep", position: 3, name: "Rollout", text: "Standort für Standort geht live. Jeder Franchisenehmer wird persönlich eingeführt und begleitet." },
+    { "@type": "HowToStep", position: 4, name: "Laufender Support", text: "Ein persönlicher Ansprechpartner bei Gastro Master. Zentrales Dashboard, regelmäßige Updates, kein IT-Aufwand Ihrerseits." },
+  ],
+};
+
 interface ProductCard {
   img: string;
   title: string;
+  alt: string;
   tagline: string;
   href: string;
   icon: React.ReactNode;
 }
 
 const PRODUCTS: ProductCard[] = [
-  { img: imgApp,         title: "App System",       tagline: "Ihre eigene Bestell-App — einheitlich gebrandet für alle Standorte",             href: "/produkte/app",                icon: <Smartphone className="w-4 h-4" /> },
-  { img: imgWebshop,     title: "Online Shop",      tagline: "Zentrales Bestellsystem für alle Standorte — 0 % Provision an Dritte",           href: "/produkte/webshop",             icon: <ShoppingCart className="w-4 h-4" /> },
-  { img: imgKasse,       title: "Kassensystem",     tagline: "Einheitliches POS-System für alle Filialen — konsolidierte Auswertung",          href: "/produkte/kassensystem",        icon: <Monitor className="w-4 h-4" /> },
-  { img: imgWebseite,    title: "Webseite",         tagline: "Professionelle Online-Präsenz für Ihr gesamtes Franchise-Netzwerk",              href: "/produkte/webseite",            icon: <Globe className="w-4 h-4" /> },
-  { img: imgTransaktion, title: "Zahlungsgebühren", tagline: "Transaktionsgebühren transparent steuern — standortübergreifend konfigurierbar", href: "/produkte/transaktionsumlage",  icon: <Percent className="w-4 h-4" /> },
+  { img: imgApp,         title: "App System",       alt: "Eigene Bestell-App für Franchise-Gastronomie — einheitlich gebrandet für alle Standorte",          tagline: "Ihre eigene Bestell-App — einheitlich gebrandet für alle Standorte",             href: "/produkte/app",                icon: <Smartphone className="w-4 h-4" /> },
+  { img: imgWebshop,     title: "Online Shop",      alt: "Zentrales Bestellsystem für Franchise-Standorte — 0 % Provision mit Gastro Master",                 tagline: "Zentrales Bestellsystem für alle Standorte — 0 % Provision an Dritte",           href: "/produkte/webshop",             icon: <ShoppingCart className="w-4 h-4" /> },
+  { img: imgKasse,       title: "Kassensystem",     alt: "TSE-konformes Kassensystem für alle Franchise-Filialen — einheitliche POS-Lösung",                  tagline: "Einheitliches POS-System für alle Filialen — konsolidierte Auswertung",          href: "/produkte/kassensystem",        icon: <Monitor className="w-4 h-4" /> },
+  { img: imgWebseite,    title: "Webseite",         alt: "Professionelle Webseite für Franchise-Gastronomie — einheitliches Branding für alle Standorte",     tagline: "Professionelle Online-Präsenz für Ihr gesamtes Franchise-Netzwerk",              href: "/produkte/webseite",            icon: <Globe className="w-4 h-4" /> },
+  { img: imgTransaktion, title: "Zahlungsgebühren", alt: "Transaktionsumlage für Franchise-Systeme — Zahlungsgebühren standortübergreifend steuern",          tagline: "Transaktionsgebühren transparent steuern — standortübergreifend konfigurierbar", href: "/produkte/transaktionsumlage",  icon: <Percent className="w-4 h-4" /> },
 ];
 
 interface StepItem {
@@ -197,21 +222,11 @@ const ONBOARDING_STEPS: StepItem[] = [
 const FranchisePage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title =
-      "Gastro Franchise digitalisieren 2026 — App, Shop & Kasse für alle Standorte | Gastro Master";
-    const meta = document.querySelector('meta[name="description"]');
-    const content =
-      "Franchise-System in der Gastronomie skalieren: einheitliche App, Webshop und Kassensystem für alle Standorte. 0 % Provision, zentrale Verwaltung. Jetzt Beratung sichern.";
-    if (meta) {
-      meta.setAttribute("content", content);
-    } else {
-      const tag = document.createElement("meta");
-      tag.name = "description";
-      tag.content = content;
-      document.head.appendChild(tag);
-    }
-  }, []);
+  useSeoMeta({
+    title: "Franchise Gastronomie Software — zentral | Gastro Master",
+    description: "Franchise-System digital aufbauen: einheitliche App, Webshop und Kassensystem für alle Standorte. Zentral gesteuert, 0 % Provision. Jetzt Beratung sichern.",
+    canonical: "https://gastro-master.de/loesungen/franchise",
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -223,6 +238,14 @@ const FranchisePage = () => {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_ARTICLE) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_HOWTO) }}
       />
 
       <Navbar />
@@ -338,7 +361,12 @@ const FranchisePage = () => {
               Der Markt wächst — Ihr System muss mithalten
             </h2>
             <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
-              Franchise-Gastronomie ist eines der stabilsten Wachstumssegmente der deutschen Wirtschaft.
+              Franchise-Gastronomie ist eines der stabilsten Wachstumssegmente der deutschen Wirtschaft —
+              auch für Gastronomen, die{" "}
+              <Link to="/loesungen/lieferservice-gruenden" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">
+                einen eigenen Lieferdienst aufbauen
+              </Link>{" "}
+              und skalieren wollen.
             </p>
           </div>
 
@@ -416,7 +444,7 @@ const FranchisePage = () => {
               {
                 icon: <GitBranch className="w-6 h-6" />,
                 title: "Fragmentierte Systeme",
-                text: "Jeder Standort ein anderes System — kein einheitliches Branding, keine zentrale Kontrolle über Menüs, Preise oder Öffnungszeiten.",
+                text: "Jeder Standort ein anderes System — kein einheitliches Branding, keine zentrale Kontrolle über Menüs, Preise oder Öffnungszeiten. Ein [einheitliches Kassensystem für alle Filialen](/produkte/kassensystem) schafft hier die Basis.",
               },
               {
                 icon: <BarChart3 className="w-6 h-6" />,
@@ -441,7 +469,7 @@ const FranchisePage = () => {
                   {item.icon}
                 </div>
                 <h3 className="font-bold text-foreground text-base mb-2">{item.title}</h3>
-                <p className="text-foreground/60 text-sm leading-relaxed">{item.text}</p>
+                <p className="text-foreground/60 text-sm leading-relaxed">{renderWithLinks(item.text)}</p>
               </motion.div>
             ))}
           </div>
@@ -566,7 +594,10 @@ const FranchisePage = () => {
             <p className="text-white/70 text-sm leading-relaxed flex-1">
               Franchise-Geber, die auf Eigenentwicklung setzen, investieren im Schnitt{" "}
               <strong className="text-white">6–18 Monate Entwicklungszeit</strong> und benötigen ein
-              eigenes IT-Team für Wartung und Weiterentwicklung — bevor der erste neue Standort live geht.
+              eigenes IT-Team für Wartung und Weiterentwicklung — bevor der erste neue Standort live geht.{" "}
+              <Link to="/preise" className="text-cyan-brand/70 underline underline-offset-2 hover:text-cyan-brand transition-colors">
+                Alle Konditionen im Überblick →
+              </Link>
             </p>
             <Link
               to="/kontakt"
@@ -790,7 +821,7 @@ const ProductCard = ({ product }: { product: ProductCard }) => (
     <div className="relative h-52 overflow-hidden">
       <img
         src={product.img}
-        alt={product.title}
+        alt={product.alt}
         className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-[#0A264A]/40 to-transparent" />

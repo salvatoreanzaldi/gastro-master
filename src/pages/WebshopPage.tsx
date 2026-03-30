@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from "framer-motion";
 import {
   ArrowRight, Plus, Minus, CheckCircle2,
   Star, CreditCard, Globe, FileText, MapPin, Users, RefreshCw, Search, type LucideIcon,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import CalculatorSection from "@/components/landing/CalculatorSection";
@@ -34,6 +36,17 @@ import teamSalvatoreImg from "@/assets/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team-andrej-krutsch.png";
 import teamMohammadImg  from "@/assets/team-mohammad-motakalemi.png";
 
+// ─── Schema ──────────────────────────────────────────────────────────────────
+const SCHEMA_BREADCRUMB = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Gastro Master", item: "https://gastro-master.de" },
+    { "@type": "ListItem", position: 2, name: "Produkte", item: "https://gastro-master.de/produkte" },
+    { "@type": "ListItem", position: 3, name: "Webshop", item: "https://gastro-master.de/produkte/webshop" },
+  ],
+};
+
 // ─── FAQ ─────────────────────────────────────────────────────────────────────
 const faqs = [
   {
@@ -54,17 +67,28 @@ const faqs = [
   },
   {
     q: "Gibt es einen Vertrag mit Mindestlaufzeit?",
-    a: "Nein. Du kannst monatlich kündigen – ohne Mindestlaufzeit. Es gibt keine versteckten Gebühren und keine Provision pro Bestellung. Nur der feste Monatsbeitrag von 79 € (netto).",
+    a: "Nein. Du kannst monatlich kündigen – ohne Mindestlaufzeit. Es gibt keine versteckten Gebühren und keine Provision pro Bestellung. Nur der feste Monatsbeitrag von 79 € (netto). Eine Übersicht aller Pakete findest du auf der [Preisseite](/preise).",
   },
   {
     q: "Was ist der Unterschied zwischen Webshop und App?",
-    a: "Der Webshop öffnet direkt im Browser – deine Kunden müssen nichts herunterladen. Die App erscheint dagegen unter deinem Namen im Apple App Store und Google Play Store. Beide Produkte nutzen dasselbe Bestellsystem. Viele unserer Kunden starten mit dem Webshop und upgraden später auf die App. App + Webshop zusammen gibt es ab 149 € / Monat.",
+    a: "Der Webshop öffnet direkt im Browser – deine Kunden müssen nichts herunterladen. Die [eigene Bestell-App](/produkte/app) erscheint dagegen unter deinem Namen im Apple App Store und Google Play Store. Beide Produkte nutzen dasselbe Bestellsystem. Viele unserer Kunden starten mit dem Webshop und upgraden später auf die App. App + Webshop zusammen gibt es ab 149 € / Monat.",
   },
   {
     q: "Helft ihr mir auch dabei, auf Google besser gefunden zu werden?",
     a: "Ja. Dein Webshop ist technisch SEO-optimiert – mit Titel-Tags, Meta-Beschreibungen und strukturierten Daten, die Google versteht. Wir unterstützen dich außerdem beim Einrichten oder Optimieren deines Google Business Profils, sodass Kunden deinen Shop direkt aus der Google-Suche aufrufen können.",
   },
 ];
+
+// ─── FAQPage Schema (built after faqs array) ─────────────────────────────────
+const SCHEMA_FAQ_WEBSHOP = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map(f => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
 
 // ─── Cursor-Tracking Glow Card ────────────────────────────────────────────────
 const GlowCard = ({
@@ -118,6 +142,13 @@ const GlowCard = ({
 };
 
 // ─── FAQ Item ─────────────────────────────────────────────────────────────────
+const renderFaqLinks = (text: string): React.ReactNode[] =>
+  text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+    const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (m) return <Link key={i} to={m[2]} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
+    return part;
+  });
+
 const FaqItem = ({ q, a }: { q: string; a: string }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -140,7 +171,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
             transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{a}</p>
+            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a)}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -390,12 +421,16 @@ const WebshopTeamCTA = () => {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const WebshopPage = () => {
-  useEffect(() => {
-    document.title = "Eigener Online-Bestellshop für Restaurants – 0 % Provision, ab 79 € | Gastro Master";
-  }, []);
+  useSeoMeta({
+    title: "Bestellsystem Gastronomie — eigener Webshop ab 79 € | Gastro Master",
+    description: "Digitales Bestellsystem für die Gastronomie ab 79 €/Monat — 0 % Provision, eigenes Branding. Unabhängig von Lieferando. Jetzt kostenlos beraten lassen.",
+    canonical: "https://gastro-master.de/produkte/webshop",
+  });
 
   return (
     <div className="min-h-screen bg-[#0A264A]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_FAQ_WEBSHOP) }} />
       <Navbar />
 
       {/* ── S1: HERO ────────────────────────────────────────────── */}
@@ -419,7 +454,7 @@ const WebshopPage = () => {
             transition={{ delay: 0.1, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.05] tracking-tight"
           >
-            Dein eigener Online-Bestellshop –{" "}
+            Dein Bestellsystem für die Gastronomie –{" "}
             <span className="text-gradient-brand">ohne App, ohne Provision.</span>
           </motion.h1>
         </div>
@@ -577,7 +612,9 @@ const WebshopPage = () => {
               Wer nicht online ist, verliert jeden Tag Umsatz.
             </h2>
             <p className="text-white/60 text-lg leading-relaxed">
-              9 von 10 Kunden suchen ein Restaurant zuerst bei Google, bevor sie bestellen. Restaurants ohne eigene Bestellseite sind für diese Kunden unsichtbar – und verlieren täglich Bestellungen an Wettbewerber, die online präsent sind. Mit deinem Gastro Master Webshop änderst du das.
+              9 von 10 Kunden suchen ein Restaurant zuerst bei Google, bevor sie bestellen. Restaurants ohne eigene Bestellseite sind für diese Kunden unsichtbar – und verlieren täglich Bestellungen an Wettbewerber, die online präsent sind. Mit deinem Gastro Master Webshop änderst du das. Wer zusätzlich einen{" "}
+              <Link to="/loesungen/lieferservice-gruenden" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">eigenen Lieferdienst aufbauen</Link>{" "}
+              möchte, findet in unserem Ratgeber alle Schritte.
             </p>
           </motion.div>
 
@@ -601,6 +638,10 @@ const WebshopPage = () => {
               </motion.div>
             ))}
           </div>
+
+          <p className="text-white/25 text-xs italic text-center mt-2 mb-12">
+            Quellen: Think with Google Consumer Insights, Statista Online Food Delivery Outlook Deutschland 2025
+          </p>
 
           {/* 3 Feature Bullets */}
           <div className="grid md:grid-cols-3 gap-6">
@@ -861,7 +902,9 @@ const WebshopPage = () => {
               Alles inklusive. Keine versteckten Kosten.
             </h2>
             <p className="text-[#0A264A]/55 dark:text-white/50 text-lg leading-relaxed">
-              Ein fester Monatsbeitrag – keine Provision, keine Mindestlaufzeit, keine Abhängigkeit.
+              Ein fester Monatsbeitrag – keine Provision, keine Mindestlaufzeit, keine Abhängigkeit. Für den Tischbetrieb ergänzt das{" "}
+              <Link to="/produkte/kassensystem" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">TSE-konforme Kassensystem</Link>{" "}
+              deinen Webshop perfekt.
             </p>
           </motion.div>
 

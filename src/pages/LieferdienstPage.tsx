@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -194,21 +195,11 @@ const PRODUCTS: ProductCard[] = [
 const LieferdienstPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title =
-      "Lieferservice einrichten ohne Lieferando — 0% Provision | Gastro Master";
-    const meta = document.querySelector('meta[name="description"]');
-    const content =
-      "Du hast schon dein Restaurant? Jetzt lieferst du auch — ohne Lieferando und ohne Provision. Eigenes Bestellsystem, Fahrer-App und App im Store. Ab 69 €/Monat. Jetzt kostenlos beraten lassen.";
-    if (meta) {
-      meta.setAttribute("content", content);
-    } else {
-      const tag = document.createElement("meta");
-      tag.name = "description";
-      tag.content = content;
-      document.head.appendChild(tag);
-    }
-  }, []);
+  useSeoMeta({
+    title: "Lieferservice einrichten ohne Lieferando — 0 % Provision | Gastro Master",
+    description: "Du hast schon dein Restaurant? Jetzt lieferst du auch — ohne Lieferando und ohne Provision. Eigenes Bestellsystem, Fahrer-App und App im Store. Jetzt kostenlos beraten lassen.",
+    canonical: "https://gastro-master.de/loesungen/lieferdienst",
+  });
 
   return (
     <div className="min-h-screen bg-background">

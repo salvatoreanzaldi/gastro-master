@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import dashboardImg from "@/assets/cashier-dashboard.png";
 
@@ -52,7 +53,9 @@ const HeroScrollSection = () => {
               <span className="block leading-[1.05]">Ohne Provision.</span>
             </h1>
             <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
-              Gastro Master gibt dir die volle Kontrolle — Bestellsystem, Kasse,
+              Gastro Master gibt dir die volle Kontrolle —{" "}
+              <Link to="/produkte/webshop" className="text-white/80 underline underline-offset-2 hover:text-white transition-colors">digitales Bestellsystem</Link>,{" "}
+              <Link to="/produkte/kassensystem" className="text-white/80 underline underline-offset-2 hover:text-white transition-colors">Kasse</Link>,
               Pickup-Screen und mehr. Alles in einem. Keine versteckten Gebühren.
             </p>
           </>

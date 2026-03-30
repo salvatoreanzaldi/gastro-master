@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -197,21 +198,11 @@ const PRODUCTS: ProductCard[] = [
 const RestaurantPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title =
-      "Kassensystem Restaurant 2026 — TSE-konform, Tischverwaltung & Online-Shop | Gastro Master";
-    const meta = document.querySelector('meta[name="description"]');
-    const content =
-      "Das richtige Kassensystem für dein Restaurant: TSE-konform, mit Tischverwaltung, Küchenmonitor und Online-Bestellsystem. Ab 49 €/Monat. Jetzt kostenlos beraten lassen.";
-    if (meta) {
-      meta.setAttribute("content", content);
-    } else {
-      const tag = document.createElement("meta");
-      tag.name = "description";
-      tag.content = content;
-      document.head.appendChild(tag);
-    }
-  }, []);
+  useSeoMeta({
+    title: "Kassensystem Restaurant 2026 — TSE-konform & Tischverwaltung | Gastro Master",
+    description: "Das richtige Kassensystem für dein Restaurant: TSE-konform, mit Tischverwaltung, Küchenmonitor und Online-Bestellsystem. Ab 49 €/Monat. Jetzt kostenlos beraten lassen.",
+    canonical: "https://gastro-master.de/loesungen/restaurant",
+  });
 
   return (
     <div className="min-h-screen bg-background">

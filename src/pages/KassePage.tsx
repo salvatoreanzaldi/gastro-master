@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from "react";
+import React from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, ShieldCheck, Cloud, Phone,
   Link2, Plus, Minus, CheckCircle2, Star, ChevronLeft, ChevronRight,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
@@ -45,29 +48,56 @@ import POSSection       from "@/components/landing/POSSection";
 const faqs = [
   {
     q: "Warum braucht mein Restaurant ein modernes Kassensystem?",
-    a: "Ein modernes Kassensystem für Gastronomie ist weit mehr als eine Registrierkasse. Es verbindet Bestelleingang, Küchenmanagement, Lieferservice, Mitarbeiterverwaltung und Statistiken in einem einzigen System – und spart dir täglich Zeit und Fehler bei der Abrechnung.",
+    a: "Ein modernes Kassensystem für Gastronomie ist weit mehr als eine Registrierkasse. Es verbindet Bestelleingang, Küchenmanagement, Lieferservice, Mitarbeiterverwaltung und Statistiken in einem einzigen System. Besonders für [Restaurants](/loesungen/restaurant) spart das täglich Zeit und reduziert Fehler bei der Abrechnung erheblich.",
   },
   {
     q: "Welches Kassensystem ist TSE-pflichtig in Deutschland?",
-    a: "Seit 2023 sind alle elektronischen Kassensysteme in Deutschland TSE-pflichtig (Technische Sicherheitseinrichtung). Das Gastro Master Kassensystem ist vollständig zertifiziert und erfüllt alle Anforderungen der Kassensicherungsverordnung (KassenSichV) sowie GoBD-Konformität.",
+    a: "Seit dem 01.01.2020 sind alle elektronischen Kassensysteme in Deutschland TSE-pflichtig (§146a AO, KassenSichV — Technische Sicherheitseinrichtung). Betriebe ohne gültige TSE riskieren Bußgelder von bis zu 25.000 €. Das Gastro Master Kassensystem ist vollständig zertifiziert und erfüllt alle Anforderungen der KassenSichV sowie GoBD-Konformität.",
   },
   {
     q: "Was kostet ein Cloud-Kassensystem für mein Restaurant?",
-    a: "Das Gastro Master Kassensystem ist als Monatsabo verfügbar – ohne teure Einmalzahlungen oder Hardware-Wartungsverträge. Cloud-Updates, Support und alle neuen Features sind im Preis inklusive. In einem kostenlosen Beratungsgespräch zeigen wir dir das für dich passende Paket.",
+    a: "Das Gastro Master Kassensystem ist als Monatsabo verfügbar – ohne teure Einmalzahlungen oder Hardware-Wartungsverträge. Cloud-Updates, Support und alle neuen Features sind im Preis inklusive. Alle Pakete und Preise findest du in der [vollständigen Preisübersicht](/preise).",
   },
   {
     q: "Kann ich das Kassensystem auch für Lieferdienste nutzen?",
-    a: "Ja. Das Kassensystem ist nativ mit der Fahrer-App, Liefergebieten und GPS-Tracking verknüpft. Bestellungen aus dem Online-Shop, der eigenen App und direkt an der Kasse landen automatisch in einem Workflow – kein manuelles Übertragen nötig.",
+    a: "Ja. Das Kassensystem ist nativ mit der Fahrer-App, Liefergebieten und GPS-Tracking verknüpft. Bestellungen aus dem [digitalen Bestellsystem](/produkte/webshop), der [eigenen Bestell-App](/produkte/app) und direkt an der Kasse landen automatisch in einem Workflow — kein manuelles Übertragen nötig. Ideal für alle, die [einen eigenen Lieferdienst aufbauen](/loesungen/lieferservice-gruenden) möchten.",
   },
   {
     q: "Wie schnell ist das Kassensystem eingerichtet?",
-    a: "Die Einrichtung dauert in der Regel 1–2 Werktage. Unser Support-Team aus Deutschland begleitet dich durch die gesamte Einrichtung und schult dein Team persönlich – vor Ort oder per Videocall.",
+    a: "Die Einrichtung dauert in der Regel 1–2 Werktage. Unser Support-Team aus Deutschland begleitet dich durch die gesamte Einrichtung und schult dein Team persönlich – vor Ort oder per Videocall. Melde dich einfach über unser [Kontaktformular](/kontakt).",
   },
   {
     q: "Ist das System GoBD-konform und für eine Betriebsprüfung geeignet?",
     a: "Ja. Das Gastro Master Kassensystem ist vollständig GoBD-konform. Alle Buchungen, Stornierungen und Tagesabschlüsse werden unveränderbar protokolliert und können jederzeit für eine Betriebsprüfung exportiert werden.",
   },
 ];
+
+const SCHEMA_BREADCRUMB = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Gastro Master", item: "https://gastro-master.de" },
+    { "@type": "ListItem", position: 2, name: "Produkte", item: "https://gastro-master.de/produkte" },
+    { "@type": "ListItem", position: 3, name: "Kassensystem", item: "https://gastro-master.de/produkte/kassensystem" },
+  ],
+};
+
+const SCHEMA_FAQ_KASSE = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map(f => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") },
+  })),
+};
+
+const renderFaqLinks = (text: string): React.ReactNode[] =>
+  text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+    const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (m) return <Link key={i} to={m[2]} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
+    return part;
+  });
 
 const FaqItem = ({ q, a }: { q: string; a: string }) => {
   const [open, setOpen] = useState(false);
@@ -93,7 +123,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
             transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{a}</p>
+            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a)}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -682,8 +712,16 @@ const WaveFeatureSection = () => {
 };
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-const KassePage = () => (
+const KassePage = () => {
+  useSeoMeta({
+    title: "Kassensystem Gastronomie — TSE-konform | Gastro Master",
+    description: "TSE-konformes Kassensystem für Gastronomie ab 69 €/Monat. Fahrer-App, QR-Bestellung & Cloud-Updates inklusive. Gesetzeskonform (§146a AO). Jetzt kostenlos beraten.",
+    canonical: "https://gastro-master.de/produkte/kassensystem",
+  });
+  return (
   <div className="min-h-screen" style={{ backgroundColor: "#0A264A" }}>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_FAQ_KASSE) }} />
     <Navbar />
 
     {/* ── S1: HERO ──────────────────────────────────────────── */}
@@ -716,7 +754,10 @@ const KassePage = () => (
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-lg text-white/55 max-w-xl leading-relaxed mb-12"
           >
-            Modernste Kassensoftware für Restaurants, Lieferdienste und Gastrobetriebe – mit TSE-Zertifizierung, GoBD-Konformität, Cloud-Updates und direktem Support aus Deutschland.
+            Modernste Kassensoftware für{" "}
+            <Link to="/loesungen/restaurant" className="text-cyan-brand/80 underline underline-offset-2 hover:opacity-80 transition-opacity">Restaurants</Link>,{" "}
+            <Link to="/loesungen/lieferservice-gruenden" className="text-cyan-brand/80 underline underline-offset-2 hover:opacity-80 transition-opacity">Lieferdienste</Link>{" "}
+            und Gastrobetriebe – mit TSE-Zertifizierung, GoBD-Konformität, Cloud-Updates und direktem Support aus Deutschland.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1181,6 +1222,7 @@ const KassePage = () => (
 
     <Footer />
   </div>
-);
+  );
+};
 
 export default KassePage;

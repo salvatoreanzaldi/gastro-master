@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, Plus, Minus, CheckCircle2, Star,
@@ -29,11 +30,11 @@ import teamAndrejImg    from "@/assets/team-andrej-krutsch.png";
 const FAQ_ITEMS = [
   {
     q: "Wie lange dauert die Erstellung einer Webseite?",
-    a: "Eine einfache Webseite (Onepager) ist in der Regel innerhalb weniger Tage online. Für umfangreiche Mehrseiter mit individuellen Funktionen planen wir gemeinsam einen realistischen Zeitrahmen im Beratungsgespräch. Die Entwicklung startet sofort nach Freigabe der Inhalte.",
+    a: "Eine einfache Webseite (Onepager) ist in der Regel innerhalb weniger Tage online. Für umfangreiche Mehrseiter mit individuellen Funktionen planen wir gemeinsam einen realistischen Zeitrahmen im [kostenlosen Beratungsgespräch](/kontakt). Die Entwicklung startet sofort nach Freigabe der Inhalte.",
   },
   {
     q: "Was ist der Unterschied zwischen Abo (49 €/Monat) und Einmalkauf?",
-    a: "Beim monatlichen Abo (49 €/Monat) übernehmen wir dauerhaft Hosting, Domain, technischen Support und Updates – du zahlst monatlich und kannst jederzeit kündigen. Beim Einmalkauf (ab 990 €) erwirbst du die vollständige Webseite und betreibst sie eigenständig. Für einfache Onepager beginnt der Preis bei 990 € – für individuelle Mehrseiter wird der Preis gemeinsam im Beratungsgespräch ermittelt.",
+    a: "Beim monatlichen Abo (49 €/Monat) übernehmen wir dauerhaft Hosting, Domain, technischen Support und Updates – du zahlst monatlich und kannst jederzeit kündigen. Beim Einmalkauf (ab 990 €) erwirbst du die vollständige Webseite und betreibst sie eigenständig. Alle Optionen findest du in der [Preisübersicht](/preise).",
   },
   {
     q: "Brauche ich Technikkenntnisse, um meine Webseite zu pflegen?",
@@ -41,15 +42,15 @@ const FAQ_ITEMS = [
   },
   {
     q: "Kann ich meine Webseite mit dem Gastro Master Webshop oder der App verknüpfen?",
-    a: "Ja. Deine Gastro Master Webseite lässt sich nahtlos mit dem Online-Bestellshop und der Bestell-App verknüpfen. Kunden landen auf deiner Webseite und können von dort direkt eine Bestellung aufgeben – ohne Plattformwechsel.",
+    a: "Ja. Deine Gastro Master Webseite lässt sich nahtlos mit dem [digitalen Bestellsystem für die Gastronomie](/produkte/webshop) und der [eigenen Bestell-App](/produkte/app) verknüpfen. Außerdem lässt sich ein [Kassensystem für die Gastronomie](/produkte/kassensystem) ergänzen. Kunden landen auf deiner Webseite und können von dort direkt eine Bestellung aufgeben – ohne Plattformwechsel.",
   },
   {
     q: "Was bedeutet DSGVO-konform, und warum ist das wichtig?",
     a: "DSGVO-konform bedeutet, dass deine Webseite alle Anforderungen der europäischen Datenschutz-Grundverordnung erfüllt: korrektes Impressum, Datenschutzerklärung, Cookie-Hinweis und sichere Verarbeitung von Kontaktformulardaten. Ohne DSGVO-Konformität riskierst du Abmahnungen und Bußgelder. Bei uns ist alles voreingestellt und rechtlich einwandfrei.",
   },
   {
-    q: "Für welche Branchen bauen Sie Webseiten?",
-    a: "Unser Schwerpunkt liegt auf der Gastronomie (Restaurants, Cafés, Bäckereien, Lieferdienste), aber wir bauen Webseiten für jede Branche: Handwerker, Schulen, Bildungseinrichtungen, Hotels, Dienstleister, Einzelhandel und Franchise-Unternehmen. Jede Webseite wird individuell auf die Branche und den Betrieb zugeschnitten.",
+    q: "Für welche Branchen baut Gastro Master Webseiten?",
+    a: "Unser Schwerpunkt liegt auf der Gastronomie — speziell für [Restaurants](/loesungen/restaurant) und [Cafés und Bäckereien](/loesungen/cafe-baeckerei) — aber wir bauen Webseiten für jede Branche: Handwerker, Schulen, Bildungseinrichtungen, Hotels, Dienstleister, Einzelhandel und Franchise-Unternehmen. Jede Webseite wird individuell auf die Branche und den Betrieb zugeschnitten.",
   },
   {
     q: "Was ist im monatlichen Abo enthalten?",
@@ -93,8 +94,18 @@ const SCHEMA_FAQ = {
   "mainEntity": FAQ_ITEMS.map(({ q, a }) => ({
     "@type": "Question",
     "name": q,
-    "acceptedAnswer": { "@type": "Answer", "text": a },
+    "acceptedAnswer": { "@type": "Answer", "text": a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") },
   })),
+};
+
+const SCHEMA_BREADCRUMB = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Gastro Master", item: "https://gastro-master.de" },
+    { "@type": "ListItem", position: 2, name: "Produkte", item: "https://gastro-master.de/produkte" },
+    { "@type": "ListItem", position: 3, name: "Webseite", item: "https://gastro-master.de/produkte/webseite" },
+  ],
 };
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -112,11 +123,11 @@ const teamMembers = [
 ];
 
 const PORTFOLIO = [
-  { img: heroGastroMaster, label: "Gastronomie",  name: "Gastro Master" },
-  { img: heroBaeckerei,    label: "Bäckerei",      name: "Bäckerei Zimmer" },
-  { img: heroEtManus,      label: "Restaurant",    name: "Et Manus" },
-  { img: heroDT,           label: "Dienstleister", name: "D&T" },
-  { img: heroDandT,        label: "Gastronomie",   name: "D&T Gastro" },
+  { img: heroGastroMaster, label: "Gastronomie",  name: "Gastro Master",  alt: "Professionelle Webseite für Gastronomie — Beispiel Gastro Master" },
+  { img: heroBaeckerei,    label: "Bäckerei",      name: "Bäckerei Zimmer", alt: "Website für Bäckerei Zimmer — Restaurant Webseite Beispiel" },
+  { img: heroEtManus,      label: "Restaurant",    name: "Et Manus",       alt: "Restaurant Webseite Et Manus — professionelle Gastronomie Website" },
+  { img: heroDT,           label: "Dienstleister", name: "D&T",            alt: "Professionelle Website für Dienstleister D&T — Webseite erstellen lassen" },
+  { img: heroDandT,        label: "Gastronomie",   name: "D&T Gastro",     alt: "Gastronomie Website D&T Gastro — eigene Restaurant Webseite" },
 ];
 
 const BRANCHEN = [
@@ -131,6 +142,13 @@ const BRANCHEN = [
 ];
 
 // ─── Inline Components ────────────────────────────────────────────────────────
+const renderFaqLinks = (text: string): React.ReactNode[] =>
+  text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+    const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (m) return <Link key={i} to={m[2]} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
+    return part;
+  });
+
 const FaqItem = ({ q, a }: { q: string; a: string }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -153,7 +171,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
             transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{a}</p>
+            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a)}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -271,17 +289,17 @@ const TeamCTA = () => {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const WebseitePage = () => {
-  useEffect(() => {
-    document.title = "Professionelle Webseite für Gastronomie – ab 49 €/Monat | Gastro Master";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", "Professionelle Webseite für Restaurants, Cafés, Handwerker und mehr – ab 49 €/Monat oder Einmalkauf ab 990 €. Eigene Domain, DSGVO-konform, inkl. Hosting & Support. In wenigen Tagen online.");
-    return () => { document.title = "Gastro Master"; };
-  }, []);
+  useSeoMeta({
+    title: "Webseite Gastronomie — ab 49 €/Monat | Gastro Master",
+    description: "Professionelle Webseite für Gastronomie — ab 49 €/Monat. Eigene Domain, DSGVO-konform, Hosting & Support inklusive. In wenigen Tagen online. Jetzt beraten lassen.",
+    canonical: "https://gastro-master.de/produkte/webseite",
+  });
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_PRODUCT) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_FAQ) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }} />
 
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -302,7 +320,7 @@ const WebseitePage = () => {
               </div>
 
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6">
-                Deine professionelle Webseite –{" "}
+                Deine Webseite für die Gastronomie –{" "}
                 <span className="text-gradient-brand">online</span>
                 {" "}in wenigen Tagen
               </h1>
@@ -400,7 +418,9 @@ const WebseitePage = () => {
                 Wer nicht online ist, verliert<br className="hidden md:block" /> jeden Tag Neukunden.
               </h2>
               <p className="text-[#0A264A]/55 dark:text-white/50 text-lg max-w-2xl mx-auto leading-relaxed">
-                Eine Webseite öffnet dir den Zugang zu Kunden, die weit über deinen Standort hinaus nach deinen Leistungen suchen. Neukunden finden dich über Google – nicht nur durch Mundpropaganda. Das gilt für die Gastronomie genauso wie für Handwerker, Schulen oder Dienstleister.
+                Eine Webseite öffnet dir den Zugang zu Kunden, die weit über deinen Standort hinaus nach deinen Leistungen suchen. Neukunden finden dich über Google – nicht nur durch Mundpropaganda. Das gilt besonders für Gastronomen, die{" "}
+                <Link to="/loesungen/lieferservice-gruenden" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">einen eigenen Lieferdienst aufbauen</Link>{" "}
+                möchten — genauso wie für Handwerker, Schulen oder Dienstleister.
               </p>
             </motion.div>
 
@@ -597,7 +617,7 @@ const WebseitePage = () => {
                 >
                   <img
                     src={item.img}
-                    alt={item.name}
+                    alt={item.alt}
                     className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />

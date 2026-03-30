@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -68,10 +69,10 @@ const SCHEMA_FAQ = {
     },
     {
       "@type": "Question",
-      name: "Gibt es Einrichtungskosten oder eine Mindestlaufzeit?",
+      name: "Wie hoch sind die Einrichtungskosten bei Gastro Master?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Nein. Es gibt 0 € Einrichtungskosten und keine Mindestlaufzeit. Alle Pakete sind monatlich kündbar. Du bezahlst nur den monatlichen Beitrag – ohne versteckte Kosten.",
+        text: "Die Einrichtungskosten besprechen wir individuell im persönlichen Beratungsgespräch — je nach Umfang deines Betriebs. Es gibt keine Mindestlaufzeit. Alle Pakete sind monatlich kündbar.",
       },
     },
     {
@@ -215,15 +216,15 @@ interface FaqItem {
 const FAQ_ITEMS: FaqItem[] = [
   {
     q: "Was kostet das Kassensystem von Gastro Master?",
-    a: "Das Gastro Master Kassensystem ist ab 69 € pro Monat (netto) erhältlich. Die Cloud-Kassensoftware ist monatlich kündbar, läuft auf Windows-Computern und beinhaltet TSE-Zertifizierung, GoBD-Konformität sowie persönlichen Support via WhatsApp.",
+    a: "Das [Gastro Master Kassensystem](/produkte/kassensystem) ist ab 69 € pro Monat (netto) erhältlich. Die Cloud-Kassensoftware ist monatlich kündbar, läuft auf Windows-Computern und beinhaltet TSE-Zertifizierung (§146a AO), GoBD-Konformität sowie persönlichen Support via WhatsApp.",
   },
   {
-    q: "Gibt es Einrichtungskosten oder eine Mindestlaufzeit?",
-    a: "Nein. Es gibt 0 € Einrichtungskosten und keine Mindestlaufzeit. Alle Pakete sind monatlich kündbar. Du bezahlst nur den monatlichen Beitrag – ohne versteckte Kosten, ohne Provision, ohne Überraschungen.",
+    q: "Wie hoch sind die Einrichtungskosten?",
+    a: "Die Einrichtungskosten besprechen wir individuell in einem persönlichen Beratungsgespräch — je nach Umfang deines Betriebs. Es gibt keine Mindestlaufzeit. Alle Pakete sind monatlich kündbar, ohne Provision, ohne Überraschungen.",
   },
   {
     q: "Was ist der Unterschied zwischen Webseite und Bestellsystem?",
-    a: "Die Webseite (49 €/Monat) ist eine professionelle Restaurant-Website ohne Bestellfunktion – dein digitales Aushängeschild für Google und Neukunden. Das Bestellsystem (79 €/Monat) enthält zusätzlich den Online-Bestellshop mit 0 % Provision, über den deine Kunden direkt bestellen können. Alle Infos zum Bestellsystem findest du unter /produkte/webshop.",
+    a: "Die Webseite (49 €/Monat) ist eine professionelle Restaurant-Website ohne Bestellfunktion – dein digitales Aushängeschild für Google und Neukunden. Das Bestellsystem (79 €/Monat) enthält zusätzlich den [Online-Bestellshop mit 0 % Provision](/produkte/webshop), über den deine Kunden direkt bestellen können.",
   },
   {
     q: "Kann ich mit einem Paket mehrere Standorte betreiben?",
@@ -235,7 +236,7 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Welches Paket ist das Richtige für meinen Betrieb?",
-    a: "Für eine reine Online-Präsenz eignet sich die Webseite (49 €/Monat). Willst du online Bestellungen entgegennehmen, ist das Bestellsystem (79 €/Monat) die richtige Wahl. Für eine eigene App empfehlen wir App + Bestellsystem für 149 €/Monat. Das Kassensystem (ab 69 €/Monat) ergänzt alle Pakete für den stationären Betrieb. Im kostenlosen Beratungsgespräch finden wir gemeinsam die passende Kombination für dich.",
+    a: "Für eine reine Online-Präsenz eignet sich die Webseite (49 €/Monat). Willst du online Bestellungen entgegennehmen, ist das Bestellsystem (79 €/Monat) die richtige Wahl. Für eine [eigene Bestell-App](/produkte/app) empfehlen wir App + Bestellsystem für 149 €/Monat. Das Kassensystem (ab 69 €/Monat) ergänzt alle Pakete für den stationären Betrieb. Wer seinen [eigenen Lieferdienst aufbauen](/loesungen/lieferservice-gruenden) möchte, findet in unserem Ratgeber alle Schritte. Im kostenlosen Beratungsgespräch finden wir gemeinsam die passende Kombination.",
   },
 ];
 
@@ -286,6 +287,13 @@ const FlyerPriceList = () => {
   );
 };
 
+const renderFaqLinks = (text: string): React.ReactNode[] =>
+  text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+    const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (m) return <Link key={i} to={m[2]} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
+    return part;
+  });
+
 const FaqAccordion = ({ item }: { item: FaqItem }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -308,7 +316,7 @@ const FaqAccordion = ({ item }: { item: FaqItem }) => {
             transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-white/60 text-sm leading-relaxed pb-5">{item.a}</p>
+            <p className="text-white/60 text-sm leading-relaxed pb-5">{renderFaqLinks(item.a)}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -319,6 +327,12 @@ const FaqAccordion = ({ item }: { item: FaqItem }) => {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const PreisePage = () => {
+  useSeoMeta({
+    title: "Gastronomie Software Preise 2026 — ab 49 € | Gastro Master",
+    description: "Webshop ab 79 €, Webseite ab 49 €, Kasse ab 69 € — 0 % Provision, persönliche Einrichtungsbegleitung, monatlich kündbar. Jetzt kostenlos beraten lassen.",
+    canonical: "https://gastro-master.de/preise",
+  });
+
   const [calcOrders, setCalcOrders] = useState(300);
   const [calcCart,   setCalcCart]   = useState(30);
   const paypalFee  = calcOrders * 0.5 * (calcCart * 0.0299 + 0.39);
@@ -327,12 +341,6 @@ const PreisePage = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0f1a] text-[#0A264A] dark:text-white">
-      {/* SEO */}
-      <title>Gastro Master Preise 2026 — App, Shop & Kassensystem ab 49 € | Gastro Master</title>
-      <meta
-        name="description"
-        content="Transparente Preise für dein Restaurant: Webseite ab 49 €/Mon., Bestellsystem 79 €/Mon. (0 % Provision), App + Shop 149 €/Mon., Kassensystem ab 69 €/Mon. — keine Einrichtungskosten, monatlich kündbar."
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }}
@@ -360,9 +368,9 @@ const PreisePage = () => {
               Preise 2026 · Gastro Master
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">
-              Transparent, fair &{" "}
+              Gastro Master Preise —{" "}
               <span className="bg-gradient-to-r from-cyan-brand to-[#007DCF] bg-clip-text text-transparent">
-                ohne versteckte Kosten.
+                transparent, fair & klar.
               </span>
             </h1>
             <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-8">
@@ -372,7 +380,7 @@ const PreisePage = () => {
 
             {/* Trust pills */}
             <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
-              {["0 € Einrichtungskosten", "Monatlich kündbar", "700+ Betriebe", "Persönlicher Support"].map((pill) => (
+              {["Persönliche Einrichtungsbegleitung", "Monatlich kündbar", "700+ Betriebe", "Persönlicher Support"].map((pill) => (
                 <span key={pill} className="inline-flex items-center gap-1.5 bg-white/[0.07] border border-white/10 text-white/70 text-xs font-medium px-3 py-1.5 rounded-full">
                   <Check className="w-3 h-3 text-cyan-brand flex-shrink-0" />
                   {pill}
@@ -652,6 +660,9 @@ const PreisePage = () => {
             <p className="text-white/55 text-lg max-w-xl mx-auto">
               TSE-konform, GoBD-zertifiziert — für Restaurant, Lieferdienst und Abholung.
             </p>
+            <p className="text-white/30 text-xs italic mt-2 max-w-xl mx-auto">
+              TSE-Pflicht seit 01.01.2020 (§146a AO, KassenSichV) — Bußgelder bis 25.000 € bei fehlendem Nachweis.
+            </p>
           </motion.div>
 
           <div className="rounded-3xl border border-cyan-brand/20 overflow-hidden bg-[#061830]">
@@ -670,7 +681,7 @@ const PreisePage = () => {
                   <span className="text-[#ED8400] font-black text-5xl leading-none">ab 69 €</span>
                   <span className="text-white/40 text-sm mb-1">/ Monat (netto)</span>
                 </div>
-                <p className="text-white/35 text-xs mb-8">monatlich kündbar · 0 € Einrichtungskosten</p>
+                <p className="text-white/35 text-xs mb-8">monatlich kündbar · persönliche Einrichtungsbegleitung</p>
                 <ul className="space-y-3 mb-8">
                   {[
                     "TSE-konforme Cloud-Kassensoftware",

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ChevronDown, Star,
@@ -105,7 +106,7 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Was kostet ein digitales Bestellsystem für die Gastronomie?",
-    a: "Der [Online-Shop](/produkte/webshop) kostet ab 79 €/Monat, die [App](/produkte/app) ab 149 €/Monat, die [Webseite](/produkte/webseite) ab 49 €/Monat und das [Kassensystem](/produkte/kassensystem) ab 69 €/Monat. Einrichtungskosten fallen nicht an. Du zahlst 0 % Provision.",
+    a: "Der [Online-Shop](/produkte/webshop) kostet ab 79 €/Monat, die [App](/produkte/app) ab 149 €/Monat, die [Webseite](/produkte/webseite) ab 49 €/Monat und das [Kassensystem](/produkte/kassensystem) ab 69 €/Monat. Die Einrichtung wird individuell besprochen. Du zahlst 0 % Provision.",
   },
   {
     q: "Bietet Gastro Master Lösungen für Cafés und Bäckereien?",
@@ -154,20 +155,11 @@ const TRUST_ITEMS = [
 const LoesungenPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title =
-      "Digitale Lösungen für die Gastronomie 2026 — Restaurant, Café, Lieferdienst | Gastro Master";
-    const content =
-      "Gastro Master bietet digitale Komplettlösungen für Gastronomie: Kassensystem, Online-Bestellshop, App und Webseite. Für Restaurants, Cafés, Lieferdienste und Franchise. Jetzt kostenlos beraten lassen.";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", content);
-    else {
-      const m = document.createElement("meta");
-      m.name = "description";
-      m.content = content;
-      document.head.appendChild(m);
-    }
-  }, []);
+  useSeoMeta({
+    title: "Digitale Lösungen für die Gastronomie 2026 | Gastro Master",
+    description: "Gastro Master bietet digitale Komplettlösungen für Gastronomie: Kassensystem, Online-Bestellshop, App und Webseite. Für Restaurants, Cafés, Lieferdienste und Franchise. Jetzt kostenlos beraten lassen.",
+    canonical: "https://gastro-master.de/loesungen",
+  });
 
   return (
     <div className="min-h-screen bg-background">

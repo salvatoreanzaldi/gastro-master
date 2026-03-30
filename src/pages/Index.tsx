@@ -1,3 +1,4 @@
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import Navbar from "@/components/landing/Navbar";
 import HeroScrollSection from "@/components/landing/HeroScrollSection";
 import HeroSection from "@/components/landing/HeroSection";
@@ -28,6 +29,12 @@ import Footer from "@/components/landing/Footer";
 
 
 const Index = () => {
+  useSeoMeta({
+    title: "Gastro Master – Mehr Gewinn durch Direktbestellungen",
+    description: "Dein eigener Webshop & deine eigene App für die Gastronomie. 0 % Provision. Mehr Direktbestellungen. 700+ zufriedene Kunden.",
+    canonical: "https://gastro-master.de/",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />

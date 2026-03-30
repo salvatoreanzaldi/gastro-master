@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ShoppingCart, Smartphone, Globe,
   Monitor, Percent, CheckCircle2, Star,
-  Truck, QrCode, Plus, ShoppingBag, Zap,
+  Truck, QrCode, Plus, ShoppingBag, Zap, ChevronDown,
 } from "lucide-react";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
@@ -137,6 +138,15 @@ const LOGOS = [
 ];
 
 // ─── JSON-LD ──────────────────────────────────────────────────────────────────
+const SCHEMA_BREADCRUMB = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://gastro-master.de/" },
+    { "@type": "ListItem", "position": 2, "name": "Produkte", "item": "https://gastro-master.de/produkte" },
+  ],
+};
+
 const SCHEMA_PRODUCT_LIST = {
   "@context": "https://schema.org",
   "@type": "ItemList",
@@ -153,6 +163,71 @@ const SCHEMA_PRODUCT_LIST = {
     })),
     { "@type": "ListItem", "position": 5, "name": ADD_ONS[0].title, "url": `https://gastro-master.de${ADD_ONS[0].href}` },
   ],
+};
+
+// ─── FAQ ──────────────────────────────────────────────────────────────────────
+const FAQ_ITEMS = [
+  {
+    q: "Was ist der Unterschied zwischen Webshop und Webseite bei Gastro Master?",
+    a: "Der [Webshop ab 79 €/Monat](/produkte/webshop) ist ein vollständiges Online-Bestellsystem — deine Kunden bestellen direkt, du behältst 100 % der Einnahmen ohne Provision. Die [professionelle Webseite ab 49 €/Monat](/produkte/webseite) ist deine Online-Präsenz ohne Bestellfunktion: mit eigener Domain, Galerie, Speisekarte und Kontaktformular. Willst du Direktbestellungen annehmen, ist der Webshop die richtige Wahl. Willst du einfach online gefunden werden, reicht die Webseite.",
+  },
+  {
+    q: "Wie lange dauert die Einrichtung — wann kann ich live gehen?",
+    a: "Für Webshop und Webseite planen wir 2–3 Wochen von Vertragsabschluss bis Go-Live — inklusive Design, Einrichtung und Testphase. Das Kassensystem erfordert zusätzlich die Hardware-Lieferung und Vor-Ort-Einrichtung. Wir übernehmen das komplette Setup für dich — du musst kein technisches Vorwissen mitbringen. Dein [Online-Bestellshop](/produkte/webshop) ist schneller live als du denkst.",
+  },
+  {
+    q: "Kann ich Webshop, App und Kassensystem kombinieren?",
+    a: "Ja — alle Gastro Master Produkte sind aufeinander abgestimmt und lassen sich flexibel kombinieren. Bestellungen aus Webshop und App laufen in einem gemeinsamen Backend zusammen. Menü, Preise und Bestellstatus synchronisieren sich automatisch mit der [Cloud-Kassensoftware](/produkte/kassensystem) — ohne manuelle Übertragung, ohne zusätzliche Schnittstellen. Du verwaltest alles zentral über ein einziges Dashboard.",
+  },
+  {
+    q: "Was kostet das Kassensystem — und was ist im Preis enthalten?",
+    a: "Das Kassensystem kostet ab 69 €/Monat (zzgl. MwSt.) und läuft auf Windows-Computern. Enthalten sind: TSE-konforme Cloud-Kassensoftware, regelmäßige Updates, Cloud-Backoffice, Auswertungen und persönlicher Support per WhatsApp. Add-Ons wie Fahrer-App (+10 €/Monat pro Fahrer) und QR-Code Tischsystem sind optional buchbar. Alle Infos auf der [Kassensystem-Übersicht](/produkte/kassensystem).",
+  },
+  {
+    q: "Brauche ich eine TSE — und was kostet ein Verstoß?",
+    a: "Ja. Seit dem 1. Januar 2020 ist eine TSE (Technische Sicherheitseinrichtung) für alle elektronischen Kassen in Deutschland Pflicht — geregelt in §146a der Abgabenordnung (AO) und der Kassensicherungsverordnung (KassenSichV). Bei Verstößen drohen Bußgelder bis 25.000 €. Zusätzlich gilt seit dem 1. Juli 2025 die Kassenmeldepflicht: Alle Kassen müssen über ELSTER beim Finanzamt gemeldet werden. Die Gastro Master [TSE-Kassenlösung](/produkte/kassensystem) ist von Anfang an gesetzeskonform und meldereif.",
+  },
+  {
+    q: "Was ist der Unterschied zwischen der Bestell-App und dem Webshop?",
+    a: "Der Webshop ist browser-basiert — deine Kunden bestellen über die Website, ohne eine App zu installieren. Die [eigene Bestell-App](/produkte/bestellapp) erscheint als native iOS- und Android-App im App Store und Google Play — unter deinem Namen und Logo. Die App ermöglicht Push-Benachrichtigungen und bindet Stammkunden dauerhaft. Beide Kanäle laufen in einem gemeinsamen Backend und können parallel betrieben werden.",
+  },
+  {
+    q: "Welche Zahlungsarten werden unterstützt?",
+    a: "Gastro Master unterstützt PayPal, Stripe, Kreditkarte (Visa, Mastercard), Apple Pay, Google Pay und Klarna. Mit der [Transaktionsumlage](/produkte/transaktionsumlage) gibst du Zahlungsgebühren automatisch und transparent an deine Kunden weiter — du behältst 100 % deines Nettoumsatzes. Die Umlage ist rechtssicher, wird beim Checkout ausgewiesen und muss nicht manuell abgerechnet werden.",
+  },
+  {
+    q: "Welche technischen Voraussetzungen gibt es?",
+    a: "Für das Kassensystem benötigst du einen Windows-PC (Windows 10 oder neuer) — keine speziellen Hardware-Mindestanforderungen. Webshop und App laufen vollständig in der Cloud: Du brauchst lediglich einen Browser und eine stabile Internetverbindung. Wir übernehmen Hosting, Domain und das komplette Setup. Bei Fragen helfen wir dir per WhatsApp, Telefon oder E-Mail weiter.",
+  },
+];
+
+const SCHEMA_FAQ_PRODUKTE = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": FAQ_ITEMS.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1"),
+    },
+  })),
+};
+
+const renderFaqLinks = (text: string) => {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+  return parts.map((part, i) => {
+    const match = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (match) {
+      const [, anchor, href] = match;
+      return (
+        <Link key={i} to={href} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">
+          {anchor}
+        </Link>
+      );
+    }
+    return part;
+  });
 };
 
 // ─── Card component (shared) ──────────────────────────────────────────────────
@@ -214,18 +289,87 @@ const ProductCard = ({
   </motion.div>
 );
 
+// ─── FAQ Accordion ────────────────────────────────────────────────────────────
+const FaqSection = () => {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  return (
+    <section className="bg-[#f8fafc] dark:bg-[#0f172a] px-5 md:px-8 lg:px-16 py-20 md:py-28">
+      <div className="max-w-3xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-12"
+        >
+          <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4 block">Häufige Fragen</span>
+          <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight mb-3">
+            Deine Fragen zu unseren Produkten
+          </h2>
+          <p className="text-[#0A264A]/50 dark:text-white/45 text-base max-w-xl">
+            Alles was du wissen musst — bevor du entscheidest.
+          </p>
+        </motion.div>
+
+        <div className="space-y-3">
+          {FAQ_ITEMS.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className="rounded-2xl border border-[#0A264A]/[0.08] dark:border-white/[0.08] bg-white dark:bg-white/[0.04] overflow-hidden"
+            >
+              <h3 className="text-base">
+                <button
+                  className="w-full flex items-center justify-between px-6 py-5 text-left gap-4"
+                  onClick={() => setOpenIdx(openIdx === i ? null : i)}
+                  aria-expanded={openIdx === i}
+                >
+                  <span className="font-bold text-[#0A264A] dark:text-white text-base leading-snug">
+                    {item.q}
+                  </span>
+                  <ChevronDown className={`w-5 h-5 text-[#0A264A]/35 dark:text-white/35 shrink-0 transition-transform duration-300 ${openIdx === i ? "rotate-180" : ""}`} />
+                </button>
+              </h3>
+              <AnimatePresence initial={false}>
+                {openIdx === i && (
+                  <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: "auto" }}
+                    exit={{ height: 0 }}
+                    transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div className="px-6 pb-5">
+                      <p className="text-[#0A264A]/60 dark:text-white/55 text-sm leading-relaxed">
+                        {renderFaqLinks(item.a)}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const ProduktePage = () => {
-  useEffect(() => {
-    document.title = "Gastronomie Software & Digitale Lösungen – Alle Produkte | Gastro Master";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", "Gastro Master bietet digitale Lösungen für die Gastronomie: Online-Bestellshop ab 79 €/Monat, eigene Bestell-App, professionelle Webseite, TSE-konformes Kassensystem ab 69 €/Monat und Transaktionsumlage. Ohne Provision, ohne Abhängigkeit.");
-    return () => { document.title = "Gastro Master"; };
-  }, []);
+  useSeoMeta({
+    title: "Gastronomie Software & digitale Lösungen | Gastro Master",
+    description: "Webshop, App, Kassensystem & Webseite für die Gastronomie – 0 % Provision, keine versteckten Gebühren. Digitale Komplettlösung von Gastro Master. Jetzt beraten lassen.",
+    canonical: "https://gastro-master.de/produkte",
+  });
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_PRODUCT_LIST) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_FAQ_PRODUKTE) }} />
 
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -246,13 +390,17 @@ const ProduktePage = () => {
               </div>
 
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6">
-                Alle Produkte auf{" "}
-                <span className="text-gradient-brand">einen Blick</span>
+                Gastronomie Software —{" "}
+                <span className="text-gradient-brand">alle Produkte</span>
               </h1>
 
               {/* GEO Definition Block */}
               <p className="text-white/70 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto mb-4">
-                Gastro Master bietet digitale Komplettlösungen für die Gastronomie – und darüber hinaus. Vom provisionslosen Online-Bestellshop über eine eigene iOS & Android App bis hin zu professionellen Webseiten und TSE-konformen Kassensystemen. Alle Produkte sind aufeinander abgestimmt und lassen sich flexibel kombinieren.
+                Gastro Master bietet digitale Komplettlösungen für die Gastronomie – und darüber hinaus. Vom provisionslosen Online-Bestellshop über eine{" "}
+                <Link to="/produkte/app" className="text-white/90 underline underline-offset-2 hover:text-white transition-colors">eigene iOS & Android App</Link>{" "}
+                bis hin zu professionellen Webseiten und{" "}
+                <Link to="/produkte/kassensystem" className="text-white/90 underline underline-offset-2 hover:text-white transition-colors">TSE-konformen Kassensystemen</Link>.
+                Alle Produkte sind aufeinander abgestimmt und lassen sich flexibel kombinieren.
               </p>
               <p className="text-white/40 text-base max-w-2xl mx-auto mb-10">
                 Für Restaurants, Lieferdienste, Cafés, Bäckereien und alle weiteren Branchen.
@@ -286,7 +434,7 @@ const ProduktePage = () => {
             >
               <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4 block">Produkte</span>
               <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight">
-                Eigenständige Produkte
+                Digitale Produkte für die Gastronomie
               </h2>
               <p className="text-[#0A264A]/50 dark:text-white/45 text-base mt-3 max-w-xl">
                 Jedes Produkt funktioniert für sich allein – und entfaltet seine volle Stärke in Kombination.
@@ -312,10 +460,10 @@ const ProduktePage = () => {
             >
               <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4 block">Erweiterung</span>
               <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
-                Add-On
+                Erweiterungen für Webshop und App
               </h2>
               <p className="text-white/45 text-base mt-3 max-w-xl">
-                Ergänze deinen Webshop oder deine App mit diesen beliebten Erweiterungen.
+                Ergänze deinen Webshop oder deine App mit diesen beliebten Add-Ons.
               </p>
             </motion.div>
 
@@ -349,7 +497,8 @@ const ProduktePage = () => {
                 Kassen-Add-Ons
               </h2>
               <p className="text-[#0A264A]/50 dark:text-white/45 text-base mt-3 max-w-xl">
-                Nur in Kombination mit dem Kassensystem – aktivierbar im laufenden Betrieb.
+                Nur in Kombination mit dem Kassensystem – aktivierbar im laufenden Betrieb. Besonders geeignet für{" "}
+                <Link to="/loesungen/lieferdienst" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">Lieferdienste mit eigenem Fahrerteam</Link>.
               </p>
               <div className="inline-flex items-center gap-1.5 mt-4 bg-[#0A264A]/[0.06] dark:bg-white/[0.06] border border-[#0A264A]/[0.1] dark:border-white/[0.1] text-[#0A264A]/60 dark:text-white/50 text-xs font-semibold px-3 py-1.5 rounded-full">
                 <Monitor className="w-3 h-3" />
@@ -430,16 +579,18 @@ const ProduktePage = () => {
                 700+ Betriebe vertrauen auf Gastro Master
               </h2>
               <p className="text-[#0A264A]/50 dark:text-white/45 text-sm max-w-xl mx-auto">
-                Laut einer Studie von{" "}
+                Über 50 % aller deutschen Restaurants nutzen bereits digitale Kassensysteme – Tendenz steigend.
+              </p>
+              <p className="text-[#94A3B8] text-xs italic mt-1">
+                Quelle:{" "}
                 <a
-                  href="https://www.statista.com"
+                  href="https://www.statista.com/outlook/emo/online-food-delivery/germany"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-cyan-brand underline underline-offset-2"
+                  className="underline underline-offset-2 hover:text-cyan-brand transition-colors"
                 >
-                  Statista
-                </a>{" "}
-                nutzen bereits über 50 % aller deutschen Restaurants digitale Kassensysteme – Tendenz steigend.
+                  Statista, Online Food Delivery Outlook Deutschland 2025
+                </a>
               </p>
             </motion.div>
 
@@ -487,6 +638,9 @@ const ProduktePage = () => {
             </motion.div>
           </div>
         </section>
+
+        {/* ── FAQ ────────────────────────────────────────────────────────────── */}
+        <FaqSection />
 
         {/* ── ABSCHLIESSENDER CTA ───────────────────────────────────────────── */}
         <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 py-20 md:py-28">

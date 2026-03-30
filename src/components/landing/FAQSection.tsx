@@ -1,6 +1,19 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+const renderWithLinks = (text: string) => {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+  return parts.map((part, i) => {
+    const match = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (match) {
+      const [, anchor, href] = match;
+      return <Link key={i} to={href} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{anchor}</Link>;
+    }
+    return part;
+  });
+};
 
 const FAQSection = () => {
   const { t } = useLanguage();
@@ -30,7 +43,7 @@ const FAQSection = () => {
                   {faq.q}
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">
-                  {faq.a}
+                  {renderWithLinks(faq.a)}
                 </AccordionContent>
               </AccordionItem>
             ))}

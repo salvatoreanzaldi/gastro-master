@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const sections = [
   {
@@ -83,7 +84,7 @@ const sections = [
           </p>
           <p className="font-medium text-foreground/80 mb-1">(2) Einrichtungsgebühren</p>
           <p className="mb-3">
-            Durch den Kauf entfallen einmalige Einrichtungsgebühren. Die Einrichtung von Filialen erfolgt
+            Die Einrichtungsgebühren werden individuell je nach Umfang des Betriebs vereinbart. Die Einrichtung von Filialen erfolgt
             digital.
           </p>
           <p className="font-medium text-foreground/80 mb-1">(3) Bestellübermittlung</p>
@@ -516,7 +517,7 @@ const sections = [
           </p>
           <p className="font-medium text-foreground/80 mb-1">(2) Einrichtungsgebühren</p>
           <p>
-            Durch den Kauf entfallen einmalige Einrichtungsgebühren. Die Einrichtung von Filialen erfolgt
+            Die Einrichtungsgebühren werden individuell je nach Umfang des Betriebs vereinbart. Die Einrichtung von Filialen erfolgt
             digital.
           </p>
         </div>
@@ -629,6 +630,11 @@ const AccordionItem = ({
 );
 
 const AGB = () => {
+  useSeoMeta({
+    title: "AGB — Allgemeine Geschäftsbedingungen | Gastro Master",
+    description: "Allgemeine Geschäftsbedingungen der Epit Global GmbH / Gastro Master.",
+    canonical: "https://gastro-master.de/agb",
+  });
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, Plus, Minus, CheckCircle2, Star,
   TrendingUp, Wallet, CreditCard, Percent,
   Banknote, Zap, Calculator, ExternalLink,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
@@ -40,31 +42,31 @@ const PAYMENT_LOGOS_B = [
 const FAQ_ITEMS = [
   {
     q: "Darf ich Kreditkartengebühren an Kunden weitergeben?",
-    a: "Ja. In Deutschland und der EU ist das Weitergeben von Zahlungsgebühren als transparente Servicegebühr (Transaktionsumlage) zulässig, sofern sie beim Checkout klar ausgewiesen wird. Die EU-Richtlinie 2015/2366 (PSD2) verbietet lediglich versteckte Aufschläge – eine offen kommunizierte Umlage ist hingegen rechtlich einwandfrei.",
+    a: "Ja. In Deutschland und der EU ist das Weitergeben von Zahlungsgebühren als transparente Servicegebühr (Transaktionsumlage) zulässig, sofern sie beim Checkout klar ausgewiesen wird. Die EU-Richtlinie 2015/2366 (PSD2) verbietet lediglich versteckte Aufschläge – eine offen kommunizierte Umlage ist hingegen rechtlich einwandfrei. Die Transaktionsumlage ist im [Gastro Master Kassensystem](/produkte/kassensystem) vollständig integriert.",
   },
   {
     q: "Wie funktioniert eine Transaktionsumlage im Restaurant?",
-    a: "Wenn ein Kunde bezahlt (z. B. per PayPal), wird die anfallende Gebühr (z. B. 2,99 % + 0,35 €) automatisch als separater Posten auf den Bestellbetrag aufgeschlagen und beim Checkout transparent ausgewiesen. Der Gastronom erhält seinen vollen Nettobetrag – ohne Abzüge.",
+    a: "Wenn ein Kunde bezahlt (z. B. per PayPal), wird die anfallende Gebühr (z. B. 2,99 % + 0,35 €) automatisch als separater Posten auf den Bestellbetrag aufgeschlagen und beim Checkout transparent ausgewiesen. Der Gastronom erhält seinen vollen Nettobetrag – ohne Abzüge. Die Funktion ist direkt in den [Gastro Master Bestellshop](/produkte/webshop) integriert.",
   },
   {
     q: "Was kostet PayPal für Gastronomen pro Transaktion?",
-    a: "PayPal berechnet für Online-Zahlungen in Deutschland 2,99 % des Transaktionsbetrags zuzüglich 0,35 € pro Transaktion (Quelle: paypal.com/de/webapps/mpp/merchant-fees). Bei 300 Bestellungen mit einem Durchschnittswert von 30 € entstehen somit monatlich ca. 374 € an Gebühren – die mit der Transaktionsumlage vollständig an den Kunden weitergegeben werden.",
+    a: "PayPal berechnet für Online-Zahlungen in Deutschland 2,99 % des Transaktionsbetrags zuzüglich 0,35 € pro Transaktion (Quelle: paypal.com/de/webapps/mpp/merchant-fees). Bei 300 Bestellungen mit einem Durchschnittswert von 30 € entstehen somit monatlich ca. 374 € an Gebühren – die mit der Transaktionsumlage vollständig an den Kunden weitergegeben werden. Gerade für [Gastronomen mit eigenem Lieferdienst](/loesungen/lieferservice-gruenden) lohnt sich das Add-On besonders.",
   },
   {
     q: "Ist die Transaktionsumlage bei Kreditkarten legal?",
-    a: "Ja. Kreditkartengebühren dürfen als transparente Umlage weitergegeben werden, solange sie beim Bestellvorgang klar sichtbar ausgewiesen sind. Die Gastro Master Plattform zeigt die Gebühr automatisch im Checkout an und erfüllt damit alle gesetzlichen Anforderungen.",
+    a: "Ja. Kreditkartengebühren dürfen als transparente Umlage weitergegeben werden, solange sie beim Bestellvorgang klar sichtbar ausgewiesen sind. Die Gastro Master Plattform zeigt die Gebühr automatisch im Checkout an und erfüllt damit alle gesetzlichen Anforderungen. Alle Preise und Add-On-Konditionen findest du in der [vollständigen Preisübersicht](/preise).",
   },
   {
     q: "Welche Zahlungsarten können umgelegt werden?",
-    a: "Alle gängigen Zahlungsarten sind abgedeckt: PayPal, Visa, Mastercard, Apple Pay, Google Pay und Klarna. Du kannst wählen, welche Methoden du aktivierst – und nur für diese wird die Umlage angewandt.",
+    a: "Alle gängigen Zahlungsarten sind abgedeckt: PayPal, Visa, Mastercard, Apple Pay, Google Pay und Klarna. Du kannst wählen, welche Methoden du aktivierst – und nur für diese wird die Umlage angewandt. Die Einrichtung erfolgt direkt in deinem [Gastro Master Bestellshop](/produkte/webshop) oder deiner [eigenen Bestell-App](/produkte/app).",
   },
   {
     q: "Funktioniert die Transaktionsumlage auch bei mehreren Standorten?",
-    a: "Ja. Die Transaktionsumlage lässt sich standortübergreifend einrichten. Jeder Standort kann mit eigenen Zahlungskonten (PayPal Business, Stripe) verknüpft werden – die Umlage wird dann automatisch für alle aktivierten Standorte angewendet.",
+    a: "Ja. Die Transaktionsumlage lässt sich standortübergreifend einrichten. Jeder Standort kann mit eigenen Zahlungskonten (PayPal Business, Stripe) verknüpft werden – die Umlage wird dann automatisch für alle aktivierten Standorte angewendet. Mehr dazu auf der [Franchise-Seite](/loesungen/franchise).",
   },
   {
     q: "Muss ich ein eigenes PayPal- und Stripe-Konto haben?",
-    a: "Ja. Zahlungen landen direkt auf deinem eigenen PayPal Business- und/oder Stripe-Konto – kein Zwischenhändler, keine Verzögerung. Das ist ein wesentlicher Vorteil gegenüber Drittplattformen: Du hast jederzeit Zugriff auf dein Geld.",
+    a: "Ja. Zahlungen landen direkt auf deinem eigenen PayPal Business- und/oder Stripe-Konto – kein Zwischenhändler, keine Verzögerung. Das ist ein wesentlicher Vorteil gegenüber Drittplattformen: Du hast jederzeit Zugriff auf dein Geld. Bei Fragen zur Einrichtung hilft unser Team gerne – schreib uns einfach über das [Kontaktformular](/kontakt).",
   },
 ];
 
@@ -88,8 +90,18 @@ const SCHEMA_FAQ = {
   "mainEntity": FAQ_ITEMS.map(({ q, a }) => ({
     "@type": "Question",
     "name": q,
-    "acceptedAnswer": { "@type": "Answer", "text": a },
+    "acceptedAnswer": { "@type": "Answer", "text": a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") },
   })),
+};
+
+const SCHEMA_BREADCRUMB = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://gastro-master.de/" },
+    { "@type": "ListItem", "position": 2, "name": "Produkte", "item": "https://gastro-master.de/produkte" },
+    { "@type": "ListItem", "position": 3, "name": "Transaktionsumlage", "item": "https://gastro-master.de/produkte/transaktionsumlage" },
+  ],
 };
 
 // ─── Fee data per provider ────────────────────────────────────────────────────
@@ -253,6 +265,14 @@ const TeamCTA = () => {
   );
 };
 
+// ─── renderFaqLinks ────────────────────────────────────────────────────────────
+const renderFaqLinks = (text: string): React.ReactNode[] =>
+  text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+    const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (m) return <Link key={i} to={m[2]} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
+    return part;
+  });
+
 // ─── FaqItem ──────────────────────────────────────────────────────────────────
 const FaqItem = ({ q, a }: { q: string; a: string }) => {
   const [open, setOpen] = useState(false);
@@ -276,7 +296,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
             transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{a}</p>
+            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a)}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -474,12 +494,11 @@ const TransaktionsumlagePage = () => {
   const [orders, setOrders] = useState(300);
   const [avgCart, setAvgCart] = useState(30);
 
-  useEffect(() => {
-    document.title = "Transaktionsumlage Gastronomie – Zahlungsgebühren weitergeben | Gastro Master";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", "Mit der Transaktionsumlage geben Gastronomen PayPal- und Kreditkartengebühren transparent an ihre Kunden weiter – rechtssicher, automatisch und ohne Mehraufwand. Top-Seller Add-On von Gastro Master.");
-    return () => { document.title = "Gastro Master"; };
-  }, []);
+  useSeoMeta({
+    title: "Transaktionsumlage Gastronomie — 0 € Gebühren | Gastro Master",
+    description: "Zahlungsgebühren (PayPal, Kreditkarte, Klarna) transparent an Kunden weitergeben — rechtssicher und automatisch. Top-Seller Add-On für Gastronomen. Jetzt informieren.",
+    canonical: "https://gastro-master.de/produkte/transaktionsumlage",
+  });
 
   const provider = PROVIDERS[activeProvider];
   const monthlyFee = Math.round(orders * (avgCart * provider.rate + provider.fixed) * 100) / 100;
@@ -490,6 +509,7 @@ const TransaktionsumlagePage = () => {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_PRODUCT) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_FAQ) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }} />
 
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -534,7 +554,7 @@ const TransaktionsumlagePage = () => {
                 In 3 Schritten zur 0 € Gebührenbelastung.
               </h2>
               <p className="text-[#0A264A]/55 dark:text-white/45 mt-5 text-lg max-w-xl mx-auto leading-relaxed">
-                Vollautomatisch, transparent und rechtssicher – ohne Mehraufwand für dich oder deine Mitarbeiter.
+                Vollautomatisch, transparent und rechtssicher – ohne Mehraufwand für dich oder deine Mitarbeiter. Die Transaktionsumlage ist direkt in den <Link to="/produkte/webshop" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">Gastro Master Bestellshop</Link> und die <Link to="/produkte/app" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">eigene Bestell-App</Link> integriert.
               </p>
             </motion.div>
             <div className="grid md:grid-cols-3 gap-8 md:gap-12">

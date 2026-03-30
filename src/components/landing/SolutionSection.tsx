@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Globe, Smartphone, CreditCard, Palette } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const icons = [Globe, Smartphone, CreditCard, Palette];
+const featureHrefs = ["/produkte/webshop", "/produkte/bestellapp", "/produkte/transaktionsumlage", null] as const;
 
 const SolutionSection = () => {
   const { t } = useLanguage();
@@ -31,6 +33,7 @@ const SolutionSection = () => {
         <div className="grid sm:grid-cols-2 gap-6 mb-12">
           {t.solution.features.map((f, i) => {
             const Icon = icons[i];
+            const href = featureHrefs[i];
             return (
               <motion.div
                 key={f.title}
@@ -38,13 +41,18 @@ const SolutionSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-background border border-border rounded-2xl p-7 hover:shadow-lg transition-shadow group"
+                className="bg-background border border-border rounded-2xl p-7 hover:shadow-lg transition-shadow group flex flex-col"
               >
                 <div className="w-12 h-12 bg-gradient-brand rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                   <Icon className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground mb-2">{f.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{f.text}</p>
+                <p className="text-muted-foreground leading-relaxed mb-4">{f.text}</p>
+                {href && (
+                  <Link to={href} className="mt-auto text-cyan-brand text-sm font-semibold inline-flex items-center gap-1.5 hover:gap-2.5 transition-all duration-200">
+                    Mehr erfahren <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                )}
               </motion.div>
             );
           })}

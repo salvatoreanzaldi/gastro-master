@@ -264,7 +264,7 @@ export const translations = {
         { q: "Wie läuft der Support?", a: "Per WhatsApp, Telefon oder E-Mail. Du hast einen persönlichen Ansprechpartner, kein anonymes Ticketsystem." },
         { q: "Bin ich lange gebunden?", a: "Nein. Du kannst jederzeit mit 3 Monaten Frist kündigen. Kein Langzeit-Lock-in." },
         { q: "Was ist beim Wechsel von einem anderen Anbieter?", a: "Wir machen dir den Wechsel so einfach wie möglich – inklusive 50 % Rabatt, solange dein altes Abo noch läuft." },
-        { q: "Kann ich später ein Kassensystem dazunehmen?", a: "Ja, jederzeit. Gastro Master bietet alles aus einer Hand – Shop, App und Kasse." },
+        { q: "Kann ich später ein Kassensystem dazunehmen?", a: "Ja, jederzeit. Gastro Master bietet alles aus einer Hand – [Webshop](/produkte/webshop), [Bestell-App](/produkte/bestellapp) und [Kassensystem](/produkte/kassensystem)." },
       ],
     },
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ChevronDown, ExternalLink,
@@ -93,7 +94,7 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Was kostet ein Kassensystem für eine Bäckerei bei Gastro Master?",
-    a: "Das [Kassensystem](/produkte/kassensystem) kostet ab 69 € pro Monat. Darin enthalten: TSE-Modul, Speisekartenverwaltung, Tagesabschluss und persönlicher Support. Einrichtungskosten fallen keine an.",
+    a: "Das [Kassensystem](/produkte/kassensystem) kostet ab 69 € pro Monat. Darin enthalten: TSE-Modul, Speisekartenverwaltung, Tagesabschluss und persönlicher Support. Die Einrichtung wird individuell auf deinen Betrieb abgestimmt.",
   },
   {
     q: "Funktioniert die Kasse auch ohne Internet?",
@@ -270,20 +271,11 @@ const SmallProductCard = ({ product }: { product: ProductCard }) => (
 const CafeBaeckereiPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title =
-      "Kassensystem für Café & Bäckerei 2026 — TSE-konform, Online-Vorbestellung | Gastro Master";
-    const content =
-      "TSE-konformes Kassensystem, Online-Vorbestellung und QR-Tischbestellung für Café und Bäckerei. Ab 69 €/Monat. Jetzt kostenlose Beratung sichern.";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", content);
-    else {
-      const m = document.createElement("meta");
-      m.name = "description";
-      m.content = content;
-      document.head.appendChild(m);
-    }
-  }, []);
+  useSeoMeta({
+    title: "Kassensystem Café & Bäckerei 2026 — TSE-konform, Online-Vorbestellung | Gastro Master",
+    description: "TSE-konformes Kassensystem, Online-Vorbestellung und QR-Tischbestellung für Café und Bäckerei. Ab 69 €/Monat. Jetzt kostenlose Beratung sichern.",
+    canonical: "https://gastro-master.de/loesungen/cafe-baeckerei",
+  });
 
   return (
     <div className="min-h-screen bg-[#0A264A]">
@@ -378,7 +370,7 @@ const CafeBaeckereiPage = () => {
             transition={{ delay: 0.5, duration: 0.5 }}
             className="flex flex-wrap gap-3 justify-center"
           >
-            {["700+ Betriebe", "TSE-konform", "0 € Einrichtung", "Persönlicher Support"].map((p) => (
+            {["700+ Betriebe", "TSE-konform", "Persönliche Einrichtung", "Persönlicher Support"].map((p) => (
               <span
                 key={p}
                 className="px-4 py-2 rounded-full bg-white/8 border border-white/10 text-white/60 text-sm font-medium"

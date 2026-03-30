@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const DOWNLOADS = [
   {
@@ -39,7 +40,13 @@ const ExternalIcon = () => (
   </svg>
 );
 
-const DownloadsPage = () => (
+const DownloadsPage = () => {
+  useSeoMeta({
+    title: "Downloads — Treiber & Software | Gastro Master",
+    description: "Gastro Master Downloads: Druckertreiber, Software und Anleitungen für Kassensystem und Bestellsystem. Kostenlos herunterladen.",
+    canonical: "https://gastro-master.de/downloads",
+  });
+  return (
   <div className="min-h-screen bg-background">
     <Navbar />
     <main className="section-padding pt-28 md:pt-32">
@@ -105,5 +112,6 @@ const DownloadsPage = () => (
     <Footer />
   </div>
 );
+};
 
 export default DownloadsPage;

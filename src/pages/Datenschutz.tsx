@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const RolleVerantwortlicher = () => (
   <p className="border-l-2 border-cyan-brand pl-3 italic text-muted-foreground text-sm mb-4">
@@ -66,6 +67,11 @@ const AccordionSection = ({ title, open, onToggle, children }: AccordionSectionP
 const SECTION_COUNT = 30;
 
 const Datenschutz = () => {
+  useSeoMeta({
+    title: "Datenschutzerklärung | Gastro Master",
+    description: "Datenschutzerklärung der Epit Global GmbH – DSGVO-konform. Informationen zur Erhebung und Verarbeitung personenbezogener Daten.",
+    canonical: "https://gastro-master.de/datenschutz",
+  });
   const [openSections, setOpenSections] = useState<Set<number>>(new Set());
 
   const toggle = (id: number) => {
