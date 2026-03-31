@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
-import dashboardImg from "@/assets/cashier-dashboard.png";
+import dashboardImg from "@/assets/kassensystem/cashier-dashboard.png";
 
 const cyclingWords = [
   "Deine Regeln.",

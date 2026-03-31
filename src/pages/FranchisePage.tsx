@@ -34,11 +34,11 @@ function renderWithLinks(text: string): React.ReactNode {
 }
 const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
-import imgApp         from "@/assets/Mock Up - Branding Hero.png";
-import imgWebshop     from "@/assets/take-startbild.jpeg";
-import imgKasse       from "@/assets/hero-pos-system.png";
-import imgWebseite    from "@/assets/Hero - Gastro Master.PNG";
-import imgTransaktion from "@/assets/9 - Zahlungsmethoden.png";
+import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
+import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
+import imgKasse       from "@/assets/heroes/hero-pos-system.png";
+import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.PNG";
+import imgTransaktion from "@/assets/addons/9 - Zahlungsmethoden.png";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 

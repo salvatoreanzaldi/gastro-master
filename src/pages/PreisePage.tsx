@@ -27,22 +27,22 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import SlimPricingSection from "@/components/landing/SlimPricingSection";
-import imgWebshop     from "@/assets/take-startbild.jpeg";
-import imgApp         from "@/assets/Mock Up - Branding Hero.png";
-import imgKasse       from "@/assets/hero-pos-system.png";
-import imgWebseite    from "@/assets/Hero - Gastro Master.PNG";
-import imgFahrerApp   from "@/assets/addon-frankfurt-gps.png";
-import imgQrTisch     from "@/assets/addon-qr-tischsystem.png";
-import imgSelfOrder   from "@/assets/selfordering-terminals.png";
-import imgKasseHW     from "@/assets/kassenhardware.png";
-import imgQrFlyer     from "@/assets/Flyer - Mock Up.png";
-import payPaypal      from "@/assets/partner-paypal.png";
-import payStripe      from "@/assets/partner-stripe.png";
-import payApple       from "@/assets/Logo - Apple Pay.png";
-import payGoogle      from "@/assets/pay-google.png";
-import payVisa        from "@/assets/pay-visa.png";
-import payMastercard  from "@/assets/pay-mastercard.png";
-import payKlarna      from "@/assets/pay-klarna.png";
+import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
+import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
+import imgKasse       from "@/assets/heroes/hero-pos-system.png";
+import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.PNG";
+import imgFahrerApp   from "@/assets/addons/addon-frankfurt-gps.png";
+import imgQrTisch     from "@/assets/addons/addon-qr-tischsystem.png";
+import imgSelfOrder   from "@/assets/addons/selfordering-terminals.png";
+import imgKasseHW     from "@/assets/hardware/kassenhardware.png";
+import imgQrFlyer     from "@/assets/mockups/Flyer - Mock Up.png";
+import payPaypal      from "@/assets/logos/partner/partner-paypal.png";
+import payStripe      from "@/assets/logos/partner/partner-stripe.png";
+import payApple       from "@/assets/logos/payment/Logo - Apple Pay.png";
+import payGoogle      from "@/assets/logos/payment/pay-google.png";
+import payVisa        from "@/assets/logos/payment/pay-visa.png";
+import payMastercard  from "@/assets/logos/payment/pay-mastercard.png";
+import payKlarna      from "@/assets/logos/payment/pay-klarna.png";
 
 // ─── SEO / Schema ───────────────────────────────────────────────────────────
 

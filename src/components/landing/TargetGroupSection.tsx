@@ -5,35 +5,35 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 // Pizzeria logos
-import logoAmanda from "@/assets/Logo Amanda.png";
-import logoIlPunto from "@/assets/Logo Il Punto.png";
-import logoLaPeperoni from "@/assets/Logo - La Peperoni.png";
-import logoPimanzo from "@/assets/Logo - Pizzeria Pimanzo.png";
-import logoIlSorriso from "@/assets/Logo-Il_Sorriso-Pizzeria.png";
+import logoAmanda from "@/assets/logos/kunden/Logo Amanda.png";
+import logoIlPunto from "@/assets/logos/kunden/Logo Il Punto.png";
+import logoLaPeperoni from "@/assets/logos/kunden/Logo - La Peperoni.png";
+import logoPimanzo from "@/assets/logos/kunden/Logo - Pizzeria Pimanzo.png";
+import logoIlSorriso from "@/assets/logos/kunden/Logo-Il_Sorriso-Pizzeria.png";
 // Asiatisch logos
-import logoHaLong from "@/assets/Logo - Ha Long Asia.png";
-import logoKojoSushi from "@/assets/Logo - Kojo Sushi.png";
-import logoSushiDeLux from "@/assets/Logo - Sushi De Lux.png";
-import logoTokyoSushi from "@/assets/Logo - Tokyo Sushi Bar.png";
-import logoPhyo7 from "@/assets/Logo Phyo 7 Sushi.png";
+import logoHaLong from "@/assets/logos/kunden/Logo - Ha Long Asia.png";
+import logoKojoSushi from "@/assets/logos/kunden/Logo - Kojo Sushi.png";
+import logoSushiDeLux from "@/assets/logos/kunden/Logo - Sushi De Lux.png";
+import logoTokyoSushi from "@/assets/logos/kunden/Logo - Tokyo Sushi Bar.png";
+import logoPhyo7 from "@/assets/logos/kunden/Logo Phyo 7 Sushi.png";
 // Indisch logos
-import logoIndianChili from "@/assets/Logo - Indian Chili.png";
-import logoIndianZaika from "@/assets/Logo - Indian Zaika .png";
-import logoStyleOfIndia from "@/assets/Logo - Style Of India.png";
-import logoTajMahal from "@/assets/Logo - Taj Mahal Masala.png";
-import logoRoyalIndia from "@/assets/Logo _ Royal India.png";
+import logoIndianChili from "@/assets/logos/kunden/Logo - Indian Chili.png";
+import logoIndianZaika from "@/assets/logos/kunden/Logo - Indian Zaika .png";
+import logoStyleOfIndia from "@/assets/logos/kunden/Logo - Style Of India.png";
+import logoTajMahal from "@/assets/logos/kunden/Logo - Taj Mahal Masala.png";
+import logoRoyalIndia from "@/assets/logos/kunden/Logo _ Royal India.png";
 // Burger logos
-import logoBBSmash from "@/assets/Logo - BB Smash It Burger.png";
-import logoChickenChill from "@/assets/Logo - Chicken and Chill.png";
-import logoHabibi from "@/assets/Logo - Habibi Chicken.png";
-import logoJoesBurger from "@/assets/Logo - Joe's Burger.png";
-import logoSmashFlat from "@/assets/Logo - Smash Burger & Flat.png";
+import logoBBSmash from "@/assets/logos/kunden/Logo - BB Smash It Burger.png";
+import logoChickenChill from "@/assets/logos/kunden/Logo - Chicken and Chill.png";
+import logoHabibi from "@/assets/logos/kunden/Logo - Habibi Chicken.png";
+import logoJoesBurger from "@/assets/logos/kunden/Logo - Joe's Burger.png";
+import logoSmashFlat from "@/assets/logos/kunden/Logo - Smash Burger & Flat.png";
 // Franchise logos
-import logoBurgerBrothers from "@/assets/logo-burger-brothers.png";
-import logoTake from "@/assets/logo-take.png";
-import logoEtManus from "@/assets/logo-et-manus.png";
-import logoBigOneBite from "@/assets/Logo - Big One Bite.png";
-import logoPomPom from "@/assets/Logo - Pom Pom.png";
+import logoBurgerBrothers from "@/assets/logos/kunden/logo-burger-brothers.png";
+import logoTake from "@/assets/logos/kunden/logo-take.png";
+import logoEtManus from "@/assets/logos/kunden/logo-et-manus.png";
+import logoBigOneBite from "@/assets/logos/kunden/Logo - Big One Bite.png";
+import logoPomPom from "@/assets/logos/kunden/Logo - Pom Pom.png";
 
 const darkBgLogos = new Set(["BB Smash It Burger", "Joe's Burger", "Smash Burger & Flat"]);
 
@@ -77,15 +77,15 @@ const customerLogos: Record<string, { src: string; alt: string }[]> = {
   ],
 };
 
-import imgPizzeria from "@/assets/target-pizzeria.png";
-import imgAsiatisch from "@/assets/target-asiatisch.png";
-import imgIndisch from "@/assets/target-indisch.png";
-import imgBurger from "@/assets/target-burger.png";
-import imgEis from "@/assets/target-eis.png";
-import imgBaeckerei from "@/assets/target-baeckerei.png";
-import imgFranchise from "@/assets/target-franchise.jpeg";
-import imgGhostKitchen from "@/assets/target-ghost-kitchen.png";
-import imgEinzelhandel from "@/assets/target-einzelhandel.png";
+import imgPizzeria from "@/assets/targets/target-pizzeria.png";
+import imgAsiatisch from "@/assets/targets/target-asiatisch.png";
+import imgIndisch from "@/assets/targets/target-indisch.png";
+import imgBurger from "@/assets/targets/target-burger.png";
+import imgEis from "@/assets/targets/target-eis.png";
+import imgBaeckerei from "@/assets/targets/target-baeckerei.png";
+import imgFranchise from "@/assets/targets/target-franchise.jpeg";
+import imgGhostKitchen from "@/assets/targets/target-ghost-kitchen.png";
+import imgEinzelhandel from "@/assets/targets/target-einzelhandel.png";
 
 const groupIcons: Record<string, typeof Truck> = {
   lieferdienst: Truck,

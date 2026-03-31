@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 
 // Representative customer logos (franchise/brand logos work well on dark bg)
-import logoBurgerBrothers from "@/assets/logo-burger-brothers.png";
-import logoTake from "@/assets/logo-take.png";
-import logoEtManus from "@/assets/logo-et-manus.png";
-import logoBigOneBite from "@/assets/Logo - Big One Bite.png";
-import logoPomPom from "@/assets/Logo - Pom Pom.png";
+import logoBurgerBrothers from "@/assets/logos/kunden/logo-burger-brothers.png";
+import logoTake from "@/assets/logos/kunden/logo-take.png";
+import logoEtManus from "@/assets/logos/kunden/logo-et-manus.png";
+import logoBigOneBite from "@/assets/logos/kunden/Logo - Big One Bite.png";
+import logoPomPom from "@/assets/logos/kunden/Logo - Pom Pom.png";
 
 const defaultLogos = [
   { src: logoBurgerBrothers, alt: "Burger Brothers" },

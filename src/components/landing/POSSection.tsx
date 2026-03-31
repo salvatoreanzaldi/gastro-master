@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Truck, QrCode, ShoppingBag } from "lucide-react";
-import kassenhardware from "@/assets/kassenhardware.png";
-import selforderTerminals from "@/assets/selfordering-terminals.png";
-import frankfurtGps from "@/assets/addon-frankfurt-gps.png";
-import qrTischsystem from "@/assets/addon-qr-tischsystem.png";
+import kassenhardware from "@/assets/hardware/kassenhardware.png";
+import selforderTerminals from "@/assets/addons/selfordering-terminals.png";
+import frankfurtGps from "@/assets/addons/addon-frankfurt-gps.png";
+import qrTischsystem from "@/assets/addons/addon-qr-tischsystem.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const POSSection = () => {

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Linkedin, Globe } from "lucide-react";
-import ceoPortrait from "@/assets/ceo-rene-ebert.png";
-import sanjayaPortrait from "@/assets/team-sanjaya-pattiyage.png";
-import salvatorePortrait from "@/assets/team-salvatore-anzaldi.png";
-import andrejPortrait from "@/assets/team-andrej-krutsch.png";
-import mohammadPortrait from "@/assets/team-mohammad-motakalemi.png";
+import ceoPortrait from "@/assets/team/ceo-rene-ebert.png";
+import sanjayaPortrait from "@/assets/team/team-sanjaya-pattiyage.png";
+import salvatorePortrait from "@/assets/team/team-salvatore-anzaldi.png";
+import andrejPortrait from "@/assets/team/team-andrej-krutsch.png";
+import mohammadPortrait from "@/assets/team/team-mohammad-motakalemi.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const founderImgs = [ceoPortrait, sanjayaPortrait];
@@ -24,6 +24,12 @@ const languages = [
 
 type PersonKey = "rene" | "sanjaya" | "salvatore" | "andrej" | "mohammad";
 
+const linkedinUrls: Partial<Record<PersonKey, string>> = {
+  rene: "https://www.linkedin.com/in/rene-ebert/",
+  sanjaya: "https://www.linkedin.com/in/sanjaya-pattiyage/",
+  salvatore: "https://www.linkedin.com/in/salvatore-a-a42711208/",
+};
+
 const FlipCard = ({ personKey, img, index }: { personKey: PersonKey; img: string; index: number }) => {
   const { t } = useLanguage();
   const [flipped, setFlipped] = useState(false);
@@ -41,34 +47,33 @@ const FlipCard = ({ personKey, img, index }: { personKey: PersonKey; img: string
       onMouseLeave={() => setFlipped(false)}
     >
       <div
-        className="relative w-full transition-transform duration-700 preserve-3d"
+        className="relative w-full transition-transform duration-700 preserve-3d min-h-[500px] sm:min-h-[380px]"
         style={{
           transformStyle: "preserve-3d",
           transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          minHeight: "380px",
         }}
       >
         {/* Front */}
         <div className="absolute inset-0 backface-hidden" style={{ backfaceVisibility: "hidden" }}>
           <div className="h-full rounded-3xl overflow-hidden border-2 border-border bg-background shadow-xl hover:shadow-2xl transition-shadow duration-500">
-            <div className="relative w-full h-56 md:h-64 overflow-hidden">
+            <div className="relative w-full aspect-square sm:aspect-auto sm:h-64 overflow-hidden p-4 sm:p-0">
               <img
                 src={img}
                 alt={`${personKey} – ${person.role}`}
-                className="w-full h-full object-cover object-top"
+                className="w-full h-full object-cover object-center rounded-2xl sm:rounded-none"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background from-0% via-transparent via-20% to-transparent sm:via-40%" />
             </div>
-            <div className="p-5 text-center">
-              <h3 className="text-lg font-bold text-foreground capitalize">
+            <div className="px-5 pt-4 pb-5 sm:p-5 text-center">
+              <h3 className="text-xl sm:text-lg font-bold text-foreground capitalize">
                 {personKey === "rene" ? "René Ebert"
                   : personKey === "sanjaya" ? "Sanjaya Pattiyage"
                   : personKey === "salvatore" ? "Salvatore Anzaldi"
                   : personKey === "andrej" ? "Andrej Krutsch"
                   : "Mohammad Motakalemi"}
               </h3>
-              <p className="text-cyan-brand text-sm font-semibold">{person.role}</p>
-              <p className="text-muted-foreground text-sm">{person.focus}</p>
+              <p className="text-cyan-brand text-base sm:text-sm font-semibold">{person.role}</p>
+              <p className="text-muted-foreground text-base sm:text-sm">{person.focus}</p>
             </div>
           </div>
         </div>
@@ -87,16 +92,18 @@ const FlipCard = ({ personKey, img, index }: { personKey: PersonKey; img: string
               <p className="text-cyan-brand text-sm font-semibold mb-4">{person.role}</p>
               <p className="text-primary-foreground/70 text-sm leading-relaxed">{person.bio}</p>
             </div>
-            <a
-              href="#"
-              onClick={(e) => e.stopPropagation()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-cyan-brand hover:text-primary-foreground text-sm font-medium transition-colors mt-4"
-            >
-              <Linkedin className="w-5 h-5" />
-              {t.founder.linkedin}
-            </a>
+            {linkedinUrls[personKey] && (
+              <a
+                href={linkedinUrls[personKey]}
+                onClick={(e) => e.stopPropagation()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-[#0A66C2] hover:text-primary-foreground text-sm font-medium transition-colors mt-4"
+              >
+                <Linkedin className="w-5 h-5" />
+                {t.founder.linkedin}
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -127,14 +134,14 @@ const FounderTrustSection = () => {
         </motion.div>
 
         {/* Founders – 2-col row */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-sm sm:max-w-2xl mx-auto mb-6">
           {founderKeys.map((key, i) => (
             <FlipCard key={key} personKey={key} img={founderImgs[i]} index={i} />
           ))}
         </div>
 
         {/* Team – 3-col row */}
-        <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-sm sm:max-w-2xl lg:max-w-4xl mx-auto">
           {teamKeys.map((key, i) => (
             <FlipCard key={key} personKey={key} img={teamImgs[i]} index={i + founderKeys.length} />
           ))}

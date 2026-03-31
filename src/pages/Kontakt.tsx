@@ -5,10 +5,10 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
-import rene     from "@/assets/Rene Ebert - Kontakt.png";
-import salva    from "@/assets/Salvatore Anzaldi - Kontakt.png";
-import andrej   from "@/assets/Andrej Krutsch - Kontakt.png";
-import mohammad from "@/assets/Mohammad Motakalemi - Kontakt.png";
+import rene     from "@/assets/kontakt/Rene Ebert - Kontakt.png";
+import salva    from "@/assets/kontakt/Salvatore Anzaldi - Kontakt.png";
+import andrej   from "@/assets/kontakt/Andrej Krutsch - Kontakt.png";
+import mohammad from "@/assets/kontakt/Mohammad Motakalemi - Kontakt.png";
 
 const teamMembers = [
   { name: "René Ebert",           role: "CEO & Gründer",      img: rene     },

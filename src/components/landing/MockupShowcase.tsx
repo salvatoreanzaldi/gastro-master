@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
-import takeStartbild from "@/assets/take-startbild.jpeg";
-import takeMenu from "@/assets/take-menu.jpeg";
-import takeFilialen from "@/assets/take-filialen.jpeg";
-import takeBestellart from "@/assets/take-bestellart.jpeg";
-import takeBenutzerkonto from "@/assets/take-benutzerkonto.jpeg";
+import takeStartbild from "@/assets/screenshots/take-startbild.jpeg";
+import takeMenu from "@/assets/screenshots/take-menu.jpeg";
+import takeFilialen from "@/assets/screenshots/take-filialen.jpeg";
+import takeBestellart from "@/assets/screenshots/take-bestellart.jpeg";
+import takeBenutzerkonto from "@/assets/screenshots/take-benutzerkonto.jpeg";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const screenImgs = [takeStartbild, takeMenu, takeFilialen, takeBestellart, takeBenutzerkonto];

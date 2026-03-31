@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Star, Users, ShieldCheck } from "lucide-react";
-import heroPOS from "@/assets/hero-pos-system.png";
+import heroPOS from "@/assets/heroes/hero-pos-system.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const fadeUp = {

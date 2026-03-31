@@ -180,8 +180,7 @@ export const translations = {
       items: [
         { name: "Kojo Sushi", person: "Ha Lim Lee", quote: "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein." },
         { name: "Pizzeria il Sorriso", person: "Marco Greco", quote: "Also der Support ist einfach 1A und den würdest du nirgendwo anders bekommen!" },
-        { name: "Nevada Burger & Steak", person: "Milad Ismail", quote: "Ich bekomme bei jeder Bestellung sofort das Geld auf mein Konto. Bei Gastro Master ist alles flexibel." },
-        { name: "61 Burger & More", person: "Sven Heinrich", quote: "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit, seinen Betrieb zu strukturieren." },
+        { name: "Artemis Grill", person: "Georgios Madatsidis", quote: "Ich bekomme bei jeder Bestellung sofort das Geld auf mein Konto. Bei Gastro Master ist alles flexibel." },
       ],
     },
 
@@ -536,8 +535,7 @@ export const translations = {
       items: [
         { name: "Kojo Sushi", person: "Ha Lim Lee", quote: "Online ordering is the future — and we want to be part of it on our own terms." },
         { name: "Pizzeria il Sorriso", person: "Marco Greco", quote: "The support is simply outstanding — you won't find anything like it anywhere else!" },
-        { name: "Nevada Burger & Steak", person: "Milad Ismail", quote: "Every order, the money hits my account immediately. With Gastro Master everything is flexible." },
-        { name: "61 Burger & More", person: "Sven Heinrich", quote: "Fast, responsive WhatsApp support and all the tools to properly run and structure your business." },
+        { name: "Artemis Grill", person: "Georgios Madatsidis", quote: "Every order, the money hits my account immediately. With Gastro Master everything is flexible." },
       ],
     },
 

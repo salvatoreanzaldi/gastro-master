@@ -12,29 +12,30 @@ import CalculatorSection from "@/components/landing/CalculatorSection";
 import TargetGroupSection from "@/components/landing/TargetGroupSection";
 
 // ─── Assets ──────────────────────────────────────────────────────────────────
-import phone1 from "@/assets/1 - Mock Up Small.png";
-import phone2 from "@/assets/2 - Mock Up - Medium.png";
-import phone3 from "@/assets/3 - Mock Up - Large.png";
-import phone4 from "@/assets/4 - Mock Up Medium.png";
-import phone5 from "@/assets/5 - Mock Up Small.png";
-import logoKojo      from "@/assets/logo-kojo-sushi.png";
-import logoIlSorriso from "@/assets/logo-il-sorriso.png";
-import logoBurger    from "@/assets/logo-burger-brothers.png";
-import logoArtemis   from "@/assets/logo-artemis.png";
-import payPaypal     from "@/assets/partner-paypal.png";
-import payApple      from "@/assets/Logo - Apple Pay.png";
-import payGoogle     from "@/assets/pay-google.png";
-import payVisa       from "@/assets/pay-visa.png";
-import payMastercard from "@/assets/pay-mastercard.png";
-import payKlarna     from "@/assets/pay-klarna.png";
-import mockStart     from "@/assets/take-startbild.jpeg";
-import mockMenu      from "@/assets/take-menu.jpeg";
-import mockBestart   from "@/assets/take-bestellart.jpeg";
-import mockFilialen  from "@/assets/take-filialen.jpeg";
-import teamReneImg      from "@/assets/ceo-rene-ebert.png";
-import teamSalvatoreImg from "@/assets/team-salvatore-anzaldi.png";
-import teamAndrejImg    from "@/assets/team-andrej-krutsch.png";
-import teamMohammadImg  from "@/assets/team-mohammad-motakalemi.png";
+import phone1 from "@/assets/mockups/1 - Mock Up Small.png";
+import phone2 from "@/assets/mockups/2 - Mock Up - Medium.png";
+import phone3 from "@/assets/mockups/3 - Mock Up - Large.png";
+import phone4 from "@/assets/mockups/4 - Mock Up Medium.png";
+import phone5 from "@/assets/mockups/5 - Mock Up Small.png";
+import heroWebshop from "@/assets/heroes/Hero - Webshop.png";
+import logoKojo      from "@/assets/logos/kunden/logo-kojo-sushi.png";
+import logoIlSorriso from "@/assets/logos/kunden/logo-il-sorriso.png";
+import logoBurger    from "@/assets/logos/kunden/logo-burger-brothers.png";
+import logoArtemis   from "@/assets/logos/kunden/logo-artemis.png";
+import payPaypal     from "@/assets/logos/partner/partner-paypal.png";
+import payApple      from "@/assets/logos/payment/Logo - Apple Pay.png";
+import payGoogle     from "@/assets/logos/payment/pay-google.png";
+import payVisa       from "@/assets/logos/payment/pay-visa.png";
+import payMastercard from "@/assets/logos/payment/pay-mastercard.png";
+import payKlarna     from "@/assets/logos/payment/pay-klarna.png";
+import mockStart     from "@/assets/screenshots/take-startbild.jpeg";
+import mockMenu      from "@/assets/screenshots/take-menu.jpeg";
+import mockBestart   from "@/assets/screenshots/take-bestellart.jpeg";
+import mockFilialen  from "@/assets/screenshots/take-filialen.jpeg";
+import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
+import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
+import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
+import teamMohammadImg  from "@/assets/team/team-mohammad-motakalemi.png";
 
 // ─── Schema ──────────────────────────────────────────────────────────────────
 const SCHEMA_BREADCRUMB = {
@@ -459,10 +460,19 @@ const WebshopPage = () => {
           </motion.h1>
         </div>
 
-        {/* 5 Mockups */}
-        <div className="relative z-10 w-full mt-6 md:mt-8">
-          <HeroPhoneSpread />
-        </div>
+        {/* Hero Image */}
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.4, duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+          className="relative z-10 w-full mt-8 md:mt-12 px-5 md:px-8"
+        >
+          <img
+            src={heroWebshop}
+            alt="Gastro Master Bestellsystem auf Desktop, Laptop, Tablet und Smartphone"
+            className="w-full max-w-5xl mx-auto object-contain drop-shadow-2xl"
+          />
+        </motion.div>
 
         {/* Subtitle + CTA */}
         <motion.div

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logoWide from "@/assets/logo-gastro-master-wide.png";
+import logoWide from "@/assets/logos/logo-gastro-master-wide.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const socialLinks = [
@@ -93,6 +93,7 @@ const Footer = () => {
                 { label: "Restaurant",           to: "/loesungen/restaurant"             },
                 { label: "Lieferdienst",         to: "/loesungen/lieferdienst"           },
                 { label: "Café & Bäckerei",      to: "/loesungen/cafe-baeckerei"         },
+                { label: "Ghost Kitchen",        to: "/loesungen/ghost-kitchen"          },
               ].map(item => (
                 <li key={item.to}>
                   <Link to={item.to} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
@@ -125,6 +126,11 @@ const Footer = () => {
               <li>
                 <Link to="/kontakt" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
                   {t.footer.kontakt}
+                </Link>
+              </li>
+              <li>
+                <Link to="/uber-uns" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  Über uns
                 </Link>
               </li>
               <li>

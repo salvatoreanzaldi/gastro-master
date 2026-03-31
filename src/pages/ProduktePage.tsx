@@ -11,11 +11,11 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
 // ─── Logos ───────────────────────────────────────────────────────────────────
-import logoKojo      from "@/assets/logo-kojo-sushi.png";
-import logoIlSorriso from "@/assets/logo-il-sorriso.png";
-import logoBurger    from "@/assets/logo-burger-brothers.png";
-import logoArtemis   from "@/assets/logo-artemis.png";
-import logoTake      from "@/assets/logo-take.png";
+import logoKojo      from "@/assets/logos/kunden/logo-kojo-sushi.png";
+import logoIlSorriso from "@/assets/logos/kunden/logo-il-sorriso.png";
+import logoBurger    from "@/assets/logos/kunden/logo-burger-brothers.png";
+import logoArtemis   from "@/assets/logos/kunden/logo-artemis.png";
+import logoTake      from "@/assets/logos/kunden/logo-take.png";
 
 // ─── Produkt-Daten ────────────────────────────────────────────────────────────
 const MAIN_PRODUCTS = [

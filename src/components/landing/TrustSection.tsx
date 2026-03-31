@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
-import logoBurgerBrothers from "@/assets/logo-burger-brothers.png";
-import logoTake from "@/assets/logo-take.png";
-import logoEtManus from "@/assets/logo-et-manus.png";
-import logoIlSorriso from "@/assets/logo-il-sorriso.png";
-import logoKojoSushi from "@/assets/logo-kojo-sushi.png";
-import logoArtemis from "@/assets/logo-artemis.png";
+import logoBurgerBrothers from "@/assets/logos/kunden/logo-burger-brothers.png";
+import logoTake from "@/assets/logos/kunden/logo-take.png";
+import logoEtManus from "@/assets/logos/kunden/logo-et-manus.png";
+import logoIlSorriso from "@/assets/logos/kunden/logo-il-sorriso.png";
+import logoKojoSushi from "@/assets/logos/kunden/logo-kojo-sushi.png";
+import logoArtemis from "@/assets/logos/kunden/logo-artemis.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const customers = [

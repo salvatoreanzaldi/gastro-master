@@ -11,37 +11,50 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
 // ─── Assets ──────────────────────────────────────────────────────────────────
-import heroPosImg       from "@/assets/hero-pos-system.png";
-import tischImg         from "@/assets/Tisch System.png";
-import fahrerImg        from "@/assets/Fahrer-App und Liefergebiete.png";
-import statistikImg     from "@/assets/Statistiken.png";
-import slideTischImg     from "@/assets/2 - Tisch Funktion.png";
-import slideGpsImg       from "@/assets/3 - Liefergebiete.png";
-import slideStatistikImg from "@/assets/4 - Statistiken.png";
-import zahlungsmethodenImg from "@/assets/9 - Zahlungsmethoden.png";
-import plattformenImg   from "@/assets/Alle Plattformen.png";
-import anruferImg       from "@/assets/Automatische Anruferkennung .png";
-import liefergebImg     from "@/assets/Liefergebiete.png";
-import zahlenImg        from "@/assets/Immer alle Zahlen im Griff haben.png";
-import zahlungenImg     from "@/assets/Alle Zahlungen Terminal.png";
-import selfOrderImg     from "@/assets/Self-Ordering Terminal Mock Up.png";
-import selfOrder11Img   from "@/assets/11 - Self Ordering.png";
-import ecKartenImg      from "@/assets/13 - EC-Kartengeräte.png";
-import barSystemImg     from "@/assets/Bar System mit Order Man.png";
-import lizenzImg        from "@/assets/Eine Lizenz für Bis zu 4 Kassen.png";
-import mitarbeiterImg   from "@/assets/Mitarbeiterverwaltung .png";
-import qrImg            from "@/assets/QR-Code System Mock Up.png";
-import selfOrderTermImg from "@/assets/selfordering-terminals.png";
-import selbstBestellenImg from "@/assets/15 - Selbst bestellen.png";
-import ordermanImg      from "@/assets/Orderman MockUp.png";
-import teamReneImg      from "@/assets/ceo-rene-ebert.png";
-import teamSalvatoreImg from "@/assets/team-salvatore-anzaldi.png";
-import teamAndrejImg    from "@/assets/team-andrej-krutsch.png";
-import logoKojo         from "@/assets/logo-kojo-sushi.png";
-import logoIlSorriso    from "@/assets/logo-il-sorriso.png";
-import logoArtemis      from "@/assets/logo-artemis.png";
-import logoTake         from "@/assets/logo-take.png";
-import logoBurger       from "@/assets/logo-burger-brothers.png";
+import heroPosImg       from "@/assets/heroes/hero-pos-system.png";
+import tischImg         from "@/assets/addons/Tisch System.png";
+import fahrerImg        from "@/assets/addons/Fahrer-App und Liefergebiete.png";
+import statistikImg     from "@/assets/kassensystem/Statistiken.png";
+import slideTischImg     from "@/assets/addons/2 - Tisch Funktion.png";
+import slideGpsImg       from "@/assets/addons/3 - Liefergebiete.png";
+import slideStatistikImg from "@/assets/kassensystem/4 - Statistiken.png";
+import zahlungsmethodenImg from "@/assets/addons/9 - Zahlungsmethoden.png";
+import plattformenImg   from "@/assets/addons/Alle Plattformen.png";
+import anruferImg       from "@/assets/kassensystem/Automatische Anruferkennung .png";
+import liefergebImg     from "@/assets/addons/Liefergebiete.png";
+import zahlenImg        from "@/assets/kassensystem/Immer alle Zahlen im Griff haben.png";
+import zahlungenImg     from "@/assets/hardware/Alle Zahlungen Terminal.png";
+import selfOrderImg     from "@/assets/mockups/Self-Ordering Terminal Mock Up.png";
+import selfOrder11Img   from "@/assets/addons/11 - Self Ordering.png";
+import ecKartenImg      from "@/assets/hardware/13 - EC-Kartengeräte.png";
+import barSystemImg     from "@/assets/addons/Bar System mit Order Man.png";
+import lizenzImg        from "@/assets/kassensystem/Eine Lizenz für Bis zu 4 Kassen.png";
+import mitarbeiterImg   from "@/assets/kassensystem/Mitarbeiterverwaltung .png";
+import qrImg            from "@/assets/mockups/QR-Code System Mock Up.png";
+import selfOrderTermImg from "@/assets/addons/selfordering-terminals.png";
+import selbstBestellenImg from "@/assets/addons/15 - Selbst bestellen.png";
+import ordermanImg      from "@/assets/mockups/Orderman MockUp.png";
+import hwEloFront      from "@/assets/hardware/Hardware - Elo Front.png";
+import hwEloSchraeg    from "@/assets/hardware/Hardware - Elo Schrägt.png";
+import hwEloHinten     from "@/assets/hardware/Hardware - Elo Hinten.png";
+import hwEloPorts      from "@/assets/hardware/Hardware - Elo Ports.png";
+import hwEloSeite      from "@/assets/hardware/Hardware - Elo Seite.png";
+import hwEloDblFront   from "@/assets/hardware/Hardware - Elo Double Screen Front.png";
+import hwEloDblSchraeg from "@/assets/hardware/Hardware - Elo Double Screen Schräg.png";
+import hwEloDblHinten  from "@/assets/hardware/Hardware - Elo Double Screen Hinten.png";
+import hwEloDblPorts   from "@/assets/hardware/Hardware - Elo Double Screen Ports.png";
+import hwSurfaceFront  from "@/assets/hardware/Hardware - Microsoft Surface Tablet Front.png";
+import hwSurfaceSchraeg from "@/assets/hardware/Hardware - Microsoft Surface Tablet Schräg.png";
+import hwSurfaceHinten from "@/assets/hardware/Hardware - Microsoft Surface Tablet Hinten.png";
+import hwSurfaceSeite  from "@/assets/hardware/Hardware - Microsoft Surface Tablet Seite.png";
+import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
+import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
+import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
+import logoKojo         from "@/assets/logos/kunden/logo-kojo-sushi.png";
+import logoIlSorriso    from "@/assets/logos/kunden/logo-il-sorriso.png";
+import logoArtemis      from "@/assets/logos/kunden/logo-artemis.png";
+import logoTake         from "@/assets/logos/kunden/logo-take.png";
+import logoBurger       from "@/assets/logos/kunden/logo-burger-brothers.png";
 import POSSection       from "@/components/landing/POSSection";
 
 // ─── FAQ ─────────────────────────────────────────────────────────────────────
@@ -537,6 +550,185 @@ const FeatureSlideshow = () => {
     </div>
   );
 };
+
+// ─── Hardware Section ─────────────────────────────────────────────────────────
+
+const HW_PRODUCTS = [
+  {
+    title: "Elo Series-3",
+    desc: "Kompaktes All-in-One Kassensystem mit Touchscreen. Ideal für Restaurants, Cafés und Imbisse.",
+    features: ["15.6\" Touchscreen", "Kompaktes Design", "Bon-Drucker integrierbar"],
+    images: [hwEloFront, hwEloSchraeg, hwEloHinten, hwEloPorts, hwEloSeite],
+    labels: ["Front", "Schräg", "Hinten", "Ports", "Seite"],
+  },
+  {
+    title: "Elo Series-3 Doublescreen",
+    desc: "Zwei Bildschirme: einer für dich, einer für den Gast. Perfekt für Thekenbetrieb und Upselling.",
+    features: ["Kunden-Display", "Upsell-Möglichkeit", "Professioneller Auftritt"],
+    images: [hwEloDblFront, hwEloDblSchraeg, hwEloDblHinten, hwEloDblPorts],
+    labels: ["Front", "Schräg", "Hinten", "Ports"],
+  },
+  {
+    title: "Microsoft Surface Tablet",
+    desc: "Flexibel und mobil. Nimm deine Kasse überall mit. Ideal für Food-Trucks, Events und kleine Betriebe.",
+    features: ["Mobil einsetzbar", "Leicht & kompakt", "Windows-kompatibel"],
+    images: [hwSurfaceFront, hwSurfaceSchraeg, hwSurfaceHinten, hwSurfaceSeite],
+    labels: ["Front", "Schräg", "Hinten", "Seite"],
+  },
+];
+
+const HwCard = ({ product, index }: { product: typeof HW_PRODUCTS[0]; index: number }) => {
+  const [current, setCurrent] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
+
+  const prev = () => setCurrent((c) => (c - 1 + product.images.length) % product.images.length);
+  const next = () => setCurrent((c) => (c + 1) % product.images.length);
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: index * 0.1, duration: 0.5 }}
+        className="group rounded-2xl border border-[#0A264A]/[0.08] dark:border-white/[0.08] bg-[#f8fafc] dark:bg-white/[0.04] overflow-hidden hover:border-cyan-brand/30 hover:shadow-xl transition-all duration-300"
+      >
+        {/* Image Carousel */}
+        <div className="relative aspect-square bg-white dark:bg-white/[0.02] p-6 flex items-center justify-center">
+          <img
+            src={product.images[current]}
+            alt={`${product.title} — ${product.labels[current]}`}
+            className="w-full h-full object-contain cursor-zoom-in transition-transform duration-300 hover:scale-[1.03]"
+            onClick={() => setLightbox(true)}
+          />
+
+          {/* Arrows */}
+          {product.images.length > 1 && (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); prev(); }}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0A264A]/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0A264A]"
+                aria-label="Vorheriges Bild"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); next(); }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0A264A]/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0A264A]"
+                aria-label="Nächstes Bild"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </>
+          )}
+
+          {/* Dots */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+            {product.images.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${i === current ? "bg-cyan-brand w-5" : "bg-[#0A264A]/20 dark:bg-white/20 hover:bg-[#0A264A]/40"}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Text */}
+        <div className="p-6">
+          <h3 className="text-lg font-bold text-[#0A264A] dark:text-white mb-2">{product.title}</h3>
+          <p className="text-[#0A264A]/60 dark:text-white/50 text-sm leading-relaxed mb-4">{product.desc}</p>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {product.features.map(f => (
+              <span key={f} className="text-xs font-medium text-cyan-brand bg-cyan-brand/10 px-2.5 py-1 rounded-full">{f}</span>
+            ))}
+          </div>
+          <Link to="/kontakt" className="inline-flex items-center gap-1.5 text-cyan-brand text-sm font-semibold hover:gap-2.5 transition-all duration-200">
+            Jetzt anfragen <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </motion.div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setLightbox(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="relative max-w-3xl w-full max-h-[85vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={product.images[current]}
+                alt={`${product.title} — ${product.labels[current]} (vergrößert)`}
+                className="w-full h-full object-contain rounded-2xl"
+              />
+
+              {/* Lightbox Arrows */}
+              {product.images.length > 1 && (
+                <>
+                  <button onClick={prev} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/30 transition-colors">
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button onClick={next} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/30 transition-colors">
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+
+              {/* Label + Close */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
+                <span className="text-white/70 text-sm font-medium bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">
+                  {product.title} — {product.labels[current]}
+                </span>
+              </div>
+              <button onClick={() => setLightbox(false)} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/30 transition-colors text-lg leading-none">
+                ×
+              </button>
+
+              {/* Lightbox Dots */}
+              <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex gap-2">
+                {product.images.map((_, i) => (
+                  <button key={i} onClick={() => setCurrent(i)}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${i === current ? "bg-cyan-brand w-6" : "bg-white/30 hover:bg-white/50"}`} />
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+const HardwareSection = () => (
+  <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-20 md:py-28">
+    <div className="max-w-5xl mx-auto">
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
+        <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Empfohlene Hardware</span>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white">Die passende Hardware für dein Kassensystem</h2>
+        <p className="text-[#0A264A]/55 dark:text-white/45 text-lg mt-5 max-w-2xl mx-auto">Robust, zuverlässig und sofort einsatzbereit. Wähle das Gerät, das zu deinem Betrieb passt.</p>
+      </motion.div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {HW_PRODUCTS.map((p, i) => <HwCard key={p.title} product={p} index={i} />)}
+      </div>
+      <div className="text-center mt-10">
+        <Link to="/kontakt" className="bg-gradient-amber text-[#0A264A] font-bold px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-amber-500/20">
+          Hardware anfragen <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </div>
+  </section>
+);
 
 // ─── Wave Feature Section ─────────────────────────────────────────────────────
 const WaveFeatureSection = () => {
@@ -1101,6 +1293,9 @@ const KassePage = () => {
         </div>
       </div>
     </section>
+
+    {/* ── HARDWARE: Empfohlene Kassenhardware ──────────────── */}
+    <HardwareSection />
 
     {/* ── S7b: WAVE FEATURE SECTION (21st.dev test) ─────────── */}
     <WaveFeatureSection />

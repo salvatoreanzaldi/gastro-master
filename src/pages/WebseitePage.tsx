@@ -13,18 +13,18 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
 // ─── Assets ───────────────────────────────────────────────────────────────────
-import heroGastroMaster from "@/assets/Hero - Gastro Master.PNG";
-import heroBaeckerei    from "@/assets/Hero - Bäckerei Zimmer.PNG";
-import heroEtManus      from "@/assets/Hero - Et Manus.PNG";
-import heroDT           from "@/assets/Hero - DT.PNG";
-import heroDandT        from "@/assets/Hero - D&T.PNG";
-import logoKojo         from "@/assets/logo-kojo-sushi.png";
-import logoIlSorriso    from "@/assets/logo-il-sorriso.png";
-import logoBurger       from "@/assets/logo-burger-brothers.png";
-import logoArtemis      from "@/assets/logo-artemis.png";
-import teamReneImg      from "@/assets/ceo-rene-ebert.png";
-import teamSalvatoreImg from "@/assets/team-salvatore-anzaldi.png";
-import teamAndrejImg    from "@/assets/team-andrej-krutsch.png";
+import heroGastroMaster from "@/assets/heroes/Hero - Gastro Master.PNG";
+import heroBaeckerei    from "@/assets/heroes/Hero - Bäckerei Zimmer.PNG";
+import heroEtManus      from "@/assets/heroes/Hero - Et Manus.PNG";
+import heroDT           from "@/assets/heroes/Hero - DT.PNG";
+import heroDandT        from "@/assets/heroes/Hero - D&T.PNG";
+import logoKojo         from "@/assets/logos/kunden/logo-kojo-sushi.png";
+import logoIlSorriso    from "@/assets/logos/kunden/logo-il-sorriso.png";
+import logoBurger       from "@/assets/logos/kunden/logo-burger-brothers.png";
+import logoArtemis      from "@/assets/logos/kunden/logo-artemis.png";
+import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
+import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
+import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
 
 // ─── JSON-LD Schema ───────────────────────────────────────────────────────────
 const FAQ_ITEMS = [

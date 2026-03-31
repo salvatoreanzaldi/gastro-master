@@ -29,6 +29,8 @@ const CafeBaeckereiPage          = lazy(() => import("@/pages/CafeBaeckereiPage"
 const LoesungenPage              = lazy(() => import("@/pages/LoesungenPage"));
 const FAQPage                    = lazy(() => import("@/pages/FAQPage"));
 const PreisePage                 = lazy(() => import("@/pages/PreisePage"));
+const UeberUnsPage               = lazy(() => import("@/pages/UeberUnsPage"));
+const GhostKitchenPage           = lazy(() => import("@/pages/GhostKitchenPage"));
 
 const queryClient = new QueryClient();
 
@@ -56,12 +58,14 @@ const App = () => (
               <Route path="/loesungen/restaurant"        element={<RestaurantPage />} />
               <Route path="/loesungen/lieferdienst"      element={<LieferdienstPage />} />
               <Route path="/loesungen/cafe-baeckerei"    element={<CafeBaeckereiPage />} />
+              <Route path="/loesungen/ghost-kitchen"    element={<GhostKitchenPage />} />
               <Route path="/impressum"                   element={<Impressum />} />
               <Route path="/datenschutz"                 element={<Datenschutz />} />
               <Route path="/agb"                         element={<AGB />} />
               <Route path="/kontakt"                     element={<Kontakt />} />
               <Route path="/faq"                         element={<FAQPage />} />
               <Route path="/preise"                      element={<PreisePage />} />
+              <Route path="/uber-uns"                     element={<UeberUnsPage />} />
               <Route path="/downloads"                   element={<DownloadsPage />} />
               <Route path="/downloads/druckertreiber"    element={<DruckertreiberPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tv, Eye, Sparkles, ArrowRight } from "lucide-react";
-import pickupScreen from "@/assets/pickup-screen.jpeg";
-import pickupScreen2 from "@/assets/pickup-screen-2.png";
+import pickupScreen from "@/assets/addons/pickup-screen.jpeg";
+import pickupScreen2 from "@/assets/addons/pickup-screen-2.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const images = [pickupScreen, pickupScreen2];

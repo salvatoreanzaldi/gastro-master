@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowRight, Menu, X, Moon, Sun, ChevronDown,
   ShoppingCart, Smartphone, Globe, Monitor, Percent,
-  Truck, Store, Coffee, UtensilsCrossed, Building2,
+  Truck, Store, Coffee, UtensilsCrossed, Building2, Ghost,
 } from "lucide-react";
-import logo from "@/assets/logo-gastro-master-round.png";
+import logo from "@/assets/logos/logo-gastro-master-round.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LangCode } from "@/lib/translations";
 
@@ -23,6 +23,7 @@ const loesungenItems = [
   { label: "Restaurant",           desc: "Tisch, Bar & Kasse vereint",   to: "/loesungen/restaurant",             icon: UtensilsCrossed},
   { label: "Lieferdienst",         desc: "Fahrer-App & Liefergebiete",   to: "/loesungen/lieferdienst",           icon: Store          },
   { label: "Café & Bäckerei",      desc: "Einfach & schnell starten",    to: "/loesungen/cafe-baeckerei",         icon: Coffee         },
+  { label: "Ghost Kitchen",        desc: "Multi-Brand, 0 % Provision",  to: "/loesungen/ghost-kitchen",          icon: Ghost          },
 ];
 
 const languages: { code: LangCode; label: string; flag: string }[] = [
@@ -163,6 +164,11 @@ const Navbar = () => {
           {/* Preise page link */}
           <Link to="/preise" className="text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
             {t.nav.preise}
+          </Link>
+
+          {/* Über uns */}
+          <Link to="/uber-uns" className="text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
+            Über uns
           </Link>
 
           {/* Dark mode */}
@@ -318,6 +324,12 @@ const Navbar = () => {
           <Link to="/preise" onClick={() => setMobileOpen(false)}
             className="block text-primary-foreground/70 hover:text-primary-foreground font-medium py-2">
             {t.nav.preise}
+          </Link>
+
+          {/* Über uns */}
+          <Link to="/uber-uns" onClick={() => setMobileOpen(false)}
+            className="block text-primary-foreground/70 hover:text-primary-foreground font-medium py-2">
+            Über uns
           </Link>
           <button onClick={scrollToForm}
             className="w-full bg-gradient-amber text-white dark:text-[#0A264A] font-bold px-5 py-3 rounded-xl text-base mt-2">

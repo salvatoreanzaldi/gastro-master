@@ -11,21 +11,21 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
 // ─── Assets ───────────────────────────────────────────────────────────────────
-import payPaypalIcon  from "@/assets/Logo - PayPal Icon.png";
-import payStripeBlack from "@/assets/Logo - Stripe Black.png";
-import payVisa       from "@/assets/pay-visa.png";
-import payMastercard from "@/assets/pay-mastercard.png";
-import payApple      from "@/assets/Logo - Apple Pay.png";
-import payGoogle     from "@/assets/pay-google.png";
-import payKlarna     from "@/assets/pay-klarna.png";
-import paymentScreen from "@/assets/9 - Zahlungsmethoden.png";
-import logoKojo      from "@/assets/logo-kojo-sushi.png";
-import logoIlSorriso from "@/assets/logo-il-sorriso.png";
-import logoBurger    from "@/assets/logo-burger-brothers.png";
-import logoArtemis   from "@/assets/logo-artemis.png";
-import teamReneImg      from "@/assets/ceo-rene-ebert.png";
-import teamSalvatoreImg from "@/assets/team-salvatore-anzaldi.png";
-import teamAndrejImg    from "@/assets/team-andrej-krutsch.png";
+import payPaypalIcon  from "@/assets/logos/payment/Logo - PayPal Icon.png";
+import payStripeBlack from "@/assets/logos/payment/Logo - Stripe Black.png";
+import payVisa       from "@/assets/logos/payment/pay-visa.png";
+import payMastercard from "@/assets/logos/payment/pay-mastercard.png";
+import payApple      from "@/assets/logos/payment/Logo - Apple Pay.png";
+import payGoogle     from "@/assets/logos/payment/pay-google.png";
+import payKlarna     from "@/assets/logos/payment/pay-klarna.png";
+import paymentScreen from "@/assets/addons/9 - Zahlungsmethoden.png";
+import logoKojo      from "@/assets/logos/kunden/logo-kojo-sushi.png";
+import logoIlSorriso from "@/assets/logos/kunden/logo-il-sorriso.png";
+import logoBurger    from "@/assets/logos/kunden/logo-burger-brothers.png";
+import logoArtemis   from "@/assets/logos/kunden/logo-artemis.png";
+import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
+import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
+import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
 
 // ─── Payment Logos (module-level, reused in both heroes) ─────────────────────
 const PAYMENT_LOGOS_B = [

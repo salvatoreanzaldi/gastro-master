@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
-import partnerStripe from "@/assets/partner-stripe.png";
-import partnerPaypal from "@/assets/partner-paypal.png";
-import partnerSides from "@/assets/partner-sides.png";
-import partnerWolt from "@/assets/partner-wolt.png";
-import partnerUberDirect from "@/assets/partner-uber-direct.png";
-import partnerLieferando from "@/assets/partner-lieferando.png";
-import partnerWinorder from "@/assets/partner-winorder.png";
+import partnerStripe from "@/assets/logos/partner/partner-stripe.png";
+import partnerPaypal from "@/assets/logos/partner/partner-paypal.png";
+import partnerSides from "@/assets/logos/partner/partner-sides.png";
+import partnerWolt from "@/assets/logos/partner/partner-wolt.png";
+import partnerUberDirect from "@/assets/logos/partner/partner-uber-direct.png";
+import partnerLieferando from "@/assets/logos/partner/partner-lieferando.png";
+import partnerWinorder from "@/assets/logos/partner/partner-winorder.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const partners = [

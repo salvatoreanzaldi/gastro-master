@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, TrendingUp } from "lucide-react";
-import partnerPaypal from "@/assets/partner-paypal.png";
-import partnerStripe from "@/assets/partner-stripe.png";
-import payApple from "@/assets/Logo - Apple Pay.png";
-import payGoogle from "@/assets/pay-google.png";
-import payVisa from "@/assets/pay-visa.png";
-import payMastercard from "@/assets/pay-mastercard.png";
-import payKlarna from "@/assets/pay-klarna.png";
+import partnerPaypal from "@/assets/logos/partner/partner-paypal.png";
+import partnerStripe from "@/assets/logos/partner/partner-stripe.png";
+import payApple from "@/assets/logos/payment/Logo - Apple Pay.png";
+import payGoogle from "@/assets/logos/payment/pay-google.png";
+import payVisa from "@/assets/logos/payment/pay-visa.png";
+import payMastercard from "@/assets/logos/payment/pay-mastercard.png";
+import payKlarna from "@/assets/logos/payment/pay-klarna.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const paymentMethods = [
