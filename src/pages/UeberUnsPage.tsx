@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLangPath } from "@/components/LanguageLayout";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
@@ -13,6 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, type CarouselApi } from "@/components/ui/carousel";
 
 import imgUsingen from "@/assets/ueber-uns/Über uns - Usingen.png";
 import heroUeberUns from "@/assets/heroes/Hero - Über Uns.png";
@@ -146,6 +147,96 @@ const FaqItem = ({ q, a, open, onToggle, lp }: { q: string; a: string; open: boo
     </AnimatePresence>
   </motion.div>
 );
+
+// ─── Testimonial Carousel ──────────────────────────────────────────────────
+
+type TestimonialItem = { name: string; restaurant: string; quote: string; videoId: string };
+
+const TestimonialCarousel = ({ badge, heading, subtitle, items }: {
+  badge: string; heading: string; subtitle: string; items: TestimonialItem[];
+}) => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+
+  const onSelect = useCallback(() => {
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    setCount(api.scrollSnapList().length);
+  }, [api]);
+
+  useEffect(() => {
+    if (!api) return;
+    onSelect();
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
+    return () => { api.off("select", onSelect); };
+  }, [api, onSelect]);
+
+  // Autoplay: alle 5 Sekunden weiterblättern, Reset bei Interaktion
+  useEffect(() => {
+    if (!api) return;
+    let timer: ReturnType<typeof setInterval>;
+    const start = () => { clearInterval(timer); timer = setInterval(() => api.scrollNext(), 5000); };
+    start();
+    api.on("pointerDown", start);
+    api.on("select", start);
+    return () => { clearInterval(timer); api.off("pointerDown", start); api.off("select", start); };
+  }, [api]);
+
+  return (
+    <section className="section-padding bg-surface-light">
+      <div className="container-tight">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
+          <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{badge}</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">{heading}</h2>
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">{subtitle}</p>
+        </motion.div>
+
+        <div className="max-w-6xl mx-auto">
+          <Carousel opts={{ align: "start", loop: true }} setApi={setApi} className="w-full">
+            <CarouselContent className="-ml-4">
+              {items.map((tm) => (
+                <CarouselItem key={tm.videoId} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                  <div className="rounded-2xl border border-border bg-background overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full">
+                    <div className="relative aspect-video">
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${tm.videoId}`}
+                        title={`${tm.name} – ${tm.restaurant}`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="absolute inset-0 w-full h-full"
+                      />
+                    </div>
+                    <div className="p-5">
+                      <p className="text-muted-foreground text-sm italic leading-relaxed mb-3">&bdquo;{tm.quote}&ldquo;</p>
+                      <p className="text-foreground font-bold text-sm">{tm.name}</p>
+                      <p className="text-cyan-brand text-xs font-semibold">{tm.restaurant}</p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="-left-4 md:-left-6 lg:-left-12 h-10 w-10 bg-background border-border shadow-lg hover:bg-surface-light" />
+            <CarouselNext className="-right-4 md:-right-6 lg:-right-12 h-10 w-10 bg-background border-border shadow-lg hover:bg-surface-light" />
+          </Carousel>
+
+          {/* Dot indicators */}
+          <div className="flex justify-center gap-2 mt-8">
+            {Array.from({ length: count }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => api?.scrollTo(i)}
+                className={`h-2.5 rounded-full transition-all duration-300 ${i === current ? "w-8 bg-cyan-brand" : "w-2.5 bg-border hover:bg-muted-foreground/40"}`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 // ─── Page ───────────────────────────────────────────────────────────────────
 
@@ -319,7 +410,15 @@ const UeberUnsPage = () => {
         </div>
       </section>
 
-      {/* ── S4: STANDORT USINGEN ──────────────────────────────────────── */}
+      {/* ── S4: KUNDENSTIMMEN / TESTIMONIALS (YouTube Carousel) ────────── */}
+      <TestimonialCarousel
+        badge={t("testimonials.badge")}
+        heading={t("testimonials.heading")}
+        subtitle={t("testimonials.subtitle")}
+        items={testimonialItems}
+      />
+
+      {/* ── S5: STANDORT USINGEN ──────────────────────────────────────── */}
       <section className="px-5 md:px-8 lg:px-16 py-20 md:py-28 bg-background">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
@@ -473,38 +572,6 @@ const UeberUnsPage = () => {
                 <span className="text-cyan-brand font-black text-3xl mb-3 block">{String(i + 1).padStart(2, "0")}</span>
                 <h3 className="text-lg font-bold text-primary-foreground mb-2">{item.title}</h3>
                 <p className="text-primary-foreground/55 text-sm leading-relaxed">{item.text}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── S10: TESTIMONIALS (YouTube) ────────────────────────────────── */}
-      <section className="section-padding bg-surface-light">
-        <div className="container-tight">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-            <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{t("testimonials.badge")}</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">{t("testimonials.heading")}</h2>
-            <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t("testimonials.subtitle")}</p>
-          </motion.div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {testimonialItems.map((tm, i) => (
-              <motion.div key={tm.videoId} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="rounded-2xl border border-border bg-background overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div className="relative aspect-video">
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${tm.videoId}`}
-                    title={`${tm.name} – ${tm.restaurant}`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 w-full h-full"
-                  />
-                </div>
-                <div className="p-5">
-                  <p className="text-muted-foreground text-sm italic leading-relaxed mb-3">&bdquo;{tm.quote}&ldquo;</p>
-                  <p className="text-foreground font-bold text-sm">{tm.name}</p>
-                  <p className="text-cyan-brand text-xs font-semibold">{tm.restaurant}</p>
-                </div>
               </motion.div>
             ))}
           </div>

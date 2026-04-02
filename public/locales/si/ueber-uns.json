@@ -112,7 +112,9 @@
     "items": [
       { "name": "Marco Greco", "restaurant": "Pizzeria Il Sorriso", "quote": "Gastro Master සමඟ අපි ඇණවුම් ක්‍රියාවලි සම්පූර්ණයෙන් ඩිජිටල්කරණය කළෙමු.", "videoId": "Qv-YDj9gjPk" },
       { "name": "Ha Lim Lee", "restaurant": "Kojo Sushi", "quote": "සහාය ඉමහත්ය. අපට සැබවින්ම පෞද්ගලිකව රැකවරණය ලබන බව දැනේ.", "videoId": "JkkVyIFewO0" },
-      { "name": "Georgios Madatsidis", "restaurant": "Artemis Grill", "quote": "වෙළඳපොළේ හොඳම මිල-කාර්ය සාධන අනුපාතය. සැඟවුණු ගාස්තු නැත.", "videoId": "Zx_UJJjQTso" }
+      { "name": "Georgios Madatsidis", "restaurant": "Artemis Grill", "quote": "වෙළඳපොළේ හොඳම මිල-කාර්ය සාධන අනුපාතය. සැඟවුණු ගාස්තු නැත.", "videoId": "Zx_UJJjQTso" },
+      { "name": "Milad Ismail", "restaurant": "Nevada Burger & Steak", "quote": "සෑම ඇණවුමකදීම මගේ ගිණුමට ක්ෂණිකව මුදල් ලැබේ. Gastro Master හි සියල්ල නම්‍යශීලී ය.", "videoId": "A0K7TJ_dwLM" },
+      { "name": "Sven Heinrich", "restaurant": "61 Burger & More", "quote": "මෙහි ඉක්මන් හා හොඳ WhatsApp සහාය ඇති අතර ඔබේ ව්‍යාපාරය ව්‍යුහගත කිරීමේ හැකියාව ඇත.", "videoId": "6dBBN_mohWU" }
     ]
   },
   "process": {

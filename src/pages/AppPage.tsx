@@ -15,7 +15,7 @@ import CalculatorSection from "@/components/landing/CalculatorSection";
 import TargetGroupSection from "@/components/landing/TargetGroupSection";
 
 // ─── Assets ──────────────────────────────────────────────────────────────────
-import iosIcon          from "@/assets/icons/IOS 26 icon.png";
+import iosIcon          from "@/assets/icons/iOS 26 Icon.png";
 import androidIcon      from "@/assets/icons/Android Icon.png";
 import phone1 from "@/assets/mockups/1 - Mock Up Small.png";
 import phone2 from "@/assets/mockups/2 - Mock Up - Medium.png";

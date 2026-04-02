@@ -231,61 +231,63 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
           </motion.div>
         </div>
 
-        {/* Content */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={showSubs ? activeSub : activeGroup}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.35 }}
-            className="bg-surface-light border border-border rounded-3xl overflow-hidden max-w-4xl mx-auto"
-          >
-            <div className="grid md:grid-cols-2 gap-0 min-h-[380px]">
-              {/* Image */}
-              <div className="relative aspect-[4/3] md:aspect-auto overflow-hidden">
-                <img src={displayImg} alt={displayContent?.title ?? ""} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-surface-light/20 hidden md:block" />
+        {/* Content – fixed-height wrapper prevents layout shift during slide transitions */}
+        <div className="relative max-w-4xl mx-auto h-[520px] sm:h-[480px] md:h-[380px] overflow-hidden rounded-3xl border border-border bg-surface-light">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={showSubs ? activeSub : activeGroup}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0"
+            >
+              <div className="grid md:grid-cols-2 gap-0 h-full">
+                {/* Image */}
+                <div className="relative h-[200px] sm:h-[220px] md:h-full overflow-hidden">
+                  <img src={displayImg} alt={displayContent?.title ?? ""} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-surface-light/20 hidden md:block" />
+                </div>
+                {/* Text */}
+                <div className="p-6 sm:p-8 md:p-10 flex flex-col justify-center overflow-hidden">
+                  <h3 className="text-2xl md:text-3xl font-black text-foreground mb-2">{displayContent?.title}</h3>
+                  <p className="text-cyan-brand font-semibold mb-3 md:mb-4 text-sm">{displayContent?.subtitle}</p>
+                  <p className="text-muted-foreground leading-relaxed mb-4 md:mb-6 text-sm md:text-base line-clamp-4">{displayContent?.text}</p>
+                  {(() => {
+                    const href = getSolutionHref
+                      ? getSolutionHref(activeGroup, showSubs ? activeSub : null)
+                      : null;
+                    const label = ctaLabel ?? t("target.cta");
+                    const cls = "bg-gradient-amber text-primary font-bold px-6 py-3 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2 self-start";
+                    return (
+                      <div className="flex flex-col gap-3 items-start">
+                        {href ? (
+                          <Link to={href} className={cls}>
+                            {label}
+                            <ArrowRight className="w-4 h-4" />
+                          </Link>
+                        ) : (
+                          <button onClick={scrollToForm} className={cls}>
+                            {label}
+                            <ArrowRight className="w-4 h-4" />
+                          </button>
+                        )}
+                        {activeGroup === "lieferdienst" && (
+                          <Link
+                            to={lp("/loesungen/lieferservice-gruenden")}
+                            className="text-cyan-brand text-sm font-semibold inline-flex items-center gap-1.5 hover:gap-2.5 transition-all duration-200"
+                          >
+                            {t("target.startDelivery")} <ArrowRight className="w-3.5 h-3.5" />
+                          </Link>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
               </div>
-              {/* Text */}
-              <div className="p-8 md:p-10 flex flex-col justify-center min-h-[380px]">
-                <h3 className="text-2xl md:text-3xl font-black text-foreground mb-2">{displayContent?.title}</h3>
-                <p className="text-cyan-brand font-semibold mb-4 text-sm">{displayContent?.subtitle}</p>
-                <p className="text-muted-foreground leading-relaxed mb-6">{displayContent?.text}</p>
-                {(() => {
-                  const href = getSolutionHref
-                    ? getSolutionHref(activeGroup, showSubs ? activeSub : null)
-                    : null;
-                  const label = ctaLabel ?? t("target.cta");
-                  const cls = "bg-gradient-amber text-primary font-bold px-6 py-3 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2 self-start";
-                  return (
-                    <div className="flex flex-col gap-3 items-start">
-                      {href ? (
-                        <Link to={href} className={cls}>
-                          {label}
-                          <ArrowRight className="w-4 h-4" />
-                        </Link>
-                      ) : (
-                        <button onClick={scrollToForm} className={cls}>
-                          {label}
-                          <ArrowRight className="w-4 h-4" />
-                        </button>
-                      )}
-                      {activeGroup === "lieferdienst" && (
-                        <Link
-                          to={lp("/loesungen/lieferservice-gruenden")}
-                          className="text-cyan-brand text-sm font-semibold inline-flex items-center gap-1.5 hover:gap-2.5 transition-all duration-200"
-                        >
-                          {t("target.startDelivery")} <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      )}
-                    </div>
-                  );
-                })()}
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
         {/* Customer logo strip – fixed height to prevent layout shift */}
         <div className="mt-8 max-w-4xl mx-auto" style={{ minHeight: "7rem" }}>

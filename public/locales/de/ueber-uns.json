@@ -112,7 +112,9 @@
     "items": [
       { "name": "Marco Greco", "restaurant": "Pizzeria Il Sorriso", "quote": "Mit Gastro Master haben wir unsere Bestell-Prozesse komplett digitalisiert.", "videoId": "Qv-YDj9gjPk" },
       { "name": "Ha Lim Lee", "restaurant": "Kojo Sushi", "quote": "Der Support ist unglaublich. Wir fühlen uns wirklich persönlich betreut.", "videoId": "JkkVyIFewO0" },
-      { "name": "Georgios Madatsidis", "restaurant": "Artemis Grill", "quote": "Das beste Preis-Leistungs-Verhältnis am Markt. Keine versteckten Gebühren.", "videoId": "Zx_UJJjQTso" }
+      { "name": "Georgios Madatsidis", "restaurant": "Artemis Grill", "quote": "Das beste Preis-Leistungs-Verhältnis am Markt. Keine versteckten Gebühren.", "videoId": "Zx_UJJjQTso" },
+      { "name": "Milad Ismail", "restaurant": "Nevada Burger & Steak", "quote": "Ich bekomme bei jeder Bestellung sofort das Geld auf mein Konto. Bei Gastro Master ist alles Flexibel.", "videoId": "A0K7TJ_dwLM" },
+      { "name": "Sven Heinrich", "restaurant": "61 Burger & More", "quote": "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren.", "videoId": "6dBBN_mohWU" }
     ]
   },
   "process": {
