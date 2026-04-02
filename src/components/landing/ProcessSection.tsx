@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { MessageSquareText, CalendarCheck, UtensilsCrossed, Rocket } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const stepIcons = [MessageSquareText, CalendarCheck, UtensilsCrossed, Rocket];
 
 const ProcessSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   const scrollToForm = () => {
     window.location.href = "/kontakt";
   };
@@ -16,21 +16,21 @@ const ProcessSection = () => {
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-start">
           {/* Left: heading */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{t.process.badge}</span>
-            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">{t.process.headline}</h2>
+            <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{t("process.badge")}</span>
+            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">{t("process.headline")}</h2>
             <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-              {t.process.sub}
+              {t("process.sub")}
             </p>
             <button onClick={scrollToForm}
               className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-base hover:scale-[1.02] transition-transform shadow-lg shadow-amber/20 inline-flex items-center gap-2">
-              {t.process.cta}
+              {t("process.cta")}
               <Rocket className="w-5 h-5" />
             </button>
           </motion.div>
 
           {/* Right: vertical cards with big background numbers */}
           <div className="space-y-4">
-            {t.process.steps.map((s, i) => {
+            {(t("process.steps", { returnObjects: true }) as any[]).map((s, i) => {
               const Icon = stepIcons[i];
               return (
                 <motion.div key={i} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}

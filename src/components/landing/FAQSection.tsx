@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const renderWithLinks = (text: string) => {
   const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
@@ -16,7 +16,7 @@ const renderWithLinks = (text: string) => {
 };
 
 const FAQSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   return (
     <section className="section-padding bg-surface-light" id="faq">
       <div className="container-tight max-w-3xl">
@@ -26,8 +26,8 @@ const FAQSection = () => {
           viewport={{ once: true }}
           className="text-center mb-14"
         >
-          <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">{t.faq.badge}</h2>
-          <p className="text-muted-foreground text-lg">{t.faq.sub}</p>
+          <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">{t("faq.badge")}</h2>
+          <p className="text-muted-foreground text-lg">{t("faq.sub")}</p>
         </motion.div>
 
         <motion.div
@@ -37,7 +37,7 @@ const FAQSection = () => {
           transition={{ delay: 0.15 }}
         >
           <Accordion type="single" collapsible className="space-y-3">
-            {t.faq.items.map((faq, i) => (
+            {(t("faq.items", { returnObjects: true }) as any[]).map((faq, i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="bg-background border border-border rounded-xl px-6 data-[state=open]:shadow-md transition-shadow">
                 <AccordionTrigger className="text-left text-foreground font-semibold py-5 hover:no-underline">
                   {faq.q}

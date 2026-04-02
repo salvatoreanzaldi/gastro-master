@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { RippleButton } from "@/components/ui/multi-type-ripple-buttons";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 // ── WebGL Shader ──────────────────────────────────────────────────────────────
 
@@ -233,7 +233,7 @@ const GlassyCard = ({
 // ── Section ───────────────────────────────────────────────────────────────────
 
 const GlassyPricingSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   const [isDark, setIsDark] = useState(
     () => document.documentElement.classList.contains("dark")
   );
@@ -250,7 +250,7 @@ const GlassyPricingSection = () => {
     window.location.href = "/kontakt";
   };
 
-  const packageFeaturesMap = t.pricing.packageFeatures as Record<string, readonly string[]>;
+  const packageFeaturesMap = t("pricing.packageFeatures", { returnObjects: true }) as Record<string, readonly string[]>;
 
   const sectionBg  = isDark ? "bg-[#0d1430]" : "bg-slate-100";
   const headingCol = isDark ? "text-white"    : "text-gray-900";
@@ -273,15 +273,15 @@ const GlassyPricingSection = () => {
             Transparente Preise
           </span>
           <h2 className={`text-3xl md:text-4xl lg:text-5xl font-black mb-4 ${headingCol}`}>
-            {t.pricing.headline}
+            {t("pricing.headline")}
           </h2>
           <p className={`text-lg max-w-2xl mx-auto ${subCol}`}>
-            {t.pricing.sub}
+            {t("pricing.sub")}
           </p>
         </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-4 items-stretch justify-center">
-          {t.pricing.plans.map((pkg, i) => {
+          {(t("pricing.plans", { returnObjects: true }) as any[]).map((pkg, i) => {
             const features = packageFeaturesMap[pkg.id] ?? [];
             const hasPrice = pkg.price !== "Auf Anfrage" && pkg.price !== "Custom Pricing" && pkg.price !== "Custom";
             return (
@@ -296,12 +296,12 @@ const GlassyPricingSection = () => {
                 duration={pkg.duration}
                 popular={!!pkg.popular}
                 onCta={scrollToForm}
-                ctaLabel={hasPrice ? t.pricing.ctaPrimary : t.pricing.ctaSecondary}
-                fromLabel={t.pricing.from}
-                perMonthLabel={t.pricing.perMonth}
-                vatNote={t.pricing.vatNote}
-                durationLabel={t.pricing.durationLabel}
-                onRequestLabel={t.pricing.onRequest}
+                ctaLabel={hasPrice ? t("pricing.ctaPrimary") : t("pricing.ctaSecondary")}
+                fromLabel={t("pricing.from")}
+                perMonthLabel={t("pricing.perMonth")}
+                vatNote={t("pricing.vatNote")}
+                durationLabel={t("pricing.durationLabel")}
+                onRequestLabel={t("pricing.onRequest")}
               />
             );
           })}
@@ -313,7 +313,7 @@ const GlassyPricingSection = () => {
           viewport={{ once: true }}
           className="text-center mt-8"
         >
-          <p className={`text-xs ${noteCol}`}>{t.pricing.setupNote}</p>
+          <p className={`text-xs ${noteCol}`}>{t("pricing.setupNote")}</p>
         </motion.div>
       </div>
     </section>

@@ -6,7 +6,7 @@ import logoEtManus from "@/assets/logos/kunden/logo-et-manus.png";
 import logoIlSorriso from "@/assets/logos/kunden/logo-il-sorriso.png";
 import logoKojoSushi from "@/assets/logos/kunden/logo-kojo-sushi.png";
 import logoArtemis from "@/assets/logos/kunden/logo-artemis.png";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const customers = [
   { src: logoBurgerBrothers, alt: "Burger Brothers" },
@@ -18,7 +18,7 @@ const customers = [
 ];
 
 const TrustSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   return (
     <section className="bg-surface-light section-padding">
       <div className="container-tight">
@@ -35,10 +35,10 @@ const TrustSection = () => {
                 <Star key={i} className="w-4 h-4 text-amber fill-current" />
               ))}
             </div>
-            <span className="font-semibold text-sm text-foreground">{t.trust.reviews}</span>
+            <span className="font-semibold text-sm text-foreground">{t("trust.reviews")}</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-black text-foreground mb-3">{t.trust.headline}</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">{t.trust.sub}</p>
+          <h2 className="text-3xl md:text-4xl font-black text-foreground mb-3">{t("trust.headline")}</h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">{t("trust.sub")}</p>
         </motion.div>
 
         <motion.div

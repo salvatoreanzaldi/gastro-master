@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { ShieldCheck, Rocket, HeartHandshake, ArrowRight } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const icons = [ShieldCheck, Rocket, HeartHandshake];
 
 const RiskReversalSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   const scrollToForm = () => {
     window.location.href = "/kontakt";
   };
@@ -20,15 +20,15 @@ const RiskReversalSection = () => {
           className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
-            {t.risk.headline}
+            {t("risk.headline")}
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            {t.risk.sub}
+            {t("risk.sub")}
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {t.risk.items.map((c, i) => {
+          {(t("risk.items", { returnObjects: true }) as any[]).map((c, i) => {
             const Icon = icons[i];
             return (
               <motion.div
@@ -52,7 +52,7 @@ const RiskReversalSection = () => {
         <div className="text-center">
           <button onClick={scrollToForm}
             className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
-            {t.risk.cta}
+            {t("risk.cta")}
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>

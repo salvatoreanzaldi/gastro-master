@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Star, Users, ShieldCheck } from "lucide-react";
 import heroPOS from "@/assets/heroes/hero-pos-system.png";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -12,7 +12,7 @@ const fadeUp = {
 };
 
 const HeroSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   const scrollToForm = () => {
     window.location.href = "/kontakt";
   };
@@ -29,18 +29,18 @@ const HeroSection = () => {
           <div>
             <motion.h1 initial="hidden" animate="visible" custom={1} variants={fadeUp}
               className="text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-[1.08] mb-5">
-              {t.hero.headline}
+              {t("hero.headline")}
             </motion.h1>
 
             <motion.p initial="hidden" animate="visible" custom={2} variants={fadeUp}
               className="text-lg md:text-xl text-primary-foreground/70 mb-7 max-w-lg leading-relaxed">
-              {t.hero.sub}
+              {t("hero.sub")}
             </motion.p>
 
             <motion.div initial="hidden" animate="visible" custom={3} variants={fadeUp} className="flex flex-col sm:flex-row gap-4 mb-8">
               <button onClick={scrollToForm}
                 className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-amber/20 flex items-center justify-center gap-2">
-                {t.hero.cta}
+                {t("hero.cta")}
                 <ArrowRight className="w-5 h-5" />
               </button>
             </motion.div>
@@ -50,15 +50,15 @@ const HeroSection = () => {
               className="flex flex-wrap gap-6 text-primary-foreground/60 text-sm">
               <span className="flex items-center gap-2">
                 <Star className="w-4 h-4 text-amber" fill="currentColor" />
-                {t.hero.trust1}
+                {t("hero.trust1")}
               </span>
               <span className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-cyan-brand" />
-                {t.hero.trust2}
+                {t("hero.trust2")}
               </span>
               <span className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-cyan-brand" />
-                {t.hero.trust3}
+                {t("hero.trust3")}
               </span>
             </motion.div>
           </div>

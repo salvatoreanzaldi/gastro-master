@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Phone, Calendar, CreditCard, Key, Shield } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const icons = [MessageCircle, Phone, Calendar, Shield, CreditCard, Key];
 
 const DifferentiationSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   return (
     <section className="section-padding bg-background">
       <div className="container-tight">
@@ -16,15 +16,15 @@ const DifferentiationSection = () => {
           className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
-            {t.diff.headline}
+            {t("diff.headline")}
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            {t.diff.sub}
+            {t("diff.sub")}
           </p>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {t.diff.features.map((p, i) => {
+          {(t("diff.features", { returnObjects: true }) as any[]).map((p, i) => {
             const Icon = icons[i];
             return (
               <motion.div

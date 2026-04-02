@@ -1,15 +1,17 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Globe, Smartphone, CreditCard, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "@/components/LanguageLayout";
 
 const icons = [Globe, Smartphone, CreditCard, Palette];
-const featureHrefs = ["/produkte/webshop", "/produkte/bestellapp", "/produkte/transaktionsumlage", null] as const;
+const featureHrefPaths = ["/produkte/webshop", "/produkte/bestellapp", "/produkte/transaktionsumlage", null] as const;
 
 const SolutionSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
+  const lp = useLangPath();
   const scrollToForm = () => {
-    window.location.href = "/kontakt";
+    window.location.href = lp("/kontakt");
   };
 
   return (
@@ -21,19 +23,20 @@ const SolutionSection = () => {
           viewport={{ once: true }}
           className="text-center mb-14"
         >
-          <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{t.solution.badge}</span>
+          <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{t("solution.badge")}</span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
-            {t.solution.headline1}<br />{t.solution.headline2}
+            {t("solution.headline1")}<br />{t("solution.headline2")}
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            {t.solution.sub}
+            {t("solution.sub")}
           </p>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 gap-6 mb-12">
-          {t.solution.features.map((f, i) => {
+          {(t("solution.features", { returnObjects: true }) as any[]).map((f, i) => {
             const Icon = icons[i];
-            const href = featureHrefs[i];
+            const hrefPath = featureHrefPaths[i];
+            const href = hrefPath ? lp(hrefPath) : null;
             return (
               <motion.div
                 key={f.title}
@@ -50,7 +53,7 @@ const SolutionSection = () => {
                 <p className="text-muted-foreground leading-relaxed mb-4">{f.text}</p>
                 {href && (
                   <Link to={href} className="mt-auto text-cyan-brand text-sm font-semibold inline-flex items-center gap-1.5 hover:gap-2.5 transition-all duration-200">
-                    Mehr erfahren <ArrowRight className="w-3.5 h-3.5" />
+                    {t("solution.learnMore")} <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 )}
               </motion.div>
@@ -61,7 +64,7 @@ const SolutionSection = () => {
         <div className="text-center">
           <button onClick={scrollToForm}
             className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
-            {t.solution.cta}
+            {t("solution.cta")}
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>

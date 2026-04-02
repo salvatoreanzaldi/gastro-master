@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Tv, Eye, Sparkles, ArrowRight } from "lucide-react";
 import pickupScreen from "@/assets/addons/pickup-screen.jpeg";
 import pickupScreen2 from "@/assets/addons/pickup-screen-2.png";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const images = [pickupScreen, pickupScreen2];
 const featureIcons = [Tv, Eye, Sparkles];
 
 const PickUpScreenSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   const [imgIndex, setImgIndex] = useState(0);
 
   useEffect(() => {
@@ -22,9 +22,9 @@ const PickUpScreenSection = () => {
   };
 
   const featureItems = [
-    { icon: Tv, text: t.pickup.featureTitle },
-    { icon: Eye, text: t.pickup.features[0] },
-    { icon: Sparkles, text: t.pickup.features[1] },
+    { icon: Tv, text: t("pickup.featureTitle") },
+    { icon: Eye, text: t("pickup.features.0") },
+    { icon: Sparkles, text: t("pickup.features.1") },
   ];
 
   return (
@@ -51,12 +51,12 @@ const PickUpScreenSection = () => {
 
           {/* Copy */}
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 md:order-2">
-            <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{t.pickup.badge}</span>
+            <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{t("pickup.badge")}</span>
             <h2 className="text-3xl md:text-4xl font-black text-foreground mb-5 leading-tight">
-              {t.pickup.headline1}<br />{t.pickup.headline2}
+              {t("pickup.headline1")}<br />{t("pickup.headline2")}
             </h2>
             <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-              {t.pickup.sub}
+              {t("pickup.sub")}
             </p>
 
             <div className="space-y-4 mb-8">
@@ -72,7 +72,7 @@ const PickUpScreenSection = () => {
 
             <button onClick={scrollToForm}
               className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
-              {t.pickup.cta}
+              {t("pickup.cta")}
               <ArrowRight className="w-4 h-4" />
             </button>
           </motion.div>

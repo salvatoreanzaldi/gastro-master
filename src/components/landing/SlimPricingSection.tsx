@@ -1,48 +1,20 @@
 import { motion } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { RippleButton } from "@/components/ui/multi-type-ripple-buttons";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "@/components/LanguageLayout";
 
 // ── 3 Pakete (A/B-Test-Variante: Beginner + Pro ausgeblendet, neue Namen) ─────
 
-const SLIM_PLANS = [
-  {
-    id: "webseite",
-    name: "Webseite",
-    tagline: "Professionelle Online-Präsenz",
-    priceMonthly: "49",
-    priceYearly: "39",
-    duration: "7–10 Tage",
-    popular: false,
-  },
-  {
-    id: "basic",
-    name: "Starter",
-    tagline: "Reiner Webshop",
-    priceMonthly: "79",
-    priceYearly: "69",
-    duration: "10–14 Tage",
-    popular: false,
-  },
-  {
-    id: "standard",
-    name: "Business",
-    tagline: "Webshop + App",
-    priceMonthly: "149",
-    priceYearly: "129",
-    duration: "2–3 Wochen",
-    popular: true,
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    tagline: "Franchise / Mehr-Standorte",
-    priceMonthly: null,
-    priceYearly: null,
-    duration: "Nach Projektumfang",
-    popular: false,
-  },
-] as const;
+interface SlimPlan {
+  id: string;
+  name: string;
+  tagline: string;
+  priceMonthly: string | null;
+  priceYearly: string | null;
+  duration: string;
+  popular?: boolean;
+}
 
 // ── WebGL Shader ──────────────────────────────────────────────────────────────
 
@@ -179,11 +151,13 @@ interface SlimCardProps {
   onCta: () => void; ctaLabel: string; fromLabel: string;
   perMonthLabel: string; vatNote: string; durationLabel: string;
   onRequestLabel: string; index: number;
+  popularLabel: string; yearlyNoteText: string; monthlyNoteText: string;
 }
 
 const SlimCard = ({
   name, tagline, price, yearlyPrice, isYearly, features, duration, popular, isDark,
-  onCta, ctaLabel, fromLabel, perMonthLabel, vatNote, durationLabel, onRequestLabel, index
+  onCta, ctaLabel, fromLabel, perMonthLabel, vatNote, durationLabel, onRequestLabel, index,
+  popularLabel, yearlyNoteText, monthlyNoteText
 }: SlimCardProps) => {
   const displayPrice = isYearly && yearlyPrice ? yearlyPrice : price;
   const hasPrice = displayPrice !== null;
@@ -222,7 +196,7 @@ const SlimCard = ({
     >
       {popular && (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 text-[11px] font-bold rounded-full whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-400 text-primary">
-          Beliebteste Wahl
+          {popularLabel}
         </div>
       )}
 
@@ -253,11 +227,11 @@ const SlimCard = ({
             <span className={`text-xs ${textMuted}`}>{vatNote}</span>
             {isYearly && yearlyPrice ? (
               <p className={`text-xs mt-1 ${textMuted}`}>
-                Monatlich abgerechnet · 12 Monate Laufzeit
+                {yearlyNoteText}
               </p>
             ) : (
               <p className={`text-xs mt-1 ${textMuted}`}>
-                3 Monate Kündigungsfrist
+                {monthlyNoteText}
               </p>
             )}
           </>
@@ -296,7 +270,8 @@ const SlimCard = ({
 // ── Section ───────────────────────────────────────────────────────────────────
 
 const SlimPricingSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
+  const lp = useLangPath();
   const [isDark, setIsDark] = useState(
     () => document.documentElement.classList.contains("dark")
   );
@@ -311,10 +286,12 @@ const SlimPricingSection = () => {
   }, []);
 
   const scrollToForm = () => {
-    window.location.href = "/kontakt";
+    window.location.href = lp("/kontakt");
   };
 
-  const packageFeaturesMap = t.pricing.packageFeatures as Record<string, readonly string[]>;
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+  const packageFeaturesMap = t("pricing.packageFeatures", { returnObjects: true }) as Record<string, readonly string[]>;
+  const slimPlans = arr("pricing.slimPlans") as SlimPlan[];
 
   const sectionBg  = isDark ? "bg-[#0d1430]" : "bg-slate-100";
   const headingCol = isDark ? "text-white"    : "text-gray-900";
@@ -336,13 +313,13 @@ const SlimPricingSection = () => {
           className="text-center mb-6"
         >
           <span className={`text-sm font-semibold uppercase tracking-wider mb-3 block ${badgeCol}`}>
-            Transparente Preise
+            {t("pricing.badge")}
           </span>
           <h2 className={`text-3xl md:text-4xl lg:text-5xl font-black mb-4 ${headingCol}`}>
-            {t.pricing.headline}
+            {t("pricing.headline")}
           </h2>
           <p className={`text-lg max-w-2xl mx-auto ${subCol}`}>
-            {t.pricing.sub}
+            {t("pricing.sub")}
           </p>
         </motion.div>
 
@@ -357,17 +334,17 @@ const SlimPricingSection = () => {
           {/* Monatlich label */}
           <div className="text-right">
             <p className={`text-sm font-bold transition-colors duration-200 ${!isYearly ? textPrimary : textSecondary}`}>
-              Monatlich
+              {t("pricing.billingMonthly")}
             </p>
             <p className={`text-sm transition-colors duration-200 ${!isYearly ? textSecondary : isDark ? "text-white/25" : "text-gray-300"}`}>
-              3 Mon. Kündigungsfrist
+              {t("pricing.billingMonthlyNote")}
             </p>
           </div>
 
           {/* Toggle pill */}
           <button
             onClick={() => setIsYearly(!isYearly)}
-            aria-label="Abrechnungszeitraum wechseln"
+            aria-label={t("pricing.billingMonthly")}
             className={`relative w-14 h-7 rounded-full transition-colors duration-300 flex-shrink-0 ${
               isYearly ? "bg-cyan-500" : isDark ? "bg-white/20" : "bg-black/20"
             }`}
@@ -382,17 +359,17 @@ const SlimPricingSection = () => {
           {/* Jährlich label */}
           <div className="text-left">
             <p className={`text-sm font-bold transition-colors duration-200 ${isYearly ? textPrimary : textSecondary}`}>
-              Jährlich
+              {t("pricing.billingYearly")}
             </p>
             <p className={`text-sm transition-colors duration-200 ${isYearly ? textSecondary : isDark ? "text-white/25" : "text-gray-300"}`}>
-              Monatliche Abrechnung
+              {t("pricing.billingYearlyNote")}
             </p>
           </div>
         </motion.div>
 
         {/* ── Cards ── */}
         <div className="flex flex-col lg:flex-row gap-4 items-stretch justify-center max-w-4xl mx-auto">
-          {SLIM_PLANS.map((plan, i) => {
+          {slimPlans.map((plan, i) => {
             const features = packageFeaturesMap[plan.id] ?? [];
             const hasPrice = plan.priceMonthly !== null;
             return (
@@ -409,12 +386,15 @@ const SlimPricingSection = () => {
                 duration={plan.duration}
                 popular={plan.popular}
                 onCta={scrollToForm}
-                ctaLabel={hasPrice ? t.pricing.ctaPrimary : t.pricing.ctaSecondary}
-                fromLabel={t.pricing.from}
-                perMonthLabel={t.pricing.perMonth}
-                vatNote={t.pricing.vatNote}
-                durationLabel={t.pricing.durationLabel}
-                onRequestLabel={t.pricing.onRequest}
+                ctaLabel={hasPrice ? t("pricing.ctaPrimary") : t("pricing.ctaSecondary")}
+                fromLabel={t("pricing.from")}
+                perMonthLabel={t("pricing.perMonth")}
+                vatNote={t("pricing.vatNote")}
+                durationLabel={t("pricing.durationLabel")}
+                onRequestLabel={t("pricing.onRequest")}
+                popularLabel={t("pricing.badgePopular")}
+                yearlyNoteText={t("pricing.yearlyNote")}
+                monthlyNoteText={t("pricing.monthlyNote")}
               />
             );
           })}
@@ -426,7 +406,7 @@ const SlimPricingSection = () => {
           viewport={{ once: true }}
           className="text-center mt-8"
         >
-          <p className={`text-xs ${noteCol}`}>{t.pricing.setupNote}</p>
+          <p className={`text-xs ${noteCol}`}>{t("pricing.setupNote")}</p>
         </motion.div>
       </div>
     </section>

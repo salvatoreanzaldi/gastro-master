@@ -1,4 +1,5 @@
 import { useSeoMeta } from "@/hooks/useSeoMeta";
+import { useTranslation } from "react-i18next";
 import Navbar from "@/components/landing/Navbar";
 import HeroScrollSection from "@/components/landing/HeroScrollSection";
 import HeroSection from "@/components/landing/HeroSection";
@@ -29,9 +30,10 @@ import Footer from "@/components/landing/Footer";
 
 
 const Index = () => {
+  const { t } = useTranslation("common");
   useSeoMeta({
-    title: "Gastro Master – Mehr Gewinn durch Direktbestellungen",
-    description: "Dein eigener Webshop & deine eigene App für die Gastronomie. 0 % Provision. Mehr Direktbestellungen. 700+ zufriedene Kunden.",
+    title: t("seo.indexTitle"),
+    description: t("seo.indexDescription"),
     canonical: "https://gastro-master.de/",
   });
 
@@ -44,6 +46,7 @@ const Index = () => {
       <TrustSection />
       {/* INTEREST */}
       <TargetGroupSection />
+      <VideoTestimonialSection />
       <PositioningSection />
       <CalculatorSection />
       <ProblemSection />
@@ -57,7 +60,6 @@ const Index = () => {
       <PickUpScreenSection />
       <TransaktionsUmlageSection />
       <DifferentiationSection />
-      <VideoTestimonialSection />
       <FounderTrustSection />
       {/* <LanguageBadgeSection /> */}
       <MomentumSection />

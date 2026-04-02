@@ -15,10 +15,12 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "@/components/LanguageLayout";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
-function renderWithLinks(text: string): React.ReactNode {
+function renderWithLinks(text: string, lp: (p: string) => string): React.ReactNode {
   const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
@@ -26,7 +28,7 @@ function renderWithLinks(text: string): React.ReactNode {
   let key = 0;
   while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
-    parts.push(<Link key={key++} to={match[2]} className="text-cyan-brand hover:underline font-medium">{match[1]}</Link>);
+    parts.push(<Link key={key++} to={lp(match[2])} className="text-cyan-brand hover:underline font-medium">{match[1]}</Link>);
     lastIndex = regex.lastIndex;
   }
   if (lastIndex < text.length) parts.push(text.slice(lastIndex));
@@ -40,166 +42,58 @@ import imgKasse       from "@/assets/heroes/hero-pos-system.png";
 import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.PNG";
 import imgTransaktion from "@/assets/addons/9 - Zahlungsmethoden.png";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-
-interface StatItem {
-  value: string;
-  label: string;
-  source: string;
-  href: string;
-  isCta?: boolean;
-}
-
-const STATS: StatItem[] = [
-  {
-    value: "9,9 Mrd. €",
-    label: "prognostizierter Umsatz im Online-Liefermarkt Deutschland bis 2028",
-    source: "Statista",
-    href: "https://de.statista.com/prognosen/642308/online-food-delivery-umsatz-in-deutschland",
-  },
-  {
-    value: "9,41 %",
-    label: "jährliches Wachstum im Online-Liefermarkt 2025–2028 — der Markt wächst weiter",
-    source: "Statista",
-    href: "https://de.statista.com/outlook/dmo/online-food-delivery/deutschland",
-  },
-  {
-    value: "bis 30 %",
-    label: "Provision nimmt Lieferando pro Bestellung — das ist dein Gewinn, den du abgibst",
-    source: "metro.de",
-    href: "https://www.metro.de/blog/lieferdienste",
-  },
-  {
-    value: "0 % Provision",
-    label: "mit deinem eigenen Bestellsystem — kein Cent an Lieferando",
-    source: "Gastro Master",
-    href: "/kontakt",
-    isCta: true,
-  },
-];
-
-interface CompareRow {
-  label: string;
-  gm: string;
-  gmGood: boolean;
-  platform: string;
-  platformBad: boolean;
-}
-
-const COMPARE_ROWS: CompareRow[] = [
-  { label: "Provision pro Bestellung",    gm: "0 %",                       gmGood: true,  platform: "13 bis 30 %",             platformBad: true  },
-  { label: "Dein eigenes Design",         gm: "✓ Ja",                      gmGood: true,  platform: "✗ Nein",                  platformBad: true  },
-  { label: "Kundendaten gehören dir",     gm: "✓ Ja",                      gmGood: true,  platform: "✗ Nein",                  platformBad: true  },
-  { label: "Eigene App im App Store",     gm: "✓ Verfügbar",               gmGood: true,  platform: "✗ Nicht möglich",         platformBad: true  },
-  { label: "Du entscheidest alles",       gm: "✓ Immer",                   gmGood: true,  platform: "✗ Plattform entscheidet", platformBad: true  },
-  { label: "Monatliche Grundkosten",      gm: "Ab 69 €/Monat",             gmGood: true,  platform: "Keine — aber Provision",  platformBad: true  },
-];
-
-interface FaqItem {
-  q: string;
-  a: string;
-}
-
-const FAQ_ITEMS: FaqItem[] = [
-  {
-    q: "Wie biete ich einen Lieferservice in meinem Restaurant an?",
-    a: "Du brauchst ein [Online-Bestellsystem](/produkte/webshop). Damit können deine Kunden direkt bei dir bestellen. Gastro Master richtet das für dich ein — mit deinem Logo, deinen Farben, deinem Menü. Alles läuft über dein System. Keine Provision an Lieferando. Mehr zur [Lieferdienst-Lösung](/loesungen/lieferdienst).",
-  },
-  {
-    q: "Was kostet ein eigenes Bestellsystem für Lieferdienste?",
-    a: "Der [Bestellshop von Gastro Master](/produkte/webshop) kostet 79 € pro Monat. Dein Shop ist mit deinem Branding eingerichtet. Du zahlst keine Provision — jede Bestellung gehört dir zu 100 %. Wir richten alles für dich ein. Du musst nichts selbst programmieren.",
-  },
-  {
-    q: "Wie viel Provision nimmt Lieferando?",
-    a: "Lieferando nimmt 13 % wenn du eigene Fahrer hast. Mit Lieferando-Fahrern sind es bis zu 30 %. Bei 3.000 € Monatsumsatz zahlst du bis zu 900 € Provision — jeden Monat. Das ist Geld, das du behalten könntest.",
-  },
-  {
-    q: "Lohnt sich ein eigener Lieferservice statt Lieferando?",
-    a: "Ja — besonders wenn du schon Stammkunden hast. Deine Stammkunden bestellen gerne direkt bei dir. Du behältst alle Daten, du behältst die Kontrolle. Und du zahlst keine Provision. Besonders bei Speisen mit geringem Wareneinsatz — zum Beispiel Pizza oder Sushi — lohnt sich ein eigener [Lieferdienst](/loesungen/lieferdienst) sehr.",
-  },
-  {
-    q: "Brauche ich eine eigene App für meinen Lieferdienst?",
-    a: "Nicht unbedingt. Der [Bestellshop](/produkte/webshop) funktioniert auch ohne App — im Browser, auf dem Handy. Aber eine eigene [App](/produkte/app) hat einen großen Vorteil: Stammkunden bestellen mit einem Klick. Sie sehen dein Logo auf ihrem Handy. Das stärkt die Bindung an dein Restaurant.",
-  },
-];
-
-const SCHEMA_FAQ = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ_ITEMS.map((item) => ({
-    "@type": "Question",
-    name: item.q,
-    acceptedAnswer: { "@type": "Answer", text: plainText(item.a) },
-  })),
-};
-
-const SCHEMA_ARTICLE = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  headline: "Eigener Lieferservice ohne Lieferando — 0 % Provision für Restaurants und Lieferdienste",
-  description:
-    "Lieferservice einrichten ohne Lieferando: eigenes Bestellsystem, 0 % Provision, Fahrer-App mit GPS. Für bestehende Restaurants, Imbisse und Pizzerien. Ab 69 €/Monat.",
-  url: "https://gastro-master.de/loesungen/lieferdienst",
-  author: { "@type": "Organization", name: "Gastro Master" },
-  publisher: { "@type": "Organization", name: "Gastro Master" },
-};
-
-interface ProductCard {
-  img: string;
-  title: string;
-  tagline: string;
-  href: string;
-  icon: React.ReactNode;
-  features?: string[];
-}
-
-const PRODUCTS: ProductCard[] = [
-  {
-    img: imgApp,
-    title: "App System",
-    tagline: "Deine eigene App im App Store. Stammkunden bestellen mit einem Klick.",
-    href: "/produkte/app",
-    icon: <Smartphone className="w-4 h-4" />,
-    features: [
-      "Push-Nachrichten — direkt aufs Handy deiner Kunden",
-      "Dein Logo und deine Farben in der App",
-      "Online-Bezahlung direkt in der App",
-      "Speisekarte jederzeit aktualisieren",
-    ],
-  },
-  {
-    img: imgKasse,
-    title: "Kassensystem",
-    tagline: "Alle Bestellungen landen direkt in der Kasse. Mit dem Kassensystem kannst du auch die Fahrer-App nutzen — deine Fahrer sehen Routen und Bestellungen direkt auf dem Handy.",
-    href: "/produkte/kassensystem",
-    icon: <Monitor className="w-4 h-4" />,
-  },
-  {
-    img: imgWebseite,
-    title: "Webseite",
-    tagline: "Damit neue Kunden dein Restaurant bei Google finden.",
-    href: "/produkte/webseite",
-    icon: <Globe className="w-4 h-4" />,
-  },
-  {
-    img: imgTransaktion,
-    title: "Zahlungsgebühren",
-    tagline: "Zahlungsgebühren? Können deine Kunden übernehmen.",
-    href: "/produkte/transaktionsumlage",
-    icon: <Percent className="w-4 h-4" />,
-  },
-];
+// ─── Static image / icon maps (order must match JSON cards) ─────────────────
+const cardImages = [imgApp, imgKasse, imgWebseite, imgTransaktion];
+const cardIcons  = [<Smartphone className="w-4 h-4" />, <Monitor className="w-4 h-4" />, <Globe className="w-4 h-4" />, <Percent className="w-4 h-4" />];
+const cardHrefs  = ["/produkte/app", "/produkte/kassensystem", "/produkte/webseite", "/produkte/transaktionsumlage"];
+const problemIcons = [<PenLine className="w-6 h-6" />, <TrendingDown className="w-6 h-6" />, <HelpCircle className="w-6 h-6" />];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 const LieferdienstPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const { t } = useTranslation("lieferdienst");
+  const lp = useLangPath();
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+
+  // ─── Schema ────────────────────────────────────────────────────────────
+  const faqItems = arr("faq.items") as { q: string; a: string }[];
+  const SCHEMA_FAQ = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: plainText(item.a) },
+    })),
+  };
+
+  const SCHEMA_ARTICLE = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: t("schema.headline"),
+    description: t("schema.description"),
+    url: "https://gastro-master.de/loesungen/lieferdienst",
+    author: { "@type": "Organization", name: "Gastro Master" },
+    publisher: { "@type": "Organization", name: "Gastro Master" },
+  };
 
   useSeoMeta({
-    title: "Lieferservice einrichten ohne Lieferando — 0 % Provision | Gastro Master",
-    description: "Du hast schon dein Restaurant? Jetzt lieferst du auch — ohne Lieferando und ohne Provision. Eigenes Bestellsystem, Fahrer-App und App im Store. Jetzt kostenlos beraten lassen.",
+    title: t("seo.title"),
+    description: t("seo.description"),
     canonical: "https://gastro-master.de/loesungen/lieferdienst",
   });
+
+  // ─── Data from JSON ────────────────────────────────────────────────────
+  const stats = arr("stats.items") as { value: string; label: string; source: string; href: string; isCta?: boolean }[];
+  const problems = arr("problem.items") as { title: string; text: string }[];
+  const products = arr("products.cards") as { title: string; tagline: string; features?: string[] }[];
+  const compareRows = arr("compare.rows") as { label: string; gm: string; platform: string }[];
+  const steps = arr("process.steps") as { num: string; title: string; text: string }[];
+  const trustItems = arr("trust.items") as { value: string; label: string }[];
+  const heroPills = arr("hero.pills") as string[];
+  const featuredTags = arr("products.featured.tags") as string[];
+  const ctaPills = arr("cta.pills") as string[];
 
   return (
     <div className="min-h-screen bg-background">
@@ -229,7 +123,7 @@ const LieferdienstPage = () => {
             transition={{ duration: 0.5 }}
             className="inline-block px-3 py-1 rounded-full bg-cyan-brand/15 text-cyan-brand text-xs font-bold uppercase tracking-widest mb-8"
           >
-            Lieferdienst · Bestehende Betriebe 2026
+            {t("hero.badge")}
           </motion.span>
 
           <motion.h1
@@ -238,9 +132,9 @@ const LieferdienstPage = () => {
             transition={{ delay: 0.1, duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
             className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.04] mb-6"
           >
-            Du hast schon dein Lokal.{" "}
+            {t("hero.title1")}{" "}
             <span className="text-gradient-brand block mt-2">
-              Jetzt lieferst du auch.
+              {t("hero.titleHighlight")}
             </span>
           </motion.h1>
 
@@ -250,9 +144,9 @@ const LieferdienstPage = () => {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-10"
           >
-            Deine Küche ist schon da. Deine Stammkunden auch.
+            {t("hero.subtitle1")}
             <br className="hidden md:block" />
-            Mit Gastro Master erreichst du sie auch zuhause — ohne Lieferando, ohne Provision.
+            {t("hero.subtitle2")}
           </motion.p>
 
           <motion.div
@@ -262,17 +156,17 @@ const LieferdienstPage = () => {
             className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
           >
             <Link
-              to="/kontakt"
+              to={lp("/kontakt")}
               className="bg-gradient-amber text-[#0A264A] font-bold px-10 py-5 rounded-xl text-lg inline-flex items-center gap-3 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
             >
-              Kostenloses Beratungsgespräch
+              {t("hero.cta")}
               <ArrowRight className="w-5 h-5" />
             </Link>
             <a
               href="#bestellsystem"
               className="text-white/60 hover:text-white text-base font-medium transition-colors"
             >
-              Wie es funktioniert ↓
+              {t("hero.scrollLink")}
             </a>
           </motion.div>
 
@@ -283,7 +177,7 @@ const LieferdienstPage = () => {
             transition={{ delay: 0.5, duration: 0.6 }}
             className="flex flex-wrap justify-center gap-3 mb-10"
           >
-            {["700+ Betriebe", "0 % Provision", "Eigene App", "Persönlicher Support"].map((pill) => (
+            {heroPills.map((pill) => (
               <span
                 key={pill}
                 className="px-4 py-2 rounded-full bg-white/8 border border-white/12 text-white/70 text-sm font-medium"
@@ -301,15 +195,12 @@ const LieferdienstPage = () => {
             className="text-left max-w-2xl mx-auto border border-cyan-brand/20 rounded-2xl bg-cyan-brand/5 px-7 py-6"
           >
             <p className="text-xs font-bold uppercase tracking-widest text-cyan-brand mb-2">
-              Was bedeutet eigener Lieferdienst?
+              {t("hero.geoTitle")}
             </p>
-            <p className="text-white/70 text-sm leading-relaxed">
-              Ein <strong className="text-white">eigener Lieferdienst</strong> bedeutet: Deine Kunden
-              bestellen direkt bei dir — über deinen eigenen Bestellshop oder deine eigene App. Du zahlst
-              keine Provision an Lieferando, Wolt oder Uber Eats. Die Kundendaten gehören dir. Du
-              entscheidest selbst über Preise, Liefergebiete und Öffnungszeiten. Gastro Master liefert
-              dafür die komplette Technik — ab 69 € pro Monat, ohne versteckte Gebühren.
-            </p>
+            <p
+              className="text-white/70 text-sm leading-relaxed [&_strong]:text-white"
+              dangerouslySetInnerHTML={{ __html: t("hero.geoText") }}
+            />
           </motion.div>
 
           {/* Internal link for newcomers */}
@@ -319,9 +210,9 @@ const LieferdienstPage = () => {
             transition={{ delay: 0.8, duration: 0.5 }}
             className="text-white/35 text-xs mt-6 text-center"
           >
-            Du hast noch kein eigenes Lokal?{" "}
-            <Link to="/loesungen/lieferservice-gruenden" className="text-cyan-brand/70 hover:text-cyan-brand underline underline-offset-2 transition-colors">
-              Hier ist unser Gründer-Leitfaden →
+            {t("hero.newcomerText")}{" "}
+            <Link to={lp("/loesungen/lieferservice-gruenden")} className="text-cyan-brand/70 hover:text-cyan-brand underline underline-offset-2 transition-colors">
+              {t("hero.newcomerLink")}
             </Link>
           </motion.p>
         </div>
@@ -332,15 +223,15 @@ const LieferdienstPage = () => {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-black text-foreground mb-3">
-              Der Markt wächst — und Lieferando verdient mit
+              {t("stats.title")}
             </h2>
             <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
-              Die Zahlen zeigen: Wer jetzt liefert, gewinnt. Wer weiter Provision zahlt, verliert.
+              {t("stats.text")}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {STATS.map((s, i) => (
+            {stats.map((s, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -370,7 +261,7 @@ const LieferdienstPage = () => {
                   {s.label}
                 </p>
                 <a
-                  href={s.href}
+                  href={s.isCta ? lp(s.href) : s.href}
                   target={s.isCta ? "_self" : "_blank"}
                   rel="noopener noreferrer"
                   className={`text-xs mt-auto flex items-center gap-1 transition-colors ${
@@ -382,7 +273,7 @@ const LieferdienstPage = () => {
                   }`}
                 >
                   {s.isCta ? (
-                    <>Jetzt kostenlos beraten lassen <ArrowRight className="w-3 h-3" /></>
+                    <>{t("stats.ctaText")} <ArrowRight className="w-3 h-3" /></>
                   ) : (
                     <>{s.source} <ExternalLink className="w-3 h-3" /></>
                   )}
@@ -398,34 +289,18 @@ const LieferdienstPage = () => {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="inline-block px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-widest mb-4">
-              Das kennen viele Gastronomen
+              {t("problem.badge")}
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
-              Du hast schon Stammkunden — aber erreichst du sie auch zuhause?
+              {t("problem.title")}
             </h2>
             <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
-              Diese drei Probleme stehen deinem eigenen Lieferdienst im Weg.
+              {t("problem.text")}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: <PenLine className="w-6 h-6" />,
-                title: "Telefon und Zettel",
-                text: "Kunden rufen an. Du schreibst alles auf Zettel. Fehler passieren. Bestellungen gehen verloren. Das kostet dich Zeit und Geld.",
-              },
-              {
-                icon: <TrendingDown className="w-6 h-6" />,
-                title: "30 % Provision an Lieferando",
-                text: "Du bist bei Lieferando — aber 30 % von jeder Bestellung behält die Plattform. Bei 3.000 € Umsatz verlierst du bis zu 900 € im Monat.",
-              },
-              {
-                icon: <HelpCircle className="w-6 h-6" />,
-                title: "Technik ist unklar",
-                text: "Du willst selbst liefern, aber weißt nicht wie. Eigene App, eigener Shop — das klingt kompliziert. Ist es nicht. Wir machen das für dich.",
-              },
-            ].map((item, i) => (
+            {problems.map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -435,7 +310,7 @@ const LieferdienstPage = () => {
                 className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6"
               >
                 <div className="w-11 h-11 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4">
-                  {item.icon}
+                  {problemIcons[i]}
                 </div>
                 <h3 className="font-bold text-foreground text-base mb-2">{item.title}</h3>
                 <p className="text-foreground/60 text-sm leading-relaxed">{item.text}</p>
@@ -454,13 +329,13 @@ const LieferdienstPage = () => {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="inline-block px-3 py-1 rounded-full bg-cyan-brand/15 text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4">
-              So lieferst du selbst — ohne Lieferando
+              {t("products.badge")}
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
-              Dein eigenes System. Alles aus einer Hand.
+              {t("products.title")}
             </h2>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Von der Bestellung bis zur Lieferung — wir richten alles für dich ein.
+              {t("products.text")}
             </p>
           </div>
 
@@ -472,45 +347,43 @@ const LieferdienstPage = () => {
             className="mb-5"
           >
             <Link
-              to="/produkte/webshop"
+              to={lp("/produkte/webshop")}
               className="group relative rounded-2xl overflow-hidden bg-white/5 border-2 border-cyan-brand/30 hover:border-cyan-brand/60 transition-all duration-300 flex flex-col md:flex-row"
             >
               {/* Image */}
               <div className="relative md:w-2/5 h-56 md:h-auto overflow-hidden shrink-0">
                 <img
                   src={imgWebshop}
-                  alt="Online Bestellshop"
+                  alt={t("products.featured.imgAlt")}
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0A264A] hidden md:block" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-[#0A264A]/30 to-transparent md:hidden" />
                 <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-brand/20 backdrop-blur-sm border border-cyan-brand/30 text-cyan-brand text-xs font-bold">
-                  Hauptprodukt
+                  {t("products.featured.badge")}
                 </div>
               </div>
               {/* Content */}
               <div className="p-7 flex flex-col justify-center flex-1">
                 <div className="flex items-center gap-2 mb-3">
                   <ShoppingCart className="w-5 h-5 text-cyan-brand" />
-                  <span className="text-cyan-brand text-sm font-bold">Online Shop</span>
+                  <span className="text-cyan-brand text-sm font-bold">{t("products.featured.category")}</span>
                 </div>
                 <h3 className="text-white font-black text-2xl mb-3 leading-tight">
-                  Dein eigener Bestellshop. 0 % Provision.
+                  {t("products.featured.title")}
                 </h3>
                 <p className="text-white/65 text-base leading-relaxed mb-5">
-                  Deine Kunden bestellen direkt bei dir — über deinen Shop, mit deinem Logo.
-                  Du zahlst keine Gebühren an Lieferando. Jede Bestellung gehört dir zu 100 %.
-                  Wir richten den Shop ein — mit deinem Menü, deinen Preisen, deinen Liefergebieten.
+                  {t("products.featured.text")}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-5">
-                  {["0 % Provision", "Dein Branding", "Liefergebiete", "Eigene Preise", "Ab 69 €/Monat"].map((tag) => (
+                  {featuredTags.map((tag) => (
                     <span key={tag} className="px-3 py-1 rounded-full bg-white/8 border border-white/10 text-white/60 text-xs font-medium">
                       {tag}
                     </span>
                   ))}
                 </div>
                 <div className="inline-flex items-center gap-2 text-cyan-brand text-sm font-semibold group-hover:gap-3 transition-all">
-                  Online Shop ansehen <ArrowRight className="w-4 h-4" />
+                  {t("products.featured.linkText")} <ArrowRight className="w-4 h-4" />
                 </div>
               </div>
             </Link>
@@ -518,22 +391,22 @@ const LieferdienstPage = () => {
 
           {/* 2 + 2 grid for remaining products */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-            {PRODUCTS.slice(0, 2).map((p, i) => (
-              <SmallProductCard key={i} product={p} />
+            {products.slice(0, 2).map((p, i) => (
+              <SmallProductCard key={i} product={p} index={i} lp={lp} t={t} />
             ))}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {PRODUCTS.slice(2).map((p, i) => (
-              <SmallProductCard key={i} product={p} />
+            {products.slice(2).map((p, i) => (
+              <SmallProductCard key={i} product={p} index={i + 2} lp={lp} t={t} />
             ))}
           </div>
 
           <div className="text-center mt-10">
             <Link
-              to="/kontakt"
+              to={lp("/kontakt")}
               className="bg-gradient-amber text-[#0A264A] font-bold px-10 py-4 rounded-xl text-base inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
             >
-              Kostenlose Beratung anfragen
+              {t("products.cta")}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -545,13 +418,13 @@ const LieferdienstPage = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <span className="inline-block px-3 py-1 rounded-full bg-foreground/8 text-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">
-              Vergleich
+              {t("compare.badge")}
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
-              Warum ein eigenes System statt Lieferando?
+              {t("compare.title")}
             </h2>
             <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
-              Gastro Master vs. Lieferando, Wolt und Uber Eats — der direkte Vergleich.
+              {t("compare.text")}
             </p>
           </div>
 
@@ -559,35 +432,35 @@ const LieferdienstPage = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left p-4 text-foreground/40 font-semibold w-[40%]">Was zählt</th>
+                  <th className="text-left p-4 text-foreground/40 font-semibold w-[40%]">{t("compare.colHeader")}</th>
                   <th className="p-4 text-center w-[30%]">
                     <div className="flex flex-col items-center gap-1">
                       <span className="px-2 py-0.5 rounded-full bg-cyan-brand/15 text-cyan-brand text-[10px] font-bold uppercase tracking-wider">
-                        Empfohlen
+                        {t("compare.colGmBadge")}
                       </span>
-                      <span className="font-black text-foreground text-base">Gastro Master</span>
-                      <span className="text-foreground/40 text-xs font-normal">Eigenes System</span>
+                      <span className="font-black text-foreground text-base">{t("compare.colGm")}</span>
+                      <span className="text-foreground/40 text-xs font-normal">{t("compare.colGmSub")}</span>
                     </div>
                   </th>
                   <th className="p-4 text-center w-[30%]">
-                    <span className="font-semibold text-foreground/60">Lieferando / Wolt / Uber Eats</span>
+                    <span className="font-semibold text-foreground/60">{t("compare.colPlatform")}</span>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {COMPARE_ROWS.map((row, i) => (
+                {compareRows.map((row, i) => (
                   <tr
                     key={i}
                     className={`border-b border-border last:border-0 ${i % 2 === 0 ? "bg-foreground/[0.02]" : ""}`}
                   >
                     <td className="p-4 text-foreground/70 font-medium">{row.label}</td>
                     <td className="p-4 text-center">
-                      <span className={`font-semibold ${row.gmGood ? "text-emerald-600 dark:text-emerald-400" : "text-foreground"}`}>
+                      <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                         {row.gm}
                       </span>
                     </td>
                     <td className="p-4 text-center">
-                      <span className={`${row.platformBad ? "text-red-500" : "text-foreground/70"}`}>
+                      <span className="text-red-500">
                         {row.platform}
                       </span>
                     </td>
@@ -600,21 +473,20 @@ const LieferdienstPage = () => {
           {/* Rechenbeispiel */}
           <div className="mt-6 rounded-2xl bg-[#0A264A] p-7 flex flex-col md:flex-row items-start md:items-center gap-6">
             <div className="flex-1">
-              <p className="text-white/50 text-xs font-bold uppercase tracking-wider mb-2">Rechenbeispiel</p>
+              <p className="text-white/50 text-xs font-bold uppercase tracking-wider mb-2">{t("compare.calcBadge")}</p>
               <p className="text-white font-black text-lg leading-snug mb-1">
-                Bei 3.000 € Monatsumsatz zahlst du an Lieferando{" "}
-                <span className="text-red-400">bis zu 900 €</span> Provision — jeden Monat.
+                {t("compare.calcTitle")}{" "}
+                <span className="text-red-400">{t("compare.calcHighlight")}</span> {t("compare.calcTitleEnd")}
               </p>
               <p className="text-white/60 text-sm">
-                Mit Gastro Master: <strong className="text-emerald-400">0 €</strong> Provision.
-                Das sind <strong className="text-white">10.800 € im Jahr</strong>, die du behältst.
+                {t("compare.calcText1")} <strong className="text-emerald-400">{t("compare.calcText2")}</strong> {t("compare.calcText3")} <strong className="text-white">{t("compare.calcText4")}</strong>{t("compare.calcText5")}
               </p>
             </div>
             <Link
-              to="/kontakt"
+              to={lp("/kontakt")}
               className="shrink-0 bg-gradient-amber text-[#0A264A] font-bold px-6 py-3 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform whitespace-nowrap"
             >
-              Kostenlose Beratung
+              {t("compare.calcCta")}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -626,13 +498,13 @@ const LieferdienstPage = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
             <span className="inline-block px-3 py-1 rounded-full bg-cyan-brand/10 text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4">
-              So einfach geht es
+              {t("process.badge")}
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
-              In 3 Schritten zum eigenen Lieferdienst
+              {t("process.title")}
             </h2>
             <p className="text-foreground/60 text-lg max-w-xl mx-auto">
-              Du brauchst keine Technik-Kenntnisse. Wir machen das für dich.
+              {t("process.text")}
             </p>
           </div>
 
@@ -641,23 +513,7 @@ const LieferdienstPage = () => {
             <div className="hidden md:block absolute top-[2.25rem] left-[16.5%] right-[16.5%] h-px bg-gradient-to-r from-transparent via-cyan-brand/25 to-transparent pointer-events-none" />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {[
-                {
-                  num: "01",
-                  title: "Kostenloses Gespräch",
-                  text: "Wir schauen uns deinen Betrieb an. Kein Druck. Keine Kosten.",
-                },
-                {
-                  num: "02",
-                  title: "Wir richten alles ein",
-                  text: "Shop, App und Kasse — alles fertig mit deinem Branding. Du musst nichts selbst machen.",
-                },
-                {
-                  num: "03",
-                  title: "Du lieferst los",
-                  text: "Dein Lieferdienst läuft. Wir sind weiter für dich da, wenn du uns brauchst.",
-                },
-              ].map((step, i) => (
+              {steps.map((step, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -682,15 +538,10 @@ const LieferdienstPage = () => {
       <section style={{ backgroundColor: "#0A264A" }} className="py-10 px-5 md:px-8 lg:px-16">
         <div className="max-w-5xl mx-auto">
           <p className="text-center text-white/40 text-xs uppercase tracking-widest font-bold mb-6">
-            700+ Gastro-Betriebe liefern schon mit Gastro Master
+            {t("trust.headline")}
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              { value: "700+",      label: "Betriebe in Deutschland und Österreich" },
-              { value: "5,0 ★",    label: "Google Bewertung" },
-              { value: "0 %",      label: "Provision — jede Bestellung gehört dir" },
-              { value: "Eigene App", label: "Im App Store — mit deinem Logo" },
-            ].map((item) => (
+            {trustItems.map((item) => (
               <div key={item.value}>
                 <p className="text-2xl md:text-3xl font-black text-white">{item.value}</p>
                 <p className="text-white/50 text-xs mt-1 leading-snug">{item.label}</p>
@@ -711,14 +562,13 @@ const LieferdienstPage = () => {
           >
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-white font-black text-xl tracking-tight">Epit Pay</span>
+                <span className="text-white font-black text-xl tracking-tight">{t("epitPay.title")}</span>
                 <span className="px-2.5 py-1 rounded-full bg-cyan-brand/20 text-cyan-brand text-[10px] font-bold uppercase tracking-widest">
-                  Bald verfügbar
+                  {t("epitPay.badge")}
                 </span>
               </div>
               <p className="text-white/70 text-sm leading-relaxed">
-                Bald brauchst du keinen extra Zahlungsanbieter mehr. Mit Epit Pay bekommst du
-                Bestellsystem und Zahlungsabwicklung aus einer Hand. Alles zusammen — einfach.
+                {t("epitPay.text")}
               </p>
             </div>
             <div className="shrink-0 w-12 h-12 rounded-xl bg-cyan-brand/10 border border-cyan-brand/20 flex items-center justify-center">
@@ -733,15 +583,15 @@ const LieferdienstPage = () => {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-black text-foreground mb-3">
-              Häufige Fragen zum eigenen Lieferdienst
+              {t("faq.title")}
             </h2>
             <p className="text-foreground/60 text-lg">
-              Einfache Antworten — damit du sofort loslegen kannst.
+              {t("faq.text")}
             </p>
           </div>
 
           <div className="space-y-3">
-            {FAQ_ITEMS.map((item, i) => (
+            {faqItems.map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 10 }}
@@ -774,7 +624,7 @@ const LieferdienstPage = () => {
                       className="overflow-hidden"
                     >
                       <div className="px-6 pb-6 text-foreground/65 text-sm leading-relaxed border-t border-border pt-4">
-                        {renderWithLinks(item.a)}
+                        {renderWithLinks(item.a, lp)}
                       </div>
                     </motion.div>
                   )}
@@ -801,7 +651,7 @@ const LieferdienstPage = () => {
             viewport={{ once: true }}
             className="inline-block px-3 py-1 rounded-full bg-cyan-brand/15 text-cyan-brand text-xs font-bold uppercase tracking-widest mb-6"
           >
-            Kostenlose Beratung
+            {t("cta.badge")}
           </motion.span>
 
           <motion.h2
@@ -810,7 +660,7 @@ const LieferdienstPage = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight"
           >
-            Wir helfen dir, deinen Lieferdienst zu starten.
+            {t("cta.title")}
           </motion.h2>
 
           <motion.p
@@ -820,9 +670,9 @@ const LieferdienstPage = () => {
             transition={{ delay: 0.1 }}
             className="text-white/60 text-lg leading-relaxed mb-10"
           >
-            Shop, App, Kasse — wir richten alles ein.
+            {t("cta.text1")}
             <br />
-            0 % Provision. Dein Branding. Deine Kunden.
+            {t("cta.text2")}
           </motion.p>
 
           <motion.div
@@ -832,10 +682,10 @@ const LieferdienstPage = () => {
             transition={{ delay: 0.2 }}
           >
             <Link
-              to="/kontakt"
+              to={lp("/kontakt")}
               className="bg-gradient-amber text-[#0A264A] font-bold px-12 py-5 rounded-xl text-lg inline-flex items-center gap-3 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
             >
-              Kostenloses Gespräch buchen
+              {t("cta.button")}
               <ArrowRight className="w-5 h-5" />
             </Link>
           </motion.div>
@@ -847,8 +697,8 @@ const LieferdienstPage = () => {
             transition={{ delay: 0.35 }}
             className="flex flex-wrap justify-center gap-6 mt-10 text-white/40 text-sm"
           >
-            {["0 % Provision", "700+ Betriebe", "5,0 ★ Google", "Persönlicher Support"].map((t) => (
-              <span key={t}>{t}</span>
+            {ctaPills.map((pill) => (
+              <span key={pill}>{pill}</span>
             ))}
           </motion.div>
         </div>
@@ -861,20 +711,30 @@ const LieferdienstPage = () => {
 
 // ─── Small Product Card ───────────────────────────────────────────────────────
 
-const SmallProductCard = ({ product }: { product: ProductCard }) => (
+const SmallProductCard = ({
+  product,
+  index,
+  lp,
+  t,
+}: {
+  product: { title: string; tagline: string; features?: string[] };
+  index: number;
+  lp: (p: string) => string;
+  t: (key: string) => string;
+}) => (
   <Link
-    to={product.href}
+    to={lp(cardHrefs[index])}
     className="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-cyan-brand/40 transition-all duration-300 block"
   >
     <div className="relative h-44 overflow-hidden">
       <img
-        src={product.img}
+        src={cardImages[index]}
         alt={product.title}
         className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-[#0A264A]/40 to-transparent" />
       <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white text-xs font-medium">
-        {product.icon}
+        {cardIcons[index]}
         <span className="ml-0.5">{product.title}</span>
       </div>
     </div>
@@ -893,7 +753,7 @@ const SmallProductCard = ({ product }: { product: ProductCard }) => (
         </ul>
       )}
       <div className="flex items-center gap-1.5 mt-3 text-cyan-brand text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-        {product.features ? "Alle Features ansehen" : "Mehr erfahren"} <ArrowRight className="w-3 h-3" />
+        {product.features ? t("products.moreFeatures") : t("products.moreInfo")} <ArrowRight className="w-3 h-3" />
       </div>
     </div>
   </Link>

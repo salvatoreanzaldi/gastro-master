@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { XCircle } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const ProblemSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   return (
     <section className="section-padding bg-background">
       <div className="container-tight">
@@ -14,16 +14,16 @@ const ProblemSection = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-6">
-              {t.problem.headline1}<br />
-              <span className="text-destructive">{t.problem.headline2}</span>
+              {t("problem.headline1")}<br />
+              <span className="text-destructive">{t("problem.headline2")}</span>
             </h2>
             <p className="text-muted-foreground text-lg mb-8 max-w-lg leading-relaxed">
-              {t.problem.sub}
+              {t("problem.sub")}
             </p>
           </motion.div>
 
           <div className="space-y-4">
-            {t.problem.items.map((text, i) => (
+            {(t("problem.items", { returnObjects: true }) as string[]).map((text, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, x: 30 }}

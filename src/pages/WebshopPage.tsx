@@ -6,6 +6,8 @@ import {
   Star, CreditCard, Globe, FileText, MapPin, Users, RefreshCw, Search, type LucideIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "@/components/LanguageLayout";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import CalculatorSection from "@/components/landing/CalculatorSection";
@@ -68,7 +70,7 @@ const faqs = [
   },
   {
     q: "Gibt es einen Vertrag mit Mindestlaufzeit?",
-    a: "Nein. Du kannst monatlich kündigen – ohne Mindestlaufzeit. Es gibt keine versteckten Gebühren und keine Provision pro Bestellung. Nur der feste Monatsbeitrag von 79 € (netto). Eine Übersicht aller Pakete findest du auf der [Preisseite](/preise).",
+    a: "Der Webshop ist monatlich kündbar mit 3 Monaten Kündigungsfrist. Es gibt keine versteckten Gebühren und keine Provision pro Bestellung. Nur der feste Monatsbeitrag ab 79 € (netto). Eine Übersicht aller Pakete findest du auf der [Preisseite](/preise).",
   },
   {
     q: "Was ist der Unterschied zwischen Webshop und App?",
@@ -290,22 +292,20 @@ const testimonials = [
   { initials: "GM", quote: "Wir haben durch die App viel mehr Kunden und Reichweite gewonnen.", name: "Georgios Madatsidis", restaurant: "Artemis Grill", logo: logoArtemis },
 ];
 
-// ─── How it Works ─────────────────────────────────────────────────────────────
-const steps = [
-  { num: "01", title: "Kostenlose Beratung", text: "Wir besprechen gemeinsam, wie dein Webshop aussehen soll: Name, Logo, Farben, Speisekarte, Liefergebiete und Zahlungsmethoden. Kein Technik-Vorwissen nötig." },
-  { num: "02", title: "Wir richten alles ein", text: "Unser Team konfiguriert deinen Webshop, richtet dein Branding ein und stellt sicher, dass alles reibungslos läuft. Du musst nichts selbst programmieren." },
-  { num: "03", title: "Live – Kunden bestellen direkt", text: "Nach wenigen Werktagen ist dein Webshop live. Kunden bestellen direkt über den Link – kein Download, 0 % Provision, 100 % dein Umsatz." },
-];
-
 // ─── Team CTA ─────────────────────────────────────────────────────────────────
-const teamMembers = [
-  { img: teamReneImg,      name: "René Ebert",         role: "Gründer & Geschäftsführer" },
-  { img: teamSalvatoreImg, name: "Salvatore Anzaldi",   role: "Head of Sales" },
-  { img: teamAndrejImg,    name: "Andrej Krutsch",      role: "Head of Operations" },
-  { img: teamMohammadImg,  name: "Mohammad Motakalemi", role: "Customer Success" },
-];
-
 const WebshopTeamCTA = () => {
+  const { t } = useTranslation("webshop");
+  const lp = useLangPath();
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+  const roles = arr("teamCta.roles") as string[];
+
+  const teamMembers = [
+    { img: teamReneImg,      name: "René Ebert",         role: roles[0] ?? "" },
+    { img: teamSalvatoreImg, name: "Salvatore Anzaldi",   role: roles[1] ?? "" },
+    { img: teamAndrejImg,    name: "Andrej Krutsch",      role: roles[2] ?? "" },
+    { img: teamMohammadImg,  name: "Mohammad Motakalemi", role: roles[3] ?? "" },
+  ];
+
   const [current, setCurrent] = useState(0);
   useEffect(() => {
     const t = setInterval(() => setCurrent(c => (c + 1) % teamMembers.length), 4000);
@@ -325,17 +325,19 @@ const WebshopTeamCTA = () => {
           {/* Left: Text */}
           <div className="p-10 md:p-14 flex flex-col justify-center">
             <span className="bg-[#0A264A]/[0.07] dark:bg-white/10 text-[#0A264A] dark:text-white text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full inline-block mb-8 w-fit">
-              Jetzt durchstarten
+              {t("teamCta.badge")}
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight mb-6">
-              Bereit für deinen eigenen<br />Online-Bestellshop?
+              {t("teamCta.headline").split("\n").map((line, i, a) => (
+                <React.Fragment key={i}>{line}{i < a.length - 1 && <br />}</React.Fragment>
+              ))}
             </h2>
-            <p className="font-bold text-[#0A264A] dark:text-white text-sm mb-3">Das erwartet dich:</p>
+            <p className="font-bold text-[#0A264A] dark:text-white text-sm mb-3">{t("teamCta.expectTitle")}</p>
             <p className="text-[#0A264A]/60 dark:text-white/55 text-base leading-relaxed mb-5">
-              In einem kostenlosen Erstgespräch entwickelt einer unserer Experten ein individuelles Konzept für deinen eigenen Online-Bestellshop – mit deinem Branding, deiner Speisekarte und 0 % Provision. Unverbindlich und komplett kostenlos.
+              {t("teamCta.expectText")}
             </p>
             <p className="text-[#0A264A]/40 dark:text-white/35 text-sm leading-relaxed mb-4">
-              Dein Webshop kann bereits in wenigen Werktagen live sein. Keine Programmierkenntnisse nötig – wir übernehmen alles.
+              {t("teamCta.expectSub")}
             </p>
             {/* Language pills */}
             <div className="flex flex-wrap gap-2 mb-10">
@@ -363,13 +365,13 @@ const WebshopTeamCTA = () => {
             </div>
 
             <motion.button
-              onClick={() => { window.location.href = "/kontakt"; }}
+              onClick={() => { window.location.href = lp("/kontakt"); }}
               whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2 }}
               className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group w-fit"
             >
-              Kostenlose Beratung anfragen
+              {t("teamCta.cta")}
               <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
             </motion.button>
           </div>
@@ -422,11 +424,29 @@ const WebshopTeamCTA = () => {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const WebshopPage = () => {
+  const { t } = useTranslation("webshop");
+  const lp = useLangPath();
+
   useSeoMeta({
-    title: "Bestellsystem Gastronomie — eigener Webshop ab 79 € | Gastro Master",
-    description: "Digitales Bestellsystem für die Gastronomie ab 79 €/Monat — 0 % Provision, eigenes Branding. Unabhängig von Lieferando. Jetzt kostenlos beraten lassen.",
+    title: t("seo.title"),
+    description: t("seo.description"),
     canonical: "https://gastro-master.de/produkte/webshop",
   });
+
+  // Safe array extraction — returns [] if namespace not yet loaded
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+
+  const tFaqs = arr("faq.items") as { q: string; a: string }[];
+  const tFeatures = arr("features.cards") as { title: string; text: string }[];
+  const tSteps = arr("steps.items") as { num: string; title: string; text: string }[];
+  const tStats = arr("seo_section.stats") as { stat: string; desc: string }[];
+  const tSeoBullets = arr("seo_section.bullets") as { title: string; text: string }[];
+  const tTrustPills = arr("hero.trustPills") as string[];
+  const tCompPlatformItems = arr("compare.platformItems") as string[];
+  const tCompGmItems = arr("compare.gmItems") as string[];
+  const tPricingFeatures = arr("pricing.mainPackage.features") as string[];
+  const tPricingAddons = arr("pricing.addons") as any[];
+  const tTestStats = arr("testimonials.stats") as { value: string; label: string }[];
 
   return (
     <div className="min-h-screen bg-[#0A264A]">
@@ -446,7 +466,7 @@ const WebshopPage = () => {
             transition={{ duration: 0.5 }}
             className="inline-block px-3 py-1 rounded-full bg-cyan-brand/15 text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5"
           >
-            Online-Bestellshop für Gastronomie
+            {t("hero.badge")}
           </motion.span>
 
           <motion.h1
@@ -455,8 +475,8 @@ const WebshopPage = () => {
             transition={{ delay: 0.1, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.05] tracking-tight"
           >
-            Dein Bestellsystem für die Gastronomie –{" "}
-            <span className="text-gradient-brand">ohne App, ohne Provision.</span>
+            {t("hero.h1")}{" "}
+            <span className="text-gradient-brand">{t("hero.h1Highlight")}</span>
           </motion.h1>
         </div>
 
@@ -482,28 +502,23 @@ const WebshopPage = () => {
           className="max-w-2xl mx-auto px-5 text-center relative z-10 pt-8 md:pt-10 pb-4 flex flex-col items-center gap-6"
         >
           <p className="text-lg md:text-xl text-white/60 leading-relaxed">
-            Ab 79 € pro Monat. Sofort online. Kein App-Download. Eigene Domain. Deine Kunden bestellen direkt – 0 % Provision, 100 % dein Umsatz.
+            {t("hero.subtitle")}
           </p>
 
           <motion.button
-            onClick={() => { window.location.href = "/kontakt"; }}
+            onClick={() => { window.location.href = lp("/kontakt"); }}
             whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
             whileTap={{ scale: 0.97 }}
             transition={{ duration: 0.2 }}
             className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group"
           >
-            Kostenlose Beratung
+            {t("hero.cta")}
             <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
           </motion.button>
 
           {/* Trust Pills */}
           <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 pt-1">
-            {[
-              "700+ aktive Kunden",
-              "Kein Einrichtungsaufwand",
-              "Ab 79 € / Monat",
-              "Kein App-Download nötig",
-            ].map(item => (
+            {tTrustPills.map(item => (
               <span key={item} className="flex items-center gap-1.5 text-white/40 text-sm">
                 <CheckCircle2 className="w-3.5 h-3.5 text-cyan-brand flex-shrink-0" strokeWidth={2} />
                 {item}
@@ -523,8 +538,8 @@ const WebshopPage = () => {
             transition={{ delay: 0, duration: 0.5 }}
             className="text-center"
           >
-            <p className="text-2xl md:text-3xl font-black text-[#0A264A] dark:text-white mb-1.5 leading-none">0 %</p>
-            <p className="text-[#0A264A]/45 dark:text-white/40 text-sm leading-snug">Provision auf Bestellungen</p>
+            <p className="text-2xl md:text-3xl font-black text-[#0A264A] dark:text-white mb-1.5 leading-none">{t("trustBar.stat1Value")}</p>
+            <p className="text-[#0A264A]/45 dark:text-white/40 text-sm leading-snug">{t("trustBar.stat1Label")}</p>
           </motion.div>
 
           <motion.div
@@ -537,7 +552,7 @@ const WebshopPage = () => {
             <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-cyan-brand/10 flex items-center justify-center">
               <Globe className="w-7 h-7 md:w-8 md:h-8 text-cyan-brand" strokeWidth={1.5} />
             </div>
-            <p className="text-[#0A264A]/45 dark:text-white/40 text-sm leading-snug">Kein App-Download nötig</p>
+            <p className="text-[#0A264A]/45 dark:text-white/40 text-sm leading-snug">{t("trustBar.stat2Label")}</p>
           </motion.div>
 
           <motion.div
@@ -547,8 +562,8 @@ const WebshopPage = () => {
             transition={{ delay: 0.14, duration: 0.5 }}
             className="text-center"
           >
-            <p className="text-2xl md:text-3xl font-black text-[#0A264A] dark:text-white mb-1.5 leading-none">700+</p>
-            <p className="text-[#0A264A]/45 dark:text-white/40 text-sm leading-snug">Aktive Kunden</p>
+            <p className="text-2xl md:text-3xl font-black text-[#0A264A] dark:text-white mb-1.5 leading-none">{t("trustBar.stat3Value")}</p>
+            <p className="text-[#0A264A]/45 dark:text-white/40 text-sm leading-snug">{t("trustBar.stat3Label")}</p>
           </motion.div>
         </div>
       </section>
@@ -562,12 +577,12 @@ const WebshopPage = () => {
             viewport={{ once: true }}
             className="mb-8 md:mb-10 max-w-2xl"
           >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Funktionsumfang</span>
+            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("features.badge")}</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-5">
-              Was dein Gastro Master Webshop kann.
+              {t("features.headline")}
             </h2>
             <p className="text-[#0A264A]/55 dark:text-white/50 text-lg leading-relaxed">
-              Dein Webshop – mit deinem Namen, deinem Branding und den Funktionen, die Gastronomen im Alltag wirklich brauchen. Kein App-Download, direkt im Browser.
+              {t("features.sub")}
             </p>
           </motion.div>
 
@@ -598,9 +613,9 @@ const WebshopPage = () => {
                 <div className="p-5">
                   <div className="flex items-center gap-2 mb-2">
                     <f.icon className="w-4 h-4 text-cyan-brand flex-shrink-0" strokeWidth={2} />
-                    <h3 className="text-[#0A264A] dark:text-white font-bold text-sm leading-snug">{f.title}</h3>
+                    <h3 className="text-[#0A264A] dark:text-white font-bold text-sm leading-snug">{tFeatures[i]?.title || f.title}</h3>
                   </div>
-                  <p className="text-[#0A264A]/55 dark:text-white/45 text-sm leading-relaxed">{f.text}</p>
+                  <p className="text-[#0A264A]/55 dark:text-white/45 text-sm leading-relaxed">{tFeatures[i]?.text || f.text}</p>
                 </div>
               </motion.div>
             ))}
@@ -617,24 +632,19 @@ const WebshopPage = () => {
             viewport={{ once: true }}
             className="max-w-2xl mb-14 md:mb-20"
           >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Online-Sichtbarkeit</span>
+            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("seo_section.badge")}</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-5">
-              Wer nicht online ist, verliert jeden Tag Umsatz.
+              {t("seo_section.headline")}
             </h2>
             <p className="text-white/60 text-lg leading-relaxed">
-              9 von 10 Kunden suchen ein Restaurant zuerst bei Google, bevor sie bestellen. Restaurants ohne eigene Bestellseite sind für diese Kunden unsichtbar – und verlieren täglich Bestellungen an Wettbewerber, die online präsent sind. Mit deinem Gastro Master Webshop änderst du das. Wer zusätzlich einen{" "}
-              <Link to="/loesungen/lieferservice-gruenden" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">eigenen Lieferdienst aufbauen</Link>{" "}
-              möchte, findet in unserem Ratgeber alle Schritte.
+              {t("seo_section.sub")}{" "}
+              <Link to={lp("/loesungen/lieferservice-gruenden")} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{t("seo_section.linkText")}</Link>
             </p>
           </motion.div>
 
           {/* 3 Stats */}
           <div className="grid md:grid-cols-3 gap-5 mb-16">
-            {[
-              { stat: "91 %",   desc: "der Kunden suchen ein Restaurant zuerst bei Google, bevor sie bestellen" },
-              { stat: "+ 40 %", desc: "mehr Bestellungen erzielen Restaurants mit eigener Online-Bestellseite im Vergleich zu solchen ohne" },
-              { stat: "28 %",   desc: "aller Google-Klicks entfallen auf den ersten Treffer – dein SEO-optimierter Webshop hilft dir dorthin" },
-            ].map((item, i) => (
+            {tStats.map((item, i) => (
               <motion.div
                 key={item.stat}
                 initial={{ opacity: 0, y: 24 }}
@@ -650,30 +660,14 @@ const WebshopPage = () => {
           </div>
 
           <p className="text-white/25 text-xs italic text-center mt-2 mb-12">
-            Quellen: Think with Google Consumer Insights, Statista Online Food Delivery Outlook Deutschland 2025
+            {t("seo_section.sources")}
           </p>
 
           {/* 3 Feature Bullets */}
           <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                Icon: Search,
-                title: "SEO-optimierte Bestellseite",
-                text: "Dein Webshop ist von Google vollständig indexierbar – mit Titel-Tags, Meta-Beschreibungen und strukturierten Daten. Kunden finden dich direkt über die Suchmaschine.",
-              },
-              {
-                Icon: MapPin,
-                title: "Google Business Profile",
-                text: "Wir helfen dir, deinen Google-Unternehmenseintrag zu optimieren, damit Kunden aus der Google-Suche direkt auf deinen Bestellshop klicken können.",
-              },
-              {
-                Icon: Globe,
-                title: "Eigene Domain",
-                text: "Deine Bestellseite unter deiner eigenen Adresse – z.B. pizza-xyz.de/bestellen. Eine eigene Domain steigert das Vertrauen deiner Kunden und verbessert dein Google-Ranking.",
-              },
-            ].map((item, i) => (
+            {[Search, MapPin, Globe].map((BulletIcon, i) => (
               <motion.div
-                key={item.title}
+                key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -681,11 +675,11 @@ const WebshopPage = () => {
                 className="flex flex-col gap-4"
               >
                 <div className="w-12 h-12 rounded-xl bg-cyan-brand/15 flex items-center justify-center flex-shrink-0">
-                  <item.Icon className="w-6 h-6 text-cyan-brand" strokeWidth={1.75} />
+                  <BulletIcon className="w-6 h-6 text-cyan-brand" strokeWidth={1.75} />
                 </div>
                 <div>
-                  <h3 className="text-white font-bold text-lg mb-2">{item.title}</h3>
-                  <p className="text-white/55 text-sm leading-relaxed">{item.text}</p>
+                  <h3 className="text-white font-bold text-lg mb-2">{tSeoBullets[i]?.title}</h3>
+                  <p className="text-white/55 text-sm leading-relaxed">{tSeoBullets[i]?.text}</p>
                 </div>
               </motion.div>
             ))}
@@ -699,13 +693,13 @@ const WebshopPage = () => {
             className="mt-14"
           >
             <motion.button
-              onClick={() => { window.location.href = "/kontakt"; }}
+              onClick={() => { window.location.href = lp("/kontakt"); }}
               whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2 }}
               className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group"
             >
-              Jetzt Sichtbarkeit steigern
+              {t("seo_section.cta")}
               <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
             </motion.button>
           </motion.div>
@@ -724,12 +718,12 @@ const WebshopPage = () => {
             viewport={{ once: true }}
             className="text-center mb-8 md:mb-10"
           >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Vergleich</span>
+            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("compare.badge")}</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight">
-              Alle Vorteile auf einen Blick.
+              {t("compare.headline")}
             </h2>
             <p className="text-[#0A264A]/55 dark:text-white/45 mt-5 text-lg leading-relaxed max-w-2xl mx-auto">
-              Wer über Lieferando, Wolt oder Uber Eats verkauft, zahlt bis zu 30 % Provision – jeden Monat, automatisch, ohne Verhandlung. Mit Gastro Master behältst du 100 % deines Umsatzes.
+              {t("compare.sub")}
             </p>
           </motion.div>
 
@@ -746,16 +740,10 @@ const WebshopPage = () => {
             >
               <div className="absolute -top-16 -left-16 w-48 h-48 bg-red-500/10 dark:bg-red-500/15 blur-[60px] rounded-full pointer-events-none" />
               <h3 className="text-xl md:text-2xl font-black text-[#0A264A] dark:text-white mb-5 relative z-10">
-                Andere Lieferplattformen
+                {t("compare.platformTitle")}
               </h3>
               <ul className="space-y-3 relative z-10">
-                {[
-                  "Lange Vertragsbindung – oft 12 bis 24 Monate",
-                  "14–30 % Gewinnverlust durch Provisionen pro Bestellung",
-                  "Komplizierter Support, häufig im Ausland",
-                  "Vollständig abhängig von Plattform-Regeln und Preisen",
-                  "Kein Google-SEO-Vorteil für dein Restaurant",
-                ].map((item, i) => (
+                {tCompPlatformItems.map((item, i) => (
                   <motion.li
                     key={i}
                     initial={{ opacity: 0, x: -12 }}
@@ -785,16 +773,10 @@ const WebshopPage = () => {
             >
               <div className="absolute -top-16 -right-16 w-48 h-48 bg-emerald-500/10 dark:bg-emerald-500/12 blur-[60px] rounded-full pointer-events-none" />
               <h3 className="text-xl md:text-2xl font-black text-[#0A264A] dark:text-white mb-5 relative z-10">
-                Mit Gastro Master Webshop
+                {t("compare.gmTitle")}
               </h3>
               <ul className="space-y-3 relative z-10">
-                {[
-                  "Monatliche Kündigung möglich – keine Mindestlaufzeit",
-                  "0 % Provision auf alle Bestellungen – du behältst deinen Umsatz",
-                  "100 % unabhängig – volle Kontrolle über dein System und deine Preise",
-                  "Support direkt in Deutschland – schnell und persönlich",
-                  "SEO-optimiert – dein Webshop wird von Google gefunden",
-                ].map((item, i) => (
+                {tCompGmItems.map((item, i) => (
                   <motion.li
                     key={i}
                     initial={{ opacity: 0, x: 12 }}
@@ -839,9 +821,9 @@ const WebshopPage = () => {
             viewport={{ once: true }}
             className="text-center mb-16 md:mb-20"
           >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Social Proof</span>
+            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("testimonials.badge")}</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
-              700+ Gastronomen, die bereits direkt online bestellen lassen.
+              {t("testimonials.headline")}
             </h2>
           </motion.div>
 
@@ -876,12 +858,7 @@ const WebshopPage = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { value: "700+",      label: "aktive Gastro Master Kunden" },
-              { value: "0 %",       label: "Provision auf Direktbestellungen" },
-              { value: "3–7 Tage",  label: "bis der Webshop live ist" },
-              { value: "79 € / Mo", label: "Online-Bestellshop, netto" },
-            ].map((s, i) => (
+            {tTestStats.map((s, i) => (
               <motion.div
                 key={s.label}
                 initial={{ opacity: 0, y: 14 }}
@@ -907,14 +884,13 @@ const WebshopPage = () => {
             viewport={{ once: true }}
             className="mb-7 max-w-2xl"
           >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Transparente Preise</span>
+            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("pricing.badge")}</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-5">
-              Alles inklusive. Keine versteckten Kosten.
+              {t("pricing.headline")}
             </h2>
             <p className="text-[#0A264A]/55 dark:text-white/50 text-lg leading-relaxed">
-              Ein fester Monatsbeitrag – keine Provision, keine Mindestlaufzeit, keine Abhängigkeit. Für den Tischbetrieb ergänzt das{" "}
-              <Link to="/produkte/kassensystem" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">TSE-konforme Kassensystem</Link>{" "}
-              deinen Webshop perfekt.
+              {t("pricing.sub")}{" "}
+              <Link to={lp("/produkte/kassensystem")} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{t("pricing.kasseLinkText")}</Link>
             </p>
           </motion.div>
 
@@ -928,25 +904,17 @@ const WebshopPage = () => {
           >
             <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-12">
               <div className="md:w-64 flex-shrink-0">
-                <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">Hauptpaket</span>
-                <h3 className="text-white font-black text-2xl mb-3">Online-Bestellshop</h3>
+                <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">{t("pricing.mainPackage.badge")}</span>
+                <h3 className="text-white font-black text-2xl mb-3">{t("pricing.mainPackage.title")}</h3>
                 <div className="flex items-end gap-2">
-                  <span className="text-[#ED8400] font-black text-5xl leading-none">79 €</span>
-                  <span className="text-white/40 text-sm mb-1">/ Monat (netto)</span>
+                  <span className="text-[#ED8400] font-black text-4xl md:text-5xl leading-none whitespace-nowrap">ab 79 €</span>
+                  <span className="text-white/40 text-sm mb-1">{t("pricing.mainPackage.priceLabel")}</span>
                 </div>
               </div>
 
               <div className="flex-1">
                 <ul className="space-y-2.5">
-                  {[
-                    "Eigene Bestellseite (deine Domain)",
-                    "Eigenes Branding (Logo, Farben, Name)",
-                    "Alle gängigen Zahlungsarten",
-                    "Lieferung & Abholung",
-                    "Multi-Standort & Filialen",
-                    "SEO-optimiert für Google",
-                    "Support inklusive",
-                  ].map(f => (
+                  {tPricingFeatures.map(f => (
                     <li key={f} className="flex items-center gap-2 text-white/75 text-sm">
                       <CheckCircle2 className="w-4 h-4 text-cyan-brand flex-shrink-0" strokeWidth={2} />
                       {f}
@@ -957,7 +925,7 @@ const WebshopPage = () => {
 
               <div className="flex-shrink-0">
                 <motion.button
-                  onClick={() => { window.location.href = "/kontakt"; }}
+                  onClick={() => { window.location.href = lp("/kontakt"); }}
                   whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ duration: 0.2 }}
@@ -988,7 +956,7 @@ const WebshopPage = () => {
                 Upgrade auf die vollständige App-Lösung: deine eigene App erscheint unter deinem Namen im Apple App Store und Google Play Store. Gemeinsam mit dem Webshop für 149 € / Monat.
               </p>
               <button
-                onClick={() => { window.location.href = "/produkte/bestellapp"; }}
+                onClick={() => { window.location.href = lp("/produkte/bestellapp"); }}
                 className="mt-5 text-cyan-brand text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all duration-200"
               >
                 Mehr erfahren <ArrowRight className="w-4 h-4" />
@@ -1005,14 +973,14 @@ const WebshopPage = () => {
               <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">Add-on</span>
               <h3 className="text-[#0A264A] dark:text-white font-black text-lg mb-2">Professionelle Website</h3>
               <div className="my-3">
-                <span className="text-[#0A264A] dark:text-white font-black text-2xl">+ 49 €</span>
+                <span className="text-[#0A264A] dark:text-white font-black text-2xl">ab 49 €</span>
                 <span className="text-[#0A264A]/40 dark:text-white/40 text-sm"> / Monat</span>
               </div>
               <p className="text-[#0A264A]/55 dark:text-white/50 text-sm leading-relaxed flex-1">
                 Dein digitales Aushängeschild – eine eigenständige Restaurant-Website mit Bildergalerie, Kontaktformular und Google Maps. Informiert Besucher, während der Webshop Bestellungen entgegennimmt.
               </p>
               <button
-                onClick={() => { window.location.href = "/produkte/webseite"; }}
+                onClick={() => { window.location.href = lp("/produkte/webseite"); }}
                 className="mt-5 text-cyan-brand text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all duration-200"
               >
                 Mehr erfahren <ArrowRight className="w-4 h-4" />
@@ -1054,7 +1022,7 @@ const WebshopPage = () => {
                 ))}
               </div>
               <button
-                onClick={() => { window.location.href = "/produkte/transaktionsumlage"; }}
+                onClick={() => { window.location.href = lp("/produkte/transaktionsumlage"); }}
                 className="text-cyan-brand text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all duration-200"
               >
                 Mehr erfahren <ArrowRight className="w-4 h-4" />
@@ -1073,16 +1041,16 @@ const WebshopPage = () => {
             viewport={{ once: true }}
             className="text-center mb-20 md:mb-28"
           >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">So einfach geht's</span>
+            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("steps.badge")} geht's</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight">
-              In 3 Schritten zu deiner eigenen Bestellseite.
+              {t("steps.headline")}
             </h2>
             <p className="text-[#0A264A]/55 dark:text-white/45 mt-5 text-lg max-w-xl mx-auto leading-relaxed">
-              Du musst kein Entwickler sein. Wir übernehmen alles – du gibst die Richtung vor.
+              {t("steps.sub")}
             </p>
           </motion.div>
           <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-            {steps.map((step, i) => (
+            {tSteps.map((step, i) => (
               <motion.div
                 key={step.num}
                 initial={{ opacity: 0, y: 28 }}
@@ -1117,7 +1085,7 @@ const WebshopPage = () => {
                 Weitere Fragen? Ruf uns an oder schreib uns – wir antworten innerhalb von 24 Stunden.
               </p>
               <button
-                onClick={() => { window.location.href = "/kontakt"; }}
+                onClick={() => { window.location.href = lp("/kontakt"); }}
                 className="mt-8 text-cyan-brand text-sm font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all"
               >
                 Direkt anfragen <ArrowRight className="w-4 h-4" />
@@ -1129,7 +1097,7 @@ const WebshopPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              {faqs.map(faq => <FaqItem key={faq.q} {...faq} />)}
+              {tFaqs.map(faq => <FaqItem key={faq.q} {...faq} />)}
             </motion.div>
           </div>
         </div>

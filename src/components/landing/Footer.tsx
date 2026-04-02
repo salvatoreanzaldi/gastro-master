@@ -1,6 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import logoWide from "@/assets/logos/logo-gastro-master-wide.png";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
+
+const prodRoutes = [
+  "/produkte/webshop",
+  "/produkte/app",
+  "/produkte/webseite",
+  "/produkte/kassensystem",
+  "/produkte/transaktionsumlage",
+];
+
+const loesRoutes = [
+  "/loesungen/lieferservice-gruenden",
+  "/loesungen/franchise",
+  "/loesungen/restaurant",
+  "/loesungen/lieferdienst",
+  "/loesungen/cafe-baeckerei",
+  "/loesungen/ghost-kitchen",
+];
 
 const socialLinks = [
   {
@@ -34,7 +51,10 @@ const socialLinks = [
 ];
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
+  const { lang } = useParams<{ lang: string }>();
+  const currentLang = lang || "de";
+  const lp = (path: string) => `/${currentLang}${path}`;
   return (
     <footer className="bg-gradient-navy border-t border-primary-foreground/10 px-5 md:px-8 lg:px-16 py-12">
       <div className="container-tight">
@@ -44,7 +64,7 @@ const Footer = () => {
 
           {/* Brand + Social */}
           <div>
-            <Link to="/" className="inline-flex items-center mb-5">
+            <Link to={lp("/")} className="inline-flex items-center mb-5">
               <img src={logoWide} alt="Gastro Master" className="h-7 md:h-8 w-auto" />
             </Link>
             <div className="flex items-center gap-3">
@@ -65,18 +85,12 @@ const Footer = () => {
 
           {/* Produkte */}
           <div>
-            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">Produkte</h4>
+            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">{t('footer.produkte')}</h4>
             <ul className="space-y-2.5">
-              {[
-                { label: "Online Shop",          to: "/produkte/webshop"            },
-                { label: "App System",           to: "/produkte/app"                },
-                { label: "Webseite",             to: "/produkte/webseite"           },
-                { label: "Kassensystem",         to: "/produkte/kassensystem"       },
-                { label: "Transaktions-Umlage",  to: "/produkte/transaktionsumlage" },
-              ].map(item => (
-                <li key={item.to}>
-                  <Link to={item.to} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                    {item.label}
+              {prodRoutes.map((to, i) => (
+                <li key={to}>
+                  <Link to={lp(to)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                    {t(`nav.prodItems.${i}.label`)}
                   </Link>
                 </li>
               ))}
@@ -85,19 +99,12 @@ const Footer = () => {
 
           {/* Lösungen */}
           <div>
-            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">Lösungen</h4>
+            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">{t('footer.loesungen')}</h4>
             <ul className="space-y-2.5">
-              {[
-                { label: "Lieferdienst gründen", to: "/loesungen/lieferservice-gruenden" },
-                { label: "Franchise",            to: "/loesungen/franchise"              },
-                { label: "Restaurant",           to: "/loesungen/restaurant"             },
-                { label: "Lieferdienst",         to: "/loesungen/lieferdienst"           },
-                { label: "Café & Bäckerei",      to: "/loesungen/cafe-baeckerei"         },
-                { label: "Ghost Kitchen",        to: "/loesungen/ghost-kitchen"          },
-              ].map(item => (
-                <li key={item.to}>
-                  <Link to={item.to} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                    {item.label}
+              {loesRoutes.map((to, i) => (
+                <li key={to}>
+                  <Link to={lp(to)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                    {t(`nav.loesItems.${i}.label`)}
                   </Link>
                 </li>
               ))}
@@ -106,41 +113,41 @@ const Footer = () => {
 
           {/* Weiteres */}
           <div>
-            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">Weiteres</h4>
+            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">{t('footer.weiteres')}</h4>
             <ul className="space-y-2.5">
               <li>
-                <Link to="/impressum" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t.footer.impressum}
+                <Link to={lp("/impressum")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t('footer.impressum')}
                 </Link>
               </li>
               <li>
-                <Link to="/datenschutz" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t.footer.datenschutz}
+                <Link to={lp("/datenschutz")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t('footer.datenschutz')}
                 </Link>
               </li>
               <li>
-                <Link to="/agb" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t.footer.agb}
+                <Link to={lp("/agb")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t('footer.agb')}
                 </Link>
               </li>
               <li>
-                <Link to="/kontakt" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t.footer.kontakt}
+                <Link to={lp("/kontakt")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t('footer.kontakt')}
                 </Link>
               </li>
               <li>
-                <Link to="/uber-uns" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  Über uns
+                <Link to={lp("/uber-uns")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t('footer.ueberUns')}
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                <Link to={lp("/faq")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link to="/downloads" className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t.footer.downloads}
+                <Link to={lp("/downloads")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {t('footer.downloads')}
                 </Link>
               </li>
             </ul>
@@ -149,7 +156,7 @@ const Footer = () => {
 
         {/* Bottom bar */}
         <div className="pt-6 border-t border-primary-foreground/10 text-center text-primary-foreground/30 text-sm">
-          © {new Date().getFullYear()} Gastro Master. {t.footer.rights}
+          © {new Date().getFullYear()} Gastro Master. {t('footer.rights')}
         </div>
       </div>
     </footer>

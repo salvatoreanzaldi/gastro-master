@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const YOUTUBE_IDS = ["JkkVyIFewO0", "Qv-YDj9gjPk", "Zx_UJJjQTso"];
 
 const VideoTestimonialSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
 
-  const testimonials = t.video.items.map((item, i) => ({
+  const testimonials = (t("video.items", { returnObjects: true }) as any[]).map((item: any, i: number) => ({
     title: item.name,
     subtitle: item.person,
     quote: item.quote,
@@ -27,13 +27,13 @@ const VideoTestimonialSection = () => {
           className="text-center mb-12"
         >
           <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">
-            {t.video.badge}
+            {t("video.badge")}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-primary-foreground mb-4">
-            {t.video.headline}
+            {t("video.headline")}
           </h2>
           <p className="text-primary-foreground/60 text-lg max-w-xl mx-auto">
-            {t.video.sub}
+            {t("video.sub")}
           </p>
         </motion.div>
 

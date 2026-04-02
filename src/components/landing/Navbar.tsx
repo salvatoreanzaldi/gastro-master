@@ -1,42 +1,55 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowRight, Menu, X, Moon, Sun, ChevronDown,
   ShoppingCart, Smartphone, Globe, Monitor, Percent,
   Truck, Store, Coffee, UtensilsCrossed, Building2, Ghost,
 } from "lucide-react";
 import logo from "@/assets/logos/logo-gastro-master-round.png";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { LangCode } from "@/lib/translations";
+import { useTranslation } from "react-i18next";
+import { SUPPORTED_LANGS, type SupportedLang } from "@/i18n";
 
-const prodItems = [
-  { label: "Online Shop",         desc: "0% Provision, eigene Domain",       to: "/produkte/webshop",            icon: ShoppingCart },
-  { label: "App System",          desc: "iOS & Android App",                 to: "/produkte/app",                icon: Smartphone   },
-  { label: "Webseite",            desc: "Professionell & schnell",           to: "/produkte/webseite",           icon: Globe        },
-  { label: "Kassensystem",        desc: "TSE-konform, Cloud-POS",            to: "/produkte/kassensystem",       icon: Monitor      },
-  { label: "Transaktions-Umlage", desc: "Gebühren transparent weitergeben", to: "/produkte/transaktionsumlage", icon: Percent      },
+const prodRoutes = [
+  { to: "/produkte/webshop",            icon: ShoppingCart },
+  { to: "/produkte/app",                icon: Smartphone   },
+  { to: "/produkte/webseite",           icon: Globe        },
+  { to: "/produkte/kassensystem",       icon: Monitor      },
+  { to: "/produkte/transaktionsumlage", icon: Percent      },
 ];
 
-const loesungenItems = [
-  { label: "Lieferdienst gründen", desc: "Eigenen Service aufbauen",     to: "/loesungen/lieferservice-gruenden", icon: Truck          },
-  { label: "Franchise",            desc: "Deine Marke, dein System",     to: "/loesungen/franchise",              icon: Building2      },
-  { label: "Restaurant",           desc: "Tisch, Bar & Kasse vereint",   to: "/loesungen/restaurant",             icon: UtensilsCrossed},
-  { label: "Lieferdienst",         desc: "Fahrer-App & Liefergebiete",   to: "/loesungen/lieferdienst",           icon: Store          },
-  { label: "Café & Bäckerei",      desc: "Einfach & schnell starten",    to: "/loesungen/cafe-baeckerei",         icon: Coffee         },
-  { label: "Ghost Kitchen",        desc: "Multi-Brand, 0 % Provision",  to: "/loesungen/ghost-kitchen",          icon: Ghost          },
+const loesRoutes = [
+  { to: "/loesungen/lieferservice-gruenden", icon: Truck          },
+  { to: "/loesungen/franchise",              icon: Building2      },
+  { to: "/loesungen/restaurant",             icon: UtensilsCrossed},
+  { to: "/loesungen/lieferdienst",           icon: Store          },
+  { to: "/loesungen/cafe-baeckerei",         icon: Coffee         },
+  { to: "/loesungen/ghost-kitchen",          icon: Ghost          },
 ];
 
-const languages: { code: LangCode; label: string; flag: string }[] = [
+const languages: { code: SupportedLang; label: string; flag: string }[] = [
   { code: "de", label: "Deutsch", flag: "🇩🇪" },
   { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "it", label: "Italiano", flag: "🇮🇹" },
+  { code: "fa", label: "فارسی", flag: "🇮🇷" },
+  { code: "si", label: "සිංහල", flag: "🇱🇰" },
 ];
 
 const Navbar = () => {
-  const { t, lang, setLang } = useLanguage();
+  const { t, i18n } = useTranslation("common");
+  const lang = (i18n.language || "de") as SupportedLang;
+  const { lang: urlLang } = useParams<{ lang: string }>();
+  const currentLang = urlLang || lang;
+  const lp = (path: string) => `/${currentLang}${path}`;
+
+  const prodItemsData = t("nav.prodItems", { returnObjects: true }) as { label: string; desc: string }[];
+  const loesItemsData = t("nav.loesItems", { returnObjects: true }) as { label: string; desc: string }[];
+  const prodItems = prodRoutes.map((r, i) => ({ ...r, label: prodItemsData[i]?.label || "", desc: prodItemsData[i]?.desc || "" }));
+  const loesungenItems = loesRoutes.map((r, i) => ({ ...r, label: loesItemsData[i]?.label || "", desc: loesItemsData[i]?.desc || "" }));
   const { pathname } = useLocation();
   const navigate = useNavigate();
   // Helle Seiten ohne Hero-Hintergrund brauchen immer die sichtbare (aktive) Navbar
-  const alwaysVisible = ["/impressum", "/datenschutz", "/agb", "/kontakt", "/preise"].includes(pathname) || pathname.startsWith("/downloads");
+  const pathWithoutLang = pathname.replace(/^\/[a-z]{2}/, "");
+  const alwaysVisible = ["/impressum", "/datenschutz", "/agb", "/kontakt", "/preise"].includes(pathWithoutLang) || pathWithoutLang.startsWith("/downloads");
   const [scrolled, setScrolled]             = useState(false);
   const active = scrolled;          // steuert schmal/weit
   const visibleBg = alwaysVisible || scrolled; // steuert Hintergrund-Sichtbarkeit
@@ -75,10 +88,16 @@ const Navbar = () => {
 
   const scrollToForm = () => {
     setMobileOpen(false);
-    navigate("/kontakt");
+    navigate(lp("/kontakt"));
   };
 
-  const currentLang = languages.find(l => l.code === lang)!;
+  const switchLanguage = (code: SupportedLang) => {
+    const restPath = pathname.replace(/^\/[a-z]{2}/, "") || "/";
+    navigate(`/${code}${restPath === "/" ? "" : restPath}`);
+    setLangOpen(false);
+  };
+
+  const currentLangObj = languages.find(l => l.code === currentLang) || languages[0];
 
   const DropdownMenu = ({ items, onClose }: { items: typeof prodItems; onClose: () => void }) => (
     <div className="bg-surface-navy/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl shadow-black/40 overflow-hidden py-2">
@@ -87,7 +106,7 @@ const Navbar = () => {
         return (
           <Link
             key={item.to}
-            to={item.to}
+            to={lp(item.to)}
             onClick={onClose}
             className="flex items-start gap-3 px-4 py-3 hover:bg-white/[0.06] transition-colors"
           >
@@ -113,7 +132,7 @@ const Navbar = () => {
       <div className="flex items-center justify-between px-4 md:px-5">
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+        <Link to={lp("/")} className="flex items-center gap-2.5 flex-shrink-0">
           <div className="w-9 h-9 flex-shrink-0 rounded-full overflow-hidden bg-white/10 ring-1 ring-primary-foreground/15">
             <img src={logo} alt="Gastro Master" className="w-full h-full object-contain" />
           </div>
@@ -130,9 +149,9 @@ const Navbar = () => {
             onMouseEnter={() => { if (prodCloseTimer.current) clearTimeout(prodCloseTimer.current); setProdDropOpen(true); }}
             onMouseLeave={() => { prodCloseTimer.current = setTimeout(() => setProdDropOpen(false), 150); }}
           >
-            <Link to="/produkte" onClick={() => setProdDropOpen(false)}
+            <Link to={lp("/produkte")} onClick={() => setProdDropOpen(false)}
               className="flex items-center gap-1 text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
-              {t.nav.produkte}
+              {t('nav.produkte')}
               <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${prodDropOpen ? "rotate-180" : ""}`} />
             </Link>
             {prodDropOpen && (
@@ -149,9 +168,9 @@ const Navbar = () => {
             onMouseEnter={() => { if (loesCloseTimer.current) clearTimeout(loesCloseTimer.current); setLoesDropOpen(true); }}
             onMouseLeave={() => { loesCloseTimer.current = setTimeout(() => setLoesDropOpen(false), 150); }}
           >
-            <Link to="/loesungen" onClick={() => setLoesDropOpen(false)}
+            <Link to={lp("/loesungen")} onClick={() => setLoesDropOpen(false)}
               className="flex items-center gap-1 text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
-              Lösungen
+              {t('nav.loesungen')}
               <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${loesDropOpen ? "rotate-180" : ""}`} />
             </Link>
             {loesDropOpen && (
@@ -162,13 +181,13 @@ const Navbar = () => {
           </div>
 
           {/* Preise page link */}
-          <Link to="/preise" className="text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
-            {t.nav.preise}
+          <Link to={lp("/preise")} className="text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
+            {t('nav.preise')}
           </Link>
 
           {/* Über uns */}
-          <Link to="/uber-uns" className="text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
-            Über uns
+          <Link to={lp("/uber-uns")} className="text-primary-foreground/70 hover:text-primary-foreground font-medium transition-all duration-500 text-sm">
+            {t('nav.ueberUns')}
           </Link>
 
           {/* Dark mode */}
@@ -187,8 +206,8 @@ const Navbar = () => {
               className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg border border-primary-foreground/15 bg-primary-foreground/5 text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-all text-sm font-medium"
               aria-label="Select language"
             >
-              <span className="text-base leading-none">{currentLang.flag}</span>
-              <span className="text-xs font-bold uppercase">{lang}</span>
+              <span className="text-base leading-none">{currentLangObj.flag}</span>
+              <span className="text-xs font-bold uppercase">{currentLang}</span>
               <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${langOpen ? "rotate-180" : ""}`} />
             </button>
             {langOpen && (
@@ -196,9 +215,9 @@ const Navbar = () => {
                 {languages.map(l => (
                   <button
                     key={l.code}
-                    onClick={() => { setLang(l.code); setLangOpen(false); }}
+                    onClick={() => { switchLanguage(l.code); }}
                     className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${
-                      lang === l.code
+                      currentLang === l.code
                         ? "bg-primary-foreground/10 text-primary-foreground font-semibold"
                         : "text-primary-foreground/60 hover:bg-primary-foreground/8 hover:text-primary-foreground"
                     }`}
@@ -213,7 +232,7 @@ const Navbar = () => {
 
           <button onClick={scrollToForm}
             className="bg-gradient-amber text-white dark:text-[#0A264A] font-bold rounded-xl hover:scale-[1.02] transition-all duration-700 inline-flex items-center gap-1.5 px-5 py-2.5 text-sm whitespace-nowrap flex-shrink-0">
-            {t.nav.cta}
+            {t('nav.cta')}
             <ArrowRight className="w-4 h-4 flex-shrink-0" />
           </button>
         </div>
@@ -230,14 +249,14 @@ const Navbar = () => {
               onClick={() => setLangOpen(!langOpen)}
               className="w-8 h-8 rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 flex items-center justify-center text-base"
               aria-label="Select language">
-              {currentLang.flag}
+              {currentLangObj.flag}
             </button>
             {langOpen && (
               <div className="absolute right-0 top-full mt-2 bg-surface-navy border border-primary-foreground/15 rounded-xl shadow-2xl shadow-black/30 overflow-hidden z-50 min-w-[130px]">
                 {languages.map(l => (
-                  <button key={l.code} onClick={() => { setLang(l.code); setLangOpen(false); }}
+                  <button key={l.code} onClick={() => { switchLanguage(l.code); }}
                     className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${
-                      lang === l.code ? "bg-primary-foreground/10 text-primary-foreground font-semibold" : "text-primary-foreground/60 hover:bg-primary-foreground/8 hover:text-primary-foreground"
+                      currentLang === l.code ? "bg-primary-foreground/10 text-primary-foreground font-semibold" : "text-primary-foreground/60 hover:bg-primary-foreground/8 hover:text-primary-foreground"
                     }`}>
                     <span className="text-base">{l.flag}</span>
                     {l.label}
@@ -262,15 +281,15 @@ const Navbar = () => {
               onClick={() => setProdMobOpen(!prodMobOpen)}
               className="flex items-center w-full text-primary-foreground/70 hover:text-primary-foreground font-medium py-2 text-left"
             >
-              {t.nav.produkte}
+              {t('nav.produkte')}
               <ChevronDown className={`w-4 h-4 ml-auto transition-transform duration-200 ${prodMobOpen ? "rotate-180" : ""}`} />
             </button>
             {prodMobOpen && (
               <div className="pl-4 mt-1 space-y-1 border-l border-white/10 mb-2">
-                <Link to="/produkte" onClick={() => setMobileOpen(false)}
+                <Link to={lp("/produkte")} onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-2 py-2 text-primary-foreground font-semibold text-sm">
                   <ArrowRight className="w-3.5 h-3.5 text-cyan-brand flex-shrink-0" />
-                  Alle Produkte
+                  {t('nav.alleProdukte')}
                 </Link>
                 {prodItems.map(item => {
                   const Icon = item.icon;
@@ -290,16 +309,16 @@ const Navbar = () => {
           <div>
             <div className="flex items-center">
               <Link
-                to="/loesungen"
+                to={lp("/loesungen")}
                 onClick={() => setMobileOpen(false)}
                 className="flex-1 text-primary-foreground/70 hover:text-primary-foreground font-medium py-2"
               >
-                Lösungen
+                {t('nav.loesungen')}
               </Link>
               <button
                 onClick={() => setLoesMobOpen(!loesMobOpen)}
                 className="py-2 px-1"
-                aria-label="Lösungen Untermenü"
+                aria-label={`${t('nav.loesungen')} Untermenü`}
               >
                 <ChevronDown className={`w-4 h-4 text-primary-foreground/70 transition-transform duration-200 ${loesMobOpen ? "rotate-180" : ""}`} />
               </button>
@@ -321,19 +340,19 @@ const Navbar = () => {
           </div>
 
           {/* Preise page link */}
-          <Link to="/preise" onClick={() => setMobileOpen(false)}
+          <Link to={lp("/preise")} onClick={() => setMobileOpen(false)}
             className="block text-primary-foreground/70 hover:text-primary-foreground font-medium py-2">
-            {t.nav.preise}
+            {t('nav.preise')}
           </Link>
 
           {/* Über uns */}
-          <Link to="/uber-uns" onClick={() => setMobileOpen(false)}
+          <Link to={lp("/uber-uns")} onClick={() => setMobileOpen(false)}
             className="block text-primary-foreground/70 hover:text-primary-foreground font-medium py-2">
-            Über uns
+            {t('nav.ueberUns')}
           </Link>
           <button onClick={scrollToForm}
             className="w-full bg-gradient-amber text-white dark:text-[#0A264A] font-bold px-5 py-3 rounded-xl text-base mt-2">
-            {t.nav.cta}
+            {t('nav.cta')}
           </button>
         </div>
       )}

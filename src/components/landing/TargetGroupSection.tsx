@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Truck, Building2, ChefHat, Store, CakeSlice, Pizza, Drumstick, IceCream, Croissant, Layers, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "@/components/LanguageLayout";
 
 // Pizzeria logos
 import logoAmanda from "@/assets/logos/kunden/Logo Amanda.png";
@@ -129,7 +130,8 @@ interface TargetGroupSectionProps {
 }
 
 const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionProps = {}) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
+  const lp = useLangPath();
   const [activeGroup, setActiveGroup] = useState("lieferdienst");
   const [activeSub, setActiveSub] = useState("pizzeria");
   const [autoIndex, setAutoIndex] = useState(0);
@@ -138,13 +140,13 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
   const showSubs = activeGroup === "lieferdienst";
 
   const autoSequence = [
-    ...t.target.subs.map(s => ({ group: "lieferdienst", sub: s.id })),
-    ...t.target.groups.filter(g => g.id !== "lieferdienst").map(g => ({ group: g.id, sub: null as string | null })),
+    ...(t("target.subs", { returnObjects: true }) as any[]).map(s => ({ group: "lieferdienst", sub: s.id })),
+    ...(t("target.groups", { returnObjects: true }) as any[]).filter(g => g.id !== "lieferdienst").map(g => ({ group: g.id, sub: null as string | null })),
   ];
 
   const displayContent = showSubs
-    ? t.target.subs.find(s => s.id === activeSub)?.content
-    : t.target.groups.find(g => g.id === activeGroup)?.content;
+    ? (t("target.subs", { returnObjects: true }) as any[]).find(s => s.id === activeSub)?.content
+    : (t("target.groups", { returnObjects: true }) as any[]).find(g => g.id === activeGroup)?.content;
 
   const displayImg = showSubs ? subImgs[activeSub] : groupImgs[activeGroup];
 
@@ -179,21 +181,21 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
   };
 
   const scrollToForm = () => {
-    window.location.href = "/kontakt";
+    window.location.href = lp("/kontakt");
   };
 
   return (
     <section className="section-padding bg-background">
       <div className="container-tight">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
-          <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{t.target.badge}</span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">{t.target.headline}</h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t.target.sub}</p>
+          <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">{t("target.badge")}</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">{t("target.headline")}</h2>
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t("target.sub")}</p>
         </motion.div>
 
         {/* Main group selector */}
         <div className="flex flex-wrap justify-center gap-2 mb-6">
-          {t.target.groups.map(g => {
+          {(t("target.groups", { returnObjects: true }) as any[]).map(g => {
             const Icon = groupIcons[g.id] ?? Truck;
             return (
               <button key={g.id} onClick={() => handleGroupClick(g.id)}
@@ -214,7 +216,7 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
             transition={{ duration: 0.25 }}
             className="flex flex-wrap justify-center gap-2"
           >
-            {t.target.subs.map(s => {
+            {(t("target.subs", { returnObjects: true }) as any[]).map(s => {
               const Icon = subIcons[s.id] ?? ChefHat;
               return (
                 <button key={s.id} onClick={() => handleSubClick(s.id)}
@@ -254,7 +256,7 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
                   const href = getSolutionHref
                     ? getSolutionHref(activeGroup, showSubs ? activeSub : null)
                     : null;
-                  const label = ctaLabel ?? t.target.cta;
+                  const label = ctaLabel ?? t("target.cta");
                   const cls = "bg-gradient-amber text-primary font-bold px-6 py-3 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2 self-start";
                   return (
                     <div className="flex flex-col gap-3 items-start">
@@ -271,10 +273,10 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
                       )}
                       {activeGroup === "lieferdienst" && (
                         <Link
-                          to="/loesungen/lieferservice-gruenden"
+                          to={lp("/loesungen/lieferservice-gruenden")}
                           className="text-cyan-brand text-sm font-semibold inline-flex items-center gap-1.5 hover:gap-2.5 transition-all duration-200"
                         >
-                          eigenen Lieferdienst gründen <ArrowRight className="w-3.5 h-3.5" />
+                          {t("target.startDelivery")} <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       )}
                     </div>
@@ -297,7 +299,7 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
             transition={{ duration: 0.3 }}
           >
             <p className="text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-5">
-              Unsere Kunden
+              {t("target.customerLogosLabel")}
             </p>
             <div className="grid grid-cols-5 gap-2 md:gap-8 items-center w-full">
               {(activeLogos ?? []).map((logo) => (
