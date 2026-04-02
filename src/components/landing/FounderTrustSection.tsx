@@ -6,20 +6,20 @@ import sanjayaPortrait from "@/assets/team/team-sanjaya-pattiyage.png";
 import salvatorePortrait from "@/assets/team/team-salvatore-anzaldi.png";
 import andrejPortrait from "@/assets/team/team-andrej-krutsch.png";
 import mohammadPortrait from "@/assets/team/team-mohammad-motakalemi.png";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const founderImgs = [ceoPortrait, sanjayaPortrait];
 const teamImgs = [salvatorePortrait, andrejPortrait, mohammadPortrait];
 const founderKeys = ["rene", "sanjaya"] as const;
 const teamKeys = ["salvatore", "andrej", "mohammad"] as const;
 
-const languages = [
-  { label: "Deutsch",       flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
-  { label: "Englisch",      flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
-  { label: "Italienisch",   flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
-  { label: "Persisch",      flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
-  { label: "Russisch",      flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
-  { label: "Singhalesisch", flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+const languageMeta = [
+  { flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
+  { flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
+  { flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
+  { flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
+  { flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
+  { flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
 ];
 
 type PersonKey = "rene" | "sanjaya" | "salvatore" | "andrej" | "mohammad";
@@ -31,9 +31,9 @@ const linkedinUrls: Partial<Record<PersonKey, string>> = {
 };
 
 const FlipCard = ({ personKey, img, index }: { personKey: PersonKey; img: string; index: number }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   const [flipped, setFlipped] = useState(false);
-  const person = t.founder.people[personKey];
+  const person = t(`founder.people.${personKey}`, { returnObjects: true }) as any;
 
   return (
     <motion.div
@@ -101,7 +101,7 @@ const FlipCard = ({ personKey, img, index }: { personKey: PersonKey; img: string
                 className="inline-flex items-center gap-2 text-[#0A66C2] hover:text-primary-foreground text-sm font-medium transition-colors mt-4"
               >
                 <Linkedin className="w-5 h-5" />
-                {t.founder.linkedin}
+                {t("founder.linkedin")}
               </a>
             )}
           </div>
@@ -112,7 +112,10 @@ const FlipCard = ({ personKey, img, index }: { personKey: PersonKey; img: string
 };
 
 const FounderTrustSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+  const languageLabels = arr("founder.languages") as string[];
+  const languages = languageMeta.map((m, i) => ({ ...m, label: languageLabels[i] ?? "" }));
   return (
     <section className="section-padding bg-surface-light">
       <div className="container-tight">
@@ -123,13 +126,13 @@ const FounderTrustSection = () => {
           className="text-center mb-14"
         >
           <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">
-            {t.founder.badge}
+            {t("founder.badge")}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
-            {t.founder.headline1}<br />{t.founder.headline2}
+            {t("founder.headline1")}<br />{t("founder.headline2")}
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            {t.founder.sub}
+            {t("founder.sub")}
           </p>
         </motion.div>
 
@@ -158,11 +161,11 @@ const FounderTrustSection = () => {
           <div className="flex items-center justify-center gap-2.5 mb-3">
             <Globe className="w-6 h-6 text-cyan-brand" />
             <h3 className="text-2xl md:text-3xl font-black text-foreground">
-              {t.founder.langTitle}
+              {t("founder.langTitle")}
             </h3>
           </div>
           <p className="text-muted-foreground text-base md:text-lg mb-8 max-w-xl mx-auto">
-            {t.founder.langSub}
+            {t("founder.langSub")}
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 py-3">

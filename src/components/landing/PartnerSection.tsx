@@ -6,7 +6,7 @@ import partnerWolt from "@/assets/logos/partner/partner-wolt.png";
 import partnerUberDirect from "@/assets/logos/partner/partner-uber-direct.png";
 import partnerLieferando from "@/assets/logos/partner/partner-lieferando.png";
 import partnerWinorder from "@/assets/logos/partner/partner-winorder.png";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const partners = [
   { src: partnerStripe, alt: "Stripe" },
@@ -19,7 +19,7 @@ const partners = [
 ];
 
 const PartnerSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   return (
     <section className="section-padding bg-background">
       <div className="container-tight">
@@ -30,13 +30,13 @@ const PartnerSection = () => {
           className="text-center mb-12"
         >
           <span className="text-muted-foreground text-sm font-semibold uppercase tracking-wider mb-3 block">
-            {t.partner.badge}
+            {t("partner.badge")}
           </span>
           <h2 className="text-2xl md:text-3xl font-black text-foreground mb-3">
-            {t.partner.headline}
+            {t("partner.headline")}
           </h2>
           <p className="text-muted-foreground text-base max-w-xl mx-auto">
-            {t.partner.sub}
+            {t("partner.sub")}
           </p>
         </motion.div>
 

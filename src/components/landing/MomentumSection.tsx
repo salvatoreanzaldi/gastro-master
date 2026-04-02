@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { Rocket, Users, Building2, Monitor, CreditCard, Sparkles } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const milestoneIcons = [Sparkles, Users, Building2, Users, Monitor, CreditCard];
 
 const MomentumSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   return (
     <section className="px-5 md:px-8 lg:px-16 py-12 md:py-16 lg:py-20 bg-gradient-navy relative overflow-hidden">
       <div className="absolute inset-0 opacity-10" style={{
@@ -19,21 +19,21 @@ const MomentumSection = () => {
           className="text-center mb-10"
         >
           <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">
-            {t.momentum.badge}
+            {t("momentum.badge")}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-primary-foreground mb-3">
-            {t.momentum.headline}
+            {t("momentum.headline")}
           </h2>
           <p className="text-primary-foreground/60 text-lg max-w-xl mx-auto">
-            {t.momentum.sub}
+            {t("momentum.sub")}
           </p>
         </motion.div>
 
         <div className="grid gap-3 max-w-3xl mx-auto">
-          {t.momentum.milestones.map((m, i) => {
+          {(t("momentum.milestones", { returnObjects: true }) as any[]).map((m, i) => {
             const Icon = milestoneIcons[i];
-            const isNext = i === t.momentum.milestones.length - 1;
-            const isGlow = i >= t.momentum.milestones.length - 2;
+            const isNext = i === (t("momentum.milestones", { returnObjects: true }) as any[]).length - 1;
+            const isGlow = i >= (t("momentum.milestones", { returnObjects: true }) as any[]).length - 2;
             return (
               <motion.div
                 key={m.year}
@@ -65,7 +65,7 @@ const MomentumSection = () => {
                     <h3 className="text-primary-foreground font-bold text-sm md:text-base">{m.title}</h3>
                     {isNext && (
                       <span className="text-[10px] font-bold uppercase tracking-wider bg-cyan-brand/20 text-cyan-brand px-2 py-0.5 rounded-full">
-                        {t.momentum.outroLabel}
+                        {t("momentum.outroLabel")}
                       </span>
                     )}
                   </div>
@@ -86,7 +86,7 @@ const MomentumSection = () => {
           viewport={{ once: true }}
           className="text-center text-primary-foreground/30 text-sm mt-6 max-w-md mx-auto"
         >
-          {t.momentum.outro}
+          {t("momentum.outro")}
         </motion.p>
       </div>
     </section>

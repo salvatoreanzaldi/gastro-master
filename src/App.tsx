@@ -2,80 +2,99 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
-import { LanguageProvider } from "@/contexts/LanguageContext";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { lazy, Suspense, type ComponentType } from "react";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import LanguageLayout from "@/components/LanguageLayout";
+import { ROUTES } from "@/config/routes";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
-const ProduktePage               = lazy(() => import("@/pages/ProduktePage"));
-const WebshopPage                = lazy(() => import("@/pages/WebshopPage"));
-const AppPage                    = lazy(() => import("@/pages/AppPage"));
-const WebseitePage               = lazy(() => import("@/pages/WebseitePage"));
-const KassePage                  = lazy(() => import("@/pages/KassePage"));
-const TransaktionsumlagePage     = lazy(() => import("@/pages/TransaktionsumlagePage"));
-const Impressum                  = lazy(() => import("@/pages/Impressum"));
-const Datenschutz                = lazy(() => import("@/pages/Datenschutz"));
-const AGB                        = lazy(() => import("@/pages/AGB"));
-const Kontakt                    = lazy(() => import("@/pages/Kontakt"));
-const DownloadsPage              = lazy(() => import("@/pages/DownloadsPage"));
-const DruckertreiberPage         = lazy(() => import("@/pages/DruckertreiberPage"));
-const LieferserviceGruendenPage  = lazy(() => import("@/pages/LieferserviceGruendenPage"));
-const FranchisePage              = lazy(() => import("@/pages/FranchisePage"));
-const RestaurantPage             = lazy(() => import("@/pages/RestaurantPage"));
-const LieferdienstPage           = lazy(() => import("@/pages/LieferdienstPage"));
-const CafeBaeckereiPage          = lazy(() => import("@/pages/CafeBaeckereiPage"));
-const LoesungenPage              = lazy(() => import("@/pages/LoesungenPage"));
-const FAQPage                    = lazy(() => import("@/pages/FAQPage"));
-const PreisePage                 = lazy(() => import("@/pages/PreisePage"));
-const UeberUnsPage               = lazy(() => import("@/pages/UeberUnsPage"));
-const GhostKitchenPage           = lazy(() => import("@/pages/GhostKitchenPage"));
+// ─── Lazy Imports (static strings required by Vite) ──────────────────────────
+const LAZY_COMPONENTS: Record<string, ComponentType> = {
+  "@/pages/ProduktePage":               lazy(() => import("@/pages/ProduktePage")),
+  "@/pages/WebshopPage":                lazy(() => import("@/pages/WebshopPage")),
+  "@/pages/AppPage":                    lazy(() => import("@/pages/AppPage")),
+  "@/pages/WebseitePage":               lazy(() => import("@/pages/WebseitePage")),
+  "@/pages/KassePage":                  lazy(() => import("@/pages/KassePage")),
+  "@/pages/TransaktionsumlagePage":     lazy(() => import("@/pages/TransaktionsumlagePage")),
+  "@/pages/Impressum":                  lazy(() => import("@/pages/Impressum")),
+  "@/pages/Datenschutz":                lazy(() => import("@/pages/Datenschutz")),
+  "@/pages/AGB":                        lazy(() => import("@/pages/AGB")),
+  "@/pages/Kontakt":                    lazy(() => import("@/pages/Kontakt")),
+  "@/pages/DownloadsPage":              lazy(() => import("@/pages/DownloadsPage")),
+  "@/pages/DruckertreiberPage":         lazy(() => import("@/pages/DruckertreiberPage")),
+  "@/pages/LieferserviceGruendenPage":  lazy(() => import("@/pages/LieferserviceGruendenPage")),
+  "@/pages/FranchisePage":              lazy(() => import("@/pages/FranchisePage")),
+  "@/pages/RestaurantPage":             lazy(() => import("@/pages/RestaurantPage")),
+  "@/pages/LieferdienstPage":           lazy(() => import("@/pages/LieferdienstPage")),
+  "@/pages/CafeBaeckereiPage":          lazy(() => import("@/pages/CafeBaeckereiPage")),
+  "@/pages/LoesungenPage":              lazy(() => import("@/pages/LoesungenPage")),
+  "@/pages/FAQPage":                    lazy(() => import("@/pages/FAQPage")),
+  "@/pages/PreisePage":                 lazy(() => import("@/pages/PreisePage")),
+  "@/pages/UeberUnsPage":               lazy(() => import("@/pages/UeberUnsPage")),
+  "@/pages/GhostKitchenPage":           lazy(() => import("@/pages/GhostKitchenPage")),
+};
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <LanguageProvider>
-      <TooltipProvider>
+    <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
           <Suspense fallback={null}>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/produkte"                     element={<ProduktePage />} />
-              <Route path="/produkte/webshop"            element={<WebshopPage />} />
-              <Route path="/produkte/app"                element={<AppPage />} />
-              <Route path="/produkte/bestellapp"         element={<AppPage />} />
-              <Route path="/produkte/webseite"           element={<WebseitePage />} />
-              <Route path="/produkte/kassensystem"        element={<KassePage />} />
-              <Route path="/produkte/transaktionsumlage" element={<TransaktionsumlagePage />} />
-              <Route path="/loesungen"                         element={<LoesungenPage />} />
-              <Route path="/loesungen/lieferservice-gruenden" element={<LieferserviceGruendenPage />} />
-              <Route path="/loesungen/franchise"         element={<FranchisePage />} />
-              <Route path="/loesungen/restaurant"        element={<RestaurantPage />} />
-              <Route path="/loesungen/lieferdienst"      element={<LieferdienstPage />} />
-              <Route path="/loesungen/cafe-baeckerei"    element={<CafeBaeckereiPage />} />
-              <Route path="/loesungen/ghost-kitchen"    element={<GhostKitchenPage />} />
-              <Route path="/impressum"                   element={<Impressum />} />
-              <Route path="/datenschutz"                 element={<Datenschutz />} />
-              <Route path="/agb"                         element={<AGB />} />
-              <Route path="/kontakt"                     element={<Kontakt />} />
-              <Route path="/faq"                         element={<FAQPage />} />
-              <Route path="/preise"                      element={<PreisePage />} />
-              <Route path="/uber-uns"                     element={<UeberUnsPage />} />
-              <Route path="/downloads"                   element={<DownloadsPage />} />
-              <Route path="/downloads/druckertreiber"    element={<DruckertreiberPage />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              {/* Root redirect → /de/ */}
+              <Route path="/" element={<Navigate to="/de" replace />} />
+
+              {/* Legacy routes without lang prefix → redirect to /de/... */}
+              <Route path="/produkte/*" element={<RedirectWithLang />} />
+              <Route path="/loesungen/*" element={<RedirectWithLang />} />
+              <Route path="/impressum" element={<Navigate to="/de/impressum" replace />} />
+              <Route path="/datenschutz" element={<Navigate to="/de/datenschutz" replace />} />
+              <Route path="/agb" element={<Navigate to="/de/agb" replace />} />
+              <Route path="/kontakt" element={<Navigate to="/de/kontakt" replace />} />
+              <Route path="/faq" element={<Navigate to="/de/faq" replace />} />
+              <Route path="/preise" element={<Navigate to="/de/preise" replace />} />
+              <Route path="/uber-uns" element={<Navigate to="/de/uber-uns" replace />} />
+              <Route path="/downloads/*" element={<RedirectWithLang />} />
+
+              {/* /:lang routes — generated from ROUTES config */}
+              <Route path="/:lang" element={<LanguageLayout />}>
+                {ROUTES.map((route) => {
+                  if (route.path === "/") {
+                    return <Route key="index" index element={<Index />} />;
+                  }
+                  const Component = LAZY_COMPONENTS[route.importPath];
+                  if (!Component) return null;
+                  return (
+                    <Route
+                      key={route.path}
+                      path={route.path.slice(1)}
+                      element={<Component />}
+                    />
+                  );
+                })}
+                {/* Alias: /produkte/bestellapp → AppPage */}
+                <Route path="produkte/bestellapp" element={(() => { const C = LAZY_COMPONENTS["@/pages/AppPage"]; return C ? <C /> : null; })()} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         </BrowserRouter>
       </TooltipProvider>
-    </LanguageProvider>
   </QueryClientProvider>
 );
+
+/** Redirects legacy paths like /produkte/webshop → /de/produkte/webshop */
+const RedirectWithLang = () => {
+  const path = window.location.pathname;
+  return <Navigate to={`/de${path}`} replace />;
+};
 
 export default App;

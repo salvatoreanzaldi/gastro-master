@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "@/components/LanguageLayout";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -26,36 +28,46 @@ import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
 
-// ─── JSON-LD Schema ───────────────────────────────────────────────────────────
-const FAQ_ITEMS = [
-  {
-    q: "Wie lange dauert die Erstellung einer Webseite?",
-    a: "Eine einfache Webseite (Onepager) ist in der Regel innerhalb weniger Tage online. Für umfangreiche Mehrseiter mit individuellen Funktionen planen wir gemeinsam einen realistischen Zeitrahmen im [kostenlosen Beratungsgespräch](/kontakt). Die Entwicklung startet sofort nach Freigabe der Inhalte.",
-  },
-  {
-    q: "Was ist der Unterschied zwischen Abo (49 €/Monat) und Einmalkauf?",
-    a: "Beim monatlichen Abo (49 €/Monat) übernehmen wir dauerhaft Hosting, Domain, technischen Support und Updates – du zahlst monatlich und kannst jederzeit kündigen. Beim Einmalkauf (ab 990 €) erwirbst du die vollständige Webseite und betreibst sie eigenständig. Alle Optionen findest du in der [Preisübersicht](/preise).",
-  },
-  {
-    q: "Brauche ich Technikkenntnisse, um meine Webseite zu pflegen?",
-    a: "Nein. Im monatlichen Abo kümmern wir uns um alle technischen Aspekte. Inhaltliche Änderungen (Texte, Bilder, Öffnungszeiten) koordinierst du einfach mit unserem Team – schnell und unkompliziert per WhatsApp oder E-Mail.",
-  },
-  {
-    q: "Kann ich meine Webseite mit dem Gastro Master Webshop oder der App verknüpfen?",
-    a: "Ja. Deine Gastro Master Webseite lässt sich nahtlos mit dem [digitalen Bestellsystem für die Gastronomie](/produkte/webshop) und der [eigenen Bestell-App](/produkte/app) verknüpfen. Außerdem lässt sich ein [Kassensystem für die Gastronomie](/produkte/kassensystem) ergänzen. Kunden landen auf deiner Webseite und können von dort direkt eine Bestellung aufgeben – ohne Plattformwechsel.",
-  },
-  {
-    q: "Was bedeutet DSGVO-konform, und warum ist das wichtig?",
-    a: "DSGVO-konform bedeutet, dass deine Webseite alle Anforderungen der europäischen Datenschutz-Grundverordnung erfüllt: korrektes Impressum, Datenschutzerklärung, Cookie-Hinweis und sichere Verarbeitung von Kontaktformulardaten. Ohne DSGVO-Konformität riskierst du Abmahnungen und Bußgelder. Bei uns ist alles voreingestellt und rechtlich einwandfrei.",
-  },
-  {
-    q: "Für welche Branchen baut Gastro Master Webseiten?",
-    a: "Unser Schwerpunkt liegt auf der Gastronomie — speziell für [Restaurants](/loesungen/restaurant) und [Cafés und Bäckereien](/loesungen/cafe-baeckerei) — aber wir bauen Webseiten für jede Branche: Handwerker, Schulen, Bildungseinrichtungen, Hotels, Dienstleister, Einzelhandel und Franchise-Unternehmen. Jede Webseite wird individuell auf die Branche und den Betrieb zugeschnitten.",
-  },
-  {
-    q: "Was ist im monatlichen Abo enthalten?",
-    a: "Das monatliche Abo (49 €/Monat netto) umfasst: professionelles Webdesign, eigene Domain (z.B. deinbetrieb.de), zuverlässiges Hosting, 2 E-Mail-Postfächer, DSGVO-konforme Einrichtung, technischen Support und laufende Updates. Keine versteckten Kosten, monatlich kündbar.",
-  },
+const PORTFOLIO_IMGS = [heroGastroMaster, heroBaeckerei, heroEtManus, heroDT, heroDandT];
+const TESTIMONIAL_LOGOS = [logoKojo, logoIlSorriso, logoBurger, logoArtemis];
+const TEAM_IMGS = [teamReneImg, teamSalvatoreImg, teamAndrejImg];
+
+const TRUST_BAR_URLS = [
+  "https://aboutus.godaddy.net/newsroom/news-releases/press-release-details/2024/Gen-Z-and-Millennials-to-Small-Businesses-Get-Online-or-Get-Left-Behind/default.aspx",
+  "https://www.thinkwithgoogle.com/",
+  null,
+];
+
+const STAT_URLS = [
+  "https://www.hubspot.com/",
+  "https://www.thinkwithgoogle.com/",
+  "https://www2.deloitte.com/",
+];
+
+const STAT_ICONS = [TrendingUp, MapPin, Search];
+
+const FEATURE_ICONS = [Images, Instagram, Mail, Users, Briefcase, Building2, Link2];
+
+const BRANCHEN_ICONS = [UtensilsCrossed, Coffee, Wrench, GraduationCap, ConciergeBell, Building2, Hotel, Store];
+
+const LANG_META = [
+  { flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
+  { flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
+  { flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
+  { flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
+  { flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
+  { flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+];
+
+// ─── JSON-LD Schema (bleibt statisch DE für SEO) ─────────────────────────────
+const FAQ_ITEMS_SCHEMA = [
+  { q: "Wie lange dauert die Erstellung einer Webseite?", a: "Eine einfache Webseite (Onepager) ist in der Regel innerhalb weniger Tage online." },
+  { q: "Was ist der Unterschied zwischen Abo (49 €/Monat) und Einmalkauf?", a: "Beim monatlichen Abo übernehmen wir dauerhaft Hosting, Domain, technischen Support und Updates. Beim Einmalkauf erwirbst du die vollständige Webseite." },
+  { q: "Brauche ich Technikkenntnisse, um meine Webseite zu pflegen?", a: "Nein. Im monatlichen Abo kümmern wir uns um alle technischen Aspekte." },
+  { q: "Kann ich meine Webseite mit dem Gastro Master Webshop oder der App verknüpfen?", a: "Ja. Deine Gastro Master Webseite lässt sich nahtlos mit dem digitalen Bestellsystem und der eigenen Bestell-App verknüpfen." },
+  { q: "Was bedeutet DSGVO-konform, und warum ist das wichtig?", a: "DSGVO-konform bedeutet, dass deine Webseite alle Anforderungen der europäischen Datenschutz-Grundverordnung erfüllt." },
+  { q: "Für welche Branchen baut Gastro Master Webseiten?", a: "Unser Schwerpunkt liegt auf der Gastronomie, aber wir bauen Webseiten für jede Branche." },
+  { q: "Was ist im monatlichen Abo enthalten?", a: "Das monatliche Abo umfasst: professionelles Webdesign, eigene Domain, zuverlässiges Hosting, 2 E-Mail-Postfächer, DSGVO-konforme Einrichtung, technischen Support und laufende Updates." },
 ];
 
 const SCHEMA_PRODUCT = {
@@ -70,11 +82,7 @@ const SCHEMA_PRODUCT = {
       "price": "49",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
-      "priceSpecification": {
-        "@type": "UnitPriceSpecification",
-        "billingIncrement": 1,
-        "unitCode": "MON",
-      },
+      "priceSpecification": { "@type": "UnitPriceSpecification", "billingIncrement": 1, "unitCode": "MON" },
       "seller": { "@type": "Organization", "name": "Gastro Master Deutschland" },
     },
     {
@@ -91,10 +99,10 @@ const SCHEMA_PRODUCT = {
 const SCHEMA_FAQ = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": FAQ_ITEMS.map(({ q, a }) => ({
+  "mainEntity": FAQ_ITEMS_SCHEMA.map(({ q, a }) => ({
     "@type": "Question",
     "name": q,
-    "acceptedAnswer": { "@type": "Answer", "text": a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") },
+    "acceptedAnswer": { "@type": "Answer", "text": a },
   })),
 };
 
@@ -108,48 +116,18 @@ const SCHEMA_BREADCRUMB = {
   ],
 };
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-const testimonials = [
-  { initials: "HL", quote: "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein.", name: "Ha Lim Lee", restaurant: "Kojo Sushi", logo: logoKojo },
-  { initials: "MG", quote: "Also der Support ist einfach 1a und den würdest du nirgend wo anders so bekommen!", name: "Marco Greco", restaurant: "Pizzeria Il Sorriso", logo: logoIlSorriso },
-  { initials: "SH", quote: "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren.", name: "Sven Heinrich", restaurant: "61 Burger & More", logo: logoBurger },
-  { initials: "GM", quote: "Wir haben durch die App viel mehr Kunden und Reichweite gewonnen.", name: "Georgios Madatsidis", restaurant: "Artemis Grill", logo: logoArtemis },
-];
-
-const teamMembers = [
-  { img: teamReneImg,      name: "René Ebert",        role: "Gründer & Geschäftsführer" },
-  { img: teamSalvatoreImg, name: "Salvatore Anzaldi",  role: "Head of Sales" },
-  { img: teamAndrejImg,    name: "Andrej Krutsch",     role: "Head of Operations" },
-];
-
-const PORTFOLIO = [
-  { img: heroGastroMaster, label: "Gastronomie",  name: "Gastro Master",  alt: "Professionelle Webseite für Gastronomie — Beispiel Gastro Master" },
-  { img: heroBaeckerei,    label: "Bäckerei",      name: "Bäckerei Zimmer", alt: "Website für Bäckerei Zimmer — Restaurant Webseite Beispiel" },
-  { img: heroEtManus,      label: "Restaurant",    name: "Et Manus",       alt: "Restaurant Webseite Et Manus — professionelle Gastronomie Website" },
-  { img: heroDT,           label: "Dienstleister", name: "D&T",            alt: "Professionelle Website für Dienstleister D&T — Webseite erstellen lassen" },
-  { img: heroDandT,        label: "Gastronomie",   name: "D&T Gastro",     alt: "Gastronomie Website D&T Gastro — eigene Restaurant Webseite" },
-];
-
-const BRANCHEN = [
-  { icon: UtensilsCrossed, label: "Restaurant" },
-  { icon: Coffee,          label: "Café & Bäckerei" },
-  { icon: Wrench,          label: "Handwerker" },
-  { icon: GraduationCap,   label: "Schule & Bildung" },
-  { icon: ConciergeBell,   label: "Dienstleister" },
-  { icon: Building2,       label: "Franchise" },
-  { icon: Hotel,           label: "Hotel & Pension" },
-  { icon: Store,           label: "Einzelhandel" },
-];
-
 // ─── Inline Components ────────────────────────────────────────────────────────
-const renderFaqLinks = (text: string): React.ReactNode[] =>
-  text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
-    const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
-    if (m) return <Link key={i} to={m[2]} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
-    return part;
-  });
+const RenderFaqLinks = ({ text, lp }: { text: string; lp: (p: string) => string }) => (
+  <>
+    {text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+      const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+      if (m) return <Link key={i} to={lp(m[2])} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
+      return part;
+    })}
+  </>
+);
 
-const FaqItem = ({ q, a }: { q: string; a: string }) => {
+const FaqItem = ({ q, a, lp }: { q: string; a: string; lp: (p: string) => string }) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-white/[0.08]">
@@ -171,7 +149,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
             transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a)}</p>
+            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl"><RenderFaqLinks text={a} lp={lp} /></p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -180,12 +158,29 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
 };
 
 const TeamCTA = () => {
+  const { t } = useTranslation("webseite");
+  const lp = useLangPath();
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+
+  const languages = arr("teamCta.languages") as string[];
+
+  const roles = arr("teamCta.roles") as string[];
+  const teamRoles = [
+    { img: TEAM_IMGS[0], name: "René Ebert",       role: roles[0] ?? "" },
+    { img: TEAM_IMGS[1], name: "Salvatore Anzaldi", role: roles[1] ?? "" },
+    { img: TEAM_IMGS[2], name: "Andrej Krutsch",    role: roles[2] ?? "" },
+  ];
+
   const [current, setCurrent] = useState(0);
   useEffect(() => {
-    const t = setInterval(() => setCurrent(c => (c + 1) % teamMembers.length), 4000);
-    return () => clearInterval(t);
-  }, []);
-  const member = teamMembers[current];
+    if (!teamRoles.length) return;
+    const timer = setInterval(() => setCurrent(c => (c + 1) % teamRoles.length), 4000);
+    return () => clearInterval(timer);
+  }, [teamRoles.length]);
+
+  const member = teamRoles[current];
+  if (!member) return null;
+
   return (
     <section className="bg-[#F0F4F8] dark:bg-[#060e1a] px-5 md:px-8 lg:px-16 py-20 md:py-28">
       <div className="max-w-6xl mx-auto">
@@ -198,49 +193,40 @@ const TeamCTA = () => {
         >
           <div className="p-10 md:p-14 flex flex-col justify-center">
             <span className="bg-[#0A264A]/[0.07] dark:bg-white/10 text-[#0A264A] dark:text-white text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full inline-block mb-8 w-fit">
-              Jetzt durchstarten
+              {t("teamCta.badge")}
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight mb-6">
-              Buche jetzt dein<br />kostenloses Beratungsgespräch.
-            </h2>
-            <p className="font-bold text-[#0A264A] dark:text-white text-sm mb-3">Das erwartet dich:</p>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight mb-6" dangerouslySetInnerHTML={{ __html: t("teamCta.title") }} />
+            <p className="font-bold text-[#0A264A] dark:text-white text-sm mb-3">{t("teamCta.expectTitle")}</p>
             <p className="text-[#0A264A]/60 dark:text-white/55 text-base leading-relaxed mb-5">
-              In einem kostenlosen Erstgespräch besprechen wir deine Wünsche, Ziele und den Umfang deiner neuen Webseite – und erstellen ein individuelles Angebot, das genau zu deinem Betrieb und Budget passt.
+              {t("teamCta.expectDesc")}
             </p>
             <p className="text-[#0A264A]/40 dark:text-white/35 text-sm leading-relaxed mb-4">
-              Danach geht es schnell: In der Regel ist deine Webseite innerhalb weniger Tage online.
+              {t("teamCta.afterDesc")}
             </p>
             <div className="flex flex-wrap gap-2 mb-10">
-              {[
-                { label: "Deutsch",       flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
-                { label: "Englisch",      flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
-                { label: "Italienisch",   flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
-                { label: "Persisch",      flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
-                { label: "Russisch",      flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
-                { label: "Singhalesisch", flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
-              ].map((lang, i) => (
+              {languages.map((label, i) => (
                 <motion.div
-                  key={lang.label}
+                  key={label}
                   initial={{ opacity: 0, scale: 0.85 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.05 + i * 0.06, duration: 0.3, ease: "easeOut" }}
                   whileHover={{ scale: 1.08, y: -2 }}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${lang.color}`}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${LANG_META[i]?.color ?? ""}`}
                 >
-                  <span className="text-lg leading-none">{lang.flag}</span>
-                  {lang.label}
+                  <span className="text-lg leading-none">{LANG_META[i]?.flag}</span>
+                  {label}
                 </motion.div>
               ))}
             </div>
             <motion.button
-              onClick={() => { window.location.href = "/kontakt"; }}
+              onClick={() => { window.location.href = lp("/kontakt"); }}
               whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2 }}
               className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group w-fit"
             >
-              Kostenloses Beratungsgespräch
+              {t("teamCta.cta")}
               <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
             </motion.button>
           </div>
@@ -272,7 +258,7 @@ const TeamCTA = () => {
               </AnimatePresence>
             </div>
             <div className="absolute top-5 right-5 flex gap-2">
-              {teamMembers.map((_, i) => (
+              {teamRoles.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrent(i)}
@@ -289,11 +275,30 @@ const TeamCTA = () => {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const WebseitePage = () => {
+  const { t } = useTranslation("webseite");
+  const lp = useLangPath();
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+
   useSeoMeta({
-    title: "Webseite Gastronomie — ab 49 €/Monat | Gastro Master",
-    description: "Professionelle Webseite für Gastronomie — ab 49 €/Monat. Eigene Domain, DSGVO-konform, Hosting & Support inklusive. In wenigen Tagen online. Jetzt beraten lassen.",
+    title: t("seo.title"),
+    description: t("seo.description"),
     canonical: "https://gastro-master.de/produkte/webseite",
   });
+
+  const trustBarItems = arr("trustBar.items") as { value: string; label: string; source: string | null }[];
+  const heroIcons = [Globe, CheckCircle2, Handshake, Star];
+  const heroPills = arr("hero.pills") as string[];
+  const onlineStats = arr("onlinePresence.stats") as { value: string; desc: string; source: string; color: string }[];
+  const featureTiles = arr("features.tiles") as { title: string; desc: string }[];
+  const portfolioItems = arr("portfolio.items") as { label: string; name: string; alt: string }[];
+  const branchenItems = arr("branchen.items") as string[];
+  const processSteps = arr("process.steps") as { num: string; title: string; desc: string }[];
+  const aboFeatures = arr("pricing.abo.features") as string[];
+  const simpleFeatures = arr("pricing.simple.features") as string[];
+  const individualFeatures = arr("pricing.individual.features") as string[];
+  const testimonialItems = arr("testimonials.items") as { initials: string; quote: string; name: string; restaurant: string }[];
+  const testimonialStats = arr("testimonials.stats") as { value: string; label: string }[];
+  const faqItems = arr("faq.items") as { q: string; a: string }[];
 
   return (
     <>
@@ -316,45 +321,41 @@ const WebseitePage = () => {
             >
               <div className="inline-flex items-center gap-2 bg-cyan-brand/10 border border-cyan-brand/20 text-cyan-brand text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
                 <Globe className="w-3.5 h-3.5" />
-                Professionelle Webseite · ab 49 €/Monat
+                {t("hero.badge")}
               </div>
 
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6">
-                Deine Webseite für die Gastronomie –{" "}
-                <span className="text-gradient-brand">online</span>
-                {" "}in wenigen Tagen
+                {t("hero.title1")}{" "}
+                <span className="text-gradient-brand">{t("hero.titleHighlight")}</span>
+                {" "}{t("hero.title2")}
               </h1>
 
-              {/* Definition Block (GEO-optimiert) */}
               <p className="text-white/70 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto mb-4">
-                Eine professionelle Webseite ist die Grundlage jeder digitalen Präsenz. Sie eröffnet dir die Möglichkeit, weit über deinen Standort hinaus neue Kunden zu erreichen – über Google, Social Media und Weiterempfehlungen. Für Gastronomie, Handwerk, Schulen und alle weiteren Branchen.
+                {t("hero.desc")}
               </p>
               <p className="text-white/45 text-base max-w-2xl mx-auto mb-10">
-                DSGVO-konform. Eigene Domain. Inkl. Hosting & Support.
+                {t("hero.subdesc")}
               </p>
 
-              {/* Trust Pills */}
               <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
-                {[
-                  { icon: Globe,        label: "Eigene Domain" },
-                  { icon: CheckCircle2, label: "DSGVO-konform" },
-                  { icon: Handshake,    label: "Für alle Branchen" },
-                  { icon: Star,         label: "Kein Technik-Know-how nötig" },
-                ].map((pill) => (
-                  <div key={pill.label} className="flex items-center gap-1.5 bg-white/10 border border-white/15 px-4 py-2 rounded-full text-white/80 text-sm font-medium">
-                    <pill.icon className="w-4 h-4 text-cyan-brand" />
-                    {pill.label}
-                  </div>
-                ))}
+                {heroPills.map((label, i) => {
+                  const Icon = heroIcons[i];
+                  return (
+                    <div key={label} className="flex items-center gap-1.5 bg-white/10 border border-white/15 px-4 py-2 rounded-full text-white/80 text-sm font-medium">
+                      {Icon && <Icon className="w-4 h-4 text-cyan-brand" />}
+                      {label}
+                    </div>
+                  );
+                })}
               </div>
 
               <motion.button
-                onClick={() => { window.location.href = "/kontakt"; }}
+                onClick={() => { window.location.href = lp("/kontakt"); }}
                 whileHover={{ scale: 1.03, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55)" }}
                 whileTap={{ scale: 0.97 }}
                 className="bg-gradient-amber text-[#0A264A] font-bold px-8 py-4 rounded-xl text-lg inline-flex items-center gap-2 shadow-lg"
               >
-                Kostenloses Beratungsgespräch
+                {t("hero.cta")}
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
             </motion.div>
@@ -364,26 +365,7 @@ const WebseitePage = () => {
         {/* ── S2: TRUST BAR ─────────────────────────────────────────────────── */}
         <section className="bg-white dark:bg-[#111827] border-y border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-10 md:py-12">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-            {[
-              {
-                value: "75 %",
-                label: "der Nutzer beurteilen die Glaubwürdigkeit eines Unternehmens anhand seiner Webseite",
-                source: "Stanford Web Credibility Research",
-                url: "https://credibility.stanford.edu/",
-              },
-              {
-                value: "97 %",
-                label: "der Verbraucher suchen online nach lokalen Unternehmen und Dienstleistungen",
-                source: "Google Consumer Insights",
-                url: "https://www.thinkwithgoogle.com/",
-              },
-              {
-                value: "700+",
-                label: "Unternehmen setzen bereits auf Gastro Master für ihre digitale Präsenz",
-                source: null,
-                url: null,
-              },
-            ].map((s, i) => (
+            {trustBarItems.map((s, i) => (
               <motion.div
                 key={s.value}
                 initial={{ opacity: 0, y: 14 }}
@@ -394,8 +376,8 @@ const WebseitePage = () => {
               >
                 <p className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white mb-2 leading-none">{s.value}</p>
                 <p className="text-[#0A264A]/55 dark:text-white/45 text-sm leading-snug mb-2">{s.label}</p>
-                {s.source && (
-                  <a href={s.url!} target="_blank" rel="noopener noreferrer" className="text-xs text-cyan-brand/70 hover:text-cyan-brand underline transition-colors">
+                {s.source && TRUST_BAR_URLS[i] && (
+                  <a href={TRUST_BAR_URLS[i]!} target="_blank" rel="noopener noreferrer" className="text-xs text-cyan-brand/70 hover:text-cyan-brand underline transition-colors">
                     Quelle: {s.source}
                   </a>
                 )}
@@ -413,70 +395,46 @@ const WebseitePage = () => {
               viewport={{ once: true }}
               className="text-center mb-6"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Online-Sichtbarkeit</span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-6">
-                Wer nicht online ist, verliert<br className="hidden md:block" /> jeden Tag Neukunden.
-              </h2>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("onlinePresence.badge")}</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-6" dangerouslySetInnerHTML={{ __html: t("onlinePresence.title") }} />
               <p className="text-[#0A264A]/55 dark:text-white/50 text-lg max-w-2xl mx-auto leading-relaxed">
-                Eine Webseite öffnet dir den Zugang zu Kunden, die weit über deinen Standort hinaus nach deinen Leistungen suchen. Neukunden finden dich über Google – nicht nur durch Mundpropaganda. Das gilt besonders für Gastronomen, die{" "}
-                <Link to="/loesungen/lieferservice-gruenden" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">einen eigenen Lieferdienst aufbauen</Link>{" "}
-                möchten — genauso wie für Handwerker, Schulen oder Dienstleister.
+                {t("onlinePresence.desc")}{" "}
+                <Link to={lp("/loesungen/lieferservice-gruenden")} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{t("onlinePresence.descLink")}</Link>{" "}
+                {t("onlinePresence.descAfter")}
               </p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-              {[
-                {
-                  icon: TrendingUp,
-                  value: "88 %",
-                  desc: "der Nutzer kehren nach einem schlechten Website-Erlebnis nicht mehr zurück.",
-                  source: "HubSpot Research",
-                  url: "https://www.hubspot.com/",
-                  color: "text-red-500",
-                },
-                {
-                  icon: MapPin,
-                  value: "46 %",
-                  desc: "aller Google-Suchen haben einen lokalen Bezug – deine Kunden suchen dich.",
-                  source: "Google Search Statistics",
-                  url: "https://www.thinkwithgoogle.com/",
-                  color: "text-cyan-brand",
-                },
-                {
-                  icon: Search,
-                  value: "2,8×",
-                  desc: "mehr Umsatzwachstum erzielen Unternehmen mit starker Online-Präsenz.",
-                  source: "Deloitte Digital",
-                  url: "https://www2.deloitte.com/",
-                  color: "text-emerald-500",
-                },
-              ].map((stat, i) => (
-                <motion.div
-                  key={stat.value}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.5 }}
-                  className="bg-[#0A264A]/[0.03] dark:bg-white/[0.04] border border-[#0A264A]/[0.07] dark:border-white/[0.07] rounded-2xl p-8"
-                >
-                  <stat.icon className={`w-7 h-7 mb-4 ${stat.color}`} />
-                  <p className={`text-4xl font-black mb-3 ${stat.color}`}>{stat.value}</p>
-                  <p className="text-[#0A264A]/65 dark:text-white/55 text-sm leading-relaxed mb-3">{stat.desc}</p>
-                  <a href={stat.url} target="_blank" rel="noopener noreferrer" className="text-xs text-[#0A264A]/35 dark:text-white/30 hover:text-cyan-brand underline transition-colors">
-                    Quelle: {stat.source}
-                  </a>
-                </motion.div>
-              ))}
+              {onlineStats.map((stat, i) => {
+                const Icon = STAT_ICONS[i];
+                return (
+                  <motion.div
+                    key={stat.value}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1, duration: 0.5 }}
+                    className="bg-[#0A264A]/[0.03] dark:bg-white/[0.04] border border-[#0A264A]/[0.07] dark:border-white/[0.07] rounded-2xl p-8"
+                  >
+                    {Icon && <Icon className={`w-7 h-7 mb-4 ${stat.color}`} />}
+                    <p className={`text-4xl font-black mb-3 ${stat.color}`}>{stat.value}</p>
+                    <p className="text-[#0A264A]/65 dark:text-white/55 text-sm leading-relaxed mb-3">{stat.desc}</p>
+                    <a href={STAT_URLS[i]} target="_blank" rel="noopener noreferrer" className="text-xs text-[#0A264A]/35 dark:text-white/30 hover:text-cyan-brand underline transition-colors">
+                      Quelle: {stat.source}
+                    </a>
+                  </motion.div>
+                );
+              })}
             </div>
 
             <div className="text-center mt-12">
               <motion.button
-                onClick={() => { window.location.href = "/kontakt"; }}
+                onClick={() => { window.location.href = lp("/kontakt"); }}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 className="inline-flex items-center gap-2 bg-[#0A264A] dark:bg-white text-white dark:text-[#0A264A] font-bold px-8 py-4 rounded-xl text-base shadow-lg"
               >
-                Jetzt Sichtbarkeit aufbauen
+                {t("onlinePresence.cta")}
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
             </div>
@@ -492,97 +450,32 @@ const WebseitePage = () => {
               viewport={{ once: true }}
               className="text-center mb-14"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Funktionsumfang</span>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("features.badge")}</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
-                Alles, was deine Online-Präsenz braucht.
+                {t("features.title")}
               </h2>
             </motion.div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Tile 1 – Groß */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.05 }}
-                className="col-span-2 bg-white/[0.06] border border-white/[0.08] rounded-2xl p-7 hover:bg-white/[0.09] transition-colors"
-              >
-                <Images className="w-7 h-7 text-cyan-brand mb-4" />
-                <h3 className="text-white font-bold text-lg mb-2">Bildergalerie</h3>
-                <p className="text-white/50 text-sm leading-relaxed">Professionelle Foto- und Videogalerie, die Besucher überzeugt. Zeige dein Ambiente, deine Gerichte oder deine Leistungen in bestem Licht.</p>
-              </motion.div>
-              {/* Tile 2 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="col-span-1 bg-white/[0.06] border border-white/[0.08] rounded-2xl p-7 hover:bg-white/[0.09] transition-colors"
-              >
-                <Instagram className="w-7 h-7 text-cyan-brand mb-4" />
-                <h3 className="text-white font-bold text-base mb-2">Instagram-Feed</h3>
-                <p className="text-white/50 text-sm leading-relaxed">Dein aktueller Instagram-Feed direkt auf der Webseite synchronisiert – immer aktuell.</p>
-              </motion.div>
-              {/* Tile 3 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.15 }}
-                className="col-span-1 bg-white/[0.06] border border-white/[0.08] rounded-2xl p-7 hover:bg-white/[0.09] transition-colors"
-              >
-                <Mail className="w-7 h-7 text-cyan-brand mb-4" />
-                <h3 className="text-white font-bold text-base mb-2">Kontaktformular</h3>
-                <p className="text-white/50 text-sm leading-relaxed">Kundenanfragen landen direkt in deinem Postfach – DSGVO-konform und einfach.</p>
-              </motion.div>
-              {/* Tile 4 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="col-span-1 bg-white/[0.06] border border-white/[0.08] rounded-2xl p-7 hover:bg-white/[0.09] transition-colors"
-              >
-                <Users className="w-7 h-7 text-cyan-brand mb-4" />
-                <h3 className="text-white font-bold text-base mb-2">Über uns</h3>
-                <p className="text-white/50 text-sm leading-relaxed">Deine Geschichte, dein Team, deine Werte. Schaffe Vertrauen bei jedem Besucher.</p>
-              </motion.div>
-              {/* Tile 5 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.25 }}
-                className="col-span-1 bg-white/[0.06] border border-white/[0.08] rounded-2xl p-7 hover:bg-white/[0.09] transition-colors"
-              >
-                <Briefcase className="w-7 h-7 text-cyan-brand mb-4" />
-                <h3 className="text-white font-bold text-base mb-2">Karriere-Seite</h3>
-                <p className="text-white/50 text-sm leading-relaxed">Offene Stellen und Bewerbungsformular – finde die richtigen Mitarbeiter.</p>
-              </motion.div>
-              {/* Tile 6 – Groß */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="col-span-2 bg-white/[0.06] border border-white/[0.08] rounded-2xl p-7 hover:bg-white/[0.09] transition-colors"
-              >
-                <Building2 className="w-7 h-7 text-cyan-brand mb-4" />
-                <h3 className="text-white font-bold text-lg mb-2">Franchise-Seite</h3>
-                <p className="text-white/50 text-sm leading-relaxed">Überzeuge potenzielle Franchise-Partner mit einer professionellen eigenen Unterseite – inklusive Bewerbungsformular und allen wichtigen Informationen zu deinem Franchise-Konzept.</p>
-              </motion.div>
-              {/* Tile 7 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.35 }}
-                className="col-span-2 lg:col-span-4 bg-cyan-brand/10 border border-cyan-brand/20 rounded-2xl p-7 hover:bg-cyan-brand/[0.13] transition-colors"
-              >
-                <Link2 className="w-7 h-7 text-cyan-brand mb-4" />
-                <h3 className="text-white font-bold text-lg mb-2">Mit Webshop & App verknüpfbar</h3>
-                <p className="text-white/60 text-sm leading-relaxed max-w-2xl">Deine Webseite und dein Gastro Master Bestell-System aus einem Guss. Kunden landen auf deiner Webseite und können direkt eine Bestellung aufgeben – nahtlos, ohne Plattformwechsel.</p>
-              </motion.div>
+              {featureTiles.map((tile, i) => {
+                const Icon = FEATURE_ICONS[i];
+                const isLarge = i === 0 || i === 5;
+                const isHighlight = i === 6;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.05 + i * 0.05 }}
+                    className={`${isHighlight ? "col-span-2 lg:col-span-4 bg-cyan-brand/10 border border-cyan-brand/20 hover:bg-cyan-brand/[0.13]" : isLarge ? "col-span-2 bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.09]" : "col-span-1 bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.09]"} rounded-2xl p-7 transition-colors`}
+                  >
+                    {Icon && <Icon className="w-7 h-7 text-cyan-brand mb-4" />}
+                    <h3 className={`text-white font-bold ${isLarge || isHighlight ? "text-lg" : "text-base"} mb-2`}>{tile.title}</h3>
+                    <p className={`${isHighlight ? "text-white/60" : "text-white/50"} text-sm leading-relaxed ${isHighlight ? "max-w-2xl" : ""}`}>{tile.desc}</p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -596,17 +489,17 @@ const WebseitePage = () => {
               viewport={{ once: true }}
               className="text-center mb-14"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Portfolio</span>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("portfolio.badge")}</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-4">
-                Websites, die wir gebaut haben.
+                {t("portfolio.title")}
               </h2>
               <p className="text-[#0A264A]/50 dark:text-white/45 text-lg max-w-xl mx-auto">
-                Für Gastronomie, Bäckereien und weitere Branchen – jede Webseite individuell auf den Betrieb zugeschnitten.
+                {t("portfolio.desc")}
               </p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {PORTFOLIO.map((item, i) => (
+              {portfolioItems.map((item, i) => (
                 <motion.div
                   key={item.name}
                   initial={{ opacity: 0, y: 20 }}
@@ -616,7 +509,7 @@ const WebseitePage = () => {
                   className="group relative rounded-2xl overflow-hidden aspect-[4/3] cursor-default"
                 >
                   <img
-                    src={item.img}
+                    src={PORTFOLIO_IMGS[i]}
                     alt={item.alt}
                     className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   />
@@ -633,12 +526,12 @@ const WebseitePage = () => {
 
             <div className="text-center mt-12">
               <motion.button
-                onClick={() => { window.location.href = "/kontakt"; }}
+                onClick={() => { window.location.href = lp("/kontakt"); }}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 className="inline-flex items-center gap-2 bg-[#0A264A] dark:bg-white text-white dark:text-[#0A264A] font-bold px-8 py-4 rounded-xl text-base shadow-lg"
               >
-                Deine Webseite anfragen
+                {t("portfolio.cta")}
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
             </div>
@@ -654,30 +547,33 @@ const WebseitePage = () => {
               viewport={{ once: true }}
               className="text-center mb-14"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Zielgruppe</span>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("branchen.badge")}</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
-                Nicht nur für die Gastronomie.
+                {t("branchen.title")}
               </h2>
               <p className="text-white/55 text-lg max-w-2xl mx-auto leading-relaxed">
-                Unser Schwerpunkt liegt auf der Gastronomie, aber wir bauen Webseiten für jede Branche. Jede Website wird individuell auf den Betrieb und seine Zielgruppe zugeschnitten.
+                {t("branchen.desc")}
               </p>
             </motion.div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {BRANCHEN.map((b, i) => (
-                <motion.div
-                  key={b.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.06 }}
-                  whileHover={{ scale: 1.04, y: -3 }}
-                  className="flex flex-col items-center justify-center gap-3 bg-white/[0.06] border border-white/[0.08] rounded-2xl p-6 text-center cursor-default hover:bg-white/[0.1] transition-colors"
-                >
-                  <b.icon className="w-8 h-8 text-cyan-brand" />
-                  <span className="text-white font-semibold text-sm">{b.label}</span>
-                </motion.div>
-              ))}
+              {branchenItems.map((label, i) => {
+                const Icon = BRANCHEN_ICONS[i];
+                return (
+                  <motion.div
+                    key={label}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.06 }}
+                    whileHover={{ scale: 1.04, y: -3 }}
+                    className="flex flex-col items-center justify-center gap-3 bg-white/[0.06] border border-white/[0.08] rounded-2xl p-6 text-center cursor-default hover:bg-white/[0.1] transition-colors"
+                  >
+                    {Icon && <Icon className="w-8 h-8 text-cyan-brand" />}
+                    <span className="text-white font-semibold text-sm">{label}</span>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -691,18 +587,14 @@ const WebseitePage = () => {
               viewport={{ once: true }}
               className="text-center mb-20"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">So läuft's ab</span>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("process.badge")}</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight">
-                In 3 Schritten zu deiner professionellen Webseite.
+                {t("process.title")}
               </h2>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                { num: "01", title: "Kostenloses Beratungsgespräch", desc: "Wir besprechen deine Wünsche, Ziele, Zielgruppe und den gewünschten Umfang – und erstellen ein individuelles Angebot." },
-                { num: "02", title: "Design & Umsetzung", desc: "Unser Team baut deine Webseite professionell, DSGVO-konform und optimiert für alle Geräte. Du wirst während des Prozesses eingebunden." },
-                { num: "03", title: "Go-Live", desc: "Deine neue Webseite ist in wenigen Tagen online – mit eigener Domain, Hosting und vollem Support von unserem Team." },
-              ].map((step, i) => (
+              {processSteps.map((step, i) => (
                 <motion.div
                   key={step.num}
                   initial={{ opacity: 0, y: 24 }}
@@ -729,12 +621,12 @@ const WebseitePage = () => {
               viewport={{ once: true }}
               className="text-center mb-14"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Transparente Preise</span>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("pricing.badge")}</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
-                Du entscheidest, wie du starten willst.
+                {t("pricing.title")}
               </h2>
               <p className="text-white/50 text-lg max-w-xl mx-auto">
-                Abo oder Einmalkauf – beide Wege führen zu deiner professionellen Online-Präsenz.
+                {t("pricing.desc")}
               </p>
             </motion.div>
 
@@ -750,26 +642,17 @@ const WebseitePage = () => {
               >
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="bg-[#ED8400] text-white text-xs font-black uppercase tracking-widest px-5 py-1.5 rounded-full shadow-lg">
-                    Beliebt
+                    {t("pricing.abo.popular")}
                   </span>
                 </div>
-                <p className="text-[#0A264A]/50 text-xs font-bold uppercase tracking-widest mb-3">Monatliches Abo</p>
+                <p className="text-[#0A264A]/50 text-xs font-bold uppercase tracking-widest mb-3">{t("pricing.abo.label")}</p>
                 <div className="mb-1">
-                  <span className="text-5xl font-black text-[#0A264A]">49 €</span>
-                  <span className="text-[#0A264A]/50 text-base font-medium ml-2">/Monat</span>
+                  <span className="text-5xl font-black text-[#0A264A]">{t("pricing.abo.price")}</span>
+                  <span className="text-[#0A264A]/50 text-base font-medium ml-2">{t("pricing.abo.per")}</span>
                 </div>
-                <p className="text-[#0A264A]/40 text-xs mb-7">zzgl. MwSt. · monatlich kündbar</p>
+                <p className="text-[#0A264A]/40 text-xs mb-7">{t("pricing.abo.note")}</p>
                 <ul className="space-y-3 mb-8 flex-1">
-                  {[
-                    "Professionelles Webdesign",
-                    "Eigene Domain inklusive",
-                    "Zuverlässiges Hosting",
-                    "2 E-Mail-Postfächer",
-                    "DSGVO-konform eingerichtet",
-                    "Technischer Support",
-                    "Laufende Updates",
-                    "Monatlich kündbar",
-                  ].map(f => (
+                  {aboFeatures.map(f => (
                     <li key={f} className="flex items-center gap-2.5 text-[#0A264A]/75 text-sm">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
                       {f}
@@ -777,12 +660,12 @@ const WebseitePage = () => {
                   ))}
                 </ul>
                 <motion.button
-                  onClick={() => { window.location.href = "/kontakt"; }}
+                  onClick={() => { window.location.href = lp("/kontakt"); }}
                   whileHover={{ scale: 1.03, boxShadow: "0 0 24px 6px rgba(237,132,0,0.45)" }}
                   whileTap={{ scale: 0.97 }}
                   className="w-full bg-[#ED8400] text-white font-bold py-3.5 rounded-xl inline-flex items-center justify-center gap-2 shadow-lg"
                 >
-                  Jetzt starten
+                  {t("pricing.abo.cta")}
                   <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </motion.div>
@@ -795,23 +678,17 @@ const WebseitePage = () => {
                 transition={{ delay: 0.1 }}
                 className="bg-white/[0.07] border border-white/[0.12] rounded-3xl p-8 flex flex-col"
               >
-                <p className="text-white/50 text-xs font-bold uppercase tracking-widest mb-3">Simple Website · Einmalkauf</p>
+                <p className="text-white/50 text-xs font-bold uppercase tracking-widest mb-3">{t("pricing.simple.label")}</p>
                 <div className="mb-1">
-                  <span className="text-5xl font-black text-white">ab 990 €</span>
+                  <span className="text-5xl font-black text-white">{t("pricing.simple.price")}</span>
                 </div>
-                <p className="text-white/35 text-xs mb-2">einmalig · zzgl. MwSt.</p>
-                <p className="text-[#ED8400]/80 text-xs font-semibold mb-7">Auch in 3 bequemen Raten möglich</p>
+                <p className="text-white/35 text-xs mb-2">{t("pricing.simple.note")}</p>
+                <p className="text-[#ED8400]/80 text-xs font-semibold mb-7">{t("pricing.simple.raten")}</p>
                 <p className="text-white/60 text-sm leading-relaxed mb-5">
-                  Ideal für Betriebe, die schnell und günstig online sichtbar sein wollen. Ein professioneller Onepager mit allem, was du brauchst:
+                  {t("pricing.simple.desc")}
                 </p>
                 <ul className="space-y-3 mb-8 flex-1">
-                  {[
-                    "Startseite mit allen wichtigen Infos",
-                    "Kontaktformular",
-                    "Impressum & Datenschutz",
-                    "Mobiloptimiertes Design",
-                    "DSGVO-konform",
-                  ].map(f => (
+                  {simpleFeatures.map(f => (
                     <li key={f} className="flex items-center gap-2.5 text-white/60 text-sm">
                       <CheckCircle2 className="w-4 h-4 text-cyan-brand flex-shrink-0" />
                       {f}
@@ -819,12 +696,12 @@ const WebseitePage = () => {
                   ))}
                 </ul>
                 <motion.button
-                  onClick={() => { window.location.href = "/kontakt"; }}
+                  onClick={() => { window.location.href = lp("/kontakt"); }}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="w-full bg-white/10 border border-white/20 text-white font-bold py-3.5 rounded-xl inline-flex items-center justify-center gap-2 hover:bg-white/15 transition-colors"
                 >
-                  Angebot anfragen
+                  {t("pricing.simple.cta")}
                   <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </motion.div>
@@ -837,23 +714,16 @@ const WebseitePage = () => {
                 transition={{ delay: 0.15 }}
                 className="bg-white/[0.07] border border-white/[0.12] rounded-3xl p-8 flex flex-col"
               >
-                <p className="text-white/50 text-xs font-bold uppercase tracking-widest mb-3">Individuelle Website · Mehrseiter</p>
+                <p className="text-white/50 text-xs font-bold uppercase tracking-widest mb-3">{t("pricing.individual.label")}</p>
                 <div className="mb-1">
-                  <span className="text-5xl font-black text-white">Auf Anfrage</span>
+                  <span className="text-5xl font-black text-white">{t("pricing.individual.price")}</span>
                 </div>
-                <p className="text-white/35 text-xs mb-7">Preis je nach Umfang · Einmalkauf oder Abo</p>
+                <p className="text-white/35 text-xs mb-7">{t("pricing.individual.note")}</p>
                 <p className="text-white/60 text-sm leading-relaxed mb-5">
-                  Für umfangreichere Projekte mit mehreren Unterseiten und individuellen Funktionen. Der Preis wird gemeinsam im Beratungsgespräch ermittelt.
+                  {t("pricing.individual.desc")}
                 </p>
                 <ul className="space-y-3 mb-8 flex-1">
-                  {[
-                    "Mehrere Unterseiten",
-                    "Bildergalerie",
-                    "Instagram-Feed-Integration",
-                    "Karriere- & Franchise-Seite",
-                    "Video-Einbindung",
-                    "Individuelle Features auf Anfrage",
-                  ].map(f => (
+                  {individualFeatures.map(f => (
                     <li key={f} className="flex items-center gap-2.5 text-white/60 text-sm">
                       <CheckCircle2 className="w-4 h-4 text-cyan-brand flex-shrink-0" />
                       {f}
@@ -861,12 +731,12 @@ const WebseitePage = () => {
                   ))}
                 </ul>
                 <motion.button
-                  onClick={() => { window.location.href = "/kontakt"; }}
+                  onClick={() => { window.location.href = lp("/kontakt"); }}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="w-full bg-white/10 border border-white/20 text-white font-bold py-3.5 rounded-xl inline-flex items-center justify-center gap-2 hover:bg-white/15 transition-colors"
                 >
-                  Angebot anfragen
+                  {t("pricing.individual.cta")}
                   <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </motion.div>
@@ -883,16 +753,14 @@ const WebseitePage = () => {
               viewport={{ once: true }}
               className="text-center mb-14"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Kundenstimmen</span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
-                700+ Unternehmen,<br className="hidden md:block" /> die bereits auf Gastro Master vertrauen.
-              </h2>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("testimonials.badge")}</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight" dangerouslySetInnerHTML={{ __html: t("testimonials.title") }} />
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-14">
-              {testimonials.map((t, i) => (
+              {testimonialItems.map((item, i) => (
                 <motion.div
-                  key={t.name}
+                  key={item.name}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -902,26 +770,21 @@ const WebseitePage = () => {
                   <div className="flex gap-0.5 mb-4">
                     {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-[#ED8400] text-[#ED8400]" />)}
                   </div>
-                  <p className="text-white/80 text-base leading-relaxed mb-5">„{t.quote}"</p>
+                  <p className="text-white/80 text-base leading-relaxed mb-5">&bdquo;{item.quote}&ldquo;</p>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-cyan-brand/20 flex items-center justify-center text-cyan-brand font-bold text-sm flex-shrink-0">{t.initials}</div>
+                    <div className="w-10 h-10 rounded-full bg-cyan-brand/20 flex items-center justify-center text-cyan-brand font-bold text-sm flex-shrink-0">{item.initials}</div>
                     <div>
-                      <p className="text-white font-semibold text-sm">{t.name}</p>
-                      <p className="text-white/45 text-xs">{t.restaurant}</p>
+                      <p className="text-white font-semibold text-sm">{item.name}</p>
+                      <p className="text-white/45 text-xs">{item.restaurant}</p>
                     </div>
-                    <img src={t.logo} alt={t.restaurant} className="h-7 object-contain ml-auto opacity-60" />
+                    {TESTIMONIAL_LOGOS[i] && <img src={TESTIMONIAL_LOGOS[i]} alt={item.restaurant} className="h-7 object-contain ml-auto opacity-60" />}
                   </div>
                 </motion.div>
               ))}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { value: "700+",       label: "Unternehmen vertrauen Gastro Master" },
-                { value: "Tage",       label: "Nicht Wochen – so schnell bist du online" },
-                { value: "Alle",       label: "Branchen & Betriebsgrößen" },
-                { value: "Inkl.",      label: "Support, Hosting & Domain im Abo" },
-              ].map((s, i) => (
+              {testimonialStats.map((s, i) => (
                 <motion.div
                   key={s.label}
                   initial={{ opacity: 0, y: 14 }}
@@ -948,20 +811,20 @@ const WebseitePage = () => {
                 viewport={{ once: true }}
                 className="lg:sticky lg:top-32"
               >
-                <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">FAQ</span>
+                <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("faq.badge")}</span>
                 <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-6">
-                  Häufige Fragen zur Gastro Master Webseite
+                  {t("faq.title")}
                 </h2>
                 <p className="text-white/45 text-base leading-relaxed">
-                  Du hast weitere Fragen? Wir beraten dich gern persönlich – kostenlos und unverbindlich.
+                  {t("faq.desc")}
                 </p>
                 <motion.button
-                  onClick={() => { window.location.href = "/kontakt"; }}
+                  onClick={() => { window.location.href = lp("/kontakt"); }}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="mt-8 inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white font-bold px-6 py-3 rounded-xl text-sm hover:bg-white/15 transition-colors"
                 >
-                  Beratung anfragen
+                  {t("faq.cta")}
                   <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </motion.div>
@@ -971,8 +834,8 @@ const WebseitePage = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
               >
-                {FAQ_ITEMS.map(item => (
-                  <FaqItem key={item.q} q={item.q} a={item.a} />
+                {faqItems.map(item => (
+                  <FaqItem key={item.q} q={item.q} a={item.a} lp={lp} />
                 ))}
               </motion.div>
             </div>

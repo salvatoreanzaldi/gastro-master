@@ -5,7 +5,7 @@ import takeMenu from "@/assets/screenshots/take-menu.jpeg";
 import takeFilialen from "@/assets/screenshots/take-filialen.jpeg";
 import takeBestellart from "@/assets/screenshots/take-bestellart.jpeg";
 import takeBenutzerkonto from "@/assets/screenshots/take-benutzerkonto.jpeg";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const screenImgs = [takeStartbild, takeMenu, takeFilialen, takeBestellart, takeBenutzerkonto];
 
@@ -86,7 +86,7 @@ const Dot = ({ index, centerIdx }: DotProps) => {
 };
 
 const MockupShowcase = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Detect mobile once at mount for container height
@@ -124,13 +124,13 @@ const MockupShowcase = () => {
           className="text-center pt-14 pb-4 relative z-10 shrink-0 px-4"
         >
           <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">
-            {t.mockup.badge}
+            {t("mockup.badge")}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-primary-foreground mb-4">
-            {t.mockup.headline}
+            {t("mockup.headline")}
           </h2>
           <p className="text-primary-foreground/60 text-lg max-w-2xl mx-auto">
-            {t.mockup.sub}
+            {t("mockup.sub")}
           </p>
         </motion.div>
 
@@ -140,7 +140,7 @@ const MockupShowcase = () => {
             <PhoneCard
               key={i}
               img={img}
-              label={t.mockup.tabs[i]}
+              label={t(`mockup.tabs.${i}`)}
               index={i}
               centerIdx={centerIdx}
             />

@@ -3,25 +3,26 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import dashboardImg from "@/assets/kassensystem/cashier-dashboard.png";
-
-const cyclingWords = [
-  "Deine Regeln.",
-  "Dein Gewinn.",
-  "Dein Umsatz.",
-  "Deine Freiheit.",
-  "Dein Erfolg.",
-  "Deine Zukunft.",
-];
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "@/components/LanguageLayout";
 
 const HeroScrollSection = () => {
   const [index, setIndex] = useState(0);
+  const { t } = useTranslation("common");
+  const lp = useLangPath();
+
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+  const cyclingWords = arr("heroScroll.cyclingWords") as string[];
 
   useEffect(() => {
+    if (cyclingWords.length === 0) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % cyclingWords.length);
     }, 2500);
     return () => clearInterval(interval);
-  }, []);
+  }, [cyclingWords.length]);
+
+  if (cyclingWords.length === 0) return null;
 
   return (
     <div className="flex flex-col overflow-hidden bg-gradient-navy">
@@ -29,10 +30,12 @@ const HeroScrollSection = () => {
         titleComponent={
           <>
             <p className="text-sm md:text-base font-semibold text-amber-400 uppercase tracking-widest mb-4">
-              Das Gastro-System der nächsten Generation
+              {t("heroScroll.badge")}
             </p>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6">
-              <span className="block leading-[1.05]">Dein Restaurant.</span>
+              <span className="block leading-[1.05]">
+                {t("heroScroll.title1")}
+              </span>
               <span className="block leading-[1.3] overflow-visible">
                 <span className="relative inline-block min-w-[12rem] md:min-w-[18rem] overflow-visible">
                   <AnimatePresence mode="wait">
@@ -50,13 +53,15 @@ const HeroScrollSection = () => {
                   </AnimatePresence>
                 </span>
               </span>
-              <span className="block leading-[1.05]">Ohne Provision.</span>
+              <span className="block leading-[1.05]">
+                {t("heroScroll.title2")}
+              </span>
             </h1>
             <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
-              Gastro Master gibt dir die volle Kontrolle —{" "}
-              <Link to="/produkte/webshop" className="text-white/80 underline underline-offset-2 hover:text-white transition-colors">digitales Bestellsystem</Link>,{" "}
-              <Link to="/produkte/kassensystem" className="text-white/80 underline underline-offset-2 hover:text-white transition-colors">Kasse</Link>,
-              Pickup-Screen und mehr. Alles in einem. Keine versteckten Gebühren.
+              {t("heroScroll.subPrefix")}{" "}
+              <Link to={lp("/produkte/webshop")} className="text-white/80 underline underline-offset-2 hover:text-white transition-colors">{t("heroScroll.linkWebshop")}</Link>,{" "}
+              <Link to={lp("/produkte/kassensystem")} className="text-white/80 underline underline-offset-2 hover:text-white transition-colors">{t("heroScroll.linkKasse")}</Link>,
+              {" "}{t("heroScroll.subSuffix")}
             </p>
           </>
         }

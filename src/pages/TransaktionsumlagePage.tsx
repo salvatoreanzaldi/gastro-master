@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "@/components/LanguageLayout";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -38,35 +40,37 @@ const PAYMENT_LOGOS_B = [
   { src: payKlarna,       alt: "Klarna",      h: "h-10" },
 ] as const;
 
-// ─── JSON-LD Schema ───────────────────────────────────────────────────────────
-const FAQ_ITEMS = [
+const TESTIMONIAL_LOGOS = [logoKojo, logoIlSorriso, logoBurger, logoArtemis];
+
+// ─── JSON-LD Schema (bleibt statisch DE für SEO) ─────────────────────────────
+const FAQ_ITEMS_SCHEMA = [
   {
     q: "Darf ich Kreditkartengebühren an Kunden weitergeben?",
-    a: "Ja. In Deutschland und der EU ist das Weitergeben von Zahlungsgebühren als transparente Servicegebühr (Transaktionsumlage) zulässig, sofern sie beim Checkout klar ausgewiesen wird. Die EU-Richtlinie 2015/2366 (PSD2) verbietet lediglich versteckte Aufschläge – eine offen kommunizierte Umlage ist hingegen rechtlich einwandfrei. Die Transaktionsumlage ist im [Gastro Master Kassensystem](/produkte/kassensystem) vollständig integriert.",
+    a: "Ja. In Deutschland und der EU ist das Weitergeben von Zahlungsgebühren als transparente Servicegebühr (Transaktionsumlage) zulässig, sofern sie beim Checkout klar ausgewiesen wird.",
   },
   {
     q: "Wie funktioniert eine Transaktionsumlage im Restaurant?",
-    a: "Wenn ein Kunde bezahlt (z. B. per PayPal), wird die anfallende Gebühr (z. B. 2,99 % + 0,35 €) automatisch als separater Posten auf den Bestellbetrag aufgeschlagen und beim Checkout transparent ausgewiesen. Der Gastronom erhält seinen vollen Nettobetrag – ohne Abzüge. Die Funktion ist direkt in den [Gastro Master Bestellshop](/produkte/webshop) integriert.",
+    a: "Wenn ein Kunde bezahlt, wird die anfallende Gebühr automatisch als separater Posten auf den Bestellbetrag aufgeschlagen und beim Checkout transparent ausgewiesen.",
   },
   {
     q: "Was kostet PayPal für Gastronomen pro Transaktion?",
-    a: "PayPal berechnet für Online-Zahlungen in Deutschland 2,99 % des Transaktionsbetrags zuzüglich 0,35 € pro Transaktion (Quelle: paypal.com/de/webapps/mpp/merchant-fees). Bei 300 Bestellungen mit einem Durchschnittswert von 30 € entstehen somit monatlich ca. 374 € an Gebühren – die mit der Transaktionsumlage vollständig an den Kunden weitergegeben werden. Gerade für [Gastronomen mit eigenem Lieferdienst](/loesungen/lieferservice-gruenden) lohnt sich das Add-On besonders.",
+    a: "PayPal berechnet für Online-Zahlungen in Deutschland 2,99 % des Transaktionsbetrags zuzüglich 0,35 € pro Transaktion.",
   },
   {
     q: "Ist die Transaktionsumlage bei Kreditkarten legal?",
-    a: "Ja. Kreditkartengebühren dürfen als transparente Umlage weitergegeben werden, solange sie beim Bestellvorgang klar sichtbar ausgewiesen sind. Die Gastro Master Plattform zeigt die Gebühr automatisch im Checkout an und erfüllt damit alle gesetzlichen Anforderungen. Alle Preise und Add-On-Konditionen findest du in der [vollständigen Preisübersicht](/preise).",
+    a: "Ja. Kreditkartengebühren dürfen als transparente Umlage weitergegeben werden, solange sie beim Bestellvorgang klar sichtbar ausgewiesen sind.",
   },
   {
     q: "Welche Zahlungsarten können umgelegt werden?",
-    a: "Alle gängigen Zahlungsarten sind abgedeckt: PayPal, Visa, Mastercard, Apple Pay, Google Pay und Klarna. Du kannst wählen, welche Methoden du aktivierst – und nur für diese wird die Umlage angewandt. Die Einrichtung erfolgt direkt in deinem [Gastro Master Bestellshop](/produkte/webshop) oder deiner [eigenen Bestell-App](/produkte/app).",
+    a: "Alle gängigen Zahlungsarten sind abgedeckt: PayPal, Visa, Mastercard, Apple Pay, Google Pay und Klarna.",
   },
   {
     q: "Funktioniert die Transaktionsumlage auch bei mehreren Standorten?",
-    a: "Ja. Die Transaktionsumlage lässt sich standortübergreifend einrichten. Jeder Standort kann mit eigenen Zahlungskonten (PayPal Business, Stripe) verknüpft werden – die Umlage wird dann automatisch für alle aktivierten Standorte angewendet. Mehr dazu auf der [Franchise-Seite](/loesungen/franchise).",
+    a: "Ja. Die Transaktionsumlage lässt sich standortübergreifend einrichten.",
   },
   {
     q: "Muss ich ein eigenes PayPal- und Stripe-Konto haben?",
-    a: "Ja. Zahlungen landen direkt auf deinem eigenen PayPal Business- und/oder Stripe-Konto – kein Zwischenhändler, keine Verzögerung. Das ist ein wesentlicher Vorteil gegenüber Drittplattformen: Du hast jederzeit Zugriff auf dein Geld. Bei Fragen zur Einrichtung hilft unser Team gerne – schreib uns einfach über das [Kontaktformular](/kontakt).",
+    a: "Ja. Zahlungen landen direkt auf deinem eigenen PayPal Business- und/oder Stripe-Konto.",
   },
 ];
 
@@ -87,10 +91,10 @@ const SCHEMA_PRODUCT = {
 const SCHEMA_FAQ = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": FAQ_ITEMS.map(({ q, a }) => ({
+  "mainEntity": FAQ_ITEMS_SCHEMA.map(({ q, a }) => ({
     "@type": "Question",
     "name": q,
-    "acceptedAnswer": { "@type": "Answer", "text": a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") },
+    "acceptedAnswer": { "@type": "Answer", "text": a },
   })),
 };
 
@@ -135,146 +139,39 @@ const PROVIDERS = [
 
 // Comparison table: 300 orders × 30 €
 const TABLE_ROWS = [
-  { provider: "PayPal",                logo: payPaypalIcon,      rate: "2,99 % + 0,35 €",      monthly: 374.10 },
+  { provider: "PayPal",                logo: payPaypalIcon,  rate: "2,99 % + 0,35 €",      monthly: 374.10 },
   { provider: "Kreditkarte (Stripe)",  logo: payVisa,        rate: "1,50 % + 0,25 €",      monthly: 210.00 },
   { provider: "Apple Pay",             logo: payApple,       rate: "1,50 % + 0,25 €",      monthly: 210.00 },
   { provider: "Google Pay",            logo: payGoogle,      rate: "1,50 % + 0,25 €",      monthly: 210.00 },
   { provider: "Klarna",                logo: payKlarna,      rate: "ca. 2,49 % + 0,25 €",  monthly: 299.10 },
 ];
 
-// ─── Testimonials ─────────────────────────────────────────────────────────────
-const testimonials = [
-  { initials: "HL", quote: "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein.", name: "Ha Lim Lee", restaurant: "Kojo Sushi", logo: logoKojo },
-  { initials: "MG", quote: "Also der Support ist einfach 1a und den würdest du nirgend wo anders so bekommen!", name: "Marco Greco", restaurant: "Pizzeria Il Sorriso", logo: logoIlSorriso },
-  { initials: "SH", quote: "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren.", name: "Sven Heinrich", restaurant: "61 Burger & More", logo: logoBurger },
-  { initials: "GM", quote: "Wir haben durch die App viel mehr Kunden und Reichweite gewonnen.", name: "Georgios Madatsidis", restaurant: "Artemis Grill", logo: logoArtemis },
+// ─── Team members (names stay constant) ──────────────────────────────────────
+const TEAM_IMGS = [teamReneImg, teamSalvatoreImg, teamAndrejImg];
+const TEAM_NAMES = ["René Ebert", "Salvatore Anzaldi", "Andrej Krutsch"];
+
+const LANG_META = [
+  { flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
+  { flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
+  { flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
+  { flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
+  { flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
+  { flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
 ];
 
-// ─── Team CTA ─────────────────────────────────────────────────────────────────
-const teamMembers = [
-  { img: teamReneImg,      name: "René Ebert",        role: "Gründer & Geschäftsführer" },
-  { img: teamSalvatoreImg, name: "Salvatore Anzaldi",  role: "Head of Sales" },
-  { img: teamAndrejImg,    name: "Andrej Krutsch",     role: "Head of Operations" },
-];
-
-const TeamCTA = () => {
-  const [current, setCurrent] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setCurrent(c => (c + 1) % teamMembers.length), 4000);
-    return () => clearInterval(t);
-  }, []);
-  const member = teamMembers[current];
-  return (
-    <section className="bg-[#F0F4F8] dark:bg-[#060e1a] px-5 md:px-8 lg:px-16 py-20 md:py-28">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="bg-white dark:bg-[#0d1f35] rounded-3xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/40 grid lg:grid-cols-2"
-        >
-          <div className="p-10 md:p-14 flex flex-col justify-center">
-            <span className="bg-[#0A264A]/[0.07] dark:bg-white/10 text-[#0A264A] dark:text-white text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full inline-block mb-8 w-fit">
-              Jetzt durchstarten
-            </span>
-            <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight mb-6">
-              Buche jetzt dein<br />kostenloses Beratungsgespräch.
-            </h2>
-            <p className="font-bold text-[#0A264A] dark:text-white text-sm mb-3">Das erwartet dich:</p>
-            <p className="text-[#0A264A]/60 dark:text-white/55 text-base leading-relaxed mb-5">
-              In einem kostenlosen Erstgespräch analysieren wir gemeinsam deine Zahlungsstruktur – Zahlungsmethoden, Standorte und Konten – und erstellen ein individuelles Angebot, das genau zu deinem Betrieb passt.
-            </p>
-            <p className="text-[#0A264A]/40 dark:text-white/35 text-sm leading-relaxed mb-4">
-              Die Einrichtung dauert in der Regel nur wenige Tage. Danach zahlst du keine Zahlungsgebühren mehr aus eigener Tasche.
-            </p>
-            <div className="flex flex-wrap gap-2 mb-10">
-              {[
-                { label: "Deutsch",       flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
-                { label: "Englisch",      flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
-                { label: "Italienisch",   flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
-                { label: "Persisch",      flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
-                { label: "Russisch",      flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
-                { label: "Singhalesisch", flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
-              ].map((lang, i) => (
-                <motion.div
-                  key={lang.label}
-                  initial={{ opacity: 0, scale: 0.85 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.05 + i * 0.06, duration: 0.3, ease: "easeOut" }}
-                  whileHover={{ scale: 1.08, y: -2 }}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${lang.color}`}
-                >
-                  <span className="text-lg leading-none">{lang.flag}</span>
-                  {lang.label}
-                </motion.div>
-              ))}
-            </div>
-            <motion.button
-              onClick={() => { window.location.href = "/kontakt"; }}
-              whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.2 }}
-              className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group w-fit"
-            >
-              Kostenlose Beratung anfragen
-              <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
-            </motion.button>
-          </div>
-          <div className="relative min-h-[380px] lg:min-h-auto overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={current}
-                src={member.img}
-                alt={member.name}
-                initial={{ opacity: 0, scale: 1.04 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.97 }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
-                className="absolute inset-0 w-full h-full object-cover object-top"
-              />
-            </AnimatePresence>
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-8 py-7">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={current}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <p className="text-white font-bold text-lg leading-tight">{member.name}</p>
-                  <p className="text-white/70 text-sm">{member.role}</p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-            <div className="absolute top-5 right-5 flex gap-2">
-              {teamMembers.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrent(i)}
-                  className={`rounded-full transition-all duration-300 ${i === current ? "w-5 h-2 bg-white" : "w-2 h-2 bg-white/40 hover:bg-white/70"}`}
-                />
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+const FEATURE_ICONS = [Wallet, CreditCard, Percent, Banknote, TrendingUp, CheckCircle2, Zap];
+const FEATURE_SIZES: ("lg" | "sm")[] = ["lg", "sm", "sm", "sm", "lg", "sm", "sm"];
 
 // ─── renderFaqLinks ────────────────────────────────────────────────────────────
-const renderFaqLinks = (text: string): React.ReactNode[] =>
+const renderFaqLinks = (text: string, lp: (p: string) => string): React.ReactNode[] =>
   text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
     const m = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
-    if (m) return <Link key={i} to={m[2]} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
+    if (m) return <Link key={i} to={lp(m[2])} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{m[1]}</Link>;
     return part;
   });
 
 // ─── FaqItem ──────────────────────────────────────────────────────────────────
-const FaqItem = ({ q, a }: { q: string; a: string }) => {
+const FaqItem = ({ q, a, lp }: { q: string; a: string; lp: (p: string) => string }) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-white/[0.08]">
@@ -296,7 +193,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
             transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a)}</p>
+            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a, lp)}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -304,8 +201,10 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
   );
 };
 
-// ─── Hero Variante B – Particle Canvas (21st.dev / AetherFlow adapted) ───────
+// ─── Hero Variante B – Particle Canvas ──────────────────────────────────────
 const HeroParticleVariant = () => {
+  const { t } = useTranslation("transaktionsumlage");
+  const lp = useLangPath();
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   React.useEffect(() => {
@@ -436,7 +335,7 @@ const HeroParticleVariant = () => {
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-brand/10 border border-cyan-brand/25 mb-6 backdrop-blur-sm"
         >
           <Star className="h-4 w-4 text-cyan-brand fill-cyan-brand" />
-          <span className="text-sm font-bold text-white/90">Add-On #1 · Transaktions-Umlage</span>
+          <span className="text-sm font-bold text-white/90">{t("hero.badge")}</span>
         </motion.div>
 
         {/* H1 */}
@@ -444,7 +343,7 @@ const HeroParticleVariant = () => {
           custom={1} variants={fadeUp} initial="hidden" animate="visible"
           className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-10"
         >
-          <span className="text-gradient-brand">Transaktionsumlage</span>{" "}–<br />Zahlungsgebühren<br />transparent weitergeben
+          <span className="text-gradient-brand">{t("hero.title1")}</span>{t("hero.title2")}
         </motion.h1>
 
         {/* Subline */}
@@ -452,7 +351,7 @@ const HeroParticleVariant = () => {
           custom={2} variants={fadeUp} initial="hidden" animate="visible"
           className="max-w-2xl mx-auto text-lg md:text-xl text-white/55 mb-8 leading-relaxed"
         >
-          Die Transaktionsumlage ist ein Add-On für Gastronomen, das die anfallenden Zahlungsgebühren von PayPal, Kreditkarte, Apple Pay, Google Pay und Klarna automatisch und transparent als separaten Posten an den Kunden weitergibt. Du erhältst deinen vollen Nettoumsatz.
+          {t("hero.desc")}
         </motion.p>
 
         {/* Payment Logos */}
@@ -474,12 +373,12 @@ const HeroParticleVariant = () => {
         {/* CTA */}
         <motion.div custom={4} variants={fadeUp} initial="hidden" animate="visible">
           <motion.button
-            onClick={() => { window.location.href = "/kontakt"; }}
+            onClick={() => { window.location.href = lp("/kontakt"); }}
             whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55)" }}
             whileTap={{ scale: 0.97 }}
             className="px-8 py-4 bg-[#ED8400] text-white font-bold rounded-xl shadow-lg shadow-[#ED8400]/30 inline-flex items-center gap-2 text-lg"
           >
-            Kostenloses Beratungsgespräch
+            {t("hero.cta")}
             <ArrowRight className="h-5 w-5" />
           </motion.button>
         </motion.div>
@@ -488,15 +387,128 @@ const HeroParticleVariant = () => {
   );
 };
 
+// ─── TeamCTA ─────────────────────────────────────────────────────────────────
+const TeamCTA = () => {
+  const { t } = useTranslation("transaktionsumlage");
+  const lp = useLangPath();
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setCurrent(c => (c + 1) % TEAM_IMGS.length), 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const roles = arr("teamCta.teamRoles") as string[];
+  const langs = arr("teamCta.langs") as string[];
+  if (!roles.length || !langs.length) return null;
+
+  return (
+    <section className="bg-[#F0F4F8] dark:bg-[#060e1a] px-5 md:px-8 lg:px-16 py-20 md:py-28">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="bg-white dark:bg-[#0d1f35] rounded-3xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/40 grid lg:grid-cols-2"
+        >
+          <div className="p-10 md:p-14 flex flex-col justify-center">
+            <span className="bg-[#0A264A]/[0.07] dark:bg-white/10 text-[#0A264A] dark:text-white text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full inline-block mb-8 w-fit">
+              {t("teamCta.badge")}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight mb-6">
+              {t("teamCta.title")}
+            </h2>
+            <p className="font-bold text-[#0A264A] dark:text-white text-sm mb-3">{t("teamCta.expectLabel")}</p>
+            <p className="text-[#0A264A]/60 dark:text-white/55 text-base leading-relaxed mb-5">
+              {t("teamCta.expectText")}
+            </p>
+            <p className="text-[#0A264A]/40 dark:text-white/35 text-sm leading-relaxed mb-4">
+              {t("teamCta.setupText")}
+            </p>
+            <div className="flex flex-wrap gap-2 mb-10">
+              {langs.map((label, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.05 + i * 0.06, duration: 0.3, ease: "easeOut" }}
+                  whileHover={{ scale: 1.08, y: -2 }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${LANG_META[i]?.color ?? ""}`}
+                >
+                  <span className="text-lg leading-none">{LANG_META[i]?.flag}</span>
+                  {label}
+                </motion.div>
+              ))}
+            </div>
+            <motion.button
+              onClick={() => { window.location.href = lp("/kontakt"); }}
+              whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2 }}
+              className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group w-fit"
+            >
+              {t("teamCta.cta")}
+              <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
+            </motion.button>
+          </div>
+          <div className="relative min-h-[380px] lg:min-h-auto overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={current}
+                src={TEAM_IMGS[current]}
+                alt={TEAM_NAMES[current]}
+                initial={{ opacity: 0, scale: 1.04 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+              />
+            </AnimatePresence>
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-8 py-7">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <p className="text-white font-bold text-lg leading-tight">{TEAM_NAMES[current]}</p>
+                  <p className="text-white/70 text-sm">{roles[current]}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <div className="absolute top-5 right-5 flex gap-2">
+              {TEAM_IMGS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  className={`rounded-full transition-all duration-300 ${i === current ? "w-5 h-2 bg-white" : "w-2 h-2 bg-white/40 hover:bg-white/70"}`}
+                />
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const TransaktionsumlagePage = () => {
+  const { t } = useTranslation("transaktionsumlage");
+  const lp = useLangPath();
+  const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
+
   const [activeProvider, setActiveProvider] = useState(0);
   const [orders, setOrders] = useState(300);
   const [avgCart, setAvgCart] = useState(30);
 
   useSeoMeta({
-    title: "Transaktionsumlage Gastronomie — 0 € Gebühren | Gastro Master",
-    description: "Zahlungsgebühren (PayPal, Kreditkarte, Klarna) transparent an Kunden weitergeben — rechtssicher und automatisch. Top-Seller Add-On für Gastronomen. Jetzt informieren.",
+    title: t("seo.title"),
+    description: t("seo.description"),
     canonical: "https://gastro-master.de/produkte/transaktionsumlage",
   });
 
@@ -504,6 +516,17 @@ const TransaktionsumlagePage = () => {
   const monthlyFee = Math.round(orders * (avgCart * provider.rate + provider.fixed) * 100) / 100;
   const yearlyFee  = Math.round(monthlyFee * 12 * 100) / 100;
   const revenue    = orders * avgCart;
+
+  const trustBar = arr("trustBar") as { value: string; label: string }[];
+  const steps = arr("howItWorks.steps") as { num: string; title: string; text: string }[];
+  const featureItems = arr("features.items") as { title: string; text: string }[];
+  const quotes = arr("testimonials.quotes") as { initials: string; quote: string; name: string; restaurant: string }[];
+  const stats = arr("testimonials.stats") as { value: string; label: string }[];
+  const faqItems = arr("faq.items") as { q: string; a: string }[];
+  const webshopFeatures = arr("requirements.webshop.features") as string[];
+  const appFeatures = arr("requirements.appWebshop.features") as string[];
+
+  if (!trustBar.length) return null;
 
   return (
     <>
@@ -520,13 +543,9 @@ const TransaktionsumlagePage = () => {
         {/* ── S2: TRUST BAR ─────────────────────────────────────────────────── */}
         <section className="bg-white dark:bg-[#111827] border-y border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-10 md:py-12">
           <div className="max-w-6xl mx-auto grid grid-cols-3 gap-4 md:gap-8 items-center">
-            {[
-              { value: "Top-Seller",  label: "Beliebtestes Add-On" },
-              { value: "7",           label: "Unterstützte Zahlungsarten" },
-              { value: "700+",        label: "Gastronomen nutzen Gastro Master" },
-            ].map((s, i) => (
+            {trustBar.map((s, i) => (
               <motion.div
-                key={s.label}
+                key={i}
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -549,32 +568,20 @@ const TransaktionsumlagePage = () => {
               viewport={{ once: true }}
               className="text-center mb-20 md:mb-28"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">So funktioniert's</span>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("howItWorks.badge")}</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight">
-                In 3 Schritten zur 0 € Gebührenbelastung.
+                {t("howItWorks.title")}
               </h2>
               <p className="text-[#0A264A]/55 dark:text-white/45 mt-5 text-lg max-w-xl mx-auto leading-relaxed">
-                Vollautomatisch, transparent und rechtssicher – ohne Mehraufwand für dich oder deine Mitarbeiter. Die Transaktionsumlage ist direkt in den <Link to="/produkte/webshop" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">Gastro Master Bestellshop</Link> und die <Link to="/produkte/app" className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">eigene Bestell-App</Link> integriert.
+                {t("howItWorks.desc")}{" "}
+                <Link to={lp("/produkte/webshop")} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{t("howItWorks.descLinkShop")}</Link>
+                {" "}{t("howItWorks.descMid")}{" "}
+                <Link to={lp("/produkte/app")} className="text-cyan-brand underline underline-offset-2 hover:opacity-80 transition-opacity">{t("howItWorks.descLinkApp")}</Link>
+                {" "}{t("howItWorks.descEnd")}
               </p>
             </motion.div>
             <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-              {[
-                {
-                  num: "01",
-                  title: "Gebühr entsteht beim Kunden",
-                  text: "Dein Kunde wählt eine Zahlungsmethode – z. B. PayPal (2,99 % + 0,35 €) oder Kreditkarte via Stripe (1,5 % + 0,25 €). Die exakte Gebühr wird in Echtzeit berechnet.",
-                },
-                {
-                  num: "02",
-                  title: "Umlage erscheint transparent im Checkout",
-                  text: "Noch vor dem Bezahlen sieht der Kunde die Gebühr als eigenen Posten – klar beschriftet und nachvollziehbar. Kein versteckter Aufschlag, alles rechtssicher.",
-                },
-                {
-                  num: "03",
-                  title: "Du erhältst 100 % deines Umsatzes",
-                  text: "Kein Cent geht verloren. Dein PayPal Business- oder Stripe-Konto erhält den vollen Betrag – die Zahlungsgebühr hat der Kunde getragen.",
-                },
-              ].map((step, i) => (
+              {steps.map((step, i) => (
                 <motion.div
                   key={step.num}
                   initial={{ opacity: 0, y: 28 }}
@@ -604,13 +611,13 @@ const TransaktionsumlagePage = () => {
             >
               <div className="inline-flex items-center gap-2 text-cyan-brand mb-4">
                 <Calculator className="w-5 h-5" />
-                <span className="text-sm font-semibold uppercase tracking-wider">Gebühren-Rechner</span>
+                <span className="text-sm font-semibold uppercase tracking-wider">{t("calculator.badge")}</span>
               </div>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4">
-                Wie viel sparst du mit der Transaktionsumlage?
+                {t("calculator.title")}
               </h2>
               <p className="text-white/60 text-lg max-w-xl mx-auto">
-                Wähle deinen Zahlungsanbieter und passe die Werte an deinen Betrieb an.
+                {t("calculator.desc")}
               </p>
             </motion.div>
 
@@ -642,7 +649,7 @@ const TransaktionsumlagePage = () => {
               {/* Sliders */}
               <div className="grid md:grid-cols-2 gap-8 mb-10">
                 <div>
-                  <label className="block text-white/65 text-sm font-medium mb-2">Bestellungen pro Monat</label>
+                  <label className="block text-white/65 text-sm font-medium mb-2">{t("calculator.ordersLabel")}</label>
                   <input
                     type="range" min={50} max={3000} step={50} value={orders}
                     onChange={(e) => setOrders(Number(e.target.value))}
@@ -651,7 +658,7 @@ const TransaktionsumlagePage = () => {
                   <div className="text-3xl font-black text-white">{orders}</div>
                 </div>
                 <div>
-                  <label className="block text-white/65 text-sm font-medium mb-2">Ø Bestellwert</label>
+                  <label className="block text-white/65 text-sm font-medium mb-2">{t("calculator.avgCartLabel")}</label>
                   <input
                     type="range" min={10} max={80} step={1} value={avgCart}
                     onChange={(e) => setAvgCart(Number(e.target.value))}
@@ -664,17 +671,17 @@ const TransaktionsumlagePage = () => {
               {/* Result Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-6">
                 <div className="bg-white/[0.08] border border-white/15 rounded-2xl p-3 md:p-5 text-center">
-                  <p className="text-white/50 text-[11px] font-bold uppercase tracking-widest mb-2">Monatsumsatz</p>
+                  <p className="text-white/50 text-[11px] font-bold uppercase tracking-widest mb-2">{t("calculator.revenueLabel")}</p>
                   <p className="text-2xl md:text-3xl font-black text-white">{revenue.toLocaleString("de-DE")} €</p>
                 </div>
                 <div className="bg-red-500/[0.15] border border-red-500/30 rounded-2xl p-3 md:p-5 text-center">
-                  <p className="text-white/50 text-[11px] font-bold uppercase tracking-widest mb-2">Gebühren / Monat</p>
+                  <p className="text-white/50 text-[11px] font-bold uppercase tracking-widest mb-2">{t("calculator.feesLabel")}</p>
                   <p className="text-2xl md:text-3xl font-black text-red-400">
                     {monthlyFee.toLocaleString("de-DE", { minimumFractionDigits: 2 })} €
                   </p>
                 </div>
                 <div className="bg-emerald-500/[0.12] border border-emerald-500/25 rounded-2xl p-3 md:p-5 text-center">
-                  <p className="text-white/50 text-[11px] font-bold uppercase tracking-widest mb-2">Ersparnis / Jahr</p>
+                  <p className="text-white/50 text-[11px] font-bold uppercase tracking-widest mb-2">{t("calculator.savingsLabel")}</p>
                   <p className="text-2xl md:text-3xl font-black text-emerald-400">
                     {yearlyFee.toLocaleString("de-DE", { minimumFractionDigits: 2 })} €
                   </p>
@@ -692,23 +699,23 @@ const TransaktionsumlagePage = () => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 hover:text-cyan-brand transition-colors"
                 >
-                  Quelle: {provider.source.text} <ExternalLink className="w-3 h-3" />
+                  {t("calculator.sourceLabel")} {provider.source.text} <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
 
               <div className="text-center">
                 <p className="text-white/65 mb-6 text-base md:text-lg">
-                  Mit der Transaktionsumlage sparst du{" "}
+                  {t("calculator.savingsText1")}{" "}
                   <strong className="text-cyan-brand">
                     {yearlyFee.toLocaleString("de-DE", { minimumFractionDigits: 2 })} €
                   </strong>{" "}
-                  pro Jahr – diese Gebühren zahlen deine Kunden.
+                  {t("calculator.savingsText2")}
                 </p>
                 <button
-                  onClick={() => { window.location.href = "/kontakt"; }}
+                  onClick={() => { window.location.href = lp("/kontakt"); }}
                   className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2"
                 >
-                  Individuelles Angebot anfragen
+                  {t("calculator.cta")}
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
@@ -726,21 +733,21 @@ const TransaktionsumlagePage = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Vergleich · 300 Bestellungen à 30 €</span>
+                <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("comparison.badge")}</span>
                 <h2 className="text-3xl md:text-4xl font-black text-[#0A264A] dark:text-white leading-tight mb-4">
-                  Wie viel zahlt ein Restaurant pro Monat ohne Transaktionsumlage?
+                  {t("comparison.title")}
                 </h2>
                 <p className="text-[#0A264A]/55 dark:text-white/45 text-base leading-relaxed mb-8">
-                  Bei 300 Bestellungen mit einem Durchschnittswert von 30 € entstehen monatlich folgende Kosten – die du ohne Transaktionsumlage selbst trägst.
+                  {t("comparison.desc")}
                 </p>
                 <div className="overflow-x-auto rounded-2xl border border-[#0A264A]/10 dark:border-white/10">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-[#0A264A] text-white">
-                        <th className="text-left px-4 py-3 font-bold text-xs uppercase tracking-wider rounded-tl-2xl">Anbieter</th>
-                        <th className="text-left px-4 py-3 font-bold text-xs uppercase tracking-wider">Gebühren</th>
-                        <th className="text-right px-4 py-3 font-bold text-xs uppercase tracking-wider text-red-300">Ohne Umlage</th>
-                        <th className="text-right px-4 py-3 font-bold text-xs uppercase tracking-wider text-emerald-300 rounded-tr-2xl">Mit Umlage</th>
+                        <th className="text-left px-4 py-3 font-bold text-xs uppercase tracking-wider rounded-tl-2xl">{t("comparison.thProvider")}</th>
+                        <th className="text-left px-4 py-3 font-bold text-xs uppercase tracking-wider">{t("comparison.thFees")}</th>
+                        <th className="text-right px-4 py-3 font-bold text-xs uppercase tracking-wider text-red-300">{t("comparison.thWithout")}</th>
+                        <th className="text-right px-4 py-3 font-bold text-xs uppercase tracking-wider text-emerald-300 rounded-tr-2xl">{t("comparison.thWith")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -763,7 +770,7 @@ const TransaktionsumlagePage = () => {
                   </table>
                 </div>
                 <p className="text-[#0A264A]/35 dark:text-white/25 text-xs mt-3 leading-relaxed">
-                  Quellen:{" "}
+                  {t("comparison.sources")}{" "}
                   <a href="https://www.paypal.com/de/webapps/mpp/merchant-fees" target="_blank" rel="noopener noreferrer" className="underline hover:text-cyan-brand transition-colors">PayPal Merchant Fees</a>
                   {" "}·{" "}
                   <a href="https://stripe.com/de/pricing" target="_blank" rel="noopener noreferrer" className="underline hover:text-cyan-brand transition-colors">Stripe Pricing</a>
@@ -796,41 +803,37 @@ const TransaktionsumlagePage = () => {
               viewport={{ once: true }}
               className="text-center mb-14"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Leistungen</span>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("features.badge")}</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
-                Deine Marge. Vollständig geschützt.
+                {t("features.title")}
               </h2>
               <p className="text-white/55 mt-5 text-lg max-w-xl mx-auto">
-                Mit der Transaktions-Umlage zahlst du keine Gebühren mehr – deine Kunden schon.
+                {t("features.desc")}
               </p>
             </motion.div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* paypal — lg */}
-              {[
-                { size: "lg" as const, Icon: Wallet, title: "Eigenes PayPal Business", text: "Zahlungen landen direkt auf deinem eigenen PayPal Business-Konto – kein Umweg, kein Zwischenhändler. Du behältst die volle Kontrolle und hast sofortigen Zugriff auf dein Geld.", delay: 0 },
-                { size: "sm" as const, Icon: CreditCard, title: "Eigenes Stripe-Konto", text: "Kreditkarte, Apple Pay, Google Pay – direkt auf dein Konto.", delay: 0.06 },
-                { size: "sm" as const, Icon: Percent, title: "Transparente Umlage", text: "Kunden zahlen die Gebühren – klar und professionell kommuniziert.", delay: 0.09 },
-                { size: "sm" as const, Icon: Banknote, title: "Alle Zahlungsarten", text: "PayPal, Visa, Mastercard, Klarna, Apple Pay, Google Pay.", delay: 0.12 },
-                { size: "lg" as const, Icon: TrendingUp, title: "Marge vollständig erhalten", text: "Statt Gebühren aus dem Gewinn zu bezahlen, werden sie transparent als separater Posten ausgewiesen. Deine Kalkulation bleibt sauber – 100 % deines Nettoumsatzes verbleiben bei dir.", delay: 0.15 },
-                { size: "sm" as const, Icon: CheckCircle2, title: "Rechtlich einwandfrei", text: "Die Umlage ist gesetzlich zulässig und klar kommuniziert.", delay: 0.18 },
-                { size: "sm" as const, Icon: Zap, title: "Schnelle Einrichtung", text: "In wenigen Schritten aktiviert – wir begleiten dich dabei.", delay: 0.21 },
-              ].map(({ size, Icon, title, text, delay }) => (
-                <motion.div
-                  key={title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay }}
-                  className={`${size === "lg" ? "col-span-2" : "col-span-1"} bg-white/[0.07] border border-white/10 rounded-2xl p-7 hover:bg-white/[0.10] transition-colors`}
-                >
-                  <div className="w-11 h-11 rounded-xl bg-cyan-brand/15 flex items-center justify-center mb-5">
-                    <Icon className="w-5 h-5 text-cyan-brand" />
-                  </div>
-                  <h3 className={`text-white font-bold mb-2 ${size === "lg" ? "text-lg" : "text-base"}`}>{title}</h3>
-                  <p className="text-white/55 text-sm leading-relaxed">{text}</p>
-                </motion.div>
-              ))}
+              {featureItems.map((feat, i) => {
+                const size = FEATURE_SIZES[i] ?? "sm";
+                const Icon = FEATURE_ICONS[i] ?? Zap;
+                const delay = i * 0.03;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay }}
+                    className={`${size === "lg" ? "col-span-2" : "col-span-1"} bg-white/[0.07] border border-white/10 rounded-2xl p-7 hover:bg-white/[0.10] transition-colors`}
+                  >
+                    <div className="w-11 h-11 rounded-xl bg-cyan-brand/15 flex items-center justify-center mb-5">
+                      <Icon className="w-5 h-5 text-cyan-brand" />
+                    </div>
+                    <h3 className={`text-white font-bold mb-2 ${size === "lg" ? "text-lg" : "text-base"}`}>{feat.title}</h3>
+                    <p className="text-white/55 text-sm leading-relaxed">{feat.text}</p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -844,12 +847,12 @@ const TransaktionsumlagePage = () => {
               viewport={{ once: true }}
               className="text-center mb-14"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Voraussetzungen</span>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("requirements.badge")}</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight">
-                Die Transaktions-Umlage ist ein Add-On.
+                {t("requirements.title")}
               </h2>
               <p className="text-[#0A264A]/55 dark:text-white/45 mt-5 text-lg max-w-2xl mx-auto leading-relaxed">
-                Sie funktioniert ausschließlich in Kombination mit einem der folgenden Gastro Master Pakete.
+                {t("requirements.desc")}
               </p>
             </motion.div>
 
@@ -862,42 +865,42 @@ const TransaktionsumlagePage = () => {
             >
               <div className="grid md:grid-cols-2 gap-8 md:gap-12">
                 <div>
-                  <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">Paket</span>
-                  <h3 className="text-white font-black text-2xl mb-2">Webshop</h3>
+                  <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">{t("requirements.webshop.label")}</span>
+                  <h3 className="text-white font-black text-2xl mb-2">{t("requirements.webshop.name")}</h3>
                   <div className="flex items-end gap-2 mb-4">
-                    <span className="text-[#ED8400] font-black text-4xl leading-none">79 €</span>
-                    <span className="text-white/40 text-sm mb-1">/ Monat (netto)</span>
+                    <span className="text-[#ED8400] font-black text-4xl leading-none">{t("requirements.webshop.price")}</span>
+                    <span className="text-white/40 text-sm mb-1">{t("requirements.webshop.priceSuffix")}</span>
                   </div>
                   <ul className="space-y-2 mb-5">
-                    {["Online-Bestellsystem", "Eigenes Branding", "Alle Zahlungsarten", "Support inklusive"].map(f => (
+                    {webshopFeatures.map(f => (
                       <li key={f} className="flex items-center gap-2 text-white/70 text-sm">
                         <CheckCircle2 className="w-4 h-4 text-cyan-brand flex-shrink-0" strokeWidth={2} />
                         {f}
                       </li>
                     ))}
                   </ul>
-                  <button onClick={() => { window.location.href = "/produkte/webshop"; }} className="text-cyan-brand text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all duration-200">
-                    Mehr erfahren <ArrowRight className="w-4 h-4" />
+                  <button onClick={() => { window.location.href = lp("/produkte/webshop"); }} className="text-cyan-brand text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all duration-200">
+                    {t("requirements.webshop.link")} <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
 
                 <div className="border-t md:border-t-0 md:border-l border-white/10 md:pl-12 pt-8 md:pt-0">
-                  <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">Hauptpaket</span>
-                  <h3 className="text-white font-black text-2xl mb-2">App + Webshop</h3>
+                  <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">{t("requirements.appWebshop.label")}</span>
+                  <h3 className="text-white font-black text-2xl mb-2">{t("requirements.appWebshop.name")}</h3>
                   <div className="flex items-end gap-2 mb-4">
-                    <span className="text-[#ED8400] font-black text-4xl leading-none">149 €</span>
-                    <span className="text-white/40 text-sm mb-1">/ Monat (netto)</span>
+                    <span className="text-[#ED8400] font-black text-4xl leading-none">{t("requirements.appWebshop.price")}</span>
+                    <span className="text-white/40 text-sm mb-1">{t("requirements.appWebshop.priceSuffix")}</span>
                   </div>
                   <ul className="space-y-2 mb-5">
-                    {["iOS & Android App", "Webshop", "Push Notifications", "Multi-Standort", "Support inklusive"].map(f => (
+                    {appFeatures.map(f => (
                       <li key={f} className="flex items-center gap-2 text-white/70 text-sm">
                         <CheckCircle2 className="w-4 h-4 text-cyan-brand flex-shrink-0" strokeWidth={2} />
                         {f}
                       </li>
                     ))}
                   </ul>
-                  <button onClick={() => { window.location.href = "/produkte/app"; }} className="text-cyan-brand text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all duration-200">
-                    Mehr erfahren <ArrowRight className="w-4 h-4" />
+                  <button onClick={() => { window.location.href = lp("/produkte/app"); }} className="text-cyan-brand text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all duration-200">
+                    {t("requirements.appWebshop.link")} <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -913,10 +916,10 @@ const TransaktionsumlagePage = () => {
             >
               <div className="flex flex-col md:flex-row md:items-center gap-6">
                 <div className="flex-1">
-                  <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">Add-On · Top-Seller</span>
-                  <h3 className="text-[#0A264A] dark:text-white font-black text-xl mb-2">Transaktions-Umlage</h3>
+                  <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-3 block">{t("requirements.addon.label")}</span>
+                  <h3 className="text-[#0A264A] dark:text-white font-black text-xl mb-2">{t("requirements.addon.name")}</h3>
                   <p className="text-[#0A264A]/55 dark:text-white/50 text-sm leading-relaxed mb-4 max-w-lg">
-                    Der Preis wird individuell auf Basis deiner Zahlungsmethoden, Standortanzahl und Transaktionsvolumen berechnet. In einem kurzen Beratungsgespräch erstellen wir gemeinsam ein Angebot, das genau zu deinem Betrieb passt.
+                    {t("requirements.addon.desc")}
                   </p>
                   <div className="flex flex-wrap items-center gap-4">
                     {PAYMENT_LOGOS_B.map(p => (
@@ -925,12 +928,12 @@ const TransaktionsumlagePage = () => {
                   </div>
                 </div>
                 <motion.button
-                  onClick={() => { window.location.href = "/kontakt"; }}
+                  onClick={() => { window.location.href = lp("/kontakt"); }}
                   whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.45)" }}
                   whileTap={{ scale: 0.97 }}
                   className="shrink-0 bg-[#ED8400] text-white font-bold px-7 py-3.5 rounded-xl text-sm shadow-lg shadow-[#ED8400]/30 whitespace-nowrap inline-flex items-center gap-2"
                 >
-                  Beratung anfragen
+                  {t("requirements.addon.cta")}
                   <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </div>
@@ -947,16 +950,16 @@ const TransaktionsumlagePage = () => {
               viewport={{ once: true }}
               className="text-center mb-16 md:mb-20"
             >
-              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">Social Proof</span>
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("testimonials.badge")}</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
-                700+ Gastronomen, die bereits mit Gastro Master arbeiten.
+                {t("testimonials.title")}
               </h2>
             </motion.div>
 
             <div className="grid md:grid-cols-2 gap-5 mb-16">
-              {testimonials.map((t, i) => (
+              {quotes.map((q, i) => (
                 <motion.div
-                  key={t.name}
+                  key={q.name}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -968,30 +971,25 @@ const TransaktionsumlagePage = () => {
                       <Star key={j} className="w-4 h-4 fill-[#FBA200] text-[#FBA200]" />
                     ))}
                   </div>
-                  <p className="text-white/70 text-base leading-relaxed mb-6 italic">"{t.quote}"</p>
+                  <p className="text-white/70 text-base leading-relaxed mb-6 italic">"{q.quote}"</p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-cyan-brand/20 border border-cyan-brand/30 flex items-center justify-center flex-shrink-0">
-                      <span className="text-cyan-brand text-xs font-black">{t.initials}</span>
+                      <span className="text-cyan-brand text-xs font-black">{q.initials}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-white font-semibold text-sm">{t.name}</p>
-                      <p className="text-white/40 text-xs">{t.restaurant}</p>
+                      <p className="text-white font-semibold text-sm">{q.name}</p>
+                      <p className="text-white/40 text-xs">{q.restaurant}</p>
                     </div>
-                    <img src={t.logo} alt={t.restaurant} className="h-6 object-contain opacity-50 flex-shrink-0" loading="lazy" />
+                    <img src={TESTIMONIAL_LOGOS[i]} alt={q.restaurant} className="h-6 object-contain opacity-50 flex-shrink-0" loading="lazy" />
                   </div>
                 </motion.div>
               ))}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { value: "700+",        label: "aktive Gastro Master Kunden" },
-                { value: "0 %",         label: "Provision auf Direktbestellungen" },
-                { value: "Top-Seller",  label: "meistgebuchtes Add-On" },
-                { value: "7",           label: "unterstützte Zahlungsarten" },
-              ].map((s, i) => (
+              {stats.map((s, i) => (
                 <motion.div
-                  key={s.label}
+                  key={i}
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -1015,18 +1013,18 @@ const TransaktionsumlagePage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
               >
-                <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">FAQ</span>
+                <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("faq.badge")}</span>
                 <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
-                  Häufige Fragen zur Transaktionsumlage in der Gastronomie.
+                  {t("faq.title")}
                 </h2>
                 <p className="text-white/40 mt-6 text-base leading-relaxed">
-                  Weitere Fragen? Ruf uns an oder schreib uns – wir antworten innerhalb von 24 Stunden.
+                  {t("faq.desc")}
                 </p>
                 <button
-                  onClick={() => { window.location.href = "/kontakt"; }}
+                  onClick={() => { window.location.href = lp("/kontakt"); }}
                   className="mt-8 text-cyan-brand text-sm font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all"
                 >
-                  Direkt anfragen <ArrowRight className="w-4 h-4" />
+                  {t("faq.cta")} <ArrowRight className="w-4 h-4" />
                 </button>
               </motion.div>
               <motion.div
@@ -1035,7 +1033,7 @@ const TransaktionsumlagePage = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                {FAQ_ITEMS.map(faq => <FaqItem key={faq.q} q={faq.q} a={faq.a} />)}
+                {faqItems.map(faq => <FaqItem key={faq.q} q={faq.q} a={faq.a} lp={lp} />)}
               </motion.div>
             </div>
           </div>

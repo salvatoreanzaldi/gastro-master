@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const ReferencesSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   return (
     <section className="section-padding bg-background" id="referenzen">
       <div className="container-tight">
@@ -14,15 +14,15 @@ const ReferencesSection = () => {
           className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
-            {t.references.badge}
+            {t("references.badge")}
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            {t.references.headline}
+            {t("references.headline")}
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {t.references.items.map((item, i) => (
+          {(t("references.items", { returnObjects: true }) as any[]).map((item, i) => (
             <motion.div
               key={item.name}
               initial={{ opacity: 0, y: 20 }}

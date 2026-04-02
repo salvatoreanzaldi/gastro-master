@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Minus, Star } from "lucide-react";
 import { useState } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 type FeatureStatus = true | false | string;
 
@@ -75,14 +75,14 @@ const renderCell = (val: FeatureStatus) => {
 };
 
 const PricingSection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
   const [showTable, setShowTable] = useState(false);
 
   const scrollToForm = () => {
     window.location.href = "/kontakt";
   };
 
-  const packageFeaturesMap = t.pricing.packageFeatures as Record<string, readonly string[]>;
+  const packageFeaturesMap = t("pricing.packageFeatures", { returnObjects: true }) as Record<string, readonly string[]>;
 
   return (
     <section className="section-padding bg-background" id="preise">
@@ -94,16 +94,16 @@ const PricingSection = () => {
           className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
-            {t.pricing.headline}
+            {t("pricing.headline")}
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            {t.pricing.sub}
+            {t("pricing.sub")}
           </p>
         </motion.div>
 
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          {t.pricing.plans.map((pkg, i) => {
+          {(t("pricing.plans", { returnObjects: true }) as any[]).map((pkg, i) => {
             const isHighlight = !!pkg.popular;
             const features = packageFeaturesMap[pkg.id] ?? [];
             const hasPrice = pkg.price !== "Auf Anfrage" && pkg.price !== "Custom Pricing" && pkg.price !== "Custom";
@@ -122,7 +122,7 @@ const PricingSection = () => {
               >
                 {isHighlight && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-amber text-primary text-[11px] font-bold px-3 py-1 rounded-full whitespace-nowrap">
-                    {t.pricing.badgePopular}
+                    {t("pricing.badgePopular")}
                   </div>
                 )}
 
@@ -139,19 +139,19 @@ const PricingSection = () => {
                   {hasPrice ? (
                     <div>
                       <div className="flex items-baseline gap-1">
-                        <span className={`text-xs ${isHighlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{t.pricing.from}</span>
+                        <span className={`text-xs ${isHighlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{t("pricing.from")}</span>
                         <span className={`text-3xl font-black ${isHighlight ? "text-primary-foreground" : "text-foreground"}`}>
                           {pkg.price}€
                         </span>
-                        <span className={`text-xs ${isHighlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{t.pricing.perMonth}</span>
+                        <span className={`text-xs ${isHighlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{t("pricing.perMonth")}</span>
                       </div>
                       <span className={`text-[10px] ${isHighlight ? "text-primary-foreground/35" : "text-muted-foreground/60"}`}>
-                        {t.pricing.vatNote}
+                        {t("pricing.vatNote")}
                       </span>
                     </div>
                   ) : (
                     <span className={`text-xl font-bold ${isHighlight ? "text-primary-foreground" : "text-foreground"}`}>
-                      {t.pricing.onRequest}
+                      {t("pricing.onRequest")}
                     </span>
                   )}
                 </div>
@@ -166,7 +166,7 @@ const PricingSection = () => {
                 </ul>
 
                 <p className={`text-[11px] mb-4 ${isHighlight ? "text-primary-foreground/40" : "text-muted-foreground"}`}>
-                  {t.pricing.durationLabel}: {pkg.duration}
+                  {t("pricing.durationLabel")}: {pkg.duration}
                 </p>
 
                 <button
@@ -177,7 +177,7 @@ const PricingSection = () => {
                       : "bg-primary text-primary-foreground hover:opacity-90"
                   }`}
                 >
-                  {hasPrice ? t.pricing.ctaPrimary : t.pricing.ctaSecondary}
+                  {hasPrice ? t("pricing.ctaPrimary") : t("pricing.ctaSecondary")}
                 </button>
               </motion.div>
             );
@@ -195,7 +195,7 @@ const PricingSection = () => {
             onClick={() => setShowTable(!showTable)}
             className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-brand hover:underline transition-all"
           >
-            {showTable ? t.pricing.hideComparison : t.pricing.showComparison}
+            {showTable ? t("pricing.hideComparison") : t("pricing.showComparison")}
             <ArrowRight className={`w-4 h-4 transition-transform ${showTable ? "rotate-90" : ""}`} />
           </button>
         </motion.div>
@@ -208,7 +208,7 @@ const PricingSection = () => {
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left py-4 px-5 font-semibold text-muted-foreground w-[220px]">Feature</th>
-                    {t.pricing.plans.map((pkg) => (
+                    {(t("pricing.plans", { returnObjects: true }) as any[]).map((pkg) => (
                       <th key={pkg.id} className={`py-4 px-3 text-center font-bold text-xs ${pkg.popular ? "text-cyan-brand" : "text-foreground"}`}>
                         <div className="flex flex-col items-center gap-0.5">
                           {pkg.popular && <Star className="w-3 h-3 text-amber fill-amber" />}
@@ -230,7 +230,7 @@ const PricingSection = () => {
                         <tr key={row.label} className="border-b border-border/50 last:border-0">
                           <td className="py-3 px-5 text-foreground text-sm">{row.label}</td>
                           {row.values.map((val, vi) => (
-                            <td key={vi} className={`py-3 px-3 text-center ${t.pricing.plans[vi]?.popular ? "bg-primary/[0.03]" : ""}`}>
+                            <td key={vi} className={`py-3 px-3 text-center ${t("pricing.plans", { returnObjects: true }) as any[][vi]?.popular ? "bg-primary/[0.03]" : ""}`}>
                               {renderCell(val)}
                             </td>
                           ))}
@@ -244,7 +244,7 @@ const PricingSection = () => {
 
             {/* Mobile stacked */}
             <div className="lg:hidden space-y-6">
-              {t.pricing.plans.map((pkg, pi) => {
+              {(t("pricing.plans", { returnObjects: true }) as any[]).map((pkg, pi) => {
                 const isHighlight = !!pkg.popular;
                 const hasPrice = pkg.price !== "Auf Anfrage" && pkg.price !== "Custom Pricing" && pkg.price !== "Custom";
                 return (
@@ -253,13 +253,13 @@ const PricingSection = () => {
                       <div>
                         <h4 className={`font-bold text-lg ${isHighlight ? "text-primary-foreground" : "text-foreground"}`}>{pkg.name}</h4>
                         {hasPrice ? (
-                          <span className={`text-sm ${isHighlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{t.pricing.from} {pkg.price}€{t.pricing.perMonth} {t.pricing.vatNote}</span>
+                          <span className={`text-sm ${isHighlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{t("pricing.from")} {pkg.price}€{t("pricing.perMonth")} {t("pricing.vatNote")}</span>
                         ) : (
-                          <span className={`text-sm ${isHighlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{t.pricing.onRequest}</span>
+                          <span className={`text-sm ${isHighlight ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{t("pricing.onRequest")}</span>
                         )}
                       </div>
                       {isHighlight && (
-                        <span className="bg-gradient-amber text-primary text-[10px] font-bold px-2.5 py-1 rounded-full">{t.pricing.badgePopular}</span>
+                        <span className="bg-gradient-amber text-primary text-[10px] font-bold px-2.5 py-1 rounded-full">{t("pricing.badgePopular")}</span>
                       )}
                     </div>
                     {comparison.map((group) => (
@@ -288,7 +288,7 @@ const PricingSection = () => {
 
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center">
           <p className="text-muted-foreground text-xs">
-            {t.pricing.setupNote}
+            {t("pricing.setupNote")}
           </p>
         </motion.div>
       </div>
