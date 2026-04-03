@@ -4,6 +4,7 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+  assetsInclude: ["**/*.PNG"],
   test: {
     environment: "jsdom",
     globals: true,
