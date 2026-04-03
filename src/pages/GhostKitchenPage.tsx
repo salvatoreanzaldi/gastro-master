@@ -15,7 +15,7 @@ import Footer from "@/components/landing/Footer";
 import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
 import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
 import imgKasse       from "@/assets/heroes/hero-pos-system.png";
-import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.PNG";
+import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.png";
 import imgTransaktion from "@/assets/addons/9 - Zahlungsmethoden.png";
 
 // ─── Static maps ────────────────────────────────────────────────────────────

@@ -39,7 +39,7 @@ const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
 import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
 import imgKasse       from "@/assets/heroes/hero-pos-system.png";
-import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.PNG";
+import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.png";
 import imgTransaktion from "@/assets/addons/9 - Zahlungsmethoden.png";
 
 // ─── Static maps (order must match JSON products) ────────────────────────────

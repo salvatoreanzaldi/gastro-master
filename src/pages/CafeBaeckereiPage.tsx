@@ -29,7 +29,7 @@ const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
 import imgKasse       from "@/assets/hardware/kassenhardware.png";
 import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
-import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.PNG";
+import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.png";
 import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
 import imgTransaktion from "@/assets/addons/9 - Zahlungsmethoden.png";
 

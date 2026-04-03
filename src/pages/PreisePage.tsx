@@ -32,7 +32,7 @@ import SlimPricingSection from "@/components/landing/SlimPricingSection";
 import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
 import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
 import imgKasse       from "@/assets/heroes/hero-pos-system.png";
-import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.PNG";
+import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.png";
 import imgFahrerApp   from "@/assets/addons/addon-frankfurt-gps.png";
 import imgQrTisch     from "@/assets/addons/addon-qr-tischsystem.png";
 import imgSelfOrder   from "@/assets/addons/selfordering-terminals.png";

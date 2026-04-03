@@ -15,11 +15,11 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
 // ─── Assets ───────────────────────────────────────────────────────────────────
-import heroGastroMaster from "@/assets/heroes/Hero - Gastro Master.PNG";
-import heroBaeckerei    from "@/assets/heroes/Hero - Bäckerei Zimmer.PNG";
-import heroEtManus      from "@/assets/heroes/Hero - Et Manus.PNG";
-import heroDT           from "@/assets/heroes/Hero - DT.PNG";
-import heroDandT        from "@/assets/heroes/Hero - D&T.PNG";
+import heroGastroMaster from "@/assets/heroes/Hero - Gastro Master.png";
+import heroBaeckerei    from "@/assets/heroes/Hero - Bäckerei Zimmer.png";
+import heroEtManus      from "@/assets/heroes/Hero - Et Manus.png";
+import heroDT           from "@/assets/heroes/Hero - DT.png";
+import heroDandT        from "@/assets/heroes/Hero - D&T.png";
 import logoKojo         from "@/assets/logos/kunden/logo-kojo-sushi.png";
 import logoIlSorriso    from "@/assets/logos/kunden/logo-il-sorriso.png";
 import logoBurger       from "@/assets/logos/kunden/logo-burger-brothers.png";
