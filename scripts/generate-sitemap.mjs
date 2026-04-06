@@ -34,7 +34,7 @@ if (routes.length === 0) {
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 const BASE_URL = "https://gastro-master.de";
-const LANGUAGES = ["de", "en", "it", "fa", "si"];
+const LANGUAGES = ["de", "en", "it", "fa", "si", "ru"];
 const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
 // ─── Generate XML ────────────────────────────────────────────────────────────

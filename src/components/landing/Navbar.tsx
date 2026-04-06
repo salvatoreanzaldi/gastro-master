@@ -32,6 +32,7 @@ const languages: { code: SupportedLang; label: string; flag: string }[] = [
   { code: "it", label: "Italiano", flag: "🇮🇹" },
   { code: "fa", label: "فارسی", flag: "🇮🇷" },
   { code: "si", label: "සිංහල", flag: "🇱🇰" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
 ];
 
 const Navbar = () => {

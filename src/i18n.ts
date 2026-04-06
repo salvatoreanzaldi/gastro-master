@@ -9,8 +9,9 @@ import commonEn from "../public/locales/en/common.json";
 import commonIt from "../public/locales/it/common.json";
 import commonFa from "../public/locales/fa/common.json";
 import commonSi from "../public/locales/si/common.json";
+import commonRu from "../public/locales/ru/common.json";
 
-export const SUPPORTED_LANGS = ["de", "en", "it", "fa", "si"] as const;
+export const SUPPORTED_LANGS = ["de", "en", "it", "fa", "si", "ru"] as const;
 export type SupportedLang = (typeof SUPPORTED_LANGS)[number];
 
 export const RTL_LANGS: SupportedLang[] = ["fa"];
@@ -32,6 +33,7 @@ i18n
       it: { common: commonIt },
       fa: { common: commonFa },
       si: { common: commonSi },
+      ru: { common: commonRu },
     },
 
     // Partial bundling: common is bundled, other namespaces loaded via HTTP

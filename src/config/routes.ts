@@ -59,6 +59,6 @@ export const ROUTES: RouteEntry[] = [
 export const ROUTE_PATHS = ROUTES.map(r => r.path);
 
 /** Supported languages — re-exported for sitemap script convenience */
-export const LANGUAGES = ["de", "en", "it", "fa", "si"] as const;
+export const LANGUAGES = ["de", "en", "it", "fa", "si", "ru"] as const;
 
 export const BASE_URL = "https://gastro-master.de";
