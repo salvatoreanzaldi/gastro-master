@@ -700,7 +700,7 @@ const WaveFeatureSection = ({ t }: { t: (k: string, o?: any) => any }) => {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const KassePage = () => {
-  const { t } = useTranslation("kasse");
+  const { t, ready } = useTranslation("kasse");
   const lp = useLangPath();
 
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
@@ -727,7 +727,7 @@ const KassePage = () => {
   });
 
   return (
-  <div className="min-h-screen" style={{ backgroundColor: "#0A264A" }}>
+  <div className={`min-h-screen transition-opacity duration-300 ${!ready ? "opacity-0 lg:opacity-100" : "opacity-100"}`} style={{ backgroundColor: "#0A264A" }}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }} />
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_FAQ_KASSE) }} />
     <Navbar />
@@ -755,6 +755,20 @@ const KassePage = () => {
             <span className="text-gradient-brand">{t("hero.h1Highlight")}</span>
             {" "}{t("hero.h1Suffix")}
           </motion.h1>
+          {/* Mobile-only Hero Image – zwischen Titel und Untertitel */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.15, duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+            className="relative flex lg:hidden items-center justify-center my-8"
+          >
+            <div className="absolute inset-0 bg-[#007DCF]/12 blur-[80px] rounded-full scale-75" />
+            <img
+              src={heroPosImg}
+              alt={t("hero.heroImgAlt")}
+              className="relative z-10 w-full max-w-sm drop-shadow-2xl"
+            />
+          </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

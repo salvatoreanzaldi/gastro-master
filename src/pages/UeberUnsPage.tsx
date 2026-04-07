@@ -8,7 +8,7 @@ import {
   Sparkles, Globe, Linkedin, UtensilsCrossed, MapPin, UserCheck,
   Star, Wallet, Diamond, Handshake, Zap, ShieldCheck,
   MessageCircle, Settings, GraduationCap, Headphones, Play,
-  Plus, Minus, ChevronDown,
+  Plus, Minus, ChevronDown, ChevronLeft, ChevronRight, RotateCcw,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
@@ -69,16 +69,13 @@ const renderWithLinks = (text: string, lp: (p: string) => string): React.ReactNo
 
 interface PersonData { key: string; name: string; role: string; focus: string; bio: string; linkedin: string | null; }
 
-const FlipCard = ({ person, index, linkedinLabel }: { person: PersonData; index: number; linkedinLabel: string }) => {
+const FlipCard = ({ person, index, linkedinLabel, noEntrance }: { person: PersonData; index: number; linkedinLabel: string; noEntrance?: boolean }) => {
   const [flipped, setFlipped] = useState(false);
   const img = TEAM_IMG_MAP[person.key];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.12 }}
+      {...(noEntrance ? {} : { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { delay: index * 0.12 } })}
       className="perspective-[1200px] cursor-pointer"
       onClick={() => setFlipped(!flipped)}
       onMouseEnter={() => setFlipped(true)}
@@ -89,15 +86,19 @@ const FlipCard = ({ person, index, linkedinLabel }: { person: PersonData; index:
         style={{ transformStyle: "preserve-3d", transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
       >
         <div className="absolute inset-0 backface-hidden" style={{ backfaceVisibility: "hidden" }}>
-          <div className="h-full rounded-3xl overflow-hidden border-2 border-border bg-background shadow-xl hover:shadow-2xl transition-shadow duration-500">
+          <div className="h-full rounded-3xl overflow-hidden border border-border/30 sm:border-2 sm:border-border bg-background shadow-none sm:shadow-xl sm:hover:shadow-2xl transition-shadow duration-500">
             <div className="relative w-full aspect-square md:h-64 overflow-hidden p-4 md:p-0">
               <img src={img} alt={`${person.name} – ${person.role}`} className="w-full h-full object-cover object-center rounded-2xl md:rounded-none" />
               <div className="absolute inset-0 bg-gradient-to-t from-background from-0% via-transparent via-20% to-transparent md:via-40%" />
             </div>
-            <div className="px-5 pt-4 pb-5 sm:p-5 text-center">
+            <div className="px-5 pt-4 pb-2 sm:p-5 text-center">
               <h3 className="text-xl sm:text-lg font-bold text-foreground">{person.name}</h3>
               <p className="text-cyan-brand text-base sm:text-sm font-semibold">{person.role}</p>
               <p className="text-muted-foreground text-base sm:text-sm">{person.focus}</p>
+            </div>
+            <div className="flex items-center justify-center gap-1.5 pb-4 text-muted-foreground/60 sm:hidden">
+              <RotateCcw className="w-4 h-4" />
+              <span className="text-xs font-semibold">Antippen zum Umdrehen</span>
             </div>
           </div>
         </div>
@@ -118,6 +119,77 @@ const FlipCard = ({ person, index, linkedinLabel }: { person: PersonData; index:
         </div>
       </div>
     </motion.div>
+  );
+};
+
+// ─── TeamCarousel (mobile only) ─────────────────────────────────────────────
+
+const TeamCarousel = ({ allMembers, linkedinLabel }: { allMembers: PersonData[]; linkedinLabel: string }) => {
+  const [api, setApi] = useState<import("@/components/ui/carousel").CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    const onSelect = () => setCurrent(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    onSelect();
+    return () => { api.off("select", onSelect); };
+  }, [api]);
+
+  // Auto-slide every 5s, pause when user interacts
+  useEffect(() => {
+    if (!api) return;
+    let paused = false;
+    const id = setInterval(() => { if (!paused) api.scrollNext(); }, 5000);
+    const pause = () => { paused = true; setTimeout(() => { paused = false; }, 8000); };
+    api.on("pointerDown", pause);
+    return () => { clearInterval(id); api.off("pointerDown", pause); };
+  }, [api]);
+
+  return (
+    <div className="sm:hidden">
+      <Carousel opts={{ loop: true }} setApi={setApi} className="relative mx-auto max-w-xs">
+        <CarouselContent className="-ml-2">
+          {allMembers.map((person, i) => (
+            <CarouselItem key={person.key} className="pl-2">
+              <div className="px-1 py-1">
+                <FlipCard person={person} index={0} linkedinLabel={linkedinLabel} noEntrance />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+
+        {/* Navigation arrows */}
+        <button
+          onClick={() => api?.scrollPrev()}
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 w-9 h-9 rounded-full bg-background/90 border border-border shadow-lg flex items-center justify-center text-foreground active:scale-95 transition-transform"
+          aria-label="Vorheriger"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          onClick={() => api?.scrollNext()}
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-20 w-9 h-9 rounded-full bg-background/90 border border-border shadow-lg flex items-center justify-center text-foreground active:scale-95 transition-transform"
+          aria-label="Nächster"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </Carousel>
+
+      {/* Dots */}
+      <div className="flex justify-center gap-2 mt-5">
+        {allMembers.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => api?.scrollTo(i)}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              i === current ? "bg-cyan-brand w-5" : "bg-foreground/20"
+            }`}
+            aria-label={`Slide ${i + 1}`}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -495,10 +567,15 @@ const UeberUnsPage = () => {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4" dangerouslySetInnerHTML={{ __html: t("team.heading") }} />
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">{t("team.subtitle")}</p>
           </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-sm sm:max-w-2xl mx-auto mb-6">
+
+          {/* ── Mobile: Carousel ── */}
+          <TeamCarousel allMembers={[...founders, ...members]} linkedinLabel={t("team.linkedinLabel")} />
+
+          {/* ── Desktop: Grids (unverändert) ── */}
+          <div className="hidden sm:grid grid-cols-2 gap-6 max-w-2xl mx-auto mb-6">
             {founders.map((person, i) => <FlipCard key={person.key} person={person} index={i} linkedinLabel={t("team.linkedinLabel")} />)}
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-sm sm:max-w-2xl lg:max-w-4xl mx-auto">
+          <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-6 max-w-2xl lg:max-w-4xl mx-auto">
             {members.map((person, i) => <FlipCard key={person.key} person={person} index={i + founders.length} linkedinLabel={t("team.linkedinLabel")} />)}
           </div>
         </div>

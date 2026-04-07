@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense, type ComponentType } from "react";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 import LanguageLayout from "@/components/LanguageLayout";
 import { ROUTES } from "@/config/routes";
 import Index from "./pages/Index";
@@ -45,6 +46,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <ScrollToTopButton />
           <Suspense fallback={null}>
             <Routes>
               {/* Root redirect → /de/ */}

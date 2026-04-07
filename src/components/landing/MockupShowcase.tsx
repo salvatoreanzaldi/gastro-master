@@ -13,9 +13,9 @@ const screenImgs = [takeStartbild, takeMenu, takeFilialen, takeBestellart, takeB
 const SPACING_D = 220;  // px between phone centers
 const BEND_D = 22;      // arc curve coefficient
 const ROTATE_Y_D = 14;  // degrees of 3-D tilt per offset unit
-// Mobile-optimised values (read at runtime to avoid SSR issues)
-const SPACING_M = 130;
-const BEND_M = 6;
+// Mobile-optimised values
+const SPACING_M = 170;   // must exceed phone width (150px) to prevent overlap
+const BEND_M = 8;
 const ROTATE_Y_M = 0;   // no 3-D rotation on mobile for performance
 
 interface PhoneCardProps {
@@ -23,18 +23,22 @@ interface PhoneCardProps {
   label: string;
   index: number;
   centerIdx: MotionValue<number>;
+  isMobile: boolean;
 }
 
-const PhoneCard = ({ img, label, index, centerIdx }: PhoneCardProps) => {
-  // Read window.innerWidth at animation time so each frame uses the current value.
-  // This avoids React state/hooks for a pure-motion concern.
-  const isMob = () => typeof window !== "undefined" && window.innerWidth < 768;
-
-  const x      = useTransform(centerIdx, (c) => (index - c) * (isMob() ? SPACING_M : SPACING_D));
-  const y      = useTransform(centerIdx, (c) => Math.pow(index - c, 2) * (isMob() ? BEND_M : BEND_D));
-  const scale  = useTransform(centerIdx, (c) => Math.max(1 - Math.abs(index - c) * 0.1, 0.6));
-  const rotY   = useTransform(centerIdx, (c) => (index - c) * (isMob() ? ROTATE_Y_M : ROTATE_Y_D));
-  const opacity = useTransform(centerIdx, (c) => Math.max(1 - Math.abs(index - c) * 0.25, 0.18));
+const PhoneCard = ({ img, label, index, centerIdx, isMobile }: PhoneCardProps) => {
+  const x      = useTransform(centerIdx, (c) => (index - c) * (isMobile ? SPACING_M : SPACING_D));
+  const y      = useTransform(centerIdx, (c) => Math.pow(index - c, 2) * (isMobile ? BEND_M : BEND_D));
+  const scale  = useTransform(centerIdx, (c) => {
+    const dist = Math.abs(index - c);
+    return isMobile ? Math.max(1 - dist * 0.15, 0.55) : Math.max(1 - dist * 0.1, 0.6);
+  });
+  const rotY   = useTransform(centerIdx, (c) => (index - c) * (isMobile ? ROTATE_Y_M : ROTATE_Y_D));
+  const opacity = useTransform(centerIdx, (c) => {
+    const dist = Math.abs(index - c);
+    return isMobile ? Math.max(1 - dist * 0.9, 0) : Math.max(1 - dist * 0.25, 0.18);
+  });
+  const zIndex = useTransform(centerIdx, (c) => Math.round(10 - Math.abs(index - c) * 2));
 
   return (
     /* Outer div handles static centering; motion.div handles all animation */
@@ -47,8 +51,8 @@ const PhoneCard = ({ img, label, index, centerIdx }: PhoneCardProps) => {
       }}
     >
       <motion.div
-        className="flex flex-col items-center"
-        style={{ x, y, scale, rotateY: rotY, opacity }}
+        className="flex flex-col items-center will-change-transform"
+        style={{ x, y, scale, rotateY: rotY, opacity, zIndex }}
       >
         {/* iPhone frame */}
         <div className="relative w-[150px] md:w-[170px] lg:w-[190px] rounded-[2.2rem] bg-gradient-to-b from-[#2a2a2e] via-[#1a1a1e] to-[#0e0e10] p-[3px] shadow-2xl shadow-black/60">
@@ -89,10 +93,11 @@ const MockupShowcase = () => {
   const { t } = useTranslation("common");
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Detect mobile once at mount for container height
-  const [containerHeight] = useState(() =>
-    typeof window !== "undefined" && window.innerWidth < 768 ? "200vh" : "270vh"
+  // Detect mobile once at mount — cached for all children (no per-frame reads)
+  const [isMobile] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth < 768
   );
+  const containerHeight = isMobile ? "200vh" : "270vh";
 
   // scrollYProgress 0→1 maps to the full height of the scroll container
   const { scrollYProgress } = useScroll({
@@ -143,6 +148,7 @@ const MockupShowcase = () => {
               label={t(`mockup.tabs.${i}`)}
               index={i}
               centerIdx={centerIdx}
+              isMobile={isMobile}
             />
           ))}
         </div>

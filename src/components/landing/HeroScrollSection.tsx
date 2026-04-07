@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import dashboardImg from "@/assets/kassensystem/cashier-dashboard.png";
+import dashboardMobileImg from "@/assets/kassensystem/Main Hero Tablet Animation - Mobile Version.png";
 import { useTranslation } from "react-i18next";
 import { useLangPath } from "@/components/LanguageLayout";
 
@@ -67,9 +68,15 @@ const HeroScrollSection = () => {
         }
       >
         <img
+          src={dashboardMobileImg}
+          alt="Gastro Master Dashboard"
+          className="md:hidden mx-auto rounded-2xl object-contain h-full w-full"
+          draggable={false}
+        />
+        <img
           src={dashboardImg}
           alt="Gastro Master Dashboard"
-          className="mx-auto rounded-2xl object-cover h-full w-full object-left-top"
+          className="hidden md:block mx-auto rounded-2xl object-cover h-full w-full object-left-top"
           draggable={false}
         />
       </ContainerScroll>

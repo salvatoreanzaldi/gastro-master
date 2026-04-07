@@ -1,10 +1,118 @@
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Truck, QrCode, ShoppingBag } from "lucide-react";
+import { ArrowRight, Check, Truck, QrCode, ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import kassenhardware from "@/assets/hardware/kassenhardware.png";
 import selforderTerminals from "@/assets/addons/selfordering-terminals.png";
 import frankfurtGps from "@/assets/addons/addon-frankfurt-gps.png";
 import qrTischsystem from "@/assets/addons/addon-qr-tischsystem.png";
 import { useTranslation } from "react-i18next";
+
+// ─── Addon card content (shared between carousel & grid) ────────────────────
+
+const AddonCard = ({ icon: Icon, img, imgAlt, imgClass, title, price, features, variant = "light" }: {
+  icon: React.ComponentType<{ className?: string }>;
+  img: string; imgAlt: string; imgClass?: string;
+  title: string; price: string; features: string[];
+  variant?: "light" | "navy";
+}) => (
+  <div className={`rounded-2xl p-6 md:p-7 flex flex-col h-full ${
+    variant === "navy"
+      ? "border border-cyan-brand/20 bg-gradient-navy text-primary-foreground"
+      : "border border-border bg-background"
+  }`}>
+    <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand">
+      <Icon className="w-3.5 h-3.5" /> Add-on
+    </div>
+    <div className={`mb-4 rounded-xl overflow-hidden aspect-[4/3] ${variant === "navy" ? "bg-surface-navy/60 flex items-center justify-center" : "bg-white flex items-center justify-center"}`}>
+      <img src={img} alt={imgAlt} className={imgClass || "w-full h-full object-cover"} />
+    </div>
+    <h4 className={`text-lg font-bold mb-1 ${variant === "navy" ? "" : "text-foreground"}`}>{title}</h4>
+    <p className={`text-xs mb-5 ${variant === "navy" ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{price}</p>
+    <ul className="space-y-2 flex-1">
+      {features.map(p => (
+        <li key={p} className="flex items-start gap-2">
+          <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-cyan-brand" />
+          <span className={`text-sm ${variant === "navy" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{p}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const AddonCards = ({ t }: { t: (k: string, o?: any) => any }) => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    const onSelect = () => setCurrent(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    onSelect();
+    return () => { api.off("select", onSelect); };
+  }, [api]);
+
+  useEffect(() => {
+    if (!api) return;
+    let paused = false;
+    const id = setInterval(() => { if (!paused) api.scrollNext(); }, 5000);
+    const pause = () => { paused = true; setTimeout(() => { paused = false; }, 8000); };
+    api.on("pointerDown", pause);
+    return () => { clearInterval(id); api.off("pointerDown", pause); };
+  }, [api]);
+
+  const addons = [
+    { icon: Truck, img: frankfurtGps, imgAlt: t("pos.addon1Title"), imgClass: "w-full h-full object-contain scale-110", title: t("pos.addon1Title"), price: t("pos.addon1Price"), features: t("pos.addon1Features", { returnObjects: true }) as string[], variant: "light" as const },
+    { icon: QrCode, img: qrTischsystem, imgAlt: t("pos.addon2Title"), imgClass: "w-full h-full object-cover", title: t("pos.addon2Title"), price: t("pos.addon2Price"), features: t("pos.addon2Features", { returnObjects: true }) as string[], variant: "light" as const },
+    { icon: ShoppingBag, img: selforderTerminals, imgAlt: t("pos.addon3Title"), imgClass: "w-full h-full object-contain p-4", title: t("pos.addon3Title"), price: t("pos.addon3Price"), features: t("pos.addon3Features", { returnObjects: true }) as string[], variant: "navy" as const },
+  ];
+
+  return (
+    <>
+      {/* Mobile: Carousel */}
+      <div className="md:hidden">
+        <h3 className="text-center text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-6">Kassen Add-ons</h3>
+        <Carousel opts={{ loop: true }} setApi={setApi} className="relative mx-auto max-w-sm">
+          <CarouselContent className="-ml-3">
+            {addons.map((a, i) => (
+              <CarouselItem key={i} className="pl-3">
+                <div className="px-1 py-1">
+                  <AddonCard {...a} />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <button onClick={() => api?.scrollPrev()}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 w-9 h-9 rounded-full bg-background/90 border border-border shadow-lg flex items-center justify-center text-foreground active:scale-95 transition-transform"
+            aria-label="Vorheriger">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button onClick={() => api?.scrollNext()}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-20 w-9 h-9 rounded-full bg-background/90 border border-border shadow-lg flex items-center justify-center text-foreground active:scale-95 transition-transform"
+            aria-label="Nächster">
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </Carousel>
+        <div className="flex justify-center gap-2 mt-5">
+          {addons.map((_, i) => (
+            <button key={i} onClick={() => api?.scrollTo(i)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${i === current ? "bg-cyan-brand w-5" : "bg-foreground/20"}`}
+              aria-label={`Slide ${i + 1}`} />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: Grid (unverändert) */}
+      <div className="hidden md:grid md:grid-cols-3 gap-5">
+        {addons.map((a, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+            <AddonCard {...a} />
+          </motion.div>
+        ))}
+      </div>
+    </>
+  );
+};
 
 const POSSection = () => {
   const { t } = useTranslation("common");
@@ -27,11 +135,15 @@ const POSSection = () => {
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           className="bg-gradient-navy rounded-3xl border border-cyan-brand/20 overflow-hidden mb-10">
           <div className="grid md:grid-cols-2 gap-0 items-center">
-            <div className="p-8 md:p-12">
+            <div className="p-6 md:p-12">
               <div className="inline-block bg-cyan-brand/10 text-cyan-brand text-xs font-bold px-3 py-1 rounded-full mb-4">{t("pos.posTag")}</div>
               <h3 className="text-2xl md:text-3xl font-black text-primary-foreground mb-2">{t("pos.posPrice")}</h3>
-              <p className="text-primary-foreground/40 text-xs mb-6">{t("pos.posVat")}</p>
-              <ul className="space-y-3 mb-8">
+              <p className="text-primary-foreground/40 text-xs mb-4 md:mb-6">{t("pos.posVat")}</p>
+              {/* Mobile-only: Hardware-Bild direkt unter dem Preis */}
+              <div className="md:hidden flex justify-center mb-5">
+                <img src={kassenhardware} alt="Gastro Master Cloud-Kasse – POS Hardware" className="w-full max-w-[280px] object-contain" />
+              </div>
+              <ul className="space-y-3 mb-6 md:mb-8">
                 {(t("pos.posFeatures", { returnObjects: true }) as string[]).map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <Check className="w-4 h-4 text-cyan-brand shrink-0 mt-0.5" />
@@ -39,83 +151,23 @@ const POSSection = () => {
                   </li>
                 ))}
               </ul>
-              <button onClick={scrollToForm}
-                className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
-                {t("pos.posCta")}
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <div className="text-center md:text-left">
+                <button onClick={scrollToForm}
+                  className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
+                  <span className="md:hidden">Kostenlose Beratung</span>
+                  <span className="hidden md:inline">{t("pos.posCta")}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-            <div className="flex justify-center p-8 md:p-12">
+            <div className="hidden md:flex justify-center p-8 md:p-12">
               <img src={kassenhardware} alt="Gastro Master Cloud-Kasse – POS Hardware" className="w-full max-w-md object-contain" />
             </div>
           </div>
         </motion.div>
 
-        {/* Add-ons */}
-        <div className="grid md:grid-cols-3 gap-5">
-          {/* Addon 1 */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0 }}
-            className="rounded-2xl border border-border bg-background p-7 flex flex-col">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand">
-              <Truck className="w-3.5 h-3.5" /> Add-on
-            </div>
-            <div className="mb-4 rounded-xl overflow-hidden aspect-[4/3] bg-white flex items-center justify-center">
-              <img src={frankfurtGps} alt={t("pos.addon1Title")} className="w-full h-full object-contain scale-110" />
-            </div>
-            <h4 className="text-lg font-bold text-foreground mb-1">{t("pos.addon1Title")}</h4>
-            <p className="text-xs text-muted-foreground mb-5">{t("pos.addon1Price")}</p>
-            <ul className="space-y-2 flex-1">
-              {(t("pos.addon1Features", { returnObjects: true }) as string[]).map(p => (
-                <li key={p} className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-cyan-brand" />
-                  <span className="text-sm text-muted-foreground">{p}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Addon 2 */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-            className="rounded-2xl border border-border bg-background p-7 flex flex-col">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand">
-              <QrCode className="w-3.5 h-3.5" /> Add-on
-            </div>
-            <div className="mb-4 rounded-xl overflow-hidden aspect-[4/3]">
-              <img src={qrTischsystem} alt={t("pos.addon2Title")} className="w-full h-full object-cover" />
-            </div>
-            <h4 className="text-lg font-bold text-foreground mb-1">{t("pos.addon2Title")}</h4>
-            <p className="text-xs text-muted-foreground mb-5">{t("pos.addon2Price")}</p>
-            <ul className="space-y-2 flex-1">
-              {(t("pos.addon2Features", { returnObjects: true }) as string[]).map(p => (
-                <li key={p} className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-cyan-brand" />
-                  <span className="text-sm text-muted-foreground">{p}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Addon 3 */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-cyan-brand/20 bg-gradient-navy p-7 flex flex-col text-primary-foreground">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-4 text-cyan-brand">
-              <ShoppingBag className="w-3.5 h-3.5" /> Add-on
-            </div>
-            <div className="mb-4 rounded-xl overflow-hidden aspect-[4/3] bg-surface-navy/60 flex items-center justify-center">
-              <img src={selforderTerminals} alt={t("pos.addon3Title")} className="w-full h-full object-contain p-4" />
-            </div>
-            <h4 className="text-lg font-bold mb-1">{t("pos.addon3Title")}</h4>
-            <p className="text-xs text-primary-foreground/50 mb-5">{t("pos.addon3Price")}</p>
-            <ul className="space-y-2 flex-1">
-              {(t("pos.addon3Features", { returnObjects: true }) as string[]).map(p => (
-                <li key={p} className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-cyan-brand" />
-                  <span className="text-sm text-primary-foreground/70">{p}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        </div>
+        {/* Add-ons — Mobile: Carousel / Desktop: Grid */}
+        <AddonCards t={t} />
 
         <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           className="text-center text-muted-foreground text-xs mt-8">

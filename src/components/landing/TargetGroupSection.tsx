@@ -194,12 +194,12 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
         </motion.div>
 
         {/* Main group selector */}
-        <div className="flex flex-wrap justify-center gap-2 mb-6">
+        <div className="grid grid-cols-2 gap-3 mb-6 [&>:last-child:nth-child(odd)]:col-span-2 [&>:last-child:nth-child(odd)]:justify-self-center md:flex md:flex-wrap md:justify-center md:gap-2">
           {(t("target.groups", { returnObjects: true }) as any[]).map(g => {
             const Icon = groupIcons[g.id] ?? Truck;
             return (
               <button key={g.id} onClick={() => handleGroupClick(g.id)}
-                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border backdrop-blur-sm ${
+                className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border backdrop-blur-sm ${
                   activeGroup === g.id ? "bg-foreground text-background border-foreground shadow-lg" : "bg-background/60 text-muted-foreground border-border hover:border-foreground/30 hover:text-foreground"
                 }`}>
                 <Icon className="w-4 h-4" />
@@ -210,17 +210,17 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
         </div>
 
         {/* Sub-selector for delivery – fixed height, no layout shift */}
-        <div className="h-16 flex items-center justify-center mb-2">
+        <div className={`${showSubs ? "h-36" : "h-0"} md:h-16 overflow-hidden md:overflow-visible flex items-center justify-center mb-2 transition-[height] duration-300`}>
           <motion.div
             animate={{ opacity: showSubs ? 1 : 0, pointerEvents: showSubs ? "auto" : "none" }}
             transition={{ duration: 0.25 }}
-            className="flex flex-wrap justify-center gap-2"
+            className="grid grid-cols-2 gap-2 w-full md:flex md:flex-wrap md:justify-center"
           >
             {(t("target.subs", { returnObjects: true }) as any[]).map(s => {
               const Icon = subIcons[s.id] ?? ChefHat;
               return (
                 <button key={s.id} onClick={() => handleSubClick(s.id)}
-                  className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border ${
+                  className={`inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border ${
                     activeSub === s.id ? "bg-cyan-brand/10 text-cyan-brand border-cyan-brand/30" : "bg-surface-light text-muted-foreground border-border hover:border-cyan-brand/20 hover:text-foreground"
                   }`}>
                   <Icon className="w-3.5 h-3.5" />

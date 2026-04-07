@@ -69,7 +69,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -123,7 +123,7 @@ const Navbar = () => {
   );
 
   return (
-    <nav className={`fixed z-50 transition-all duration-700 ease-out rounded-2xl border border-primary-foreground/10 py-3 ${active
+    <nav className={`fixed z-50 rounded-2xl border border-primary-foreground/10 py-3 transition-[top,left,right,background-color,box-shadow,backdrop-filter] duration-700 ease-out will-change-[transform,opacity] ${active
         ? "top-2 left-[10%] right-[10%] md:left-[15%] md:right-[15%] lg:left-[20%] lg:right-[20%]"
         : "top-3 left-3 right-3 md:top-4 md:left-6 md:right-6"
       } ${visibleBg
