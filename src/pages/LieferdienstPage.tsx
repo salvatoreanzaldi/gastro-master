@@ -36,11 +36,11 @@ function renderWithLinks(text: string, lp: (p: string) => string): React.ReactNo
 }
 const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
-import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
-import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
-import imgKasse       from "@/assets/heroes/hero-pos-system.png";
-import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.png";
-import imgTransaktion from "@/assets/addons/9 - Zahlungsmethoden.png";
+import imgWebshop     from "@/assets/loesungen/Loesung - Webshop.png";
+import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
+import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
+import imgWebseite    from "@/assets/loesungen/Loesung - Webpage.png";
+import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 
 // ─── Static image / icon maps (order must match JSON cards) ─────────────────
 const cardImages = [imgApp, imgKasse, imgWebseite, imgTransaktion];
@@ -353,11 +353,11 @@ const LieferdienstPage = () => {
               className="group relative rounded-2xl overflow-hidden bg-white/5 border-2 border-cyan-brand/30 hover:border-cyan-brand/60 transition-all duration-300 flex flex-col md:flex-row"
             >
               {/* Image */}
-              <div className="relative md:w-2/5 h-56 md:h-auto overflow-hidden shrink-0">
+              <div className="relative md:w-2/5 h-56 md:h-auto overflow-hidden shrink-0 bg-[#0A264A]">
                 <img
                   src={imgWebshop}
                   alt={t("products.featured.imgAlt")}
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0A264A] hidden md:block" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-[#0A264A]/30 to-transparent md:hidden" />
@@ -728,13 +728,13 @@ const SmallProductCard = ({
     to={lp(cardHrefs[index])}
     className="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-cyan-brand/40 transition-all duration-300 block"
   >
-    <div className="relative h-44 overflow-hidden">
+    <div className="relative h-44 overflow-hidden bg-[#0A264A]">
       <img
         src={cardImages[index]}
         alt={product.title}
-        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+        className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-[#0A264A]/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-transparent to-transparent" />
       <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white text-xs font-medium">
         {cardIcons[index]}
         <span className="ml-0.5">{product.title}</span>

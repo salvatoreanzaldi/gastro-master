@@ -36,11 +36,11 @@ function renderWithLinks(text: string, lp: (p: string) => string): React.ReactNo
 }
 const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
-import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
-import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
-import imgKasse       from "@/assets/heroes/hero-pos-system.png";
-import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.png";
-import imgTransaktion from "@/assets/addons/9 - Zahlungsmethoden.png";
+import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
+import imgWebshop     from "@/assets/loesungen/Loesung - Webshop.png";
+import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
+import imgWebseite    from "@/assets/loesungen/Loesung - Webpage.png";
+import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 
 // ─── Static maps (order must match JSON products) ────────────────────────────
 const productImages = [imgApp, imgWebshop, imgKasse, imgWebseite, imgTransaktion];
@@ -662,13 +662,13 @@ const ProductCard = ({ product, img, icon, href, moreLabel }: ProductCardProps) 
     to={href}
     className="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-cyan-brand/40 transition-all duration-300 block"
   >
-    <div className="relative h-52 overflow-hidden">
+    <div className="relative h-52 overflow-hidden bg-[#0A264A]">
       <img
         src={img}
         alt={product.alt}
-        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+        className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-[#0A264A]/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-transparent to-transparent" />
       <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white text-xs font-medium">
         {icon}
         {product.title}

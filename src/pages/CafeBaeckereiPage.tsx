@@ -27,11 +27,11 @@ function renderWithLinks(text: string, lp: (p: string) => string): React.ReactNo
 }
 const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
-import imgKasse       from "@/assets/hardware/kassenhardware.png";
-import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
-import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.png";
-import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
-import imgTransaktion from "@/assets/addons/9 - Zahlungsmethoden.png";
+import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
+import imgWebshop     from "@/assets/loesungen/Loesung - Webshop.png";
+import imgWebseite    from "@/assets/loesungen/Loesung - Webpage.png";
+import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
+import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 
 /* ─── Static maps ────────────────────────────────────────── */
 const smallImages = [imgWebshop, imgWebseite, imgApp, imgTransaktion];
@@ -314,11 +314,11 @@ const CafeBaeckereiPage = () => {
           {/* Featured Card: Kassensystem */}
           <div className="rounded-2xl overflow-hidden bg-white/8 border border-white/10 mb-5">
             <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="relative h-64 lg:h-auto overflow-hidden">
+              <div className="relative h-64 lg:h-auto overflow-hidden bg-[#0A264A]">
                 <img
                   src={imgKasse}
                   alt={t("products.featured.imgAlt")}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain p-4"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A264A]/20 hidden lg:block" />
                 <div className="absolute top-4 left-4 flex flex-wrap gap-2">
@@ -365,13 +365,13 @@ const CafeBaeckereiPage = () => {
                 to={lp(smallHrefs[i])}
                 className="group relative rounded-2xl overflow-hidden bg-white/8 border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col"
               >
-                <div className="relative h-40 overflow-hidden">
+                <div className="relative h-40 overflow-hidden bg-[#0A264A]">
                   <img
                     src={smallImages[i]}
                     alt={card.title}
-                    className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
+                    className="w-full h-full object-contain p-3 opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-[#0A264A]/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-transparent to-transparent" />
                 </div>
                 <div className="p-4 flex flex-col flex-1">
                   <h3 className="font-bold text-white text-base mb-1">{card.title}</h3>
