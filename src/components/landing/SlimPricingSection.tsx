@@ -221,7 +221,7 @@ const SlimCard = ({
               >
                 {displayPrice}€
               </motion.span>
-              {isYearly && yearlyPrice && price && (
+              {isYearly && yearlyPrice && price && yearlyPrice !== price && (
                 <span className={`text-sm line-through ${textMuted}`}>{price}€</span>
               )}
               <span className={`text-xs ${textSecondary}`}>{perMonthLabel}</span>
