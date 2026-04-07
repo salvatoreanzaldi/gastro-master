@@ -398,7 +398,7 @@
     "yearlyNote": "Monatlich abgerechnet · 12 Monate Laufzeit",
     "monthlyNote": "3 Monate Kündigungsfrist",
     "slimPlans": [
-      { "id": "webseite", "name": "Webseite", "tagline": "Professionelle Online-Präsenz", "priceMonthly": "49", "priceYearly": "39", "duration": "7–10 Tage" },
+      { "id": "webseite", "name": "Webseite", "tagline": "Professionelle Online-Präsenz", "priceMonthly": "49", "priceYearly": "49", "duration": "7–10 Tage", "monthlyNote": "Mindestvertragslaufzeit 12 Monate", "yearlyNote": "Mindestvertragslaufzeit 12 Monate" },
       { "id": "basic", "name": "Starter", "tagline": "Reiner Webshop", "priceMonthly": "79", "priceYearly": "69", "duration": "10–14 Tage" },
       { "id": "standard", "name": "Business", "tagline": "Webshop + App", "priceMonthly": "149", "priceYearly": "129", "duration": "2–3 Wochen", "popular": true },
       { "id": "enterprise", "name": "Enterprise", "tagline": "Franchise / Mehr-Standorte", "priceMonthly": null, "priceYearly": null, "duration": "Nach Projektumfang" }

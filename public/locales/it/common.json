@@ -398,7 +398,7 @@
     "yearlyNote": "Fatturazione mensile · durata 12 mesi",
     "monthlyNote": "3 mesi di preavviso",
     "slimPlans": [
-      { "id": "webseite", "name": "Sito web", "tagline": "Presenza online professionale", "priceMonthly": "49", "priceYearly": "39", "duration": "7–10 giorni" },
+      { "id": "webseite", "name": "Sito web", "tagline": "Presenza online professionale", "priceMonthly": "49", "priceYearly": "49", "duration": "7–10 giorni", "monthlyNote": "Durata minima contratto 12 mesi", "yearlyNote": "Durata minima contratto 12 mesi" },
       { "id": "basic", "name": "Starter", "tagline": "Solo webshop", "priceMonthly": "79", "priceYearly": "69", "duration": "10–14 giorni" },
       { "id": "standard", "name": "Business", "tagline": "Webshop + App", "priceMonthly": "149", "priceYearly": "129", "duration": "2–3 settimane", "popular": true },
       { "id": "enterprise", "name": "Enterprise", "tagline": "Franchise / Multi-sede", "priceMonthly": null, "priceYearly": null, "duration": "In base al progetto" }

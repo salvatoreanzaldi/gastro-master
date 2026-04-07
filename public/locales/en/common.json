@@ -398,7 +398,7 @@
     "yearlyNote": "Billed monthly · 12-month term",
     "monthlyNote": "3-month notice period",
     "slimPlans": [
-      { "id": "webseite", "name": "Website", "tagline": "Professional Online Presence", "priceMonthly": "49", "priceYearly": "39", "duration": "7–10 days" },
+      { "id": "webseite", "name": "Website", "tagline": "Professional Online Presence", "priceMonthly": "49", "priceYearly": "49", "duration": "7–10 days", "monthlyNote": "Minimum contract 12 months", "yearlyNote": "Minimum contract 12 months" },
       { "id": "basic", "name": "Starter", "tagline": "Online Shop Only", "priceMonthly": "79", "priceYearly": "69", "duration": "10–14 days" },
       { "id": "standard", "name": "Business", "tagline": "Shop + App", "priceMonthly": "149", "priceYearly": "129", "duration": "2–3 weeks", "popular": true },
       { "id": "enterprise", "name": "Enterprise", "tagline": "Franchise / Multi-Location", "priceMonthly": null, "priceYearly": null, "duration": "By project scope" }

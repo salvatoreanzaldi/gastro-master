@@ -398,7 +398,7 @@
     "yearlyNote": "Ежемесячная оплата · 12 месяцев срок",
     "monthlyNote": "3 месяца срок уведомления",
     "slimPlans": [
-      { "id": "webseite", "name": "Веб-сайт", "tagline": "Профессиональное онлайн-присутствие", "priceMonthly": "49", "priceYearly": "39", "duration": "7–10 дней" },
+      { "id": "webseite", "name": "Веб-сайт", "tagline": "Профессиональное онлайн-присутствие", "priceMonthly": "49", "priceYearly": "49", "duration": "7–10 дней", "monthlyNote": "Минимальный срок контракта 12 месяцев", "yearlyNote": "Минимальный срок контракта 12 месяцев" },
       { "id": "basic", "name": "Starter", "tagline": "Только интернет-магазин", "priceMonthly": "79", "priceYearly": "69", "duration": "10–14 дней" },
       { "id": "standard", "name": "Business", "tagline": "Интернет-магазин + приложение", "priceMonthly": "149", "priceYearly": "129", "duration": "2–3 недели", "popular": true },
       { "id": "enterprise", "name": "Enterprise", "tagline": "Франшиза / Несколько точек", "priceMonthly": null, "priceYearly": null, "duration": "По масштабу проекта" }

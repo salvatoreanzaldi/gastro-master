@@ -398,7 +398,7 @@
     "yearlyNote": "صورتحساب ماهانه · ۱۲ ماه مدت قرارداد",
     "monthlyNote": "۳ ماه مهلت لغو",
     "slimPlans": [
-      { "id": "webseite", "name": "وب‌سایت", "tagline": "حضور آنلاین حرفه‌ای", "priceMonthly": "49", "priceYearly": "39", "duration": "۷ تا ۱۰ روز" },
+      { "id": "webseite", "name": "وب‌سایت", "tagline": "حضور آنلاین حرفه‌ای", "priceMonthly": "49", "priceYearly": "49", "duration": "۷ تا ۱۰ روز", "monthlyNote": "حداقل مدت قرارداد ۱۲ ماه", "yearlyNote": "حداقل مدت قرارداد ۱۲ ماه" },
       { "id": "basic", "name": "Starter", "tagline": "فقط فروشگاه آنلاین", "priceMonthly": "79", "priceYearly": "69", "duration": "۱۰ تا ۱۴ روز" },
       { "id": "standard", "name": "Business", "tagline": "فروشگاه + اپلیکیشن", "priceMonthly": "149", "priceYearly": "129", "duration": "۲ تا ۳ هفته", "popular": true },
       { "id": "enterprise", "name": "Enterprise", "tagline": "فرانچایز / چند شعبه", "priceMonthly": null, "priceYearly": null, "duration": "بر اساس حجم پروژه" }

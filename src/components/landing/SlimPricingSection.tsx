@@ -14,6 +14,8 @@ interface SlimPlan {
   priceYearly: string | null;
   duration: string;
   popular?: boolean;
+  monthlyNote?: string;
+  yearlyNote?: string;
 }
 
 // ── WebGL Shader ──────────────────────────────────────────────────────────────
@@ -393,8 +395,8 @@ const SlimPricingSection = () => {
                 durationLabel={t("pricing.durationLabel")}
                 onRequestLabel={t("pricing.onRequest")}
                 popularLabel={t("pricing.badgePopular")}
-                yearlyNoteText={t("pricing.yearlyNote")}
-                monthlyNoteText={t("pricing.monthlyNote")}
+                yearlyNoteText={plan.yearlyNote ?? t("pricing.yearlyNote")}
+                monthlyNoteText={plan.monthlyNote ?? t("pricing.monthlyNote")}
               />
             );
           })}
