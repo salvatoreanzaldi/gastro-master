@@ -749,7 +749,7 @@ const KassePage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.06] mb-8"
+            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.15] mb-8"
           >
             {t("hero.h1")}{" "}
             <span className="text-gradient-brand">{t("hero.h1Highlight")}</span>

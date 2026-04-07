@@ -34,7 +34,7 @@ const HeroScrollSection = () => {
               {t("heroScroll.badge")}
             </p>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6">
-              <span className="block leading-[1.05]">
+              <span className="block leading-[1.15]">
                 {t("heroScroll.title1")}
               </span>
               <span className="block leading-[1.3] overflow-visible">
@@ -54,7 +54,7 @@ const HeroScrollSection = () => {
                   </AnimatePresence>
                 </span>
               </span>
-              <span className="block leading-[1.05]">
+              <span className="block leading-[1.15]">
                 {t("heroScroll.title2")}
               </span>
             </h1>

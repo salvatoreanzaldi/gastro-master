@@ -326,7 +326,7 @@ const WebseitePage = () => {
                 {t("hero.badge")}
               </div>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.15] mb-6">
                 {t("hero.title1")}{" "}
                 <span className="text-gradient-brand">{t("hero.titleHighlight")}</span>
                 {" "}{t("hero.title2")}

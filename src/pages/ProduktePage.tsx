@@ -513,7 +513,7 @@ const ProduktePage = () => {
                 {tx.heroBadge}
               </div>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.15] mb-6">
                 {tx.heroH1a}{" "}
                 <span className="text-gradient-brand">{tx.heroH1b}</span>
               </h1>

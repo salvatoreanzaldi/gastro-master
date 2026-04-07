@@ -160,7 +160,7 @@ const LieferserviceGruendenPage = () => {
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.05] tracking-tight mb-6"
+            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.15] tracking-tight mb-6"
           >
             {t("hero.h1")}{" "}
             <span className="text-gradient-brand">{t("hero.h1Highlight")}</span>
@@ -644,7 +644,7 @@ const LieferserviceGruendenPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.1] mb-5"
+            className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] mb-5"
           >
             {t("cta.title")}{" "}
             <span className="text-cyan-brand">{t("cta.titleHighlight")}</span>

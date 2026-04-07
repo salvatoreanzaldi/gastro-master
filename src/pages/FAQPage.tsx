@@ -174,7 +174,7 @@ const FAQPage = () => {
               {t("hero.badge", { count: totalCount, catCount: categories.length })}
             </div>
             <p className="text-white/35 text-xs mb-4">{t("hero.lastUpdate")}</p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.15] mb-4">
               {t("hero.title1")}<br />
               <span className="text-gradient-brand">{t("hero.title2")}</span>
             </h1>

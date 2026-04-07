@@ -33,7 +33,7 @@ const ProductHero = ({ badge, headline, subline, ctaLabel, mockupSrc }: ProductH
             {badge}
           </motion.span>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.15] mb-6">
             {headline}
           </h1>
 

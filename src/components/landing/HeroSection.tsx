@@ -28,7 +28,7 @@ const HeroSection = () => {
           {/* Left: Copy */}
           <div>
             <motion.h1 initial="hidden" animate="visible" custom={1} variants={fadeUp}
-              className="text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-[1.08] mb-5">
+              className="text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-[1.15] mb-5">
               {t("hero.headline")}
             </motion.h1>
 

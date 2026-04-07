@@ -132,7 +132,7 @@ const CafeBaeckereiPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.04] mb-8"
+            className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.15] mb-8"
           >
             {t("hero.h1_1")}{" "}
             <span className="text-gradient-brand">{t("hero.h1_highlight")}</span>

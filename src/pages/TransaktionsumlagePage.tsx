@@ -341,7 +341,7 @@ const HeroParticleVariant = () => {
         {/* H1 */}
         <motion.h1
           custom={1} variants={fadeUp} initial="hidden" animate="visible"
-          className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-10"
+          className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.15] mb-10"
         >
           <span className="text-gradient-brand">{t("hero.title1")}</span>{t("hero.title2")}
         </motion.h1>

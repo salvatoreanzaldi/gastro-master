@@ -392,7 +392,7 @@ const UeberUnsPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight mb-5"
+            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.15] tracking-tight mb-5"
           >
             {t("hero.headingPre")}{" "}
               <span className="text-transparent bg-clip-text bg-[length:300%_auto] animate-gradient-shift bg-gradient-to-r from-[#009ACC] via-[#008BCC] via-[#007DCF] via-[#055FB6] via-[#007DCF] via-[#008BCC] to-[#009ACC]">{t("hero.headingHighlight")}</span>{t("hero.headingPost")}
@@ -707,7 +707,7 @@ const UeberUnsPage = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none opacity-[0.06]" style={{ background: "radial-gradient(circle, hsl(196,100%,50%), transparent 70%)" }} />
         <div className="max-w-2xl mx-auto relative z-10">
           <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.1] mb-5">
+            className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] mb-5">
             {t("cta.headingPre")}{" "}
               <span className="text-cyan-brand">{t("cta.headingHighlight")}</span>
           </motion.h2>
