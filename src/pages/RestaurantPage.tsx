@@ -353,14 +353,12 @@ const RestaurantPage = () => {
               className="group relative rounded-2xl overflow-hidden bg-white/5 border-2 border-cyan-brand/30 hover:border-cyan-brand/60 transition-all duration-300 flex flex-col md:flex-row"
             >
               {/* Image */}
-              <div className="relative md:w-2/5 h-56 md:h-auto overflow-hidden shrink-0 bg-[#0A264A]">
+              <div className="relative md:w-2/5 h-56 md:h-auto overflow-hidden shrink-0 bg-white dark:bg-black">
                 <img
                   src={imgKasse}
                   alt={t("products.featured.iconLabel")}
                   className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0A264A] hidden md:block" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-[#0A264A]/30 to-transparent md:hidden" />
                 <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-brand/20 backdrop-blur-sm border border-cyan-brand/30 text-cyan-brand text-xs font-bold">
                   {t("products.featured.badgeLabel")}
                 </div>
@@ -706,13 +704,12 @@ const SmallProductCard = ({ product, img, icon, href, moreLabel }: { product: { 
     to={href}
     className="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-cyan-brand/40 transition-all duration-300 block"
   >
-    <div className="relative h-44 overflow-hidden bg-[#0A264A]">
+    <div className="relative h-44 overflow-hidden bg-white dark:bg-black">
       <img
         src={img}
         alt={product.title}
         className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-transparent to-transparent" />
       <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white text-xs font-medium">
         {icon}
         {product.title}

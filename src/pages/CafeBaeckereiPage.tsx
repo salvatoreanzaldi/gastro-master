@@ -314,13 +314,12 @@ const CafeBaeckereiPage = () => {
           {/* Featured Card: Kassensystem */}
           <div className="rounded-2xl overflow-hidden bg-white/8 border border-white/10 mb-5">
             <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="relative h-64 lg:h-auto overflow-hidden bg-[#0A264A]">
+              <div className="relative h-64 lg:h-auto overflow-hidden bg-white dark:bg-black">
                 <img
                   src={imgKasse}
                   alt={t("products.featured.imgAlt")}
                   className="w-full h-full object-contain p-4"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A264A]/20 hidden lg:block" />
                 <div className="absolute top-4 left-4 flex flex-wrap gap-2">
                   <span className="px-3 py-1 rounded-full bg-cyan-brand text-[#0A264A] text-xs font-black uppercase tracking-wider">
                     {t("products.featured.badgeRecommended")}
@@ -365,13 +364,12 @@ const CafeBaeckereiPage = () => {
                 to={lp(smallHrefs[i])}
                 className="group relative rounded-2xl overflow-hidden bg-white/8 border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col"
               >
-                <div className="relative h-40 overflow-hidden bg-[#0A264A]">
+                <div className="relative h-40 overflow-hidden bg-white dark:bg-black">
                   <img
                     src={smallImages[i]}
                     alt={card.title}
-                    className="w-full h-full object-contain p-3 opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
+                    className="w-full h-full object-contain p-3 group-hover:scale-105 transition-all duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-transparent to-transparent" />
                 </div>
                 <div className="p-4 flex flex-col flex-1">
                   <h3 className="font-bold text-white text-base mb-1">{card.title}</h3>

@@ -11,11 +11,11 @@ import { useTranslation } from "react-i18next";
 import { useLangPath } from "@/components/LanguageLayout";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
-import imgWebshop     from "@/assets/screenshots/take-startbild.jpeg";
-import imgApp         from "@/assets/mockups/Mock Up - Branding Hero.png";
-import imgKasse       from "@/assets/heroes/hero-pos-system.png";
-import imgWebseite    from "@/assets/heroes/Hero - Gastro Master.png";
-import imgTransaktion from "@/assets/addons/9 - Zahlungsmethoden.png";
+import imgWebshop     from "@/assets/loesungen/Loesung - Webshop.png";
+import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
+import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
+import imgWebseite    from "@/assets/loesungen/Loesung - Webpage.png";
+import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -328,9 +328,8 @@ const LieferserviceGruendenPage = () => {
                 transition={{ delay: i * 0.08, duration: 0.4 }}
                 className="bg-white/[0.06] border border-white/[0.10] rounded-2xl overflow-hidden hover:border-cyan-brand/30 transition-all duration-300 group"
               >
-                <div className="relative overflow-hidden h-48">
-                  <img src={topImages[i]} alt={card.alt} className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A]/80 via-transparent to-transparent" />
+                <div className="relative overflow-hidden h-48 bg-white dark:bg-black">
+                  <img src={topImages[i]} alt={card.alt} className="w-full h-full object-contain p-3 group-hover:scale-[1.03] transition-transform duration-500" />
                 </div>
                 <div className="p-5">
                   <p className="text-white font-bold text-base mb-1">{card.title}</p>
@@ -354,9 +353,8 @@ const LieferserviceGruendenPage = () => {
                 transition={{ delay: 0.24 + i * 0.08, duration: 0.4 }}
                 className="bg-white/[0.06] border border-white/[0.10] rounded-2xl overflow-hidden hover:border-cyan-brand/30 transition-all duration-300 group"
               >
-                <div className="relative overflow-hidden h-40">
-                  <img src={bottomImages[i]} alt={card.alt} className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A]/80 via-transparent to-transparent" />
+                <div className="relative overflow-hidden h-40 bg-white dark:bg-black">
+                  <img src={bottomImages[i]} alt={card.alt} className="w-full h-full object-contain p-3 group-hover:scale-[1.03] transition-transform duration-500" />
                 </div>
                 <div className="p-5">
                   <p className="text-white font-bold text-base mb-1">{card.title}</p>

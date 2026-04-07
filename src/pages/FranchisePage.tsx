@@ -662,13 +662,12 @@ const ProductCard = ({ product, img, icon, href, moreLabel }: ProductCardProps) 
     to={href}
     className="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-cyan-brand/40 transition-all duration-300 block"
   >
-    <div className="relative h-52 overflow-hidden bg-[#0A264A]">
+    <div className="relative h-52 overflow-hidden bg-white dark:bg-black">
       <img
         src={img}
         alt={product.alt}
         className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0A264A] via-transparent to-transparent" />
       <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white text-xs font-medium">
         {icon}
         {product.title}
