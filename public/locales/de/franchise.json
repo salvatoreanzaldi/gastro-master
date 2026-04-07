@@ -109,6 +109,15 @@
     "cta": "Kassensystem ansehen",
     "imgAlt": "Self-Ordering Terminal für Franchise-Gastronomie — Gastro Master Kiosk-System"
   },
+  "screens": {
+    "badge": "Bildschirme · Kassensystem Add-On",
+    "title": "Pick-Up Screens & Küchenmonitore für Ihr Franchise",
+    "subtitle": "Bestellstatus in Echtzeit — für Gäste und Küche gleichermaßen.",
+    "text": "Pick-Up Screens und Küchenmonitore zählen zu den wirkungsvollsten Erweiterungen moderner Gastro-Kassensysteme: Kunden sehen ihren Bestellstatus in Echtzeit auf dem Abholbildschirm, das Küchenteam arbeitet papierlos und priorisiert Bestellungen digital. Franchise-Betriebe profitieren besonders — einheitliche Bildschirmkonfiguration an jedem Standort, weniger Nachfragen an der Theke und ein spürbar professionellerer Auftritt. Beide Bildschirmtypen sind nahtlos in das Gastro Master [Kassensystem](/produkte/kassensystem) integriert und lassen sich ohne technischen Aufwand aktivieren.",
+    "cta": "Kassensystem entdecken",
+    "imgAlt1": "Pick-Up Screen für Franchise-Gastronomie — Bestellstatus-Anzeige von Gastro Master",
+    "imgAlt2": "Küchenmonitor für Franchise-Restaurants — digitale Bestellverwaltung mit Gastro Master"
+  },
   "compare": {
     "badge": "Vergleich",
     "title": "Gastro Master vs. Eigenentwicklung vs. Anbieter-Mix",

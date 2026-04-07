@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -37,6 +37,8 @@ function renderWithLinks(text: string, lp: (p: string) => string): React.ReactNo
 const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
 import imgKiosk       from "@/assets/addons/selfordering-terminals.png";
+import imgPickup1     from "@/assets/addons/pickup-screen.jpeg";
+import imgPickup2     from "@/assets/addons/pickup-screen-2.png";
 import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
 import imgWebshop     from "@/assets/loesungen/Loesung - Webshop.png";
 import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
@@ -423,7 +425,10 @@ const FranchisePage = () => {
         </div>
       </section>
 
-      {/* ── S6: VERGLEICHSTABELLE ─────────────────────────────────────────── */}
+      {/* ── S6: PICK-UP SCREENS & KÜCHENMONITORE ─────────────────────────── */}
+      <ScreensSection />
+
+      {/* ── S7: VERGLEICHSTABELLE ─────────────────────────────────────────── */}
       <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-20">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
@@ -698,6 +703,94 @@ const FranchisePage = () => {
 
       <Footer />
     </div>
+  );
+};
+
+// ─── Screens Section ─────────────────────────────────────────────────────────
+
+const SCREEN_IMGS = [imgPickup1, imgPickup2];
+
+const ScreensSection = () => {
+  const { t } = useTranslation("franchise");
+  const lp = useLangPath();
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setIdx((i) => (i + 1) % SCREEN_IMGS.length), 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="bg-[#f8fafc] dark:bg-[#0f172a] px-5 md:px-8 lg:px-16 py-20">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-12">
+          <span className="inline-block px-3 py-1 rounded-full bg-cyan-brand/10 text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4">
+            {t("screens.badge")}
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
+            {t("screens.title")}
+          </h2>
+          <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
+            {t("screens.subtitle")}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          {/* Text */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-foreground/70 text-base md:text-lg leading-relaxed mb-6">
+              {renderWithLinks(t("screens.text"), lp)}
+            </p>
+            <Link
+              to={lp("/produkte/kassensystem")}
+              className="inline-flex items-center gap-2 bg-gradient-amber text-[#0A264A] font-bold px-6 py-3 rounded-xl text-base hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
+            >
+              {t("screens.cta")}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </motion.div>
+
+          {/* Bild mit Auto-Wechsel */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="relative rounded-2xl overflow-hidden aspect-video"
+          >
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={idx}
+                src={SCREEN_IMGS[idx]}
+                alt={idx === 0 ? t("screens.imgAlt1") : t("screens.imgAlt2")}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6 }}
+                className="w-full h-full object-cover absolute inset-0"
+              />
+            </AnimatePresence>
+            {/* Dots */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              {SCREEN_IMGS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setIdx(i)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                    i === idx ? "bg-cyan-brand scale-110" : "bg-white/40 hover:bg-white/60"
+                  }`}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
   );
 };
 
