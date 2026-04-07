@@ -27,7 +27,7 @@ const i18n = {
     heroH1b: "alle Produkte",
     heroP1: (Link: any) => <>Gastro Master bietet digitale Komplettlösungen für die Gastronomie – und darüber hinaus. Vom provisionslosen Online-Bestellshop über eine{" "}<Link to="/produkte/app" className="text-white/90 underline underline-offset-2 hover:text-white transition-colors">eigene iOS & Android App</Link>{" "}bis hin zu professionellen Webseiten und{" "}<Link to="/produkte/kassensystem" className="text-white/90 underline underline-offset-2 hover:text-white transition-colors">TSE-konformen Kassensystemen</Link>. Alle Produkte sind aufeinander abgestimmt und lassen sich flexibel kombinieren.</>,
     heroP2: "Für Restaurants, Lieferdienste, Cafés, Bäckereien und alle weiteren Branchen.",
-    heroCta: "Kostenloses Beratungsgespräch",
+    heroCta: "Kostenlose Beratung",
     prodBadge: "Produkte", prodH2: "Digitale Produkte für die Gastronomie", prodSub: "Jedes Produkt funktioniert für sich allein – und entfaltet seine volle Stärke in Kombination.",
     addonBadge: "Erweiterung", addonH2: "Erweiterungen für Webshop und App", addonSub: "Ergänze deinen Webshop oder deine App mit diesen beliebten Add-Ons.",
     kassenBadge: "Kassensystem-Erweiterungen", kassenH2: "Kassen-Add-Ons", kassenSub: "Nur in Kombination mit dem Kassensystem – aktivierbar im laufenden Betrieb. Besonders geeignet für",
@@ -77,7 +77,7 @@ const i18n = {
     heroH1b: "all products",
     heroP1: (Link: any) => <>Gastro Master provides complete digital solutions for the restaurant industry and beyond. From a commission-free{" "}<Link to="/produkte/webshop" className="text-white/90 underline underline-offset-2 hover:text-white transition-colors">online ordering system</Link>{" "}to a branded{" "}<Link to="/produkte/app" className="text-white/90 underline underline-offset-2 hover:text-white transition-colors">iOS & Android app</Link>, professional websites and{" "}<Link to="/produkte/kassensystem" className="text-white/90 underline underline-offset-2 hover:text-white transition-colors">TSE-compliant POS systems</Link>. All products work seamlessly together.</>,
     heroP2: "For restaurants, delivery services, cafés, bakeries and all other industries.",
-    heroCta: "Get Free Consultation",
+    heroCta: "Free Consultation",
     prodBadge: "Products", prodH2: "Digital Products for Restaurants", prodSub: "Each product works on its own — and reaches full potential when combined.",
     addonBadge: "Extensions", addonH2: "Extensions for Online Shop and App", addonSub: "Enhance your online shop or app with these popular add-ons.",
     kassenBadge: "POS Extensions", kassenH2: "POS Add-Ons", kassenSub: "Only available with the POS system — can be activated at any time. Especially suited for",
@@ -533,7 +533,7 @@ const ProduktePage = () => {
               >
                 <Link
                   to="/kontakt"
-                  className="bg-gradient-amber text-[#0A264A] font-bold px-8 py-4 rounded-xl text-lg inline-flex items-center gap-2 shadow-lg"
+                  className="bg-gradient-amber text-[#0A264A] font-bold px-5 py-3 md:px-8 md:py-4 rounded-xl text-base md:text-lg inline-flex items-center gap-2 shadow-lg whitespace-nowrap"
                 >
                   {tx.heroCta}
                   <ArrowRight className="w-5 h-5" />

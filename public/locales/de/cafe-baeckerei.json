@@ -12,7 +12,7 @@
     "subtitle": "TSE-konforme Kasse, Online-Vorbestellung und QR-Tischbestellung — einfach einzurichten, sofort einsatzbereit.",
     "geoTitle": "TSE-Kassenpflicht:",
     "geoText": "Seit dem 1. Januar 2020 müssen alle Kassensysteme in Deutschland mit einer zertifizierten technischen Sicherheitseinrichtung (TSE) ausgestattet sein. Das Finanzamt kann die Konformität jederzeit prüfen — bei Verstößen drohen Bußgelder bis zu 25.000 €. Cafés und Bäckereien, die zusätzlich Online-Vorbestellsysteme einsetzen, reduzieren Wartezeiten und erhöhen den durchschnittlichen Bestellwert nachweislich.",
-    "ctaPrimary": "Kostenloses Beratungsgespräch",
+    "ctaPrimary": "Kostenlose Beratung",
     "ctaSecondary": "Produkte ansehen ↓",
     "trustPills": ["800+ Betriebe", "TSE-konform", "Persönliche Einrichtung", "Persönlicher Support"]
   },
@@ -124,7 +124,7 @@
         ]
       }
     ],
-    "ctaPrimary": "Kostenloses Beratungsgespräch",
+    "ctaPrimary": "Kostenlose Beratung",
     "moreLink": "Mehr erfahren"
   },
   "compare": {

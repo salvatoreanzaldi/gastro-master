@@ -275,7 +275,7 @@ const TeamCTA = () => {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const WebseitePage = () => {
-  const { t } = useTranslation("webseite");
+  const { t, ready } = useTranslation("webseite");
   const lp = useLangPath();
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
 
@@ -299,6 +299,8 @@ const WebseitePage = () => {
   const testimonialItems = arr("testimonials.items") as { initials: string; quote: string; name: string; restaurant: string }[];
   const testimonialStats = arr("testimonials.stats") as { value: string; label: string }[];
   const faqItems = arr("faq.items") as { q: string; a: string }[];
+
+  if (!ready) return null;
 
   return (
     <>
@@ -353,7 +355,7 @@ const WebseitePage = () => {
                 onClick={() => { window.location.href = lp("/kontakt"); }}
                 whileHover={{ scale: 1.03, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55)" }}
                 whileTap={{ scale: 0.97 }}
-                className="bg-gradient-amber text-[#0A264A] font-bold px-8 py-4 rounded-xl text-lg inline-flex items-center gap-2 shadow-lg"
+                className="bg-gradient-amber text-[#0A264A] font-bold px-5 py-3 md:px-8 md:py-4 rounded-xl text-base md:text-lg inline-flex items-center gap-2 shadow-lg whitespace-nowrap"
               >
                 {t("hero.cta")}
                 <ArrowRight className="w-5 h-5" />

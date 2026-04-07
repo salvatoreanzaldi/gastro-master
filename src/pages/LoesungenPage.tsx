@@ -75,7 +75,7 @@ const TARGET_GROUP_HREFS: Record<string, string> = {
 
 const LoesungenPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const { t } = useTranslation("loesungen");
+  const { t, ready } = useTranslation("loesungen");
   const lp = useLangPath();
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
 
@@ -110,7 +110,7 @@ const LoesungenPage = () => {
     canonical: t("meta.canonical"),
   });
 
-  if (faqItems.length === 0) return null;
+  if (!ready || faqItems.length === 0) return null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -169,7 +169,7 @@ const LoesungenPage = () => {
             >
               <Link
                 to={lp("/kontakt")}
-                className="bg-gradient-amber text-[#0A264A] font-bold px-8 py-4 rounded-xl text-lg inline-flex items-center gap-2 shadow-lg"
+                className="bg-gradient-amber text-[#0A264A] font-bold px-5 py-3 md:px-8 md:py-4 rounded-xl text-base md:text-lg inline-flex items-center gap-2 shadow-lg whitespace-nowrap"
               >
                 {t("hero.cta")}
                 <ArrowRight className="w-5 h-5" />

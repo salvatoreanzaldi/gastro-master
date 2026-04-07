@@ -52,7 +52,7 @@ const problemIcons = [<PenLine className="w-6 h-6" />, <TrendingDown className="
 
 const LieferdienstPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const { t } = useTranslation("lieferdienst");
+  const { t, ready } = useTranslation("lieferdienst");
   const lp = useLangPath();
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
 
@@ -94,6 +94,8 @@ const LieferdienstPage = () => {
   const heroPills = arr("hero.pills") as string[];
   const featuredTags = arr("products.featured.tags") as string[];
   const ctaPills = arr("cta.pills") as string[];
+
+  if (!ready) return null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -157,7 +159,7 @@ const LieferdienstPage = () => {
           >
             <Link
               to={lp("/kontakt")}
-              className="bg-gradient-amber text-[#0A264A] font-bold px-10 py-5 rounded-xl text-lg inline-flex items-center gap-3 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
+              className="bg-gradient-amber text-[#0A264A] font-bold px-5 py-3 md:px-10 md:py-5 rounded-xl text-base md:text-lg inline-flex items-center gap-2 md:gap-3 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20 whitespace-nowrap"
             >
               {t("hero.cta")}
               <ArrowRight className="w-5 h-5" />

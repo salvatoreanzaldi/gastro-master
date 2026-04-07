@@ -52,7 +52,7 @@ const problemIcons  = [<ClipboardX className="w-6 h-6" />, <BarChart2 className=
 
 const RestaurantPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const { t } = useTranslation("restaurant");
+  const { t, ready } = useTranslation("restaurant");
   const lp = useLangPath();
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
 
@@ -104,6 +104,8 @@ const RestaurantPage = () => {
     description: t("meta.description"),
     canonical: t("meta.canonical"),
   });
+
+  if (!ready) return null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -171,7 +173,7 @@ const RestaurantPage = () => {
           >
             <Link
               to={lp("/kontakt")}
-              className="bg-gradient-amber text-[#0A264A] font-bold px-10 py-5 rounded-xl text-lg inline-flex items-center gap-3 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
+              className="bg-gradient-amber text-[#0A264A] font-bold px-5 py-3 md:px-10 md:py-5 rounded-xl text-base md:text-lg inline-flex items-center gap-2 md:gap-3 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20 whitespace-nowrap"
             >
               {t("hero.cta")}
               <ArrowRight className="w-5 h-5" />

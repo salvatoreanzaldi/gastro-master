@@ -376,7 +376,7 @@ const HeroParticleVariant = () => {
             onClick={() => { window.location.href = lp("/kontakt"); }}
             whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55)" }}
             whileTap={{ scale: 0.97 }}
-            className="px-8 py-4 bg-[#ED8400] text-white font-bold rounded-xl shadow-lg shadow-[#ED8400]/30 inline-flex items-center gap-2 text-lg"
+            className="px-5 py-3 md:px-8 md:py-4 bg-[#ED8400] text-white font-bold rounded-xl shadow-lg shadow-[#ED8400]/30 inline-flex items-center gap-2 text-base md:text-lg whitespace-nowrap"
           >
             {t("hero.cta")}
             <ArrowRight className="h-5 w-5" />
@@ -498,7 +498,7 @@ const TeamCTA = () => {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const TransaktionsumlagePage = () => {
-  const { t } = useTranslation("transaktionsumlage");
+  const { t, ready } = useTranslation("transaktionsumlage");
   const lp = useLangPath();
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
 
@@ -526,7 +526,7 @@ const TransaktionsumlagePage = () => {
   const webshopFeatures = arr("requirements.webshop.features") as string[];
   const appFeatures = arr("requirements.appWebshop.features") as string[];
 
-  if (!trustBar.length) return null;
+  if (!ready || !trustBar.length) return null;
 
   return (
     <>

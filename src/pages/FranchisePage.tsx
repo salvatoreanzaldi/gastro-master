@@ -52,7 +52,7 @@ const problemIcons  = [<GitBranch className="w-6 h-6" />, <BarChart3 className="
 
 const FranchisePage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const { t } = useTranslation("franchise");
+  const { t, ready } = useTranslation("franchise");
   const lp = useLangPath();
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
 
@@ -103,7 +103,7 @@ const FranchisePage = () => {
     })),
   };
 
-  if (faqItems.length === 0) return null;
+  if (!ready || faqItems.length === 0) return null;
 
   // ─── Data from i18n ────────────────────────────────────────────────────
   const statsItems = arr("stats.items") as { value: string; label: string; source: string; href: string; isCta?: boolean }[];
@@ -172,7 +172,7 @@ const FranchisePage = () => {
           >
             <Link
               to={lp("/kontakt")}
-              className="bg-gradient-amber text-[#0A264A] font-bold px-10 py-5 rounded-xl text-lg inline-flex items-center gap-3 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
+              className="bg-gradient-amber text-[#0A264A] font-bold px-5 py-3 md:px-10 md:py-5 rounded-xl text-base md:text-lg inline-flex items-center gap-2 md:gap-3 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20 whitespace-nowrap"
             >
               {t("hero.cta")}
               <ArrowRight className="w-5 h-5" />
