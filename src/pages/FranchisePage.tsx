@@ -36,6 +36,7 @@ function renderWithLinks(text: string, lp: (p: string) => string): React.ReactNo
 }
 const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
+import imgKiosk       from "@/assets/addons/selfordering-terminals.png";
 import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
 import imgWebshop     from "@/assets/loesungen/Loesung - Webshop.png";
 import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
@@ -369,7 +370,60 @@ const FranchisePage = () => {
         </div>
       </section>
 
-      {/* ── S5: VERGLEICHSTABELLE ─────────────────────────────────────────── */}
+      {/* ── S5: SELF-ORDERING KIOSK ──────────────────────────────────────── */}
+      <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-20">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="inline-block px-3 py-1 rounded-full bg-cyan-brand/10 text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4">
+              {t("kiosk.badge")}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
+              {t("kiosk.title")}
+            </h2>
+            <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
+              {t("kiosk.subtitle")}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            {/* Bild */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl overflow-hidden"
+            >
+              <img
+                src={imgKiosk}
+                alt={t("kiosk.imgAlt")}
+                className="w-full h-auto object-contain"
+              />
+            </motion.div>
+
+            {/* Text */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <p className="text-foreground/70 text-base md:text-lg leading-relaxed mb-6">
+                {renderWithLinks(t("kiosk.text"), lp)}
+              </p>
+              <Link
+                to={lp("/produkte/kassensystem")}
+                className="inline-flex items-center gap-2 bg-gradient-amber text-[#0A264A] font-bold px-6 py-3 rounded-xl text-base hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
+              >
+                {t("kiosk.cta")}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── S6: VERGLEICHSTABELLE ─────────────────────────────────────────── */}
       <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-20">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">

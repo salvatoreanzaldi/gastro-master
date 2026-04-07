@@ -101,6 +101,14 @@
     "ctaLink": "In einem persönlichen Gespräch entwickeln wir Ihre Infrastruktur",
     "moreLabel": "Mehr erfahren"
   },
+  "kiosk": {
+    "badge": "Self-Ordering · Kassensystem Add-On",
+    "title": "Self-Ordering Terminals für Ihr Franchise",
+    "subtitle": "Schnellere Bestellungen, kürzere Warteschlangen — an jedem Standort.",
+    "text": "Self-Ordering Kiosks gehören zu den effektivsten Investitionen in der modernen Gastronomie: Kunden bestellen eigenständig, Fehler durch Missverständnisse entfallen und der durchschnittliche Bestellwert steigt nachweislich um bis zu 30 %. Für Franchise-Systeme bedeutet das: einheitliche Bestellprozesse an jedem Standort, schnellere Abfertigung zu Stoßzeiten und weniger Personalbedarf an der Theke. Die Gastro Master [Kassensystem-Integration](/produkte/kassensystem) macht den Einstieg besonders einfach — das Terminal kommuniziert direkt mit der Cloud-Kasse, ohne zusätzliche Schnittstellen.",
+    "cta": "Kassensystem ansehen",
+    "imgAlt": "Self-Ordering Terminal für Franchise-Gastronomie — Gastro Master Kiosk-System"
+  },
   "compare": {
     "badge": "Vergleich",
     "title": "Gastro Master vs. Eigenentwicklung vs. Anbieter-Mix",
