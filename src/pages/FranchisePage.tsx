@@ -39,6 +39,11 @@ const plainText = (t: string) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 import imgKiosk       from "@/assets/addons/selfordering-terminals.png";
 import imgPickup1     from "@/assets/addons/pickup-screen.jpeg";
 import imgPickup2     from "@/assets/addons/pickup-screen-2.png";
+import logoBurger     from "@/assets/logos/kunden/logo-burger-brothers.png";
+import logoTake       from "@/assets/logos/kunden/logo-take.png";
+import logoEtManus    from "@/assets/logos/kunden/logo-et-manus.png";
+import logoBigOne     from "@/assets/logos/kunden/Logo - Big One Bite.png";
+import logoPomPom     from "@/assets/logos/kunden/Logo - Pom Pom.png";
 import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
 import imgWebshop     from "@/assets/loesungen/Loesung - Webshop.png";
 import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
@@ -428,7 +433,32 @@ const FranchisePage = () => {
       {/* ── S6: PICK-UP SCREENS & KÜCHENMONITORE ─────────────────────────── */}
       <ScreensSection />
 
-      {/* ── S7: VERGLEICHSTABELLE ─────────────────────────────────────────── */}
+      {/* ── S7: FRANCHISE-LOGOS ─────────────────────────────────────────── */}
+      <section className="bg-white dark:bg-[#111111] border-y border-foreground/[0.06] px-5 md:px-8 lg:px-16 py-10 md:py-14">
+        <div className="max-w-5xl mx-auto text-center">
+          <p className="text-foreground/40 text-sm font-semibold uppercase tracking-widest mb-8">
+            {t("franchiseLogos.title")}
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14">
+            {[
+              { src: logoBurger, alt: "Burger Brothers" },
+              { src: logoTake, alt: "Take" },
+              { src: logoEtManus, alt: "Et Manus" },
+              { src: logoBigOne, alt: "Big One Bite" },
+              { src: logoPomPom, alt: "Pom Pom" },
+            ].map((logo) => (
+              <img
+                key={logo.alt}
+                src={logo.src}
+                alt={logo.alt}
+                className="h-10 md:h-14 object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── S8: VERGLEICHSTABELLE ─────────────────────────────────────────── */}
       <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-20">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
@@ -735,13 +765,14 @@ const ScreensSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-center">
           {/* Text */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            className="lg:col-span-2"
           >
             <p className="text-foreground/70 text-base md:text-lg leading-relaxed mb-6">
               {renderWithLinks(t("screens.text"), lp)}
@@ -761,7 +792,7 @@ const ScreensSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative rounded-2xl overflow-hidden aspect-video"
+            className="lg:col-span-3 relative rounded-2xl overflow-hidden aspect-[16/10]"
           >
             <AnimatePresence mode="wait">
               <motion.img
