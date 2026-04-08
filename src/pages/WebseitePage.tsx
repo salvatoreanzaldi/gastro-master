@@ -538,19 +538,19 @@ const WebseitePage = () => {
               ))}
             </div>
 
-            {/* Zielgruppen-Text */}
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={`zg-text-${activeZielgruppe}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="text-[#0A264A]/60 dark:text-white/50 text-base md:text-lg text-center max-w-2xl mx-auto mb-10 leading-relaxed"
-              >
-                {zielgruppenTexts[activeZielgruppe]}
-              </motion.p>
-            </AnimatePresence>
+            {/* Zielgruppen-Text – feste Hoehe um Layout-Sprung zu vermeiden */}
+            <div className="h-[4.5rem] md:h-[3.5rem] max-w-2xl mx-auto mb-10 relative">
+              {zielgruppenTexts.map((text, i) => (
+                <p
+                  key={i}
+                  className={`absolute inset-0 text-[#0A264A]/60 dark:text-white/50 text-base md:text-lg text-center leading-relaxed transition-opacity duration-300 ${
+                    i === activeZielgruppe ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  {text}
+                </p>
+              ))}
+            </div>
 
             {/* Mockup-Anzeige: alle vorgeladen, nur aktive sichtbar */}
             <div className="relative">
