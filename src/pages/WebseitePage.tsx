@@ -13,6 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { GlobeStickers } from "@/components/ui/cobe-globe-stickers";
 
 // ─── Assets ───────────────────────────────────────────────────────────────────
 import heroGastroMaster from "@/assets/heroes/Hero - Gastro Master.png";
@@ -27,6 +28,43 @@ import logoArtemis      from "@/assets/logos/kunden/logo-artemis.png";
 import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
+
+// ─── Webpage Zielgruppen-Mockups ─────────────────────────────────────────────
+import wpRestaurantDesktop   from "@/assets/webpage/Restaurant - Desktop.png";
+import wpRestaurantMobile    from "@/assets/webpage/Restaurant - Mobile.png";
+import wpRestaurantTablet    from "@/assets/webpage/Restaurant - Tablet.png";
+import wpBarDesktop          from "@/assets/webpage/Bar - Desktop.png";
+import wpBarMobile           from "@/assets/webpage/Bar - Mobile.png";
+import wpBarTablet           from "@/assets/webpage/Bar - Tablet.png";
+import wpFranchiseDesktop    from "@/assets/webpage/Franchise - Desktop.png";
+import wpFranchiseMobile     from "@/assets/webpage/Franchise - Mobile.png";
+import wpFranchiseTablet     from "@/assets/webpage/Franchise - Tablet.png";
+import wpBaeckereiDesktop    from "@/assets/webpage/Bäckerei - Desktop.png";
+import wpBaeckereiMobile     from "@/assets/webpage/Bäckerei - Mobile.png";
+import wpBaeckereiTablet     from "@/assets/webpage/Bäckerei - Tablet.png";
+import wpSchulenDesktop      from "@/assets/webpage/Schulen - Desktop.png";
+import wpSchulenMobile       from "@/assets/webpage/Schulen - Mobile.png";
+import wpSchulenTablet       from "@/assets/webpage/Schulen - Tablet.png";
+import wpDienstleisterDesktop from "@/assets/webpage/Dienstleister - Desktop.png";
+import wpDienstleisterMobile  from "@/assets/webpage/Dienstleister - Mobile.png";
+import wpDienstleisterTablet  from "@/assets/webpage/Dienstleister - Tablet.png";
+import wpImmobilienDesktop   from "@/assets/webpage/Immobilien - Desktop.png";
+import wpImmobilienMobile    from "@/assets/webpage/Immobilien - Mobile.png";
+import wpImmobilienTablet    from "@/assets/webpage/Immobilien - Tablet.png";
+import wpFinanzenDesktop     from "@/assets/webpage/Finanzen - Desktop.png";
+import wpFinanzenMobile      from "@/assets/webpage/Finanzen - Mobile.png";
+import wpFinanzenTablet      from "@/assets/webpage/Finanzen - Tablet.png";
+
+const ZIELGRUPPEN = [
+  { label: "Restaurant", desktop: wpRestaurantDesktop, mobile: wpRestaurantMobile, tablet: wpRestaurantTablet },
+  { label: "Bar", desktop: wpBarDesktop, mobile: wpBarMobile, tablet: wpBarTablet },
+  { label: "Franchise", desktop: wpFranchiseDesktop, mobile: wpFranchiseMobile, tablet: wpFranchiseTablet },
+  { label: "Bäckerei", desktop: wpBaeckereiDesktop, mobile: wpBaeckereiMobile, tablet: wpBaeckereiTablet },
+  { label: "Schulen", desktop: wpSchulenDesktop, mobile: wpSchulenMobile, tablet: wpSchulenTablet },
+  { label: "Dienstleister", desktop: wpDienstleisterDesktop, mobile: wpDienstleisterMobile, tablet: wpDienstleisterTablet },
+  { label: "Immobilien", desktop: wpImmobilienDesktop, mobile: wpImmobilienMobile, tablet: wpImmobilienTablet },
+  { label: "Finanzen", desktop: wpFinanzenDesktop, mobile: wpFinanzenMobile, tablet: wpFinanzenTablet },
+];
 
 const PORTFOLIO_IMGS = [heroGastroMaster, heroBaeckerei, heroEtManus, heroDT, heroDandT];
 const TESTIMONIAL_LOGOS = [logoKojo, logoIlSorriso, logoBurger, logoArtemis];
@@ -285,6 +323,21 @@ const WebseitePage = () => {
     canonical: "https://gastro-master.de/produkte/webseite",
   });
 
+  const [activeZielgruppe, setActiveZielgruppe] = useState(0);
+  const [zgPaused, setZgPaused] = useState(false);
+  const zielgruppenTexts = arr("zielgruppen.texts") as string[];
+
+  useEffect(() => {
+    if (zgPaused) {
+      const resume = setTimeout(() => setZgPaused(false), 12000);
+      return () => clearTimeout(resume);
+    }
+    const interval = setInterval(() => {
+      setActiveZielgruppe((prev) => (prev + 1) % ZIELGRUPPEN.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [zgPaused]);
+
   const trustBarItems = arr("trustBar.items") as { value: string; label: string; source: string | null }[];
   const heroIcons = [Globe, CheckCircle2, Handshake, Star];
   const heroPills = arr("hero.pills") as string[];
@@ -311,8 +364,8 @@ const WebseitePage = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
 
-        {/* ── S1: HERO ───────────────────────────────────────────────────────── */}
-        <section className="mesh-gradient relative overflow-hidden px-5 md:px-8 lg:px-16 pt-36 pb-20 md:pt-44 md:pb-28">
+        {/* ── S1: HERO (ausgeblendet – alte Variante) ─────────────────────── */}
+        {/* <section className="mesh-gradient relative overflow-hidden px-5 md:px-8 lg:px-16 pt-36 pb-20 md:pt-44 md:pb-28">
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 60%, rgba(0,125,207,0.12), transparent 70%)" }} />
           <div className="max-w-6xl mx-auto relative z-10">
             <motion.div
@@ -362,6 +415,66 @@ const WebseitePage = () => {
               </motion.button>
             </motion.div>
           </div>
+        </section> */}
+
+        {/* ── S1-B: HERO (A/B-Test Variante) ────────────────────────────────── */}
+        <section className="mesh-gradient relative overflow-hidden px-5 md:px-8 lg:px-16 pt-24 pb-10 md:pt-32 md:pb-14">
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 60%, rgba(0,125,207,0.12), transparent 70%)" }} />
+          <div className="max-w-6xl mx-auto relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="text-center max-w-4xl mx-auto"
+            >
+              <div className="inline-flex items-center gap-2 bg-cyan-brand/10 border border-cyan-brand/20 text-cyan-brand text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+                <Globe className="w-3.5 h-3.5" />
+                {t("hero_b.badge")}
+              </div>
+
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.15] mb-6">
+                {t("hero_b.title1")}{" "}
+                <span className="text-gradient-brand">{t("hero_b.titleHighlight")}</span>
+                {" "}{t("hero_b.title2")}
+              </h1>
+
+              {/* ── 3D Globe ── */}
+              <div className="flex justify-center -mt-10 md:-mt-14 -mb-6 md:-mb-8">
+                <div className="w-[18rem] md:w-[26rem] lg:w-[30rem]">
+                  <GlobeStickers speed={0.005} />
+                </div>
+              </div>
+
+              <p className="text-white/70 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto mb-2">
+                {t("hero_b.desc")}
+              </p>
+              <p className="text-white/45 text-base max-w-2xl mx-auto mb-4">
+                {t("hero_b.subdesc")}
+              </p>
+
+              <div className="grid grid-cols-2 md:flex md:flex-wrap items-center justify-center gap-3 mb-4">
+                {arr("hero_b.pills").map((label, i) => {
+                  const Icon = heroIcons[i];
+                  return (
+                    <div key={label} className="flex items-center justify-center gap-1.5 bg-white/10 border border-white/15 px-4 py-2 rounded-full text-white/80 text-sm font-medium">
+                      {Icon && <Icon className="w-4 h-4 text-cyan-brand" />}
+                      {label}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <motion.button
+                onClick={() => { window.location.href = lp("/kontakt"); }}
+                whileHover={{ scale: 1.03, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55)" }}
+                whileTap={{ scale: 0.97 }}
+                className="bg-gradient-amber text-[#0A264A] font-bold px-5 py-3 md:px-8 md:py-4 rounded-xl text-base md:text-lg inline-flex items-center gap-2 shadow-lg whitespace-nowrap"
+              >
+                {t("hero_b.cta")}
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
+            </motion.div>
+          </div>
         </section>
 
         {/* ── S2: TRUST BAR ─────────────────────────────────────────────────── */}
@@ -388,8 +501,121 @@ const WebseitePage = () => {
           </div>
         </section>
 
+        {/* ── S2b: ZIELGRUPPEN-SHOWCASE ─────────────────────────────────────── */}
+        <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-12 md:py-16">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-10"
+            >
+              <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("portfolio.badge")}</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-4">
+                {t("portfolio.title")}
+              </h2>
+              <p className="text-[#0A264A]/50 dark:text-white/45 text-lg max-w-xl mx-auto">
+                {t("portfolio.desc")}
+              </p>
+            </motion.div>
+
+            {/* Zielgruppen-Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-4">
+              {ZIELGRUPPEN.map((zg, i) => (
+                <button
+                  key={zg.label}
+                  onClick={() => { setActiveZielgruppe(i); setZgPaused(true); }}
+                  className={`px-4 py-2 md:px-5 md:py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                    activeZielgruppe === i
+                      ? "bg-cyan-brand text-white shadow-lg shadow-cyan-brand/25"
+                      : "bg-[#0A264A]/[0.06] dark:bg-white/[0.08] text-[#0A264A]/70 dark:text-white/60 hover:bg-[#0A264A]/[0.12] dark:hover:bg-white/[0.15]"
+                  }`}
+                >
+                  {zg.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Zielgruppen-Text */}
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={`zg-text-${activeZielgruppe}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-[#0A264A]/60 dark:text-white/50 text-base md:text-lg text-center max-w-2xl mx-auto mb-10 leading-relaxed"
+              >
+                {zielgruppenTexts[activeZielgruppe]}
+              </motion.p>
+            </AnimatePresence>
+
+            {/* Mockup-Anzeige: Mobile + Tablet oben, Desktop unten im Browser-Frame */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeZielgruppe}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.4 }}
+                className="flex flex-col items-center gap-10"
+              >
+                {/* Mobile + Tablet nebeneinander */}
+                <div className="flex items-end justify-center gap-6 md:gap-10 w-full max-w-3xl">
+                  <img
+                    src={ZIELGRUPPEN[activeZielgruppe].mobile}
+                    alt={`${ZIELGRUPPEN[activeZielgruppe].label} – Mobile Ansicht`}
+                    className="w-[28%] md:w-[22%]"
+                  />
+                  <img
+                    src={ZIELGRUPPEN[activeZielgruppe].tablet}
+                    alt={`${ZIELGRUPPEN[activeZielgruppe].label} – Tablet Ansicht`}
+                    className="w-[52%] md:w-[48%]"
+                  />
+                </div>
+
+                {/* Desktop-Mockup im Browser-Frame */}
+                <div className="w-full max-w-4xl rounded-xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/30 border border-[#0A264A]/10 dark:border-white/10">
+                  {/* Browser Toolbar */}
+                  <div className="bg-[#E8EAED] dark:bg-[#2B2B2B] px-4 py-2.5 flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+                      <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
+                      <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+                    </div>
+                    <div className="flex-1 mx-3">
+                      <div className="bg-white dark:bg-[#1A1A1A] rounded-md px-3 py-1 text-xs text-[#0A264A]/40 dark:text-white/30 font-mono truncate">
+                        www.hier-koennte-deine-seite-stehen.de
+                      </div>
+                    </div>
+                  </div>
+                  {/* Screenshot */}
+                  <img
+                    src={ZIELGRUPPEN[activeZielgruppe].desktop}
+                    alt={`${ZIELGRUPPEN[activeZielgruppe].label} – Desktop Ansicht`}
+                    className="w-full block"
+                  />
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* CTA */}
+            <div className="text-center mt-12">
+              <motion.button
+                onClick={() => { window.location.href = lp("/kontakt"); }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="bg-gradient-amber text-white dark:text-[#0A264A] font-bold px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 shadow-lg"
+              >
+                Kostenlose Beratung
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
+            </div>
+          </div>
+        </section>
+
         {/* ── S3: WARUM ONLINE PRÄSENZ ──────────────────────────────────────── */}
-        <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-24 md:py-36">
+        <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-12 md:py-16">
           <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -482,8 +708,8 @@ const WebseitePage = () => {
           </div>
         </section>
 
-        {/* ── S5: PORTFOLIO SHOWCASE ────────────────────────────────────────── */}
-        <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-24 md:py-36">
+        {/* ── S5: PORTFOLIO SHOWCASE (ausgeblendet – ersetzt durch Zielgruppen-Showcase) ── */}
+        {/* <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-24 md:py-36">
           <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -538,7 +764,7 @@ const WebseitePage = () => {
               </motion.button>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* ── S6: FÜR ALLE BRANCHEN ─────────────────────────────────────────── */}
         <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 py-24 md:py-32">

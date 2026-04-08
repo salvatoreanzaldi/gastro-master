@@ -18,6 +18,21 @@
     ],
     "cta": "Kostenlose Beratung"
   },
+  "hero_b": {
+    "badge": "Webdesign · ab 49 €/Monat",
+    "title1": "Deine",
+    "titleHighlight": "professionelle Webseite",
+    "title2": "– in Tagen online",
+    "desc": "Wir erstellen deine Webseite – schnell, DSGVO-konform und für jede Branche. Von Gastronomie über Handwerk bis Dienstleistung: mehr Sichtbarkeit, mehr Kunden.",
+    "subdesc": "Eigene Domain. Hosting & Support inklusive. Kein Technik-Know-how nötig.",
+    "pills": [
+      "Eigene Domain",
+      "DSGVO-konform",
+      "Für alle Branchen",
+      "Kein Technik-Know-how nötig"
+    ],
+    "cta": "Kostenlose Beratung"
+  },
   "trustBar": {
     "items": [
       {
@@ -97,6 +112,18 @@
         "title": "Mit Webshop & App verknüpfbar",
         "desc": "Deine Webseite und dein Gastro Master Bestell-System aus einem Guss. Kunden landen auf deiner Webseite und können direkt eine Bestellung aufgeben – nahtlos, ohne Plattformwechsel."
       }
+    ]
+  },
+  "zielgruppen": {
+    "texts": [
+      "Dein Restaurant verdient eine Webseite, die Gäste begeistert – mit Speisekarte, Reservierung und Google-Sichtbarkeit. Mehr Tischbuchungen, weniger leere Plätze.",
+      "Cocktailkarte, Events und Öffnungszeiten – alles auf einen Blick. Zeig deiner Stadt, warum deine Bar der Place to be ist.",
+      "Einheitlicher Markenauftritt für alle Standorte – zentral gesteuert, lokal angepasst. Skaliere dein Franchise digital.",
+      "Frische Brötchen verdienen eine frische Webseite. Zeig dein Sortiment, deine Filialen und deine Geschichte – und gewinne neue Stammkunden.",
+      "Von der Anmeldung bis zum Stundenplan: Eine moderne Schulwebseite schafft Vertrauen bei Eltern, Schülern und Lehrkräften.",
+      "Ob Handwerk, Beratung oder Agentur – präsentiere deine Leistungen professionell und werde von neuen Kunden gefunden.",
+      "Exposés, Referenzen und Kontaktformular – alles, was Käufer und Verkäufer von einem modernen Immobilienbüro erwarten.",
+      "Vertrauen ist dein Kapital. Eine seriöse Webseite mit klarer Struktur überzeugt Mandanten, bevor das erste Gespräch stattfindet."
     ]
   },
   "portfolio": {
@@ -190,7 +217,7 @@
   },
   "testimonials": {
     "badge": "Kundenstimmen",
-    "title": "700+ Unternehmen,<br/>die bereits auf Gastro Master vertrauen.",
+    "title": "+800 Unternehmen,<br/>die bereits auf Gastro Master vertrauen.",
     "items": [
       { "initials": "HL", "quote": "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein.", "name": "Ha Lim Lee", "restaurant": "Kojo Sushi" },
       { "initials": "MG", "quote": "Also der Support ist einfach 1a und den würdest du nirgend wo anders so bekommen!", "name": "Marco Greco", "restaurant": "Pizzeria Il Sorriso" },
