@@ -437,7 +437,8 @@ const WebseitePage = () => {
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.15] mb-6">
                 {t("hero_b.title1")}{" "}
                 <span className="text-gradient-brand">{t("hero_b.titleHighlight")}</span>
-                {" "}{t("hero_b.title2")}
+                <br />
+                {t("hero_b.title2")}
               </h1>
 
               {/* ── 3D Globe ── */}
