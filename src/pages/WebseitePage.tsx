@@ -552,55 +552,55 @@ const WebseitePage = () => {
               </motion.p>
             </AnimatePresence>
 
-            {/* Mockup-Anzeige: Mobile + Tablet oben, Desktop unten im Browser-Frame */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeZielgruppe}
-                initial={{ opacity: 0, y: isMobile ? 0 : 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: isMobile ? 0 : -16 }}
-                transition={{ duration: 0.4 }}
-                className="flex flex-col items-center gap-10"
-              >
-                {/* Mobile + Tablet nebeneinander */}
-                <div className="flex items-end justify-center gap-6 md:gap-10 w-full max-w-3xl">
-                  <img
-                    src={ZIELGRUPPEN[activeZielgruppe].mobile}
-                    alt={`${ZIELGRUPPEN[activeZielgruppe].label} – Mobile Ansicht`}
-                    className="w-[28%] md:w-[22%]"
-                  />
-                  <img
-                    src={ZIELGRUPPEN[activeZielgruppe].tablet}
-                    alt={`${ZIELGRUPPEN[activeZielgruppe].label} – Tablet Ansicht`}
-                    className="w-[52%] md:w-[48%]"
-                  />
-                </div>
+            {/* Mockup-Anzeige: alle vorgeladen, nur aktive sichtbar */}
+            <div className="relative">
+              {ZIELGRUPPEN.map((zg, i) => (
+                <div
+                  key={zg.label}
+                  className={`flex flex-col items-center gap-10 transition-opacity duration-500 ${
+                    i === activeZielgruppe ? "opacity-100" : "opacity-0 absolute inset-0 pointer-events-none"
+                  }`}
+                >
+                  {/* Mobile + Tablet nebeneinander */}
+                  <div className="flex items-end justify-center gap-6 md:gap-10 w-full max-w-3xl">
+                    <img
+                      src={zg.mobile}
+                      alt={`${zg.label} – Mobile Ansicht`}
+                      className="w-[28%] md:w-[22%]"
+                    />
+                    <img
+                      src={zg.tablet}
+                      alt={`${zg.label} – Tablet Ansicht`}
+                      className="w-[52%] md:w-[48%]"
+                    />
+                  </div>
 
-                {/* Desktop-Mockup im Browser-Frame */}
-                <div className="w-full max-w-4xl rounded-xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/30 border border-[#0A264A]/10 dark:border-white/10">
-                  {/* Browser Toolbar */}
-                  <div className="bg-[#E8EAED] dark:bg-[#2B2B2B] px-4 py-2.5 flex items-center gap-2">
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-                      <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
-                      <span className="w-3 h-3 rounded-full bg-[#28C840]" />
-                    </div>
-                    <div className="flex-1 mx-3">
-                      <div className="bg-white dark:bg-[#1A1A1A] rounded-md px-3 py-1 text-xs text-[#0A264A]/40 dark:text-white/30 font-mono truncate">
-                        <span className="md:hidden">www.deine-seite.de</span>
-                        <span className="hidden md:inline">www.hier-koennte-deine-seite-stehen.de</span>
+                  {/* Desktop-Mockup im Browser-Frame */}
+                  <div className="w-full max-w-4xl rounded-xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/30 border border-[#0A264A]/10 dark:border-white/10">
+                    {/* Browser Toolbar */}
+                    <div className="bg-[#E8EAED] dark:bg-[#2B2B2B] px-4 py-2.5 flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+                        <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
+                        <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+                      </div>
+                      <div className="flex-1 mx-3">
+                        <div className="bg-white dark:bg-[#1A1A1A] rounded-md px-3 py-1 text-xs text-[#0A264A]/40 dark:text-white/30 font-mono truncate">
+                          <span className="md:hidden">www.deine-seite.de</span>
+                          <span className="hidden md:inline">www.hier-koennte-deine-seite-stehen.de</span>
+                        </div>
                       </div>
                     </div>
+                    {/* Screenshot */}
+                    <img
+                      src={zg.desktop}
+                      alt={`${zg.label} – Desktop Ansicht`}
+                      className="w-full block"
+                    />
                   </div>
-                  {/* Screenshot */}
-                  <img
-                    src={ZIELGRUPPEN[activeZielgruppe].desktop}
-                    alt={`${ZIELGRUPPEN[activeZielgruppe].label} – Desktop Ansicht`}
-                    className="w-full block"
-                  />
                 </div>
-              </motion.div>
-            </AnimatePresence>
+              ))}
+            </div>
 
             {/* CTA */}
             <div className="text-center mt-12">
