@@ -381,7 +381,7 @@ const FAQItemCard = ({ item, isOpen, onToggle, categoryLabel, renderWithLinks }:
             </p>
             {item.source && (
               <p className="mt-2 text-[#94A3B8] text-[11px] italic">
-                Quelle:{" "}
+                {t("common:sourceLabel")}:{" "}
                 {item.sourceHref ? (
                   <a
                     href={item.sourceHref}

@@ -18,6 +18,21 @@
     ],
     "cta": "Consulenza gratuita"
   },
+  "hero_b": {
+    "badge": "Web Design · da 49 €/mese",
+    "title1": "Il tuo",
+    "titleHighlight": "sito web professionale",
+    "title2": "– online in pochi giorni",
+    "desc": "Creiamo il tuo sito web – veloce, conforme al GDPR e per qualsiasi settore. Dalla ristorazione all'artigianato ai servizi: più visibilità, più clienti.",
+    "subdesc": "Dominio proprio. Hosting e supporto inclusi. Nessuna competenza tecnica necessaria.",
+    "pills": [
+      "Dominio proprio",
+      "Conforme al GDPR",
+      "Per tutti i settori",
+      "Nessuna competenza tecnica necessaria"
+    ],
+    "cta": "Consulenza gratuita"
+  },
   "trustBar": {
     "items": [
       {
@@ -97,6 +112,18 @@
         "title": "Collegabile con Webshop e App",
         "desc": "Il Suo sito web e il Suo sistema di ordinazione Gastro Master perfettamente integrati. I clienti arrivano sul Suo sito web e possono effettuare un ordine direttamente – senza cambiare piattaforma."
       }
+    ]
+  },
+  "zielgruppen": {
+    "texts": [
+      "Il tuo ristorante merita un sito web che entusiasmi gli ospiti – con menù, prenotazioni e visibilità su Google. Più prenotazioni ai tavoli, meno posti vuoti.",
+      "Carta cocktail, eventi e orari di apertura – tutto a colpo d'occhio. Mostra alla tua città perché il tuo bar è il posto dove stare.",
+      "Immagine del marchio uniforme per tutte le sedi – gestita centralmente, adattata localmente. Scala il tuo franchising in modo digitale.",
+      "Il pane fresco merita un sito web fresco. Mostra il tuo assortimento, le tue filiali e la tua storia – e conquista nuovi clienti abituali.",
+      "Dall'iscrizione all'orario scolastico: un sito web scolastico moderno crea fiducia tra genitori, studenti e insegnanti.",
+      "Che si tratti di artigianato, consulenza o agenzia – presenta i tuoi servizi in modo professionale e fatti trovare da nuovi clienti.",
+      "Esposé, referenze e modulo di contatto – tutto ciò che acquirenti e venditori si aspettano da un moderno studio immobiliare.",
+      "La fiducia è il tuo capitale. Un sito web serio con una struttura chiara convince i clienti prima ancora del primo colloquio."
     ]
   },
   "portfolio": {
@@ -190,7 +217,7 @@
   },
   "testimonials": {
     "badge": "Testimonianze",
-    "title": "Oltre 700 aziende<br/>si affidano già a Gastro Master.",
+    "title": "+800 aziende<br/>si affidano già a Gastro Master.",
     "items": [
       { "initials": "HL", "quote": "In futuro si ordinerà sempre di più online e noi vogliamo farne parte.", "name": "Ha Lim Lee", "restaurant": "Kojo Sushi" },
       { "initials": "MG", "quote": "Il supporto è semplicemente di prima classe e non lo troverebbe così da nessun'altra parte!", "name": "Marco Greco", "restaurant": "Pizzeria Il Sorriso" },

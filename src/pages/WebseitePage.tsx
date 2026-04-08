@@ -495,7 +495,7 @@ const WebseitePage = () => {
                 <p className="text-[#0A264A]/55 dark:text-white/45 text-sm leading-snug mb-2">{s.label}</p>
                 {s.source && TRUST_BAR_URLS[i] && (
                   <a href={TRUST_BAR_URLS[i]!} target="_blank" rel="noopener noreferrer" className="text-xs text-cyan-brand/70 hover:text-cyan-brand underline transition-colors">
-                    Quelle: {s.source}
+                    {t("common:sourceLabel")}: {s.source}
                   </a>
                 )}
               </motion.div>
@@ -651,7 +651,7 @@ const WebseitePage = () => {
                     <p className={`text-4xl font-black mb-3 ${stat.color}`}>{stat.value}</p>
                     <p className="text-[#0A264A]/65 dark:text-white/55 text-sm leading-relaxed mb-3">{stat.desc}</p>
                     <a href={STAT_URLS[i]} target="_blank" rel="noopener noreferrer" className="text-xs text-[#0A264A]/35 dark:text-white/30 hover:text-cyan-brand underline transition-colors">
-                      Quelle: {stat.source}
+                      {t("common:sourceLabel")}: {stat.source}
                     </a>
                   </motion.div>
                 );

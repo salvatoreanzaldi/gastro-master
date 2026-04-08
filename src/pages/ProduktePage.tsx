@@ -479,7 +479,7 @@ const FaqSection = ({ tx }: { tx: typeof i18n.de }) => {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const ProduktePage = () => {
-  const { i18n: i18nInstance } = useTranslation("common");
+  const { t, i18n: i18nInstance } = useTranslation("common");
   const lang = i18nInstance.language || "de";
   const tx = i18n[lang as keyof typeof i18n] || i18n.de;
 
@@ -706,7 +706,7 @@ const ProduktePage = () => {
                 {tx.trustSub}
               </p>
               <p className="text-[#94A3B8] text-xs italic mt-1">
-                Quelle:{" "}
+                {t("sourceLabel")}:{" "}
                 <a
                   href="https://www.statista.com/outlook/emo/online-food-delivery/germany"
                   target="_blank"
