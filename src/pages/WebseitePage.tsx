@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { GlobeStickers } from "@/components/ui/cobe-globe-stickers";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // ─── Assets ───────────────────────────────────────────────────────────────────
 import heroGastroMaster from "@/assets/heroes/Hero - Gastro Master.png";
@@ -323,6 +324,7 @@ const WebseitePage = () => {
     canonical: "https://gastro-master.de/produkte/webseite",
   });
 
+  const isMobile = useIsMobile();
   const [activeZielgruppe, setActiveZielgruppe] = useState(0);
   const [zgPaused, setZgPaused] = useState(false);
   const zielgruppenTexts = arr("zielgruppen.texts") as string[];
@@ -520,12 +522,12 @@ const WebseitePage = () => {
             </motion.div>
 
             {/* Zielgruppen-Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-4">
+            <div className="grid grid-cols-4 md:flex md:flex-wrap items-center justify-center gap-2 md:gap-3 mb-4">
               {ZIELGRUPPEN.map((zg, i) => (
                 <button
                   key={zg.label}
                   onClick={() => { setActiveZielgruppe(i); setZgPaused(true); }}
-                  className={`px-4 py-2 md:px-5 md:py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                  className={`px-3 py-2 md:px-5 md:py-2.5 rounded-full text-xs md:text-sm font-semibold transition-all duration-300 text-center ${
                     activeZielgruppe === i
                       ? "bg-cyan-brand text-white shadow-lg shadow-cyan-brand/25"
                       : "bg-[#0A264A]/[0.06] dark:bg-white/[0.08] text-[#0A264A]/70 dark:text-white/60 hover:bg-[#0A264A]/[0.12] dark:hover:bg-white/[0.15]"
@@ -554,9 +556,9 @@ const WebseitePage = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeZielgruppe}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: isMobile ? 0 : 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
+                exit={{ opacity: 0, y: isMobile ? 0 : -16 }}
                 transition={{ duration: 0.4 }}
                 className="flex flex-col items-center gap-10"
               >
@@ -585,7 +587,8 @@ const WebseitePage = () => {
                     </div>
                     <div className="flex-1 mx-3">
                       <div className="bg-white dark:bg-[#1A1A1A] rounded-md px-3 py-1 text-xs text-[#0A264A]/40 dark:text-white/30 font-mono truncate">
-                        www.hier-koennte-deine-seite-stehen.de
+                        <span className="md:hidden">www.deine-seite.de</span>
+                        <span className="hidden md:inline">www.hier-koennte-deine-seite-stehen.de</span>
                       </div>
                     </div>
                   </div>
