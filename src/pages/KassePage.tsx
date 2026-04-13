@@ -279,7 +279,7 @@ const TeamCTASection = ({ t, lp }: { t: (k: string, o?: any) => any; lp: (p: str
   const member = teamMembers[current];
 
   return (
-    <section className="bg-[#F0F4F8] dark:bg-[#060e1a] px-5 md:px-8 lg:px-16 py-20 md:py-28">
+    <section className="bg-[#F0F4F8] dark:bg-[#060e1a] px-5 md:px-8 lg:px-16 py-12 md:py-16">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -506,7 +506,7 @@ const HardwareSection = ({ t, lp }: { t: (k: string, o?: any) => any; lp: (p: st
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
   const products = arr("hardware.products") as { title: string; desc: string; features: string[]; labels: string[] }[];
   return (
-    <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-20 md:py-28">
+    <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-12 md:py-16">
       <div className="max-w-5xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
           <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("hardware.badge")}</span>
@@ -633,7 +633,7 @@ const WaveFeatureSection = ({ t }: { t: (k: string, o?: any) => any }) => {
   const subColor      = isDark ? "rgba(255,255,255,0.45)" : "rgba(10,38,74,0.55)";
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden px-5 md:px-8 lg:px-16 py-28 md:py-40">
+    <section ref={sectionRef} className="relative overflow-hidden px-5 md:px-8 lg:px-16 py-16 md:py-24">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
@@ -733,7 +733,7 @@ const KassePage = () => {
     <Navbar />
 
     {/* ── S1: HERO ──────────────────────────────────────────── */}
-    <section className="mesh-gradient min-h-[90vh] flex items-center px-5 md:px-8 lg:px-16 pt-36 pb-24 relative overflow-hidden">
+    <section className="mesh-gradient min-h-[90vh] flex items-center px-5 md:px-8 lg:px-16 pt-24 pb-12 relative overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full bg-[#007DCF]/8 blur-[180px] pointer-events-none" />
       <div className="max-w-6xl mx-auto relative z-10 w-full grid lg:grid-cols-2 gap-16 items-center">
         <div>
@@ -819,7 +819,7 @@ const KassePage = () => {
     </section>
 
     {/* ── S2: GOOGLE + TRUST ────────────────────────────────── */}
-    <section className="bg-white dark:bg-[#081628] border-y border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-20 md:py-24">
+    <section className="bg-white dark:bg-[#081628] border-y border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-12 md:py-14">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10 md:justify-between">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -862,7 +862,7 @@ const KassePage = () => {
     </section>
 
     {/* ── S3: BENEFITS ──────────────────────────────────────── */}
-    <section className="bg-white dark:bg-[#081628] px-5 md:px-8 lg:px-16 py-28 md:py-36">
+    <section className="bg-white dark:bg-[#081628] px-5 md:px-8 lg:px-16 py-16 md:py-20">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {benefits.map((b, i) => {
@@ -893,7 +893,7 @@ const KassePage = () => {
     </section>
 
     {/* ── S4: FEATURE SLIDESHOW ─────────────────────────────── */}
-    <section className="bg-white dark:bg-[#081628] px-5 md:px-8 lg:px-16 py-28 md:py-40">
+    <section className="bg-white dark:bg-[#081628] px-5 md:px-8 lg:px-16 py-16 md:py-24">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -913,7 +913,7 @@ const KassePage = () => {
     </section>
 
     {/* ── S5: FEATURES GRID ─────────────────────────────────── */}
-    <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 py-20 md:py-28">
+    <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 py-12 md:py-16">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -975,7 +975,7 @@ const KassePage = () => {
     </section>
 
     {/* ── S6: SOCIAL PROOF ──────────────────────────────────── */}
-    <section className="px-5 md:px-8 lg:px-16 py-28 md:py-40 relative overflow-hidden">
+    <section className="px-5 md:px-8 lg:px-16 py-16 md:py-24 relative overflow-hidden">
       <motion.div
         className="absolute inset-0"
         animate={{
@@ -1053,7 +1053,7 @@ const KassePage = () => {
       return (
         <section
           key={sec.headline}
-          className={`px-5 md:px-8 lg:px-16 py-16 md:py-24 ${
+          className={`px-5 md:px-8 lg:px-16 py-12 md:py-16 ${
             cfg.light ? "bg-white dark:bg-[#081628]" : ""
           }`}
           style={cfg.light ? undefined : { backgroundColor: cfg.bg }}
@@ -1124,7 +1124,7 @@ const KassePage = () => {
     <TeamCTASection t={t} lp={lp} />
 
     {/* ── S10: FAQ ───────────────────────────────────────────── */}
-    <section className="bg-[#081628] px-5 md:px-8 lg:px-16 py-32 md:py-44">
+    <section className="bg-[#081628] px-5 md:px-8 lg:px-16 py-20 md:py-28">
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-[1fr_2fr] gap-16 md:gap-24">
           <motion.div

@@ -21,7 +21,7 @@
     "googleLabel": "Google Bewertung",
     "googleSub": "Über 50 verifizierte Rezensionen",
     "stats": [
-      { "value": "200+", "label": "aktive Kassensystem-Nutzer" },
+      { "value": "800+", "label": "Aktive Kunden" },
       { "value": "TSE", "label": "zertifiziert & GoBD-konform" },
       { "value": "0 €", "label": "Aufpreis für Cloud-Updates" },
       { "value": "Support", "label": "direkt aus Deutschland" }
@@ -95,10 +95,10 @@
   },
   "socialProof": {
     "badge": "Vertrauen",
-    "headline": "Über 200 Gastronomen führen ihren Betrieb",
-    "headlineBr": "bereits mit dem Gastro Master Kassensystem.",
+    "headline": "Über 800 erfolgreiche Gastronomen",
+    "headlineBr": "setzen auf Gastro Master.",
     "sub": "Von der Pizzeria bis zum Franchise – Gastro Master wächst mit jedem Betrieb.",
-    "watermark": "200+"
+    "watermark": "800+"
   },
   "waveFeature": {
     "badge": "Add-ons & Erweiterungen",

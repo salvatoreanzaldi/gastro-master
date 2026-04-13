@@ -99,6 +99,11 @@
   * {
     @apply border-border;
   }
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
   body {
     @apply bg-background text-foreground font-outfit antialiased;
   }
@@ -117,6 +122,12 @@
   50%       { transform: translateY(-8px); }
 }
 
+@keyframes gradient-flow {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
 @layer utilities {
   .text-gradient-brand {
     @apply bg-clip-text text-transparent;
@@ -129,6 +140,11 @@
   }
   .bg-gradient-navy {
     background: linear-gradient(180deg, hsl(213, 76%, 16%), hsl(213, 76%, 10%));
+  }
+  .bg-gradient-navy-animated {
+    background: linear-gradient(-45deg, hsl(213, 76%, 16%), hsl(212, 95%, 37%), hsl(196, 100%, 40%), hsl(213, 76%, 10%));
+    background-size: 400% 400%;
+    animation: gradient-flow 15s ease infinite;
   }
   .bg-gradient-amber {
     background: linear-gradient(135deg, hsl(34, 100%, 47%), hsl(39, 100%, 49%));

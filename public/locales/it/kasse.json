@@ -21,7 +21,7 @@
     "googleLabel": "Valutazione Google",
     "googleSub": "Oltre 50 recensioni verificate",
     "stats": [
-      { "value": "200+", "label": "utenti attivi del sistema di cassa" },
+      { "value": "800+", "label": "clienti attivi" },
       { "value": "TSE", "label": "certificato e conforme GoBD" },
       { "value": "0 €", "label": "supplemento per aggiornamenti cloud" },
       { "value": "Supporto", "label": "direttamente dalla Germania" }
@@ -95,10 +95,10 @@
   },
   "socialProof": {
     "badge": "Fiducia",
-    "headline": "Oltre 200 ristoratori gestiscono la loro attività",
-    "headlineBr": "già con il sistema di cassa Gastro Master.",
+    "headline": "Oltre 800 ristoratori di successo",
+    "headlineBr": "scelgono Gastro Master.",
     "sub": "Dalla pizzeria al franchising – Gastro Master cresce con ogni attività.",
-    "watermark": "200+"
+    "watermark": "800+"
   },
   "waveFeature": {
     "badge": "Add-on ed estensioni",

@@ -2,6 +2,7 @@ import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { useTranslation } from "react-i18next";
 import Navbar from "@/components/landing/Navbar";
 import HeroScrollSection from "@/components/landing/HeroScrollSection";
+import HeroSectionB from "@/components/landing/HeroSectionB";
 import HeroSection from "@/components/landing/HeroSection";
 import TrustSection from "@/components/landing/TrustSection";
 import TargetGroupSection from "@/components/landing/TargetGroupSection";
@@ -42,6 +43,8 @@ const Index = () => {
       <Navbar />
       {/* ATTENTION */}
       <HeroScrollSection />
+      {/* A/B Test */}
+      <HeroSectionB />
       {/* <HeroSection /> */}
       <TrustSection />
       {/* INTEREST */}
@@ -51,7 +54,7 @@ const Index = () => {
       <CalculatorSection />
       <ProblemSection />
       <SolutionSection />
-      <MockupShowcase />
+      {/* <MockupShowcase /> */}
       {/* DESIRE */}
       {/* <PricingSection /> */}
       {/* <GlassyPricingSection /> */}

@@ -71,7 +71,8 @@
     "subPrefix": "Gastro Master gibt dir die volle Kontrolle —",
     "linkWebshop": "digitales Bestellsystem",
     "linkKasse": "Kasse",
-    "subSuffix": "Pickup-Screen und mehr. Alles in einem. Keine versteckten Gebühren."
+    "subSuffix": "Pickup-Screen und mehr. Alles in einem. Keine versteckten Gebühren.",
+    "discoverMore": "↓ Mehr entdecken ↓"
   },
   "hero": {
     "headline": "Hör auf, Provision auf deinen eigenen Umsatz zu zahlen.",
@@ -156,7 +157,7 @@
     "items": [
       {
         "title": "Die Plattform kassiert mit",
-        "text": "Bei jedem Lieferando- oder Wolt-Auftrag verlierst du 15–30 % deines Umsatzes an Provision. Das ist Gewinn, der dir zusteht."
+        "text": "Bei jedem Lieferando- oder Wolt-Auftrag verlierst du 15 - 35% deines Umsatzes an Provision. Das ist Gewinn, der dir zusteht."
       },
       {
         "title": "Weniger Marge, gleiche Arbeit",

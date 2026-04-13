@@ -21,7 +21,7 @@
     "googleLabel": "Google Rating",
     "googleSub": "Over 50 verified reviews",
     "stats": [
-      { "value": "200+", "label": "active POS users" },
+      { "value": "800+", "label": "active customers" },
       { "value": "TSE", "label": "certified & GoBD-compliant" },
       { "value": "€0", "label": "surcharge for cloud updates" },
       { "value": "Support", "label": "directly from Germany" }
@@ -95,10 +95,10 @@
   },
   "socialProof": {
     "badge": "Trust",
-    "headline": "Over 200 restaurateurs run their business",
-    "headlineBr": "with the Gastro Master POS system.",
+    "headline": "Over 800 successful restaurateurs",
+    "headlineBr": "trust Gastro Master.",
     "sub": "From pizzerias to franchises – Gastro Master grows with every business.",
-    "watermark": "200+"
+    "watermark": "800+"
   },
   "waveFeature": {
     "badge": "Add-ons & Extensions",

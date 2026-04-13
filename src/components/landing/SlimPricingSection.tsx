@@ -29,8 +29,8 @@ const SlimShaderCanvas = () => {
 
   useEffect(() => {
     const update = () => {
-      const isDark = document.documentElement.classList.contains("dark");
-      bgRef.current = isDark ? [0.05, 0.08, 0.18] : [0.95, 0.96, 0.98];
+      // Always use dark blue, regardless of light/dark mode
+      bgRef.current = [0.05, 0.08, 0.18];
       const gl = glRef.current;
       const prog = progRef.current;
       const loc = bgLocRef.current;
@@ -164,24 +164,17 @@ const SlimCard = ({
   const displayPrice = isYearly && yearlyPrice ? yearlyPrice : price;
   const hasPrice = displayPrice !== null;
 
-  const cardBase = isDark
-    ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10 hover:from-white/14 hover:border-white/20"
-    : "bg-gradient-to-br from-black/[0.04] to-black/[0.01] border-black/10 hover:from-black/[0.07] hover:border-black/20";
+  // Always use dark mode colors since background is always dark blue
+  const cardBase = "bg-gradient-to-br from-white/10 to-white/5 border-white/10 hover:from-white/14 hover:border-white/20";
 
-  const popularRing = isDark
-    ? "ring-2 ring-cyan-400/40 border-cyan-400/30 from-white/[0.18] to-white/[0.08] shadow-2xl shadow-cyan-400/10"
-    : "ring-2 ring-cyan-500/30 border-cyan-500/20 from-black/[0.07] shadow-2xl shadow-cyan-500/10";
+  const popularRing = "ring-2 ring-cyan-400/40 border-cyan-400/30 from-white/[0.18] to-white/[0.08] shadow-2xl shadow-cyan-400/10";
 
-  const textPrimary   = isDark ? "text-white"      : "text-gray-900";
-  const textSecondary = isDark ? "text-white/50"   : "text-gray-500";
-  const textMuted     = isDark ? "text-white/30"   : "text-gray-400";
-  const divider       = isDark
-    ? "bg-gradient-to-r from-transparent via-white/20 to-transparent"
-    : "bg-gradient-to-r from-transparent via-black/15 to-transparent";
+  const textPrimary   = "text-white";
+  const textSecondary = "text-white/50";
+  const textMuted     = "text-white/30";
+  const divider       = "bg-gradient-to-r from-transparent via-white/20 to-transparent";
 
-  const btnSecondary = isDark
-    ? "bg-white/10 border border-white/20 text-white hover:bg-white/20"
-    : "bg-black/8 border border-black/15 text-gray-800 hover:bg-black/12";
+  const btnSecondary = "bg-white/10 border border-white/20 text-white hover:bg-white/20";
 
   return (
     <motion.div
@@ -197,7 +190,7 @@ const SlimCard = ({
       `}
     >
       {popular && (
-        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 text-[11px] font-bold rounded-full whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-400 text-primary">
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 text-[11px] font-bold rounded-full whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-400 text-white">
           {popularLabel}
         </div>
       )}
@@ -246,8 +239,8 @@ const SlimCard = ({
 
       <ul className="flex flex-col gap-2 mb-6 flex-1">
         {features.map((f) => (
-          <li key={f} className={`flex items-start gap-2 text-sm ${isDark ? "text-white/80" : "text-gray-700"}`}>
-            <span className="mt-0.5 shrink-0"><SlimCheckIcon dark={isDark} /></span>
+          <li key={f} className="flex items-start gap-2 text-sm text-white/80">
+            <span className="mt-0.5 shrink-0"><SlimCheckIcon dark={true} /></span>
             {f}
           </li>
         ))}
@@ -295,13 +288,13 @@ const SlimPricingSection = () => {
   const packageFeaturesMap = t("pricing.packageFeatures", { returnObjects: true }) as Record<string, readonly string[]>;
   const slimPlans = arr("pricing.slimPlans") as SlimPlan[];
 
-  const sectionBg  = isDark ? "bg-[#0d1430]" : "bg-slate-100";
-  const headingCol = isDark ? "text-white"    : "text-gray-900";
-  const subCol     = isDark ? "text-white/60" : "text-gray-500";
-  const noteCol    = isDark ? "text-white/30" : "text-gray-400";
-  const badgeCol   = isDark ? "text-cyan-400" : "text-cyan-600";
-  const textPrimary   = isDark ? "text-white"    : "text-gray-900";
-  const textSecondary = isDark ? "text-white/50" : "text-gray-500";
+  const sectionBg  = "bg-[#0d1430]"; // Always dark blue
+  const headingCol = "text-white";
+  const subCol     = "text-white/60";
+  const noteCol    = "text-white/30";
+  const badgeCol   = "text-cyan-400";
+  const textPrimary   = "text-white";
+  const textSecondary = "text-white/50";
 
   return (
     <section className={`section-padding relative overflow-hidden ${sectionBg}`} id="preise-slim">
@@ -348,7 +341,7 @@ const SlimPricingSection = () => {
             onClick={() => setIsYearly(!isYearly)}
             aria-label={t("pricing.billingMonthly")}
             className={`relative w-14 h-7 rounded-full transition-colors duration-300 flex-shrink-0 ${
-              isYearly ? "bg-cyan-500" : isDark ? "bg-white/20" : "bg-black/20"
+              isYearly ? "bg-cyan-500" : "bg-white/20"
             }`}
           >
             <motion.span

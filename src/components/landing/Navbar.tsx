@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 import {
   ArrowRight, Menu, X, Moon, Sun, ChevronDown,
   ShoppingCart, Smartphone, Globe, Monitor, Percent,
@@ -7,7 +8,7 @@ import {
 } from "lucide-react";
 import logo from "@/assets/logos/logo-gastro-master-round.png";
 import { useTranslation } from "react-i18next";
-import { SUPPORTED_LANGS, type SupportedLang } from "@/i18n";
+import { SUPPORTED_LANGS, type SupportedLang, RTL_LANGS } from "@/i18n";
 
 const prodRoutes = [
   { to: "/produkte/webshop",            icon: ShoppingCart },
@@ -62,6 +63,7 @@ const Navbar = () => {
   const [prodMobOpen, setProdMobOpen]       = useState(false);
   const [loesMobOpen, setLoesMobOpen]       = useState(false);
   const langRef      = useRef<HTMLDivElement>(null);
+  const langRefMobile = useRef<HTMLDivElement>(null);
   const prodRef      = useRef<HTMLDivElement>(null);
   const loesRef      = useRef<HTMLDivElement>(null);
   const prodCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -79,7 +81,9 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+      const isOutsideDesktopLang = langRef.current && !langRef.current.contains(e.target as Node);
+      const isOutsideMobileLang = langRefMobile.current && !langRefMobile.current.contains(e.target as Node);
+      if (isOutsideDesktopLang && isOutsideMobileLang) setLangOpen(false);
       if (prodRef.current && !prodRef.current.contains(e.target as Node)) setProdDropOpen(false);
       if (loesRef.current && !loesRef.current.contains(e.target as Node)) setLoesDropOpen(false);
     };
@@ -94,8 +98,10 @@ const Navbar = () => {
 
   const switchLanguage = (code: SupportedLang) => {
     const restPath = pathname.replace(/^\/[a-z]{2}/, "") || "/";
-    navigate(`/${code}${restPath === "/" ? "" : restPath}`);
+    const newPath = `/${code}${restPath === "/" ? "" : restPath}`;
+    navigate(newPath);
     setLangOpen(false);
+    setMobileOpen(false);
   };
 
   const currentLangObj = languages.find(l => l.code === currentLang) || languages[0];
@@ -212,7 +218,7 @@ const Navbar = () => {
               <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${langOpen ? "rotate-180" : ""}`} />
             </button>
             {langOpen && (
-              <div className="absolute right-0 top-full mt-2 bg-surface-navy border border-primary-foreground/15 rounded-xl shadow-2xl shadow-black/30 overflow-hidden z-50 min-w-[130px]">
+              <div className={`absolute ${RTL_LANGS.includes(currentLang as SupportedLang) ? "left-0" : "right-0"} top-full mt-2 bg-surface-navy border border-primary-foreground/15 rounded-xl shadow-2xl shadow-black/30 overflow-hidden z-50 min-w-[130px]`}>
                 {languages.map(l => (
                   <button
                     key={l.code}
@@ -245,7 +251,7 @@ const Navbar = () => {
             aria-label="Dark Mode">
             {dark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
           </button>
-          <div className="relative">
+          <div className="relative" ref={langRefMobile}>
             <button
               onClick={() => setLangOpen(!langOpen)}
               className="w-8 h-8 rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 flex items-center justify-center text-base"
@@ -253,7 +259,7 @@ const Navbar = () => {
               {currentLangObj.flag}
             </button>
             {langOpen && (
-              <div className="absolute right-0 top-full mt-2 bg-surface-navy border border-primary-foreground/15 rounded-xl shadow-2xl shadow-black/30 overflow-hidden z-50 min-w-[130px]">
+              <div className={`absolute ${RTL_LANGS.includes(currentLang as SupportedLang) ? "left-0" : "right-0"} top-full mt-2 bg-surface-navy border border-primary-foreground/15 rounded-xl shadow-2xl shadow-black/30 overflow-hidden z-50 min-w-[130px]`}>
                 {languages.map(l => (
                   <button key={l.code} onClick={() => { switchLanguage(l.code); }}
                     className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${
