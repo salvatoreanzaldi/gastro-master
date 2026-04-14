@@ -4,9 +4,9 @@ import { Star, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGoogleReviews } from '@/hooks/useGoogleReviews';
 import type { GoogleReview, ReviewFilter } from '@/types/reviews';
-import googleLogo from '@/assets/Icons/Icon - Google.svg';
-import googleLogoRound from '@/assets/Icons/Icon - Google Rund.svg';
-import verifyIcon from '@/assets/Icons/Icon - Verify.svg';
+import googleLogo from '@/assets/icons/Icon - Google.svg';
+import googleLogoRound from '@/assets/icons/Icon - Google Rund.svg';
+import verifyIcon from '@/assets/icons/Icon - Verify.svg';
 
 /**
  * GoogleReviewsGrid
