@@ -4,27 +4,29 @@ import { Star, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGoogleReviews } from '@/hooks/useGoogleReviews';
 import type { GoogleReview, ReviewFilter } from '@/types/reviews';
+import googleLogo from '@/assets/Icons/Icon - Google.svg';
 
 /**
  * GoogleReviewsGrid
  *
- * Displays Google My Business reviews with filtering, pagination, and animations
+ * Displays Google My Business reviews with professional layout
  * Positioned after Hero Section on /de/uber-uns
  *
  * Features:
  * - Aggregated 5-star rating and review count
- * - Filter tabs: All | 5-star | 4-star | Newest
- * - Responsive grid: 3 columns desktop / 2 tablet / 1 mobile
- * - Load More pagination (shows 6 reviews initially)
+ * - Google Logo + Header with CTA
+ * - Filter tabs: All | 5-star | Newest
+ * - Responsive grid: 4 columns desktop / 2 tablet / 1 mobile
+ * - Shows 4 reviews per row on desktop
  * - Review cards: avatar, name, stars, text excerpt, date
- * - CTA button to Google Maps
+ * - "Weitere Bewertungen lesen" CTA button
  * - Dark mode support
  * - Error & loading states
  */
 export default function GoogleReviewsGrid() {
   const { reviews, totalRating, totalCount, isLoading, error } = useGoogleReviews();
   const [activeFilter, setActiveFilter] = useState<ReviewFilter>('all');
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [visibleCount, setVisibleCount] = useState(4);
 
   // Filter reviews based on active tab
   const filteredReviews = useMemo(() => {
@@ -32,8 +34,6 @@ export default function GoogleReviewsGrid() {
 
     if (activeFilter === '5') {
       filtered = reviews.filter((r) => r.rating === 5);
-    } else if (activeFilter === '4') {
-      filtered = reviews.filter((r) => r.rating >= 4);
     } else if (activeFilter === 'newest') {
       filtered = [...reviews].sort((a, b) => b.time - a.time);
     }
@@ -50,73 +50,73 @@ export default function GoogleReviewsGrid() {
 
   return (
     <section className="bg-white dark:bg-[#111827] border-b border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-16 md:py-24">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-          <div>
-            <motion.h2
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-3xl md:text-4xl font-bold text-[#0A264A] dark:text-white mb-2"
-            >
-              Ehrliches Feedback ist uns wichtig
-            </motion.h2>
-
-            {/* Rating Score */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="flex items-center gap-2"
-            >
-              <span className="text-2xl font-bold text-[#0A264A] dark:text-white">
-                {totalRating.toFixed(1)} ⭐
-              </span>
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-5 h-5 text-amber-400 fill-amber-400"
-                  />
-                ))}
-              </div>
-              <span className="text-sm text-muted-foreground">
-                ({totalCount} {totalCount === 1 ? 'Bewertung' : 'Bewertungen'})
-              </span>
-            </motion.div>
+      <div className="max-w-7xl mx-auto">
+        {/* Header Line 1: Logo + Title + CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="flex items-center justify-between gap-4 mb-4"
+        >
+          <div className="flex items-center gap-3">
+            <img
+              src={googleLogo}
+              alt="Google Logo"
+              className="h-6 md:h-7 object-contain"
+            />
+            <h2 className="text-2xl md:text-3xl font-bold text-[#0A264A] dark:text-white">
+              Bewertungen
+            </h2>
           </div>
 
           {/* CTA Button */}
-          <motion.a
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+          <a
             href="https://www.google.com/maps/place/Gastro+Master"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-gradient-amber text-[#0A264A] font-bold px-6 py-3 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-amber-500/20 w-fit"
+            className="bg-gradient-amber text-[#0A264A] font-bold px-5 md:px-6 py-2.5 md:py-3 rounded-xl text-xs md:text-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-amber-500/20 whitespace-nowrap"
           >
-            Bewerten Sie uns auf Google
-            <ArrowRight className="w-4 h-4" />
-          </motion.a>
-        </div>
+            Bewerten
+            <ArrowRight className="w-3.5 md:w-4 h-3.5 md:h-4" />
+          </a>
+        </motion.div>
+
+        {/* Header Line 2: Rating Score */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="flex items-center gap-2 mb-8"
+        >
+          <span className="text-2xl font-bold text-[#0A264A] dark:text-white">
+            {totalRating.toFixed(1)} ⭐
+          </span>
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className="w-5 h-5 text-amber-400 fill-amber-400"
+              />
+            ))}
+          </div>
+          <span className="text-sm text-muted-foreground">
+            ({totalCount} {totalCount === 1 ? 'Bewertung' : 'Bewertungen'})
+          </span>
+        </motion.div>
 
         {/* Filter Tabs */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="flex flex-wrap gap-3 mb-8"
+          transition={{ delay: 0.15 }}
+          className="flex flex-wrap gap-3 mb-10"
         >
-          {(['all', '5', '4', 'newest'] as const).map((filter) => {
+          {(['all', '5', 'newest'] as const).map((filter) => {
             const labels: Record<ReviewFilter, string> = {
               all: 'Alle',
               '5': '5-Sterne',
-              '4': '4-Sterne+',
               newest: 'Neueste',
             };
 
@@ -125,7 +125,7 @@ export default function GoogleReviewsGrid() {
                 key={filter}
                 onClick={() => {
                   setActiveFilter(filter);
-                  setVisibleCount(6); // Reset pagination on filter change
+                  setVisibleCount(4); // Reset pagination on filter change
                 }}
                 variant={activeFilter === filter ? 'default' : 'outline'}
                 className={
@@ -142,8 +142,8 @@ export default function GoogleReviewsGrid() {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
               <div
                 key={i}
                 className="bg-muted rounded-2xl p-6 animate-pulse h-80"
@@ -161,14 +161,14 @@ export default function GoogleReviewsGrid() {
           </div>
         )}
 
-        {/* Review Grid */}
+        {/* Review Grid - 4 Columns Desktop */}
         <AnimatePresence>
           {!isLoading && visibleReviews.length > 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
             >
               {visibleReviews.map((review, index) => (
                 <ReviewCard key={review.id} review={review} index={index} />
@@ -177,7 +177,7 @@ export default function GoogleReviewsGrid() {
           )}
         </AnimatePresence>
 
-        {/* Load More Button */}
+        {/* Weitere Bewertungen Button */}
         {!isLoading && hasMore && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -185,13 +185,15 @@ export default function GoogleReviewsGrid() {
             viewport={{ once: true }}
             className="flex justify-center"
           >
-            <Button
-              onClick={() => setVisibleCount((prev) => prev + 6)}
-              variant="outline"
-              size="lg"
+            <a
+              href="https://www.google.com/maps/place/Gastro+Master"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gradient-amber text-[#0A264A] font-bold px-8 py-3 rounded-xl text-base inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-amber-500/20"
             >
-              Weitere Bewertungen laden
-            </Button>
+              Weitere Bewertungen lesen
+              <ArrowRight className="w-4 h-4" />
+            </a>
           </motion.div>
         )}
       </div>
