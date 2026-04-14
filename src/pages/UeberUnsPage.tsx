@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, type CarouselApi } from "@/components/ui/carousel";
+import GoogleReviewsGrid from "@/components/GoogleReviewsGrid";
 
 import imgUsingen from "@/assets/ueber-uns/Über uns - Usingen.png";
 import heroUeberUns from "@/assets/heroes/Hero - Über Uns.png";
@@ -429,7 +430,10 @@ const UeberUnsPage = () => {
         </div>
       </section>
 
-      {/* ── S2: TRUST BAR ─────────────────────────────────────────────────── */}
+      {/* ── S2: GOOGLE REVIEWS ────────────────────────────────────────────── */}
+      <GoogleReviewsGrid />
+
+      {/* ── S3: TRUST BAR ─────────────────────────────────────────────────── */}
       <section className="bg-white dark:bg-[#111827] border-y border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-10 md:py-12">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-4">

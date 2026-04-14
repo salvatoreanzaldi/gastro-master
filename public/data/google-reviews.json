@@ -1,0 +1,122 @@
+[
+  {
+    "id": "review_001",
+    "author_name": "Marco L.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Gastro Master hat unser Restaurant völlig transformiert! Die Bestellapp ist intuitiv, das Kassensystem zuverlässig und der Support ist fantastisch. Absolute Empfehlung!",
+    "relative_time_description": "vor 2 Wochen",
+    "time": 1712880000
+  },
+  {
+    "id": "review_002",
+    "author_name": "Sarah K.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Nach 5 Jahren mit anderen Systemen: Das war die beste Entscheidung. Gastro Master ist modern, schnell und das Team versteht wirklich die Gastronomie.",
+    "relative_time_description": "vor 1 Monat",
+    "time": 1710460800
+  },
+  {
+    "id": "review_003",
+    "author_name": "Giovanni P.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Für unsere kleine Pizzeria perfekt geeignet. Die Lieferintegration mit Lieferando und Uber funktioniert nahtlos. Top Service!",
+    "relative_time_description": "vor 6 Wochen",
+    "time": 1709424000
+  },
+  {
+    "id": "review_004",
+    "author_name": "Angela M.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Wir betreiben eine Lieferkette mit 3 Filialen. Gastro Master gibt uns Gesamtkontrolle. Die Datenanalyse-Features haben unsere Effizienz um 40% gesteigert!",
+    "relative_time_description": "vor 2 Monaten",
+    "time": 1707916800
+  },
+  {
+    "id": "review_005",
+    "author_name": "Thomas D.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Das beste Kassensystem, das ich je benutzt habe. Besonders die Tischfunktion und die Statistiken im Echtzeit-Dashboard sind großartig. 10/10",
+    "relative_time_description": "vor 2 Monaten",
+    "time": 1707312000
+  },
+  {
+    "id": "review_006",
+    "author_name": "Rebecca T.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Onboarding war so einfach und der Support antwortet innerhalb von Minuten. Das Preis-Leistungs-Verhältnis ist unschlagbar. Sehr glücklich damit!",
+    "relative_time_description": "vor 3 Monaten",
+    "time": 1704720000
+  },
+  {
+    "id": "review_007",
+    "author_name": "Klaus H.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Als Franchise-Betreiber mit 5 Restaurants brauche ich zentrale Kontrolle. Gastro Master liefert genau das. Skalierbar und professionell!",
+    "relative_time_description": "vor 3 Monaten",
+    "time": 1704115200
+  },
+  {
+    "id": "review_008",
+    "author_name": "Petra S.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 4,
+    "text": "Solides System mit großem Potenzial. Die neuesten Updates mit der kontaktlosen Bestellung sind toll. Kleine UI-Verbesserungen möglich, aber sehr gut insgesamt.",
+    "relative_time_description": "vor 4 Monaten",
+    "time": 1701523200
+  },
+  {
+    "id": "review_009",
+    "author_name": "Dimitri V.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Wir nutzen Gastro Master für unsere Ghost Kitchen und alles läuft perfekt. Die Automatisierung spart uns täglich mindestens 2 Stunden Arbeit.",
+    "relative_time_description": "vor 4 Monaten",
+    "time": 1700918400
+  },
+  {
+    "id": "review_010",
+    "author_name": "Carla B.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Unsere Bäckerei-Filiale kann jetzt online Vorbestellungen entgegennehmen. Die Integration ist nahtlos und die Fehlerquote bei Bestellungen ist auf 0 gesunken!",
+    "relative_time_description": "vor 5 Monaten",
+    "time": 1698326400
+  },
+  {
+    "id": "review_011",
+    "author_name": "Roberto G.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Das Team von Gastro Master versteht das Geschäft. Im Gegensatz zu anderen Anbietern haben sie echte Lösungen für echte Probleme. Klasse!",
+    "relative_time_description": "vor 5 Monaten",
+    "time": 1697721600
+  },
+  {
+    "id": "review_012",
+    "author_name": "Silvia M.",
+    "author_url": "https://google.com/maps",
+    "profile_photo_url": null,
+    "rating": 5,
+    "text": "Transition von unserem alten System war problemlos. Gastro Master Team hat alles übernommen. Nach 1 Jahr: Würde es sofort wieder tun!",
+    "relative_time_description": "vor 6 Monaten",
+    "time": 1695129600
+  }
+]
