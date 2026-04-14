@@ -230,7 +230,7 @@ const PricingSection = () => {
                         <tr key={row.label} className="border-b border-border/50 last:border-0">
                           <td className="py-3 px-5 text-foreground text-sm">{row.label}</td>
                           {row.values.map((val, vi) => (
-                            <td key={vi} className={`py-3 px-3 text-center ${t("pricing.plans", { returnObjects: true }) as any[][vi]?.popular ? "bg-primary/[0.03]" : ""}`}>
+                            <td key={vi} className={`py-3 px-3 text-center ${(t("pricing.plans", { returnObjects: true }) as any[])[vi]?.popular ? "bg-primary/[0.03]" : ""}`}>
                               {renderCell(val)}
                             </td>
                           ))}

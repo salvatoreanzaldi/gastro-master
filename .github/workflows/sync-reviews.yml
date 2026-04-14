@@ -1,0 +1,51 @@
+name: Daily Review Sync
+
+on:
+  schedule:
+    # Run every day at 08:00 AM (UTC+2 = 06:00 UTC)
+    - cron: '0 6 * * *'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  sync-reviews:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Sync reviews from Google Sheets
+        env:
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: npm run sync-reviews
+
+      - name: Check for changes
+        id: verify-changed
+        run: |
+          if git diff --quiet public/data/google-reviews.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.verify-changed.outputs.changed == 'true'
+        run: |
+          git config user.name "Review Sync Bot"
+          git config user.email "noreply@gastro-master.com"
+          git add public/data/google-reviews.json
+          git commit -m "chore: sync reviews from Google Sheets"
+          git push

@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "sync-reviews": "node scripts/sync-reviews.js",
+    "import-reviews": "node scripts/import-reviews-to-sheet.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -47,8 +49,12 @@
     "cmdk": "^1.1.1",
     "cobe": "^2.0.1",
     "date-fns": "^3.6.0",
+    "dotenv": "^17.4.2",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.35.1",
+    "google-auth-library": "^10.6.2",
+    "google-spreadsheet": "^5.2.0",
+    "googleapis": "^171.4.0",
     "i18next": "^26.0.3",
     "i18next-browser-languagedetector": "^8.2.1",
     "i18next-http-backend": "^3.0.4",

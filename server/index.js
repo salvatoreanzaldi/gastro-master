@@ -4,15 +4,34 @@ import dotenv from 'dotenv';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { GoogleGenAI } from '@google/genai';
 
-dotenv.config({ path: '../.env' });
+// Load .env.local first (overwrites .env)
+// Use absolute path from project root
+dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '.env' });
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// Init clients
-const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Init clients (with fallback for missing credentials)
+let pinecone = null;
+let ai = null;
+
+try {
+  if (process.env.PINECONE_API_KEY) {
+    pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+  }
+} catch (err) {
+  console.warn('⚠️ Pinecone not available - RAG features disabled');
+}
+
+try {
+  if (process.env.GEMINI_API_KEY) {
+    ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  }
+} catch (err) {
+  console.warn('⚠️ Google GenAI not available - chat features disabled');
+}
 
 const EMBEDDING_MODEL = process.env.GEMINI_EMBEDDING_MODEL || 'gemini-embedding-2-preview';
 const CHAT_MODEL = process.env.GEMINI_CHAT_MODEL || 'gemini-2.0-flash';
@@ -118,6 +137,90 @@ app.post('/api/query', async (req, res) => {
     res.json({ matches: results.matches });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ─── Google My Business Reviews Proxy ──────────────────────────────────────
+
+app.get('/api/google-reviews', async (req, res) => {
+  try {
+    const apiKey = process.env.VITE_GOOGLE_PLACES_API_KEY;
+    const accountId = process.env.VITE_GOOGLE_ACCOUNT_ID; // e.g. "accounts/123456789"
+    const locationId = process.env.VITE_GOOGLE_BUSINESS_LOCATION_ID;
+
+    console.log('🔍 Google My Business Reviews Request:');
+    console.log('   API Key:', apiKey ? `***${apiKey.slice(-8)}` : '❌ MISSING');
+    console.log('   Account ID:', accountId || '❌ MISSING');
+    console.log('   Location ID:', locationId || '❌ MISSING');
+
+    if (!apiKey || !accountId || !locationId) {
+      return res.status(400).json({ error: 'Missing API credentials (API Key, Account ID, or Location ID)' });
+    }
+
+    // Construct My Business API URL
+    const url = `https://mybusinessaccountmanagement.googleapis.com/v1/${accountId}/locations/${locationId}/reviews?key=${apiKey}`;
+
+    console.log('   URL:', url.replace(apiKey, '***API_KEY***'));
+
+    const response = await fetch(url);
+    const text = await response.text();
+
+    console.log('   Response Status:', response.status);
+    if (!response.ok) {
+      console.error('   Response Body:', text.substring(0, 500));
+      return res.status(response.status).json({ error: `Google API returned ${response.status}: ${text.substring(0, 200)}` });
+    }
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error('   Failed to parse JSON:', text.substring(0, 300));
+      return res.status(500).json({ error: 'Invalid response from Google API' });
+    }
+
+    if (data.error) {
+      console.error('❌ Google My Business API Error:', data.error.message);
+      return res.status(400).json({ error: `Google API: ${data.error.message}` });
+    }
+
+    if (!data.reviews || data.reviews.length === 0) {
+      console.log('⚠️ No reviews found in Google My Business response');
+      return res.status(404).json({ error: 'No reviews found' });
+    }
+
+    // Process reviews from My Business API
+    const reviews = data.reviews
+      .filter((r) => r.reviewText && r.reviewText.length > 0) // Only reviews with text
+      .sort((a, b) => b.reviewText.length - a.reviewText.length) // Longest first
+      .slice(0, 40) // Top 40 longest
+      .sort((a, b) => new Date(b.reviewDatetime) - new Date(a.reviewDatetime)) // Newest first
+      .map((review) => ({
+        id: review.name || `${review.reviewer?.displayName}-${review.createTime}`,
+        rating: review.rating,
+        text: review.reviewText,
+        author_name: review.reviewer?.displayName || 'Anonymous',
+        relative_time_description: review.reviewDatetime || 'Recently',
+        profile_photo_url: review.reviewer?.profilePhotoUrl || null,
+        author_url: null, // Not available in My Business API
+        time: new Date(review.reviewDatetime).getTime() / 1000,
+      }));
+
+    // Calculate totals from all reviews (not just top 40)
+    const allReviewsRating = data.reviews.length > 0
+      ? data.reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / data.reviews.length
+      : 0;
+
+    console.log(`✅ Successfully loaded ${reviews.length} reviews from Google My Business API (${data.reviews.length} total)`);
+
+    res.json({
+      reviews,
+      totalRating: Math.round(allReviewsRating * 10) / 10,
+      totalCount: data.reviews.length,
+    });
+  } catch (error) {
+    console.error('Google Reviews Error:', error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 

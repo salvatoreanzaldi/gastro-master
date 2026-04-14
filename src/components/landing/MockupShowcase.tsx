@@ -160,7 +160,7 @@ const MockupShowcase = () => {
           ))}
         </div>
       </section>
-    </>
+    </div>
   );
 };
 
