@@ -2,42 +2,72 @@ import { useQuery } from '@tanstack/react-query';
 import type { GoogleReview, ReviewsState } from '@/types/reviews';
 
 /**
- * Fetches Google Reviews from static JSON
+ * Fetches Google Reviews via Backend Proxy
  *
- * Phase 1: Loads from `src/data/google-reviews.json` (static)
- * Phase 2: Replace queryFn to use Google Places API
- *   - Requires: Google Cloud API Key in .env (VITE_GOOGLE_PLACES_API_KEY)
- *   - Endpoint: POST /v3/lroLongRunningRecognize (Maps API)
- *   - Docs: https://developers.google.com/maps/documentation/places/web-service/details
+ * Phase 2: Loads from backend proxy at localhost:3001/api/google-reviews
+ *   - Backend calls Google Places API (no CORS issues)
+ *   - Frontend gets reviews from backend (no CORS issues)
+ *   - Fallback: Static JSON if API fails
  */
 async function fetchGoogleReviews(): Promise<ReviewsState> {
   try {
-    // Phase 1: Static JSON
-    const response = await fetch('/data/google-reviews.json');
-    if (!response.ok) throw new Error('Failed to fetch reviews');
+    // Call backend proxy on port 3001 (IMPORTANT: full URL, not relative path)
+    const response = await fetch('http://localhost:3001/api/google-reviews');
 
-    const reviews: GoogleReview[] = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
 
-    // Calculate aggregate statistics
-    const totalCount = reviews.length;
-    const totalRating = reviews.length > 0
-      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-      : 0;
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    console.log(`✅ Successfully loaded ${data.reviews.length} reviews from backend proxy`);
 
     return {
-      reviews,
-      totalRating: Math.round(totalRating * 10) / 10,
-      totalCount,
+      reviews: data.reviews,
+      totalRating: data.totalRating,
+      totalCount: data.totalCount,
       isLoading: false,
       error: null,
     };
   } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    console.warn(`⚠️ Failed to fetch from Google API: ${errorMsg}. Falling back to static data.`);
+  }
+
+  // Fallback: Load from static JSON
+  try {
+    const response = await fetch('/data/google-reviews.json');
+    if (!response.ok) throw new Error('Failed to fetch static reviews');
+
+    const reviews: GoogleReview[] = await response.json();
+
+    const totalRating = reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : 0;
+
+    console.log(`ℹ️ Using fallback: ${reviews.length} static reviews`);
+
+    return {
+      reviews,
+      totalRating: Math.round(totalRating * 10) / 10,
+      totalCount: 131, // Total reviews on Google My Business (includes all reviews)
+      isLoading: false,
+      error: null,
+    };
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`❌ Error loading reviews: ${errorMsg}`);
+
     return {
       reviews: [],
       totalRating: 0,
       totalCount: 0,
       isLoading: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: errorMsg,
     };
   }
 }
@@ -60,7 +90,7 @@ export function useGoogleReviews() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['google-reviews'],
     queryFn: fetchGoogleReviews,
-    staleTime: 1000 * 60 * 60, // Cache for 1 hour
+    staleTime: 0, // Always fetch fresh to ensure profile_photo_url is available
     gcTime: 1000 * 60 * 60 * 24, // Keep in cache for 24 hours
     retry: 2,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
