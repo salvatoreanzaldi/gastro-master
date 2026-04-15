@@ -45,10 +45,18 @@ export default function GoogleReviewsGrid() {
     }
   }, [availableTabs, activeFilter]);
 
-  // Reset scroll position when filter changes
+  // Reset scroll position when filter changes (without animation)
   useEffect(() => {
     if (scrollRef.current) {
+      // Temporarily disable smooth scrolling for instant jump
+      scrollRef.current.style.scrollBehavior = 'auto';
       scrollRef.current.scrollLeft = 0;
+      // Re-enable smooth scrolling after the jump
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.style.scrollBehavior = 'smooth';
+        }
+      }, 0);
     }
   }, [activeFilter]);
 
@@ -64,7 +72,7 @@ export default function GoogleReviewsGrid() {
     if (!isDragging.current || !scrollRef.current) return;
     e.preventDefault();
     const x = e.pageX - (scrollRef.current.offsetLeft ?? 0);
-    const walk = (x - startX.current) * 1.5;
+    const walk = (x - startX.current) * 1.0;
     scrollRef.current.scrollLeft = scrollLeft.current - walk;
   };
 
@@ -93,7 +101,7 @@ export default function GoogleReviewsGrid() {
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex items-center gap-3 mb-4 max-w-[1200px] mx-auto"
+          className="flex items-center gap-3 mb-4 max-w-[1225px] mx-auto"
         >
           <img
             src={googleLogo}
@@ -111,7 +119,7 @@ export default function GoogleReviewsGrid() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="flex items-center gap-2 mb-8 max-w-[1200px] mx-auto"
+          className="flex items-center gap-2 mb-8 max-w-[1225px] mx-auto"
         >
           <span className="text-2xl font-bold text-[#0A264A] dark:text-white">
             {totalRating.toFixed(1)}
@@ -136,7 +144,7 @@ export default function GoogleReviewsGrid() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.15 }}
-            className="flex flex-wrap gap-3 mb-10 max-w-[1200px] mx-auto"
+            className="flex flex-wrap gap-3 mb-10 max-w-[1225px] mx-auto"
           >
             {availableTabs.map((tab) => (
               <Button
@@ -172,7 +180,8 @@ export default function GoogleReviewsGrid() {
               onMouseMove={onMouseMove}
               onMouseUp={stopDragging}
               onMouseLeave={stopDragging}
-              className="flex gap-5 overflow-x-auto pb-6 snap-x snap-mandatory max-w-[calc(100vw-4rem)] mx-auto select-none cursor-grab active:cursor-grabbing"
+              className="flex gap-5 overflow-x-auto pb-6 snap-x snap-mandatory max-w-[1225px] mx-auto select-none cursor-grab active:cursor-grabbing"
+              style={{ scrollBehavior: 'smooth' }}
             >
               <AnimatePresence mode="wait">
                 {reviews.map((review, index) => (
@@ -199,7 +208,7 @@ export default function GoogleReviewsGrid() {
             href="https://g.page/r/CdCNZ5Fg01PBEBM/review"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex justify-center pt-4 max-w-[1200px] mx-auto"
+            className="flex justify-center pt-4 max-w-[1225px] mx-auto"
           >
             <div className="bg-[#0A264A] dark:bg-blue-600 text-white font-bold px-6 py-3 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#0A264A]/20 dark:shadow-blue-600/20 cursor-pointer">
               Bewerte uns auf Google
