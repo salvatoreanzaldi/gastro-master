@@ -87,7 +87,7 @@ export default function GoogleReviewsGrid() {
 
   return (
     <section className="bg-white dark:bg-[#111827] border-b border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-16 md:py-24">
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto">
         {/* Header Line 1: Logo + Title */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -172,8 +172,7 @@ export default function GoogleReviewsGrid() {
               onMouseMove={onMouseMove}
               onMouseUp={stopDragging}
               onMouseLeave={stopDragging}
-              className="flex gap-5 overflow-x-auto pb-6 snap-x snap-mandatory max-w-[1200px] mx-auto select-none cursor-grab active:cursor-grabbing"
-              style={{ scrollBehavior: 'auto' }}
+              className="flex gap-5 overflow-x-auto pb-6 snap-x snap-mandatory mx-auto select-none cursor-grab active:cursor-grabbing"
             >
               <AnimatePresence mode="wait">
                 {reviews.map((review, index) => (
