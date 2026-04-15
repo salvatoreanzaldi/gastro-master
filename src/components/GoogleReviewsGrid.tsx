@@ -1,9 +1,9 @@
-import { useState, useMemo, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGoogleReviews } from '@/hooks/useGoogleReviews';
-import type { GoogleReview, ReviewFilter } from '@/types/reviews';
+import type { GoogleReview } from '@/types/reviews';
 import googleLogo from '@/assets/icons/Icon - Google.svg';
 import googleLogoRound from '@/assets/icons/Icon - Google Rund.svg';
 import verifyIcon from '@/assets/icons/Icon - Verify.svg';
@@ -17,7 +17,7 @@ import verifyIcon from '@/assets/icons/Icon - Verify.svg';
  * Features:
  * - Aggregated 5-star rating and review count
  * - Google Logo + Header with CTA
- * - Filter tabs: All | 5-star | Newest
+ * - Dynamic filter tabs from Google Sheet tabs (no hardcoded filters)
  * - Responsive grid: 4 columns desktop / 2 tablet / 1 mobile
  * - Shows 4 reviews per row on desktop
  * - Review cards: avatar, name, stars, text excerpt, date
@@ -26,8 +26,11 @@ import verifyIcon from '@/assets/icons/Icon - Verify.svg';
  * - Error & loading states
  */
 export default function GoogleReviewsGrid() {
-  const { reviews, totalRating, totalCount, isLoading, error } = useGoogleReviews();
-  const [activeFilter, setActiveFilter] = useState<ReviewFilter>('all');
+  const [activeFilter, setActiveFilter] = useState<string>(''); // Empty until tabs load
+
+  // Load reviews for active filter (or default)
+  const { reviews, availableTabs, totalRating, totalCount, isLoading, error }
+    = useGoogleReviews(activeFilter || undefined);
 
   // Drag-scroll refs
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -35,18 +38,12 @@ export default function GoogleReviewsGrid() {
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
-  // Filter reviews based on active tab
-  const filteredReviews = useMemo(() => {
-    let filtered = reviews;
-
-    if (activeFilter === '5') {
-      filtered = reviews.filter((r) => r.rating === 5);
-    } else if (activeFilter === 'newest') {
-      filtered = [...reviews].sort((a, b) => b.time - a.time);
+  // Initialize active filter when tabs load
+  useEffect(() => {
+    if (availableTabs.length > 0 && !activeFilter) {
+      setActiveFilter(availableTabs[0]);
     }
-
-    return filtered;
-  }, [reviews, activeFilter]);
+  }, [availableTabs, activeFilter]);
 
   // Event handlers for drag-scroll
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -67,6 +64,14 @@ export default function GoogleReviewsGrid() {
   const stopDragging = () => {
     isDragging.current = false;
     if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
+  };
+
+  // Map sheet tab names to display labels
+  const TAB_LABELS: Record<string, string> = {
+    'Neuste': 'Neueste',
+    'Alle': 'Alle',
+    '5-Sterne': '5 Sterne',
+    // New tabs will appear with their sheet name as label
   };
 
   if (error) {
@@ -117,108 +122,84 @@ export default function GoogleReviewsGrid() {
           </span>
         </motion.div>
 
-        {/* Filter Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.15 }}
-          className="flex flex-wrap gap-3 mb-10 max-w-[1200px] mx-auto"
-        >
-          {(['newest', 'all', '5'] as const).map((filter) => {
-            const labels: Record<ReviewFilter, string> = {
-              newest: 'Neueste',
-              all: 'Alle',
-              '5': '5-Sterne',
-            };
-
-            return (
+        {/* Filter Tabs — Dynamically rendered from available tabs */}
+        {availableTabs.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.15 }}
+            className="flex flex-wrap gap-3 mb-10 max-w-[1200px] mx-auto"
+          >
+            {availableTabs.map((tab) => (
               <Button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                variant={activeFilter === filter ? 'default' : 'outline'}
+                key={tab}
+                onClick={() => setActiveFilter(tab)}
+                variant={activeFilter === tab ? 'default' : 'outline'}
                 className={
-                  activeFilter === filter
+                  activeFilter === tab
                     ? 'bg-[#0A264A] dark:bg-white text-white dark:text-[#0A264A]'
                     : ''
                 }
               >
-                {labels[filter]}
+                {TAB_LABELS[tab] ?? tab}
               </Button>
-            );
-          })}
-        </motion.div>
+            ))}
+          </motion.div>
+        )}
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="flex gap-4 overflow-x-auto pb-4">
-            {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className="bg-muted rounded-2xl p-6 animate-pulse h-80 w-72 flex-shrink-0"
-              />
-            ))}
+        {isLoading && !reviews.length ? (
+          <div className="flex justify-center items-center py-16">
+            <Loader2 className="w-8 h-8 animate-spin text-[#0A264A] dark:text-white" />
+            <span className="ml-3 text-[#0A264A] dark:text-white">
+              Bewertungen werden geladen...
+            </span>
           </div>
-        )}
-
-        {/* Empty State */}
-        {!isLoading && filteredReviews.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              Keine Bewertungen für diesen Filter vorhanden.
-            </p>
-          </div>
-        )}
-
-        {/* Review Horizontal Scroll Container */}
-        <AnimatePresence>
-          {!isLoading && filteredReviews.length > 0 && (
+        ) : (
+          <>
+            {/* Reviews Grid with Horizontal Scroll */}
             <motion.div
               ref={scrollRef}
               onMouseDown={onMouseDown}
               onMouseMove={onMouseMove}
               onMouseUp={stopDragging}
               onMouseLeave={stopDragging}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex gap-4 overflow-x-auto overflow-y-hidden pb-4 mb-8 cursor-grab select-none scroll-smooth
-                snap-x snap-mandatory max-w-[1200px] mx-auto
-                [&::-webkit-scrollbar]:h-2
-                [&::-webkit-scrollbar-track]:rounded-full
-                [&::-webkit-scrollbar-track]:bg-[#0A264A]/10
-                dark:[&::-webkit-scrollbar-track]:bg-white/10
-                [&::-webkit-scrollbar-thumb]:rounded-full
-                [&::-webkit-scrollbar-thumb]:bg-[#0A264A]/30
-                dark:[&::-webkit-scrollbar-thumb]:bg-white/30
-                hover:[&::-webkit-scrollbar-thumb]:bg-[#0A264A]/50
-                dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/50"
+              className="flex gap-5 overflow-x-auto pb-6 snap-x snap-mandatory max-w-[1200px] mx-auto select-none cursor-grab active:cursor-grabbing"
+              style={{ scrollBehavior: 'smooth' }}
             >
-              {filteredReviews.map((review, index) => (
-                <ReviewCard key={review.id} review={review} index={index} />
-              ))}
+              <AnimatePresence mode="wait">
+                {reviews.map((review, index) => (
+                  <ReviewCard key={review.id} review={review} index={index} />
+                ))}
+              </AnimatePresence>
             </motion.div>
-          )}
-        </AnimatePresence>
 
-        {/* CTA Button - Centered Below Scroll Container */}
-        {!isLoading && filteredReviews.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex justify-center"
+            {/* Empty State */}
+            {reviews.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">
+                  Keine Bewertungen für diesen Filter verfügbar.
+                </p>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* CTA Link */}
+        {reviews.length > 0 && (
+          <motion.a
+            whileHover={{ scale: 1.02 }}
+            href="https://g.page/r/CdCNZ5Fg01PBEBM/review"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex justify-center pt-4 max-w-[1200px] mx-auto"
           >
-            <a
-              href="https://g.page/r/CdCNZ5Fg01PBEBM/review"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#0A264A] dark:bg-blue-600 text-white font-bold px-8 py-3 rounded-xl text-base inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#0A264A]/20 dark:shadow-blue-600/20"
-            >
+            <div className="bg-[#0A264A] dark:bg-blue-600 text-white font-bold px-6 py-3 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#0A264A]/20 dark:shadow-blue-600/20 cursor-pointer">
               Bewerte uns auf Google
               <ArrowRight className="w-4 h-4" />
-            </a>
-          </motion.div>
+            </div>
+          </motion.a>
         )}
       </div>
     </section>
