@@ -173,7 +173,7 @@ export default function GoogleReviewsGrid() {
               onMouseUp={stopDragging}
               onMouseLeave={stopDragging}
               className="flex gap-5 overflow-x-auto pb-6 snap-x snap-mandatory max-w-[1200px] mx-auto select-none cursor-grab active:cursor-grabbing"
-              style={{ scrollBehavior: 'smooth' }}
+              style={{ scrollBehavior: 'auto' }}
             >
               <AnimatePresence mode="wait">
                 {reviews.map((review, index) => (
