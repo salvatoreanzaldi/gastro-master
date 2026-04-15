@@ -254,10 +254,7 @@ function ReviewCard({ review, index }: ReviewCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.05 }}
+      initial={{ opacity: 1 }}
       className="bg-[#f6f7f9] dark:bg-[#1F2937] rounded-2xl p-6 border border-[#0A264A]/10 dark:border-white/10 hover:shadow-lg transition-shadow duration-300 w-72 flex-shrink-0 snap-start"
     >
       {/* Author Info */}
