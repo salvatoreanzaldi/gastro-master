@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "sync-reviews": "node scripts/sync-reviews.js",
-    "import-reviews": "node scripts/import-reviews-to-sheet.js"
+    "import-reviews": "node scripts/import-reviews-to-sheet.js",
+    "download-avatars": "node scripts/download-review-avatars.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
