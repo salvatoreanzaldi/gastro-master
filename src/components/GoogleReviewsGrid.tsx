@@ -224,7 +224,6 @@ interface ReviewCardProps {
 
 function ReviewCard({ review, index }: ReviewCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   // Truncate text to 150 characters if longer
   const isTruncated = review.text.length > 150;
@@ -249,12 +248,11 @@ function ReviewCard({ review, index }: ReviewCardProps) {
       <div className="flex items-center gap-3 mb-4">
         {/* Avatar */}
         <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-          {review.profile_photo_url && !imageError ? (
+          {review.profile_photo_url ? (
             <img
               src={review.profile_photo_url}
               alt={review.author_name}
               className="w-full h-full rounded-full object-cover"
-              onError={() => setImageError(true)}
             />
           ) : (
             initials
