@@ -45,6 +45,13 @@ export default function GoogleReviewsGrid() {
     }
   }, [availableTabs, activeFilter]);
 
+  // Reset scroll position when filter changes
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = 0;
+    }
+  }, [activeFilter]);
+
   // Event handlers for drag-scroll
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     isDragging.current = true;
