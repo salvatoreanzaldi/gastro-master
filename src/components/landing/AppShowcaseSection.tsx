@@ -2,18 +2,25 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
+import screenshotStartbild from "@/assets/screenshots/Take - Startbild 2.png";
+import screenshotBestellart from "@/assets/screenshots/Take - Bestellart 2.png";
+import screenshotFilialen from "@/assets/screenshots/Take - Filialen 2.png";
+import screenshotMenu from "@/assets/screenshots/Take - Menu 2.png";
+import screenshotBenutzerkonto from "@/assets/screenshots/Take - Benutzerkonto 2.png";
+
 const AppShowcaseSection = () => {
   const { t } = useTranslation("common");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start center", "end center"],
+    offset: ["start 50%", "end 50%"],
   });
 
-  // Animation Values
-  const translateX = useTransform(scrollYProgress, [0, 1], [300, -300]);
+  // Animation: iPhone pendulum rotation (-45° to +45°)
   const rotateX = useTransform(scrollYProgress, [0, 1], [-45, 45]);
+  // Animation: Horizontal movement (right to left)
+  const translateX = useTransform(scrollYProgress, [0, 1], [400, -1200]);
 
   const arr = (key: string) => {
     const v = t(key, { returnObjects: true });
@@ -23,24 +30,24 @@ const AppShowcaseSection = () => {
   const screens = arr("appShowcase.screens") as any[];
 
   const screenshotMap: Record<string, string> = {
-    "Startbild": "Take - Startbild 2.png",
-    "Bestellart": "Take - Bestellart 2.png",
-    "Filialen": "Take - Filialen 2.png",
-    "Menü": "Take - Menu 2.png",
-    "Benutzerkonto": "Take - Benutzerkonto 2.png",
+    "Startbild": screenshotStartbild,
+    "Bestellart": screenshotBestellart,
+    "Filialen": screenshotFilialen,
+    "Menü": screenshotMenu,
+    "Benutzerkonto": screenshotBenutzerkonto,
   };
 
   if (screens.length === 0) return null;
 
   return (
-    <section className="section-padding bg-background">
+    <section className="section-padding bg-background overflow-hidden">
       <div className="container-tight">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-16"
         >
           <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">
             {t("appShowcase.badge")}
@@ -53,49 +60,55 @@ const AppShowcaseSection = () => {
           </p>
         </motion.div>
 
-        {/* Scroll Container */}
+        {/* Scroll Container with iPhone Carousel */}
         <div
           ref={containerRef}
-          className="relative h-[500px] md:h-[600px] lg:h-[700px] flex items-center overflow-x-hidden"
+          className="relative h-[550px] md:h-[650px] lg:h-[750px] flex items-center overflow-hidden"
         >
-          <motion.div
-            className="flex gap-4 md:gap-6 lg:gap-8"
-            style={{
-              x: translateX,
-              perspective: 1200,
-              willChange: "transform",
-            }}
-          >
-            {screens.map((screen, i) => (
-              <motion.div
-                key={i}
-                className="flex-shrink-0 w-64 md:w-72 lg:w-80"
-                style={{
-                  rotateX,
-                  transformStyle: "preserve-3d",
-                }}
-              >
-                {/* iPhone Frame */}
-                <div className="rounded-3xl border-8 border-gray-800 bg-black p-2 shadow-2xl aspect-[9/19.5] overflow-hidden">
-                  <img
-                    src={`/assets/screenshots/${screenshotMap[screen.label]}`}
-                    alt={screen.label}
-                    className="w-full h-full rounded-2xl object-cover"
-                  />
-                </div>
+          {/* Carousel wrapper with perspective */}
+          <div className="w-full h-full flex items-center" style={{ perspective: "1200px" }}>
+            <motion.div
+              className="flex gap-6 md:gap-8"
+              style={{
+                x: translateX,
+                willChange: "transform",
+              }}
+            >
+              {screens.map((screen, i) => (
+                <motion.div
+                  key={i}
+                  className="flex-shrink-0 w-72 md:w-80 lg:w-96"
+                  style={{
+                    rotateX: rotateX,
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  {/* iPhone Frame */}
+                  <div className="rounded-3xl border-8 border-gray-900 bg-black p-3 shadow-2xl aspect-[9/19.5] overflow-hidden">
+                    <img
+                      src={screenshotMap[screen.label]}
+                      alt={screen.label}
+                      className="w-full h-full rounded-2xl object-cover"
+                    />
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
 
-                {/* Label */}
-                <div className="text-center mt-4">
-                  <p className="text-sm md:text-base font-semibold text-foreground">
-                    {screen.label}
-                  </p>
-                  <p className="text-xs md:text-sm text-muted-foreground">
-                    {screen.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+        {/* Labels below carousel (not rotated) */}
+        <div className="mt-8 md:mt-12 grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6 max-w-4xl mx-auto">
+          {screens.map((screen, i) => (
+            <div key={i} className="text-center">
+              <p className="text-xs md:text-sm font-semibold text-foreground mb-1">
+                {screen.label}
+              </p>
+              <p className="text-xs text-muted-foreground leading-tight">
+                {screen.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
