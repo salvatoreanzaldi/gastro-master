@@ -63,37 +63,34 @@ const AppShowcaseSection = () => {
         {/* Scroll Container with iPhone Carousel */}
         <div
           ref={containerRef}
-          className="relative h-[600px] md:h-[750px] lg:h-[850px] flex items-center overflow-hidden"
+          className="relative h-[700px] md:h-[900px] lg:h-[1000px] flex items-center justify-center overflow-hidden"
+          style={{ perspective: "1200px" }}
         >
-          {/* Carousel wrapper with perspective */}
-          <div className="w-full h-full flex items-center" style={{ perspective: "1200px" }}>
-            <motion.div
-              className="flex gap-6 md:gap-8"
-              style={{
-                x: translateX,
-                willChange: "transform",
-              }}
-            >
-              {screens.map((screen, i) => (
-                <motion.div
-                  key={i}
-                  className="flex-shrink-0 w-80 md:w-96 lg:w-[400px]"
-                  style={{
-                    rotateX: rotateX,
-                    transformStyle: "preserve-3d",
-                  }}
-                >
-                  {/* iPhone Screenshot (transparent PNG with full design) */}
-                  <img
-                    src={screenshotMap[screen.label]}
-                    alt={screen.label}
-                    className="w-full drop-shadow-2xl"
-                    style={{ maxHeight: "100%", objectFit: "contain" }}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
+          <motion.div
+            className="flex gap-8 md:gap-12 lg:gap-16"
+            style={{
+              x: translateX,
+              willChange: "transform",
+            }}
+          >
+            {screens.map((screen, i) => (
+              <motion.div
+                key={i}
+                className="flex-shrink-0 w-48 md:w-56 lg:w-64"
+                style={{
+                  rotateX: rotateX,
+                  transformStyle: "preserve-3d",
+                }}
+              >
+                {/* iPhone Screenshot (transparent PNG with full design) */}
+                <img
+                  src={screenshotMap[screen.label]}
+                  alt={screen.label}
+                  className="w-full drop-shadow-xl"
+                />
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
 
         {/* Labels below carousel (not rotated) */}
