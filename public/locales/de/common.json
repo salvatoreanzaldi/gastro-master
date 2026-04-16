@@ -248,7 +248,7 @@
       },
       {
         "year": "2025",
-        "title": "Eigenes Kassensystem",
+        "title": "Eigenes Kassensystem und erste 700 Kunden",
         "text": "Cloud-Kasse, Self-Order, Pick-Up – alles aus einer Hand"
       },
       {
@@ -341,6 +341,33 @@
         "name": "61 Burger & More",
         "person": "Sven Heinrich",
         "quote": "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren."
+      }
+    ]
+  },
+  "appShowcase": {
+    "badge": "UNSERE APPS",
+    "headline": "Deine App. Dein Design. Deine Kontrolle.",
+    "subtitle": "Intuitive Oberfläche für Bestellungen, Verwaltung und Kundenerlebnis — alles auf einem Screen.",
+    "screens": [
+      {
+        "label": "Startbild",
+        "description": "Deine Visitenkarte — erste Impression zählt"
+      },
+      {
+        "label": "Bestellart",
+        "description": "Lieferung, Abholung, vor Ort — klar präsentiert"
+      },
+      {
+        "label": "Filialen",
+        "description": "Mehrere Standorte? Einfach verwalten."
+      },
+      {
+        "label": "Menü",
+        "description": "Dein Angebot — übersichtlich organisiert"
+      },
+      {
+        "label": "Benutzerkonto",
+        "description": "Kundendaten, Favoriten, Bestellhistorie"
       }
     ]
   },
@@ -619,7 +646,7 @@
   "target": {
     "badge": "Für jede Gastronomie",
     "headline": "Dein Betrieb. Deine Lösung.",
-    "sub": "Egal ob Pizzeria, Franchise oder Ghost Kitchen – finde das Modell, das zu dir passt.",
+    "sub": "Egal ob Restaurant, Lieferdienst oder Franchise – finde das Modell, das zu dir passt.",
     "cta": "Jetzt beraten lassen",
     "customerLogosLabel": "Unsere Kunden",
     "startDelivery": "eigenen Lieferdienst gründen",
@@ -668,6 +695,24 @@
           "subtitle": "Vorbestellungen und Filialabholung leicht gemacht",
           "text": "Lass deine Kunden Brötchen, Kuchen und Snacks bequem vorbestellen – über deinen eigenen Webshop oder deine App."
         }
+      },
+      {
+        "id": "restaurant",
+        "label": "Restaurant",
+        "content": {
+          "title": "Dine-in, Abholung & Lieferung zentral gesteuert",
+          "subtitle": "Tischverwaltung, Kasse und Online-Bestellungen in einem System",
+          "text": "Cloud-Kasse, QR-Tischsystem und Webshop in einem System – ohne Provision."
+        }
+      },
+      {
+        "id": "vor_ort",
+        "label": "Vor Ort Geschäft",
+        "content": {
+          "title": "Kundenverkehr optimieren und Umsatz steigern",
+          "subtitle": "Kassensystem, Self-Order-Terminals und digitale Bestellverwaltung",
+          "text": "Für Betriebe mit hohem Vor-Ort-Durchsatz: Self-Order-Terminals reduzieren Wartezeiten und erhöhen den Durchsatz. Mehr Kunden, mehr Gewinn."
+        }
       }
     ],
     "subs": [
@@ -714,15 +759,6 @@
           "title": "Süße Bestellungen, voller Gewinn",
           "subtitle": "Eis, Waffeln & Desserts direkt liefern",
           "text": "Eisdielen und Dessert-Shops mit Lieferung boomen. Nutze deinen eigenen Webshop für Vorbestellungen."
-        }
-      },
-      {
-        "id": "baeckerei-sub",
-        "label": "Bäckerei",
-        "content": {
-          "title": "Bäckerei mit Lieferservice",
-          "subtitle": "Brötchen, Kuchen & Co. vorbestellen lassen",
-          "text": "Lass deine Kunden morgens bequem vorbestellen und liefere frisch – oder biete Click & Collect an."
         }
       }
     ]
