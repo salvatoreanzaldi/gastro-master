@@ -63,11 +63,11 @@ const AppShowcaseSection = () => {
         {/* Scroll Container with iPhone Carousel */}
         <div
           ref={containerRef}
-          className="relative h-[700px] md:h-[900px] lg:h-[1000px] flex items-center justify-center overflow-hidden"
+          className="relative h-[420px] md:h-[500px] lg:h-[580px] flex items-center justify-center overflow-hidden"
           style={{ perspective: "1200px" }}
         >
           <motion.div
-            className="flex gap-8 md:gap-12 lg:gap-16"
+            className="flex gap-3 md:gap-4"
             style={{
               x: translateX,
               willChange: "transform",
@@ -76,7 +76,7 @@ const AppShowcaseSection = () => {
             {screens.map((screen, i) => (
               <motion.div
                 key={i}
-                className="flex-shrink-0 w-48 md:w-56 lg:w-64"
+                className="flex-shrink-0 w-40 md:w-48 lg:w-56"
                 style={{
                   rotateX: rotateX,
                   transformStyle: "preserve-3d",
@@ -86,7 +86,7 @@ const AppShowcaseSection = () => {
                 <img
                   src={screenshotMap[screen.label]}
                   alt={screen.label}
-                  className="w-full drop-shadow-xl"
+                  className="w-full drop-shadow-lg"
                 />
               </motion.div>
             ))}
