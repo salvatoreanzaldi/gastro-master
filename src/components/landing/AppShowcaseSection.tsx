@@ -22,6 +22,14 @@ const AppShowcaseSection = () => {
 
   const screens = arr("appShowcase.screens") as any[];
 
+  const screenshotMap: Record<string, string> = {
+    "Startbild": "Take - Startbild 2.png",
+    "Bestellart": "Take - Bestellart 2.png",
+    "Filialen": "Take - Filialen 2.png",
+    "Menü": "Take - Menu 2.png",
+    "Benutzerkonto": "Take - Benutzerkonto 2.png",
+  };
+
   if (screens.length === 0) return null;
 
   return (
@@ -70,7 +78,7 @@ const AppShowcaseSection = () => {
                 {/* iPhone Frame */}
                 <div className="rounded-3xl border-8 border-gray-800 bg-black p-2 shadow-2xl aspect-[9/19.5] overflow-hidden">
                   <img
-                    src={`/assets/screenshots/Take - ${screen.label === "Startbild" ? "Startbild" : screen.label === "Bestellart" ? "Bestellart" : screen.label === "Filialen" ? "Filialen" : screen.label === "Menü" ? "Menu" : "Benutzerkonto"} 2.png`}
+                    src={`/assets/screenshots/${screenshotMap[screen.label]}`}
                     alt={screen.label}
                     className="w-full h-full rounded-2xl object-cover"
                   />
