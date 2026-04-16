@@ -17,8 +17,8 @@ const AppShowcaseSection = () => {
     offset: ["start 50%", "end 50%"],
   });
 
-  // Animation: iPhone pendulum rotation (-45° to +45°)
-  const rotateX = useTransform(scrollYProgress, [0, 1], [-45, 45]);
+  // Animation: iPhone pendulum rotation (-30° to +30°)
+  const rotateX = useTransform(scrollYProgress, [0, 1], [-30, 30]);
   // Animation: Horizontal movement (right to left)
   const translateX = useTransform(scrollYProgress, [0, 1], [400, -1200]);
 
@@ -87,7 +87,8 @@ const AppShowcaseSection = () => {
                   <img
                     src={screenshotMap[screen.label]}
                     alt={screen.label}
-                    className="w-full h-auto drop-shadow-2xl"
+                    className="w-full drop-shadow-2xl"
+                    style={{ maxHeight: "100%", objectFit: "contain" }}
                   />
                 </motion.div>
               ))}
