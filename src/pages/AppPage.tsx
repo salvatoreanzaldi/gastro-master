@@ -40,7 +40,6 @@ import payGoogle     from "@/assets/logos/payment/pay-google.png";
 import payVisa       from "@/assets/logos/payment/pay-visa.png";
 import payMastercard from "@/assets/logos/payment/pay-mastercard.png";
 import payKlarna     from "@/assets/logos/payment/pay-klarna.png";
-// Video moved to CDN - import appVideo from "@/assets/video/App Werbe Video.mp4";
 import iconAppStore      from "@/assets/icons/Icon - Apple App Store.png";
 import iconGooglePlay    from "@/assets/icons/Icon - Google Play Store.png";
 import socialInstagram from "@/assets/icons/Icon - Instagram.png";
@@ -235,107 +234,6 @@ function HeroPhoneSpread() {
     </div>
   );
 }
-
-// ─── Video Section (iPhone Mockup + Play Button) ─────────────────────────────
-const VideoSection = () => {
-  const { t } = useTranslation("app");
-  const lp = useLangPath();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [playing, setPlaying] = useState(false);
-
-  const toggle = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (v.paused) {
-      v.play();
-      setPlaying(true);
-    } else {
-      v.pause();
-      setPlaying(false);
-    }
-  };
-
-  return (
-    <section className="bg-white dark:bg-[#111111] px-5 md:px-8 lg:px-16 py-16 md:py-24">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
-
-          {/* iPhone Mockup with Video */}
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-            className="flex justify-center"
-          >
-            <div className="relative w-[260px] md:w-[300px]">
-              <div className="relative rounded-[44px] bg-[#1a1a1a] p-[10px] shadow-[0_40px_100px_rgba(0,0,0,0.45),inset_0_0_0_1px_rgba(255,255,255,0.12)]">
-                <div className="absolute -right-[3px] top-[100px] w-[3px] h-[40px] bg-[#2a2a2a] rounded-r-sm" />
-                <div className="absolute -left-[3px] top-[90px] w-[3px] h-[32px] bg-[#2a2a2a] rounded-l-sm" />
-                <div className="absolute -left-[3px] top-[134px] w-[3px] h-[32px] bg-[#2a2a2a] rounded-l-sm" />
-
-                <div className="rounded-[36px] overflow-hidden bg-black relative aspect-[9/19.5]">
-                  <div className="absolute top-3 left-1/2 -translate-x-1/2 w-[88px] h-[28px] bg-black rounded-full z-20 flex items-center justify-center">
-                    <div className="w-3 h-3 rounded-full bg-[#1a1a1a] border border-[#2a2a2a]" />
-                  </div>
-
-                  <video
-                    ref={videoRef}
-                    src="" // Video hosted on CDN (removed from Git for build optimization)
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover bg-black"
-                    onEnded={() => setPlaying(false)}
-                  />
-
-                  <div
-                    className={`absolute inset-0 flex items-center justify-center z-10 cursor-pointer transition-all duration-300 ${playing ? "bg-transparent opacity-0 hover:opacity-100" : "bg-black/40"}`}
-                    onClick={toggle}
-                  >
-                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center shadow-xl">
-                      {playing ? (
-                        <svg className="w-6 h-6 text-white fill-white" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-                      ) : (
-                        <svg className="w-6 h-6 text-white fill-white ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-12 bg-cyan-brand/20 blur-2xl rounded-full pointer-events-none" />
-            </div>
-          </motion.div>
-
-          {/* Text */}
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-5 block">{t("video.badge")}</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A264A] dark:text-white leading-tight mb-5">
-              {t("video.title")}
-            </h2>
-            <p className="text-[#0A264A]/55 dark:text-white/50 text-lg leading-relaxed mb-8">
-              {t("video.text")}
-            </p>
-            <motion.button
-              onClick={() => { window.location.href = lp("/kontakt"); }}
-              whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.2 }}
-              className="bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base inline-flex items-center gap-3 shadow-lg shadow-[#ED8400]/30 group"
-            >
-              {t("video.cta")}
-              <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
-            </motion.button>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-};
 
 // ─── Team CTA ────────────────────────────────────────────────────────────────
 const teamImages = [teamReneImg, teamSalvatoreImg, teamAndrejImg];
@@ -594,10 +492,7 @@ const AppPage = () => {
         </div>
       </section>
 
-      {/* ── S3: VIDEO ───────────────────────────────────────────── */}
-      <VideoSection />
-
-      {/* ── S4: FEATURES ────────────────────────────────────────── */}
+      {/* ── S3: FEATURES ────────────────────────────────────────── */}
       <section className="bg-white dark:bg-[#111827] px-5 md:px-8 lg:px-16 pt-12 md:pt-16 pb-8 md:pb-10">
         <div className="max-w-6xl mx-auto">
           <motion.div
