@@ -393,8 +393,8 @@
   },
   "calculator": {
     "badge": "Provisionsrechner",
-    "headline": "So viel kostet dich die Plattform",
-    "sub": "Berechne, wie viel Gewinn du jeden Monat an Lieferplattformen verlierst.",
+    "headline": "So viel Geld kannst du sparen",
+    "sub": "Berechne, wie viel Gewinn du mit Gastro Master zurückgewinnst – monatlich und jährlich.",
     "labelOrders": "Bestellungen / Monat",
     "labelCart": "⌀ Warenkorb (€)",
     "labelCommission": "Provision (%)",
@@ -803,5 +803,17 @@
       "Software-Funktionalität bereits inklusive"
     ],
     "note": "Alle Preise zzgl. MwSt. Hardware und Sonderanforderungen nach Bedarf."
+  },
+  "contactCTA": {
+    "badge": "Kostenloses Beratungsgespräch",
+    "title": "Bereit für mehr Gewinn?",
+    "desc": "In einem 20-minütigen Gespräch zeigen wir dir die beste Kombination für deinen Betrieb – kostenlos, unverbindlich und auf dich zugeschnitten.",
+    "button": "Beratungsgespräch vereinbaren",
+    "trust": [
+      "0 % Provision",
+      "800+ Betriebe",
+      "5,0 ★ Google",
+      "3 Monate Kündigungsfrist"
+    ]
   }
 }

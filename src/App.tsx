@@ -35,6 +35,7 @@ const LAZY_COMPONENTS: Record<string, ComponentType> = {
   "@/pages/PreisePage":                 lazy(() => import("@/pages/PreisePage")),
   "@/pages/UeberUnsPage":               lazy(() => import("@/pages/UeberUnsPage")),
   "@/pages/GhostKitchenPage":           lazy(() => import("@/pages/GhostKitchenPage")),
+  "@/pages/IntegrationPage":            lazy(() => import("@/pages/IntegrationPage")),
 };
 
 const queryClient = new QueryClient();

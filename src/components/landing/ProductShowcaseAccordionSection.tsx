@@ -1,0 +1,173 @@
+import { useState } from "react";
+
+import productWebseite from "@/assets/products/Webseite - Produkt.png";
+import productWebshop from "@/assets/products/Webshop - Produkt.png";
+import productApp from "@/assets/products/App - Produkt.png";
+import productKasse from "@/assets/products/Kasse - Produkt.png";
+import productKiosk from "@/assets/products/Kiosk 2 - Produkt.png";
+
+const ProductShowcaseAccordionSection = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const products = [
+    {
+      id: "webseite",
+      title: "Webseite",
+      imageUrl: productWebseite,
+      ctaText: "Webseiten entdecken",
+      ctaUrl: "/produkte/webseite",
+    },
+    {
+      id: "online-shop",
+      title: "Online Shop",
+      imageUrl: productWebshop,
+      ctaText: "Mehr erfahren",
+      ctaUrl: "/produkte/webshop",
+    },
+    {
+      id: "app-system",
+      title: "App System",
+      imageUrl: productApp,
+      ctaText: "Apps ansehen",
+      ctaUrl: "/produkte/app",
+    },
+    {
+      id: "kasse",
+      title: "Kasse",
+      imageUrl: productKasse,
+      ctaText: "Hier ansehen",
+      ctaUrl: "/produkte/kassensystem",
+    },
+    {
+      id: "kiosk",
+      title: "Kiosk",
+      imageUrl: productKiosk,
+      ctaText: "Mehr erfahren",
+      ctaUrl: "/produkte/kassensystem",
+    },
+  ];
+
+  const handleItemHover = (index: number) => {
+    setActiveIndex(index);
+  };
+
+  return (
+    <section className="section-padding bg-background">
+      <div className="container-tight">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <span className="text-cyan-brand text-sm font-semibold uppercase tracking-wider mb-3 block">
+            UNSERE PRODUKTE
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
+            Das komplette Paket. Aus einer Hand.
+          </h2>
+        </div>
+
+        {/* Product Accordion - Horizontal Layout */}
+        <div className="flex items-center justify-center overflow-hidden -mx-48">
+          <div className="flex gap-3 items-center justify-center w-full px-48">
+            {products.map((product, index) => (
+              <div
+                key={product.id}
+                className={`
+                  relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer
+                  transition-all duration-700 ease-in-out
+                  h-[320px] md:h-[380px] lg:h-[420px]
+                  ${index === activeIndex ? "w-[420px] md:w-[620px] lg:w-[780px]" : "w-[120px] md:w-[150px]"}
+                `}
+                onMouseEnter={() => handleItemHover(index)}
+              >
+                {/* Product Image - Fixed size, crops when collapsed */}
+                <img
+                  src={product.imageUrl}
+                  alt={product.title}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover bg-muted"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src =
+                      "https://placehold.co/1280x720/2d3748/ffffff?text=Product";
+                  }}
+                />
+
+                {/* Dark overlay for better text readability - smooth fade */}
+                <div
+                  className={`
+                    absolute inset-0 transition-opacity duration-700 ease-in-out
+                    ${index === activeIndex ? "opacity-[0.125] bg-black/40" : "opacity-100 bg-black/40"}
+                  `}
+                ></div>
+
+                {/* Title - Always visible, horizontal */}
+                <div
+                  className={`
+                    absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 text-center
+                    transition-all duration-700 ease-in-out
+                    ${index === activeIndex ? "opacity-0 pointer-events-none" : "opacity-100"}
+                  `}
+                >
+                  <span
+                    className="font-black text-xl md:text-2xl lg:text-3xl leading-tight text-white"
+                    style={{
+                      textShadow: `
+                        -1px -1px 0 #000,
+                        1px -1px 0 #000,
+                        -1px 1px 0 #000,
+                        1px 1px 0 #000,
+                        -2px 0 0 #000,
+                        2px 0 0 #000,
+                        0 -2px 0 #000,
+                        0 2px 0 #000
+                      `
+                    }}
+                  >
+                    {product.title}
+                  </span>
+                </div>
+
+                {/* Caption Text & CTA Button - Expanded state */}
+                <div
+                  className={`
+                    absolute bottom-8 left-6 right-6 flex flex-col items-start gap-4
+                    transition-opacity duration-500 ease-in-out
+                    ${index === activeIndex ? "opacity-100 delay-500" : "opacity-0 pointer-events-none"}
+                  `}
+                >
+                  <span
+                    className="font-black text-3xl md:text-4xl lg:text-5xl text-left text-white"
+                    style={{
+                      textShadow: `
+                        -1px -1px 0 #000,
+                        1px -1px 0 #000,
+                        -1px 1px 0 #000,
+                        1px 1px 0 #000,
+                        -2px 0 0 #000,
+                        2px 0 0 #000,
+                        0 -2px 0 #000,
+                        0 2px 0 #000
+                      `
+                    }}
+                  >
+                    {product.title}
+                  </span>
+                  <a
+                    href={product.ctaUrl}
+                    className="px-6 py-2 rounded-full hover:opacity-90 transition-opacity duration-300 text-sm md:text-base font-black text-white flex items-center gap-2"
+                    style={{ backgroundColor: "#f99e2c" }}
+                  >
+                    {product.ctaText}
+                    <span>→</span>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+export default ProductShowcaseAccordionSection;

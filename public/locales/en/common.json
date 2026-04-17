@@ -767,5 +767,17 @@
       "Software functionality already included"
     ],
     "note": "All prices excl. VAT. Hardware and special requirements on request."
+  },
+  "contactCTA": {
+    "badge": "Free Consultation Call",
+    "title": "Ready for More Profit?",
+    "desc": "In a 20-minute call, we'll show you the best combination for your business – free, no obligation, and tailored just for you.",
+    "button": "Book a Consultation",
+    "trust": [
+      "0% Commission",
+      "800+ Restaurants",
+      "5.0 ★ Google",
+      "3-month Notice Period"
+    ]
   }
 }

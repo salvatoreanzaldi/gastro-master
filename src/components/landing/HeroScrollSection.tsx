@@ -79,6 +79,7 @@ const HeroScrollSection = () => {
         <img
           src={dashboardImg}
           alt="Gastro Master Dashboard"
+          fetchPriority="high"
           className="hidden md:block mx-auto rounded-2xl object-cover h-full w-full object-left-top"
           draggable={false}
         />

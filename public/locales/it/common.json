@@ -767,5 +767,17 @@
       "Funzionalità software già inclusa"
     ],
     "note": "Tutti i prezzi IVA esclusa. Hardware e requisiti speciali su richiesta."
+  },
+  "contactCTA": {
+    "badge": "Consulenza Gratuita",
+    "title": "Pronto per Maggiori Guadagni?",
+    "desc": "In una telefonata di 20 minuti ti mostreremo la migliore combinazione per il tuo ristorante – gratuita, senza impegno e su misura per te.",
+    "button": "Prenota una Consulenza",
+    "trust": [
+      "0% Commissioni",
+      "800+ Ristoranti",
+      "5.0 ★ Google",
+      "3 Mesi di Preavviso"
+    ]
   }
 }

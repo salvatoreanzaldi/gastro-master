@@ -2,32 +2,21 @@ import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { useTranslation } from "react-i18next";
 import Navbar from "@/components/landing/Navbar";
 import HeroScrollSection from "@/components/landing/HeroScrollSection";
-import HeroSectionB from "@/components/landing/HeroSectionB";
-import HeroSection from "@/components/landing/HeroSection";
-import TrustSection from "@/components/landing/TrustSection";
 import TargetGroupSection from "@/components/landing/TargetGroupSection";
-import PositioningSection from "@/components/landing/PositioningSection";
 import CalculatorSection from "@/components/landing/CalculatorSection";
-import ProblemSection from "@/components/landing/ProblemSection";
-import SolutionSection from "@/components/landing/SolutionSection";
-import MockupShowcase from "@/components/landing/MockupShowcase";
-import PricingSection from "@/components/landing/PricingSection";
-import GlassyPricingSection from "@/components/landing/GlassyPricingSection";
 import SlimPricingSection from "@/components/landing/SlimPricingSection";
 import POSSection from "@/components/landing/POSSection";
-import PickUpScreenSection from "@/components/landing/PickUpScreenSection";
-import TransaktionsUmlageSection from "@/components/landing/TransaktionsUmlageSection";
 import DifferentiationSection from "@/components/landing/DifferentiationSection";
 import VideoTestimonialSection from "@/components/landing/VideoTestimonialSection";
 import AppShowcaseSection from "@/components/landing/AppShowcaseSection";
+import ProductShowcaseAccordionSection from "@/components/landing/ProductShowcaseAccordionSection";
 import FounderTrustSection from "@/components/landing/FounderTrustSection";
-import LanguageBadgeSection from "@/components/landing/LanguageBadgeSection";
-import MomentumSection from "@/components/landing/MomentumSection";
 import ProcessSection from "@/components/landing/ProcessSection";
-import RiskReversalSection from "@/components/landing/RiskReversalSection";
-import ReferencesSection from "@/components/landing/ReferencesSection";
 import PartnerSection from "@/components/landing/PartnerSection";
-import FAQSection from "@/components/landing/FAQSection";
+import IntegrationSliderSection from "@/components/landing/IntegrationSliderSection";
+import ContactCTASection from "@/components/landing/ContactCTASection";
+import GoogleReviewsGrid from "@/components/GoogleReviewsGrid";
+import TrustedBrandsSection from "@/components/landing/TrustedBrandsSection";
 import Footer from "@/components/landing/Footer";
 
 
@@ -45,34 +34,38 @@ const Index = () => {
       {/* ATTENTION */}
       <HeroScrollSection />
       {/* A/B Test */}
-      <HeroSectionB />
+      {/* <HeroSectionB /> */}
       {/* <HeroSection /> */}
-      <TrustSection />
+      <GoogleReviewsGrid />
+      <TrustedBrandsSection />
+      {/* <TrustSection /> */}
       {/* INTEREST */}
+      <ProductShowcaseAccordionSection />
       <TargetGroupSection />
       <VideoTestimonialSection />
-      <AppShowcaseSection />
-      <PositioningSection />
+      <AppShowcaseSection animate={false} showFloatingFood={false} carousel={true} />
+      {/* <PositioningSection /> */}
       <CalculatorSection />
-      <ProblemSection />
-      <SolutionSection />
+      {/* <ProblemSection /> */}
+      {/* <SolutionSection /> */}
       {/* <MockupShowcase /> */}
       {/* DESIRE */}
       {/* <PricingSection /> */}
       {/* <GlassyPricingSection /> */}
       <SlimPricingSection />
       <POSSection />
-      <PickUpScreenSection />
-      <TransaktionsUmlageSection />
+      {/* <PickUpScreenSection /> */}
+      {/* <TransaktionsUmlageSection /> */}
       <DifferentiationSection />
       <FounderTrustSection />
       {/* <LanguageBadgeSection /> */}
-      <MomentumSection />
+      {/* <MomentumSection /> */}
       <ProcessSection />
       {/* <RiskReversalSection /> */}
-      <ReferencesSection />
-      <PartnerSection />
-      <FAQSection />
+      {/* <ReferencesSection /> */}
+      {/* <PartnerSection /> */}
+      <IntegrationSliderSection />
+      <ContactCTASection />
       {/* ACTION */}
       <Footer />
     </div>

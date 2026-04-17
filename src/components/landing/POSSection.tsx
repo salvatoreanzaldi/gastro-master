@@ -25,7 +25,7 @@ const AddonCard = ({ icon: Icon, img, imgAlt, imgClass, title, price, features, 
       <Icon className="w-3.5 h-3.5" /> Add-on
     </div>
     <div className={`mb-4 rounded-xl overflow-hidden aspect-[4/3] ${variant === "navy" ? "bg-surface-navy/60 flex items-center justify-center" : "bg-white flex items-center justify-center"}`}>
-      <img src={img} alt={imgAlt} className={imgClass || "w-full h-full object-cover"} />
+      <img src={img} alt={imgAlt} loading="lazy" className={imgClass || "w-full h-full object-cover"} />
     </div>
     <h4 className={`text-lg font-bold mb-1 ${variant === "navy" ? "" : "text-foreground"}`}>{title}</h4>
     <p className={`text-xs mb-5 ${variant === "navy" ? "text-primary-foreground/50" : "text-muted-foreground"}`}>{price}</p>

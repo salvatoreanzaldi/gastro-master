@@ -8,7 +8,7 @@ const colors = ["text-destructive", "text-amber", "text-cyan-brand"];
 const PositioningSection = () => {
   const { t } = useTranslation("common");
   return (
-    <section className="section-padding bg-background">
+    <section className="section-padding bg-background border-4 border-red-500">
       <div className="container-tight">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

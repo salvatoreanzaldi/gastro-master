@@ -37,7 +37,7 @@ import imgFahrerApp   from "@/assets/addons/addon-frankfurt-gps.png";
 import imgQrTisch     from "@/assets/addons/addon-qr-tischsystem.png";
 import imgSelfOrder   from "@/assets/addons/selfordering-terminals.png";
 import imgKasseHW     from "@/assets/hardware/kassenhardware.png";
-import imgQrFlyer     from "@/assets/mockups/Flyer - Mock Up.png";
+import imgQrFlyer     from "@/assets/mockups/Mock Up - Flyer.png";
 import payPaypal      from "@/assets/logos/partner/partner-paypal.png";
 import payStripe      from "@/assets/logos/partner/partner-stripe.png";
 import payApple       from "@/assets/logos/payment/Logo - Apple Pay.png";
@@ -518,7 +518,7 @@ const PreisePage = () => {
               </div>
 
               <div className="rounded-xl overflow-hidden bg-[#0A264A]/5 dark:bg-white/5 mb-5 flex items-center justify-center p-2 h-[300px]">
-                <img src={imgQrFlyer} alt="QR-Code Flyer" className="h-full w-auto object-contain scale-[1.15]" />
+                <img src={imgQrFlyer} alt="QR-Code Flyer" className="h-full w-auto object-contain scale-[1.05]" />
               </div>
 
               {/* Highlight */}

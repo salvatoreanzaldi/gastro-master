@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import type { GoogleReview } from '@/types/reviews';
 import googleLogo from '@/assets/icons/Icon - Google.svg';
 import googleLogoRound from '@/assets/icons/Icon - Google Rund.svg';
 import verifyIcon from '@/assets/icons/Icon - Verify.svg';
+import './GoogleReviewsGrid.css';
 
 /**
  * GoogleReviewsGrid
@@ -26,6 +28,7 @@ import verifyIcon from '@/assets/icons/Icon - Verify.svg';
  * - Error & loading states
  */
 export default function GoogleReviewsGrid() {
+  const { t } = useTranslation('ueber-uns');
   const [activeFilter, setActiveFilter] = useState<string>(''); // Empty until tabs load
 
   // Load reviews for active filter (or default)
@@ -81,12 +84,11 @@ export default function GoogleReviewsGrid() {
     if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
   };
 
-  // Map sheet tab names to display labels
-  const TAB_LABELS: Record<string, string> = {
-    'Neuste': 'Neueste',
-    'Alle': 'Alle',
-    '5-Sterne': '5 Sterne',
-    // New tabs will appear with their sheet name as label
+  // Get tab label from translation, fallback to sheet name
+  const getTabLabel = (tabName: string): string => {
+    const tabLabelKey = `googleReviews.tabLabels.${tabName}`;
+    const translatedLabel = t(tabLabelKey, '');
+    return translatedLabel || tabName;
   };
 
   if (error) {
@@ -94,7 +96,7 @@ export default function GoogleReviewsGrid() {
   }
 
   return (
-    <section className="bg-white dark:bg-[#111827] border-b border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-16 md:py-24">
+    <section className="bg-white dark:bg-[#111827] px-5 md:px-8 lg:px-16 py-16 md:py-16">
       <div className="max-w-7xl mx-auto">
         {/* Header Line 1: Logo + Title */}
         <motion.div
@@ -109,7 +111,7 @@ export default function GoogleReviewsGrid() {
             className="h-8 md:h-10 object-contain"
           />
           <h2 className="text-2xl md:text-3xl font-bold text-[#0A264A] dark:text-white">
-            Bewertungen
+            {t('googleReviews.title')}
           </h2>
         </motion.div>
 
@@ -133,7 +135,7 @@ export default function GoogleReviewsGrid() {
             ))}
           </div>
           <span className="text-sm text-muted-foreground">
-            ({totalCount} {totalCount === 1 ? 'Bewertung' : 'Bewertungen'})
+            ({totalCount} {t(totalCount === 1 ? 'googleReviews.reviewCount_one' : 'googleReviews.reviewCount_other')})
           </span>
         </motion.div>
 
@@ -157,7 +159,7 @@ export default function GoogleReviewsGrid() {
                     : ''
                 }
               >
-                {TAB_LABELS[tab] ?? tab}
+                {getTabLabel(tab)}
               </Button>
             ))}
           </motion.div>
@@ -168,7 +170,7 @@ export default function GoogleReviewsGrid() {
           <div className="flex justify-center items-center py-16">
             <Loader2 className="w-8 h-8 animate-spin text-[#0A264A] dark:text-white" />
             <span className="ml-3 text-[#0A264A] dark:text-white">
-              Bewertungen werden geladen...
+              {t('googleReviews.loading')}
             </span>
           </div>
         ) : (
@@ -180,7 +182,7 @@ export default function GoogleReviewsGrid() {
               onMouseMove={onMouseMove}
               onMouseUp={stopDragging}
               onMouseLeave={stopDragging}
-              className="flex gap-5 overflow-x-auto pb-6 snap-x snap-mandatory max-w-[1225px] mx-auto select-none cursor-grab active:cursor-grabbing"
+              className="reviews-scroll-container flex gap-5 pb-6 snap-x snap-mandatory max-w-[1225px] mx-auto select-none cursor-grab active:cursor-grabbing"
               style={{ scrollBehavior: 'smooth' }}
             >
               <AnimatePresence mode="wait">
@@ -194,7 +196,7 @@ export default function GoogleReviewsGrid() {
             {reviews.length === 0 && (
               <div className="text-center py-8">
                 <p className="text-muted-foreground">
-                  Keine Bewertungen für diesen Filter verfügbar.
+                  {t('googleReviews.noReviews')}
                 </p>
               </div>
             )}
@@ -211,7 +213,7 @@ export default function GoogleReviewsGrid() {
             className="flex justify-center pt-4 max-w-[1225px] mx-auto"
           >
             <div className="bg-[#0A264A] dark:bg-blue-600 text-white font-bold px-6 py-3 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#0A264A]/20 dark:shadow-blue-600/20 cursor-pointer">
-              Bewerte uns auf Google
+              {t('googleReviews.cta')}
               <ArrowRight className="w-4 h-4" />
             </div>
           </motion.a>
@@ -231,7 +233,45 @@ interface ReviewCardProps {
   index: number;
 }
 
+
+/**
+ * Translates German relative time descriptions to translation keys
+ * Maps "vor 1 Monat" -> "vor_einem_monat", "vor 2 Monaten" -> "vor_2_monaten", etc.
+ */
+function getTimeTranslationKey(germanTime: string): string {
+  // vor 1 Tag or vor einem Tag -> vor_einem_tag
+  if (germanTime === 'vor 1 Tag' || germanTime === 'vor einem Tag') return 'vor_einem_tag';
+  
+  // vor {n} Tagen
+  const daysMatch = germanTime.match(/^vor (\d+) Tagen$/);
+  if (daysMatch) return 'vor_tagen';
+  
+  // vor 1 Woche or vor einer Woche -> vor_einer_woche
+  if (germanTime === 'vor 1 Woche' || germanTime === 'vor einer Woche') return 'vor_einer_woche';
+  
+  // vor {n} Wochen
+  const weeksMatch = germanTime.match(/^vor (\d+) Wochen$/);
+  if (weeksMatch) return 'vor_wochen';
+  
+  // vor 1 Monat or vor einem Monat -> vor_einem_monat
+  if (germanTime === 'vor 1 Monat' || germanTime === 'vor einem Monat') return 'vor_einem_monat';
+  
+  // vor {n} Monaten (2-11)
+  const monthsMatch = germanTime.match(/^vor (\d+) Monaten$/);
+  if (monthsMatch) {
+    const num = parseInt(monthsMatch[1], 10);
+    if (num >= 2 && num <= 11) return `vor_${num}_monaten`;
+  }
+  
+  // vor 1 Jahr or vor einem Jahr -> vor_einem_jahr
+  if (germanTime === 'vor 1 Jahr' || germanTime === 'vor einem Jahr') return 'vor_einem_jahr';
+  
+  // Fallback: return the original text
+  return germanTime;
+}
+
 function ReviewCard({ review, index }: ReviewCardProps) {
+  const { t } = useTranslation('ueber-uns');
   const [isExpanded, setIsExpanded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -262,6 +302,7 @@ function ReviewCard({ review, index }: ReviewCardProps) {
             <img
               src={review.profile_photo_url}
               alt={review.author_name}
+              loading="lazy"
               className="w-full h-full rounded-full object-cover"
               onError={() => setImageError(true)}
             />
@@ -283,7 +324,7 @@ function ReviewCard({ review, index }: ReviewCardProps) {
                 href={review.author_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                title="Verifizierter Kunde"
+                title={t('googleReviews.verifiedCustomer')}
                 className="font-semibold text-[#0A264A] dark:text-white truncate hover:underline"
               >
                 {review.author_name}
@@ -296,7 +337,7 @@ function ReviewCard({ review, index }: ReviewCardProps) {
             <img src={verifyIcon} alt="Verified" className="w-4 h-4 flex-shrink-0" />
           </div>
           <p className="text-xs text-muted-foreground">
-            {review.relative_time_description}
+            {t(`relative_time.${getTimeTranslationKey(review.relative_time_description)}`)}
           </p>
         </div>
       </div>
@@ -326,7 +367,7 @@ function ReviewCard({ review, index }: ReviewCardProps) {
           onClick={() => setIsExpanded(!isExpanded)}
           className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline"
         >
-          {isExpanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}
+          {isExpanded ? t('googleReviews.expandLess') : t('googleReviews.expandMore')}
         </button>
       )}
     </motion.div>
@@ -339,14 +380,16 @@ function ReviewCard({ review, index }: ReviewCardProps) {
  * Fallback UI when reviews fail to load
  */
 function ErrorState() {
+  const { t } = useTranslation('ueber-uns');
+
   return (
-    <section className="bg-white dark:bg-[#111827] border-b border-[#0A264A]/[0.06] dark:border-white/[0.06] px-5 md:px-8 lg:px-16 py-16 md:py-24">
+    <section className="bg-white dark:bg-[#111827] px-5 md:px-8 lg:px-16 py-16 md:py-16">
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-2xl font-bold text-[#0A264A] dark:text-white mb-2">
-          Ehrliches Feedback ist uns wichtig
+          {t('googleReviews.errorTitle')}
         </h2>
         <p className="text-muted-foreground mb-6">
-          Bewertungen werden derzeit geladen. Bitte versuchen Sie es später erneut.
+          {t('googleReviews.errorText')}
         </p>
         <motion.a
           whileHover={{ scale: 1.02 }}
@@ -355,7 +398,7 @@ function ErrorState() {
           rel="noopener noreferrer"
           className="bg-[#0A264A] dark:bg-blue-600 text-white font-bold px-6 py-3 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#0A264A]/20 dark:shadow-blue-600/20"
         >
-          Bewerte uns auf Google
+          {t('googleReviews.cta')}
           <ArrowRight className="w-4 h-4" />
         </motion.a>
       </div>

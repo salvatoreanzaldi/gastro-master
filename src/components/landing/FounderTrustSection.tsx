@@ -58,6 +58,7 @@ const FlipCard = ({ personKey, img, index, noEntrance }: { personKey: PersonKey;
               <img
                 src={img}
                 alt={`${personKey} – ${person.role}`}
+                loading="lazy"
                 className="w-full h-full object-cover object-center rounded-2xl sm:rounded-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background from-0% via-transparent via-20% to-transparent sm:via-40%" />

@@ -58,6 +58,7 @@ import logoArtemis      from "@/assets/logos/kunden/logo-artemis.png";
 import logoTake         from "@/assets/logos/kunden/logo-take.png";
 import logoBurger       from "@/assets/logos/kunden/logo-burger-brothers.png";
 import POSSection       from "@/components/landing/POSSection";
+import PickUpScreenSection from "@/components/landing/PickUpScreenSection";
 
 // ─── FAQ ─────────────────────────────────────────────────────────────────────
 
@@ -1046,6 +1047,9 @@ const KassePage = () => {
 
     {/* ── PREISE: Die Gastro Master Cloud-Kasse ──────────────── */}
     <POSSection />
+
+    {/* ── PICK-UP SCREEN: Dein Bildschirm. Dein Appetitanreger. */}
+    <PickUpScreenSection />
 
     {/* ── S8: 4 ALTERNATING DETAIL-SECTIONS ────────────────── */}
     {alternatingData.map((sec, idx) => {

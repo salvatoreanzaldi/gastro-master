@@ -20,12 +20,13 @@ interface SlimPlan {
 
 // ── WebGL Shader ──────────────────────────────────────────────────────────────
 
-const SlimShaderCanvas = () => {
+const SlimShaderCanvas = ({ isVisible }: { isVisible: boolean }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bgRef = useRef<[number, number, number]>([0.05, 0.08, 0.18]);
   const bgLocRef = useRef<WebGLUniformLocation | null>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const progRef = useRef<WebGLProgram | null>(null);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     const update = () => {
@@ -109,7 +110,6 @@ const SlimShaderCanvas = () => {
     bgLocRef.current = gl.getUniformLocation(prog, "uBg");
     gl.uniform3fv(bgLocRef.current, new Float32Array(bgRef.current));
 
-    let raf: number;
     const resize = () => {
       canvas.width  = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
@@ -120,14 +120,17 @@ const SlimShaderCanvas = () => {
     ro.observe(canvas);
 
     const render = (t: number) => {
+      if (!isVisible) return;
       gl.uniform1f(iTimeLoc, t * 0.001);
       gl.uniform2f(iResLoc, canvas.width, canvas.height);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
-      raf = requestAnimationFrame(render);
+      rafRef.current = requestAnimationFrame(render);
     };
-    raf = requestAnimationFrame(render);
-    return () => { cancelAnimationFrame(raf); ro.disconnect(); };
-  }, []);
+    if (isVisible) {
+      rafRef.current = requestAnimationFrame(render);
+    }
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); ro.disconnect(); };
+  }, [isVisible]);
 
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
 };
@@ -271,6 +274,8 @@ const SlimPricingSection = () => {
     () => document.documentElement.classList.contains("dark")
   );
   const [isYearly, setIsYearly] = useState(false);
+  const [isCanvasVisible, setIsCanvasVisible] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const obs = new MutationObserver(() => {
@@ -278,6 +283,16 @@ const SlimPricingSection = () => {
     });
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const io = new IntersectionObserver(([entry]) => {
+      setIsCanvasVisible(entry.isIntersecting);
+    }, { threshold: 0.1 });
+    if (sectionRef.current) {
+      io.observe(sectionRef.current);
+    }
+    return () => io.disconnect();
   }, []);
 
   const scrollToForm = () => {
@@ -297,8 +312,8 @@ const SlimPricingSection = () => {
   const textSecondary = "text-white/50";
 
   return (
-    <section className={`section-padding relative overflow-hidden ${sectionBg}`} id="preise-slim">
-      <SlimShaderCanvas />
+    <section ref={sectionRef} className={`section-padding relative overflow-hidden ${sectionBg}`} id="preise-slim">
+      <SlimShaderCanvas isVisible={isCanvasVisible} />
 
       <div className="container-tight relative z-10">
         <motion.div

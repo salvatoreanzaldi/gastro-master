@@ -53,6 +53,39 @@ const sheets = google.sheets({
   }),
 });
 
+
+/**
+ * Get local avatar path if it exists, otherwise use Google URL
+ * Converts "John Doe" → "/assets/reviews-avatars/john-doe.jpg"
+ * Preserves Unicode characters like ü, ö, ä
+ */
+function getAvatarPath(authorName, googlePhotoUrl) {
+  if (!authorName) return googlePhotoUrl;
+  
+  // Convert name to slug: "John Doe" → "john-doe"
+  // Only replace spaces and remove problematic chars, preserve Unicode
+  const slug = authorName
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')                    // spaces → dashes
+    .replace(/[^a-z0-9\-äöüß]/g, '')        // keep letters, numbers, dashes, and German umlauts
+    .replace(/-+/g, '-');                     // multiple dashes → single dash
+  
+  const localPath = `/assets/reviews-avatars/${slug}.jpg`;
+  
+  // Check if local file exists
+  try {
+    const fullPath = path.join(process.cwd(), 'public', localPath);
+    if (fs.existsSync(fullPath)) {
+      return localPath;
+    }
+  } catch (e) {
+    // Silently fail and use Google URL
+  }
+  
+  return googlePhotoUrl;
+}
+
 /**
  * Converts a sheet row to a GoogleReview object
  * Row format: [Name, Sterne, Text, Datum, Foto-URL, Bewertung-URL]
@@ -70,13 +103,16 @@ function parseRowToReview(row, index) {
     }
   }
 
+  // Use local avatar if available, otherwise use Google URL
+  const avatarUrl = getAvatarPath(name, photoUrl);
+
   return {
     id: `${timestamp}-${name || `review-${index}`}`,
     rating,
     text: text || '',
     author_name: name || 'Anonymous',
     relative_time_description: dateStr || 'Recently',
-    profile_photo_url: photoUrl || null,
+    profile_photo_url: avatarUrl || null,
     author_url: reviewUrl || null,
     time: timestamp,
   };

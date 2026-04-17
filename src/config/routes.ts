@@ -43,6 +43,7 @@ export const ROUTES: RouteEntry[] = [
   { path: "/faq",                                 importPath: "@/pages/FAQPage",                    priority: 0.7, changefreq: "monthly" },
   { path: "/preise",                              importPath: "@/pages/PreisePage",                  priority: 0.8, changefreq: "weekly" },
   { path: "/uber-uns",                            importPath: "@/pages/UeberUnsPage",                priority: 0.6, changefreq: "monthly" },
+  { path: "/integrations",                        importPath: "@/pages/IntegrationPage",             priority: 0.8, changefreq: "weekly" },
   { path: "/kontakt",                             importPath: "@/pages/Kontakt",                     priority: 0.7, changefreq: "monthly" },
 
   // Downloads

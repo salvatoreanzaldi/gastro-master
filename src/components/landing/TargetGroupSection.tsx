@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Truck, Building2, ChefHat, Store, CakeSlice, Pizza, Drumstick, IceCream, Croissant, Layers, ArrowRight } from "lucide-react";
+import { Truck, Building2, ChefHat, Store, CakeSlice, Pizza, Drumstick, IceCream, Croissant, Layers, ArrowRight, UtensilsCrossed, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLangPath } from "@/components/LanguageLayout";
@@ -24,11 +24,11 @@ import logoStyleOfIndia from "@/assets/logos/kunden/Logo - Style Of India.png";
 import logoTajMahal from "@/assets/logos/kunden/Logo - Taj Mahal Masala.png";
 import logoRoyalIndia from "@/assets/logos/kunden/Logo _ Royal India.png";
 // Burger logos
-import logoBBSmash from "@/assets/logos/kunden/Logo - BB Smash It Burger.png";
+import logoBBSmash from "@/assets/logos/kunden/Logo - BB Smash It Burger 2.png";
 import logoChickenChill from "@/assets/logos/kunden/Logo - Chicken and Chill.png";
 import logoHabibi from "@/assets/logos/kunden/Logo - Habibi Chicken.png";
-import logoJoesBurger from "@/assets/logos/kunden/Logo - Joe's Burger.png";
-import logoSmashFlat from "@/assets/logos/kunden/Logo - Smash Burger & Flat.png";
+import logoJoesBurger from "@/assets/logos/kunden/Logo - Joe's Burger 2.png";
+import logoSmashFlat from "@/assets/logos/kunden/Logo - Smash Burger & Flat 2.png";
 // Franchise logos
 import logoBurgerBrothers from "@/assets/logos/kunden/logo-burger-brothers.png";
 import logoTake from "@/assets/logos/kunden/logo-take.png";
@@ -36,7 +36,7 @@ import logoEtManus from "@/assets/logos/kunden/logo-et-manus.png";
 import logoBigOneBite from "@/assets/logos/kunden/Logo - Big One Bite.png";
 import logoPomPom from "@/assets/logos/kunden/Logo - Pom Pom.png";
 
-const darkBgLogos = new Set(["BB Smash It Burger", "Joe's Burger", "Smash Burger & Flat"]);
+const darkBgLogos = new Set([]);
 
 const largeLogos = new Set(["Big One Bite"]);
 
@@ -94,6 +94,8 @@ const groupIcons: Record<string, typeof Truck> = {
   ghost: ChefHat,
   einzelhandel: Store,
   baeckerei: CakeSlice,
+  restaurant: UtensilsCrossed,
+  vor_ort: Zap,
 };
 
 const subIcons: Record<string, typeof Pizza> = {
@@ -102,7 +104,6 @@ const subIcons: Record<string, typeof Pizza> = {
   indisch: ChefHat,
   burger: Drumstick,
   eis: IceCream,
-  "baeckerei-sub": Croissant,
   "franchise-sub": Building2,
 };
 
@@ -112,6 +113,8 @@ const groupImgs: Record<string, string> = {
   ghost: imgGhostKitchen,
   einzelhandel: imgEinzelhandel,
   baeckerei: imgBaeckerei,
+  restaurant: imgPizzeria,
+  vor_ort: imgBurger,
 };
 
 const subImgs: Record<string, string> = {
@@ -120,7 +123,6 @@ const subImgs: Record<string, string> = {
   indisch: imgIndisch,
   burger: imgBurger,
   eis: imgEis,
-  "baeckerei-sub": imgBaeckerei,
   "franchise-sub": imgFranchise,
 };
 
@@ -245,7 +247,7 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
               <div className="grid md:grid-cols-2 gap-0 h-full">
                 {/* Image */}
                 <div className="relative h-[200px] sm:h-[220px] md:h-full overflow-hidden">
-                  <img src={displayImg} alt={displayContent?.title ?? ""} className="w-full h-full object-cover" />
+                  <img src={displayImg} alt={displayContent?.title ?? ""} loading="lazy" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent to-surface-light/20 hidden md:block" />
                 </div>
                 {/* Text */}
@@ -309,7 +311,8 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
                   <img
                     src={logo.src}
                     alt={logo.alt}
-                    className={`w-full object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 ${largeLogos.has(logo.alt) ? "h-9 sm:h-16 md:h-20" : "h-7 sm:h-12 md:h-14"}`}
+                    loading="lazy"
+                    className={`w-full object-contain opacity-100 hover:drop-shadow-2xl hover:brightness-125 hover:saturate-150 transition-all duration-300 ${largeLogos.has(logo.alt) ? "h-10 sm:h-20 md:h-24" : showSubs ? "h-9 sm:h-16 md:h-20" : "h-8 sm:h-14 md:h-18"}`}
                     style={darkBgLogos.has(logo.alt) ? { background: "#1f2937", borderRadius: "8px", padding: "6px 10px" } : undefined}
                   />
                 </div>

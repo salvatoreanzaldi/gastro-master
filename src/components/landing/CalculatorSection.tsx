@@ -108,19 +108,19 @@ const CalculatorSection = () => {
                 {monthlyRevenue.toLocaleString("de-DE")} €
               </p>
             </div>
-            <div className="bg-red-500/[0.15] border border-red-500/30 rounded-xl md:rounded-2xl px-2 py-2 md:p-5 text-center">
+            <div className="bg-green-500/[0.15] border border-green-500/30 rounded-xl md:rounded-2xl px-2 py-2 md:p-5 text-center">
               <p className="text-white/50 text-[9px] md:text-[11px] font-bold uppercase tracking-widest mb-1 md:mb-2">
                 {t("calculator.cardMonth")}
               </p>
-              <p className="text-base md:text-3xl font-black text-red-400">
+              <p className="text-base md:text-3xl font-black text-green-400">
                 {monthlyLoss.toLocaleString("de-DE")} €
               </p>
             </div>
-            <div className="bg-red-500/[0.15] border border-red-500/30 rounded-xl md:rounded-2xl px-2 py-2 md:p-5 text-center">
+            <div className="bg-green-500/[0.15] border border-green-500/30 rounded-xl md:rounded-2xl px-2 py-2 md:p-5 text-center">
               <p className="text-white/50 text-[9px] md:text-[11px] font-bold uppercase tracking-widest mb-1 md:mb-2">
                 {t("calculator.cardYear")}
               </p>
-              <p className="text-base md:text-3xl font-black text-red-400">
+              <p className="text-base md:text-3xl font-black text-green-400">
                 {yearlyLoss.toLocaleString("de-DE")} €
               </p>
             </div>

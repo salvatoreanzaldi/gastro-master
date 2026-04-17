@@ -43,7 +43,7 @@ const ReferencesSection = () => {
   }, [api]);
 
   return (
-    <section className="section-padding bg-background" id="referenzen">
+    <section className="section-padding bg-background border-4 border-red-500" id="referenzen">
       <div className="container-tight">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

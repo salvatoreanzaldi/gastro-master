@@ -9,6 +9,12 @@ import {
 import logo from "@/assets/logos/logo-gastro-master-round.png";
 import { useTranslation } from "react-i18next";
 import { SUPPORTED_LANGS, type SupportedLang, RTL_LANGS } from "@/i18n";
+import DeutschIcon from "@/assets/Icons/Deutsch.svg";
+import EnglischIcon from "@/assets/Icons/Englisch.svg";
+import ItalienischIcon from "@/assets/Icons/Italienisch.svg";
+import PersischIcon from "@/assets/Icons/Persisch.svg";
+import RussischIcon from "@/assets/Icons/Russisch.svg";
+import SinghalesischIcon from "@/assets/Icons/Singhalesisch.svg";
 
 const prodRoutes = [
   { to: "/produkte/webshop",            icon: ShoppingCart },
@@ -27,13 +33,13 @@ const loesRoutes = [
   { to: "/loesungen/ghost-kitchen",          icon: Ghost          },
 ];
 
-const languages: { code: SupportedLang; label: string; flag: string }[] = [
-  { code: "de", label: "Deutsch", flag: "🇩🇪" },
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "it", label: "Italiano", flag: "🇮🇹" },
-  { code: "fa", label: "فارسی", flag: "🇮🇷" },
-  { code: "si", label: "සිංහල", flag: "🇱🇰" },
-  { code: "ru", label: "Русский", flag: "🇷🇺" },
+const languages: { code: SupportedLang; label: string; icon: string }[] = [
+  { code: "de", label: "Deutsch", icon: DeutschIcon },
+  { code: "en", label: "English", icon: EnglischIcon },
+  { code: "it", label: "Italiano", icon: ItalienischIcon },
+  { code: "fa", label: "فارسی", icon: PersischIcon },
+  { code: "si", label: "සිංහල", icon: SinghalesischIcon },
+  { code: "ru", label: "Русский", icon: RussischIcon },
 ];
 
 const Navbar = () => {
@@ -51,7 +57,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   // Helle Seiten ohne Hero-Hintergrund brauchen immer die sichtbare (aktive) Navbar
   const pathWithoutLang = pathname.replace(/^\/[a-z]{2}/, "");
-  const alwaysVisible = ["/impressum", "/datenschutz", "/agb", "/kontakt", "/preise"].includes(pathWithoutLang) || pathWithoutLang.startsWith("/downloads");
+  const alwaysVisible = ["/impressum", "/datenschutz", "/agb", "/kontakt", "/preise", "/integrations"].includes(pathWithoutLang) || pathWithoutLang.startsWith("/downloads");
   const [scrolled, setScrolled]             = useState(false);
   const active = scrolled;          // steuert schmal/weit
   const visibleBg = alwaysVisible || scrolled; // steuert Hintergrund-Sichtbarkeit
@@ -213,7 +219,7 @@ const Navbar = () => {
               className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg border border-primary-foreground/15 bg-primary-foreground/5 text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-all text-sm font-medium"
               aria-label="Select language"
             >
-              <span className="text-base leading-none">{currentLangObj.flag}</span>
+              <img src={currentLangObj.icon} alt={currentLangObj.label} className="w-5 h-5 rounded-full" />
               <span className="text-xs font-bold uppercase">{currentLang}</span>
               <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${langOpen ? "rotate-180" : ""}`} />
             </button>
@@ -229,7 +235,7 @@ const Navbar = () => {
                         : "text-primary-foreground/60 hover:bg-primary-foreground/8 hover:text-primary-foreground"
                     }`}
                   >
-                    <span className="text-base">{l.flag}</span>
+                    <img src={l.icon} alt={l.label} className="w-5 h-5 rounded-full" />
                     {l.label}
                   </button>
                 ))}
@@ -254,9 +260,9 @@ const Navbar = () => {
           <div className="relative" ref={langRefMobile}>
             <button
               onClick={() => setLangOpen(!langOpen)}
-              className="w-8 h-8 rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 flex items-center justify-center text-base"
+              className="w-8 h-8 rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 flex items-center justify-center"
               aria-label="Select language">
-              {currentLangObj.flag}
+              <img src={currentLangObj.icon} alt={currentLangObj.label} className="w-6 h-6 rounded-full" />
             </button>
             {langOpen && (
               <div className={`absolute ${RTL_LANGS.includes(currentLang as SupportedLang) ? "left-0" : "right-0"} top-full mt-2 bg-surface-navy border border-primary-foreground/15 rounded-xl shadow-2xl shadow-black/30 overflow-hidden z-50 min-w-[130px]`}>
@@ -265,7 +271,7 @@ const Navbar = () => {
                     className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${
                       currentLang === l.code ? "bg-primary-foreground/10 text-primary-foreground font-semibold" : "text-primary-foreground/60 hover:bg-primary-foreground/8 hover:text-primary-foreground"
                     }`}>
-                    <span className="text-base">{l.flag}</span>
+                    <img src={l.icon} alt={l.label} className="w-5 h-5 rounded-full" />
                     {l.label}
                   </button>
                 ))}

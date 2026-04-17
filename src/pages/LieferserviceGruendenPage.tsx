@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useLangPath } from "@/components/LanguageLayout";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import ProblemSection from "@/components/landing/ProblemSection";
 import imgWebshop     from "@/assets/loesungen/Loesung - Webshop.png";
 import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
 import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
@@ -483,6 +484,9 @@ const LieferserviceGruendenPage = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* ── S4B: PROBLEM SECTION ────────────────────────────────────────────────── */}
+      <ProblemSection />
 
       {/* ── S5: SCHRITT-FÜR-SCHRITT ─────────────────────────────────────────── */}
       <section id="steps" className="bg-[#0A264A] py-24 md:py-32 px-5 md:px-8 lg:px-16">
