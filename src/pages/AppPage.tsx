@@ -40,7 +40,7 @@ import payGoogle     from "@/assets/logos/payment/pay-google.png";
 import payVisa       from "@/assets/logos/payment/pay-visa.png";
 import payMastercard from "@/assets/logos/payment/pay-mastercard.png";
 import payKlarna     from "@/assets/logos/payment/pay-klarna.png";
-import appVideo          from "@/assets/video/App Werbe Video.mp4";
+// Video moved to CDN - import appVideo from "@/assets/video/App Werbe Video.mp4";
 import iconAppStore      from "@/assets/icons/Icon - Apple App Store.png";
 import iconGooglePlay    from "@/assets/icons/Icon - Google Play Store.png";
 import socialInstagram from "@/assets/icons/Icon - Instagram.png";
@@ -281,9 +281,9 @@ const VideoSection = () => {
 
                   <video
                     ref={videoRef}
-                    src={appVideo}
+                    src="" // Video hosted on CDN (removed from Git for build optimization)
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover bg-black"
                     onEnded={() => setPlaying(false)}
                   />
 
