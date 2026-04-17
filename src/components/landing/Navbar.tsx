@@ -9,12 +9,12 @@ import {
 import logo from "@/assets/logos/logo-gastro-master-round.png";
 import { useTranslation } from "react-i18next";
 import { SUPPORTED_LANGS, type SupportedLang, RTL_LANGS } from "@/i18n";
-import DeutschIcon from "@/assets/Icons/Deutsch.svg";
-import EnglischIcon from "@/assets/Icons/Englisch.svg";
-import ItalienischIcon from "@/assets/Icons/Italienisch.svg";
-import PersischIcon from "@/assets/Icons/Persisch.svg";
-import RussischIcon from "@/assets/Icons/Russisch.svg";
-import SinghalesischIcon from "@/assets/Icons/Singhalesisch.svg";
+import DeutschIcon from "@/assets/icons/Deutsch.svg";
+import EnglischIcon from "@/assets/icons/Englisch.svg";
+import ItalienischIcon from "@/assets/icons/Italienisch.svg";
+import PersischIcon from "@/assets/icons/Persisch.svg";
+import RussischIcon from "@/assets/icons/Russisch.svg";
+import SinghalesischIcon from "@/assets/icons/Singhalesisch.svg";
 
 const prodRoutes = [
   { to: "/produkte/webshop",            icon: ShoppingCart },
