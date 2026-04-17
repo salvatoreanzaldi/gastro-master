@@ -6,75 +6,75 @@ import Footer from "@/components/landing/Footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
 // Import Lieferplattformen Icons
-import lieferandoIcon from "@/assets/Icons/app/App Icon - Lieferando.png";
-import woltIcon from "@/assets/Icons/app/App Icon - Wolt.png";
-import uberEatsIcon from "@/assets/Icons/app/App Icon - Uber Eats.png";
+import lieferandoIcon from "@/assets/icons/app/App Icon - Lieferando.png";
+import woltIcon from "@/assets/icons/app/App Icon - Wolt.png";
+import uberEatsIcon from "@/assets/icons/app/App Icon - Uber Eats.png";
 
 // Import Zahlungsmethoden Icons
-import stripeIcon from "@/assets/Icons/app/App Icon - Stripe.png";
-import klarnaIcon from "@/assets/Icons/app/App Icon - Klarna.png";
-import mollieIcon from "@/assets/Icons/app/App Icon - mollie.png";
-import visaIcon from "@/assets/Icons/app/App Icon - VISA.png";
-import mastercardIcon from "@/assets/Icons/app/App Icon - mastercard.png";
+import stripeIcon from "@/assets/icons/app/App Icon - Stripe.png";
+import klarnaIcon from "@/assets/icons/app/App Icon - Klarna.png";
+import mollieIcon from "@/assets/icons/app/App Icon - mollie.png";
+import visaIcon from "@/assets/icons/app/App Icon - VISA.png";
+import mastercardIcon from "@/assets/icons/app/App Icon - mastercard.png";
 
 // Import Kassen Icons
-import tseIcon from "@/assets/Icons/app/App Icon - TSE.png";
-import eloIcon from "@/assets/Icons/app/App Icon - Elo.png";
-import sidesIcon from "@/assets/Icons/app/App Icon - Sides.png";
-import winOrderIcon from "@/assets/Icons/app/App Icon - WinOrder.png";
-import datevIcon from "@/assets/Icons/app/App Icon - Datev.png";
-import epsonIcon from "@/assets/Icons/app/App Icon - Epson.png";
-import prismaIcon from "@/assets/Icons/app/App Icon - Prisma.png";
-import expertOrderIcon from "@/assets/Icons/app/App Icon - Expert Order.png";
+import tseIcon from "@/assets/icons/app/App Icon - TSE.png";
+import eloIcon from "@/assets/icons/app/App Icon - Elo.png";
+import sidesIcon from "@/assets/icons/app/App Icon - Sides.png";
+import winOrderIcon from "@/assets/icons/app/App Icon - WinOrder.png";
+import datevIcon from "@/assets/icons/app/App Icon - Datev.png";
+import epsonIcon from "@/assets/icons/app/App Icon - Epson.png";
+import prismaIcon from "@/assets/icons/app/App Icon - Prisma.png";
+import expertOrderIcon from "@/assets/icons/app/App Icon - Expert Order.png";
 
 // Import Versand Icons
-import upsIcon from "@/assets/Icons/app/App Icon - ups.png";
-import dpdIcon from "@/assets/Icons/app/App Icon - DPD.png";
-import dhlIcon from "@/assets/Icons/app/App Icon - DHL.png";
+import upsIcon from "@/assets/icons/app/App Icon - ups.png";
+import dpdIcon from "@/assets/icons/app/App Icon - DPD.png";
+import dhlIcon from "@/assets/icons/app/App Icon - DHL.png";
 
 // Import Social Media Icons
-import facebookIcon from "@/assets/Icons/app/App Icon - Facebook.png";
-import instagramIcon from "@/assets/Icons/app/App Icon - Instagram.png";
-import tiktokIcon from "@/assets/Icons/app/App Icon - TikTok.png";
-import whatsappIcon from "@/assets/Icons/app/App Icon - WhatsApp.png";
+import facebookIcon from "@/assets/icons/app/App Icon - Facebook.png";
+import instagramIcon from "@/assets/icons/app/App Icon - Instagram.png";
+import tiktokIcon from "@/assets/icons/app/App Icon - TikTok.png";
+import whatsappIcon from "@/assets/icons/app/App Icon - WhatsApp.png";
 
 // Import Router Icons
-import fritzIcon from "@/assets/Icons/app/App Icon - Fritz.png";
-import vodafoneIcon from "@/assets/Icons/app/App Icon - Vodafone.png";
-import telekomIcon from "@/assets/Icons/app/App Icon - Telekom.png";
+import fritzIcon from "@/assets/icons/app/App Icon - Fritz.png";
+import vodafoneIcon from "@/assets/icons/app/App Icon - Vodafone.png";
+import telekomIcon from "@/assets/icons/app/App Icon - Telekom.png";
 
 // Import all integration icons for slider
-import geminIcon from "@/assets/Icons/app/App Icon - Gemini.png";
-import chatgptIcon from "@/assets/Icons/app/App Icon - ChatGPT.png";
-import facebookSliderIcon from "@/assets/Icons/app/App Icon - Facebook.png";
-import winOrderSliderIcon from "@/assets/Icons/app/App Icon - WinOrder.png";
-import instagramSliderIcon from "@/assets/Icons/app/App Icon - Instagram.png";
-import tiktokSliderIcon from "@/assets/Icons/app/App Icon - TikTok.png";
-import zohoIcon from "@/assets/Icons/app/App Icon - ZOHO.png";
-import liefersoftIcon from "@/assets/Icons/app/App Icon - Liefersoft.png";
-import sidesSliderIcon from "@/assets/Icons/app/App Icon - Sides.png";
-import eloSliderIcon from "@/assets/Icons/app/App Icon - Elo.png";
-import appleIcon from "@/assets/Icons/app/App Icon - Apple.png";
-import microsoftIcon from "@/assets/Icons/app/App Icon - Microsoft.png";
-import googleIcon from "@/assets/Icons/app/App Icon - Google.png";
-import youtubeIcon from "@/assets/Icons/app/App Icon - YouTube.png";
-import clickupIcon from "@/assets/Icons/app/App Icon - Click Up.png";
-import upsSliderIcon from "@/assets/Icons/app/App Icon - ups.png";
-import dpdSliderIcon from "@/assets/Icons/app/App Icon - DPD.png";
-import dhlSliderIcon from "@/assets/Icons/app/App Icon - DHL.png";
-import fritzSliderIcon from "@/assets/Icons/app/App Icon - Fritz.png";
-import vodafoneSliderIcon from "@/assets/Icons/app/App Icon - Vodafone.png";
-import telekomSliderIcon from "@/assets/Icons/app/App Icon - Telekom.png";
-import makeIcon from "@/assets/Icons/app/App Icon - Make.png";
-import whatsappSliderIcon from "@/assets/Icons/app/App Icon - WhatsApp.png";
-import tseSliderIcon from "@/assets/Icons/app/App Icon - TSE.png";
-import woltSliderIcon from "@/assets/Icons/app/App Icon - Wolt.png";
-import visaSliderIcon from "@/assets/Icons/app/App Icon - VISA.png";
-import mastercardSliderIcon from "@/assets/Icons/app/App Icon - mastercard.png";
-import datevSliderIcon from "@/assets/Icons/app/App Icon - Datev.png";
-import epsonSliderIcon from "@/assets/Icons/app/App Icon - Epson.png";
-import prismaSliderIcon from "@/assets/Icons/app/App Icon - Prisma.png";
-import expertOrderSliderIcon from "@/assets/Icons/app/App Icon - Expert Order.png";
+import geminIcon from "@/assets/icons/app/App Icon - Gemini.png";
+import chatgptIcon from "@/assets/icons/app/App Icon - ChatGPT.png";
+import facebookSliderIcon from "@/assets/icons/app/App Icon - Facebook.png";
+import winOrderSliderIcon from "@/assets/icons/app/App Icon - WinOrder.png";
+import instagramSliderIcon from "@/assets/icons/app/App Icon - Instagram.png";
+import tiktokSliderIcon from "@/assets/icons/app/App Icon - TikTok.png";
+import zohoIcon from "@/assets/icons/app/App Icon - ZOHO.png";
+import liefersoftIcon from "@/assets/icons/app/App Icon - Liefersoft.png";
+import sidesSliderIcon from "@/assets/icons/app/App Icon - Sides.png";
+import eloSliderIcon from "@/assets/icons/app/App Icon - Elo.png";
+import appleIcon from "@/assets/icons/app/App Icon - Apple.png";
+import microsoftIcon from "@/assets/icons/app/App Icon - Microsoft.png";
+import googleIcon from "@/assets/icons/app/App Icon - Google.png";
+import youtubeIcon from "@/assets/icons/app/App Icon - YouTube.png";
+import clickupIcon from "@/assets/icons/app/App Icon - Click Up.png";
+import upsSliderIcon from "@/assets/icons/app/App Icon - ups.png";
+import dpdSliderIcon from "@/assets/icons/app/App Icon - DPD.png";
+import dhlSliderIcon from "@/assets/icons/app/App Icon - DHL.png";
+import fritzSliderIcon from "@/assets/icons/app/App Icon - Fritz.png";
+import vodafoneSliderIcon from "@/assets/icons/app/App Icon - Vodafone.png";
+import telekomSliderIcon from "@/assets/icons/app/App Icon - Telekom.png";
+import makeIcon from "@/assets/icons/app/App Icon - Make.png";
+import whatsappSliderIcon from "@/assets/icons/app/App Icon - WhatsApp.png";
+import tseSliderIcon from "@/assets/icons/app/App Icon - TSE.png";
+import woltSliderIcon from "@/assets/icons/app/App Icon - Wolt.png";
+import visaSliderIcon from "@/assets/icons/app/App Icon - VISA.png";
+import mastercardSliderIcon from "@/assets/icons/app/App Icon - mastercard.png";
+import datevSliderIcon from "@/assets/icons/app/App Icon - Datev.png";
+import epsonSliderIcon from "@/assets/icons/app/App Icon - Epson.png";
+import prismaSliderIcon from "@/assets/icons/app/App Icon - Prisma.png";
+import expertOrderSliderIcon from "@/assets/icons/app/App Icon - Expert Order.png";
 
 const FADE_MASK = `linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%)`;
 
