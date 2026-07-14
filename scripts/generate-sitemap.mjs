@@ -60,6 +60,19 @@ const BASE_URL = "https://gastro-master.de";
 const LANGUAGES = ["de", "en", "it", "fa", "si", "ru"];
 const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
+// XML-escape für Text der in Element-Content fließt (z.B. image:title/caption).
+// Ohne das bricht ein rohes `&` (z.B. "Kassensystem & Bestellsystem") die Sitemap
+// mit `xmlParseEntityRef: no name` → Google parst nur bis zur Fehlerzeile.
+// `&` MUSS zuerst ersetzt werden, sonst wird das eingefügte `&amp;` doppelt escaped.
+function escapeXml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
 // ─── Generate XML ────────────────────────────────────────────────────────────
 const urlEntries = [];
 
@@ -190,9 +203,9 @@ const homeRoute = routes.find((r) => r.slugs.de === "/");
 if (homeRoute) {
   const imagesXml = HOMEPAGE_IMAGES.map(
     (img) => `    <image:image>
-      <image:loc>${img.loc}</image:loc>
-      <image:title>${img.title}</image:title>
-      <image:caption>${img.caption}</image:caption>
+      <image:loc>${escapeXml(img.loc)}</image:loc>
+      <image:title>${escapeXml(img.title)}</image:title>
+      <image:caption>${escapeXml(img.caption)}</image:caption>
     </image:image>`,
   ).join("\n");
   // Inject images before closing </url> für jede Homepage-Locale-URL (de/en/it/fa/si/ru)
