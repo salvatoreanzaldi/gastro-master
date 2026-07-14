@@ -34,6 +34,16 @@ const escapeXml = (s) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
+// Entfernt Markdown-Reste aus title/description (Blog-Generator ließ sie stehen).
+// Immer VOR escapeXml anwenden. Body wird hier nicht verarbeitet.
+const stripMarkdown = (s) =>
+  String(s ?? '')
+    .replace(/\[([^\]]+)\]\(\[[^\]]+\]\([^)]*\)\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/`([^`]+)`/g, '$1');
+
 const toRfc822 = (iso) => {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return new Date().toUTCString();
@@ -43,10 +53,10 @@ const toRfc822 = (iso) => {
 const items = posts
   .map((post) => {
     const url = `${SITE_URL}/de/blog/${post.slug}`;
-    const description = post.metaDescription || post.description || post.excerpt || '';
+    const description = stripMarkdown(post.metaDescription || post.description || post.excerpt || '');
     const categories = [post.category, ...(post.tags ?? [])].filter(Boolean);
     return `    <item>
-      <title>${escapeXml(post.title)}</title>
+      <title>${escapeXml(stripMarkdown(post.title))}</title>
       <link>${url}</link>
       <guid isPermaLink="true">${url}</guid>
       <description>${escapeXml(description)}</description>

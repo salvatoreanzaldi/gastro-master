@@ -18,6 +18,7 @@ import reneFoto from "@/assets/team/ceo-rene-ebert.png";
 import sanjayaFoto from "@/assets/team/team-sanjaya-pattiyage.png";
 import salvatoreFoto from "@/assets/team/team-salvatore-anzaldi.png";
 import { SALVATORE_SLUGS } from "@/config/blog-authors";
+import { stripMarkdown } from "@/lib/utils";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -235,7 +236,7 @@ const RelatedPosts = ({ currentSlug, category }: { currentSlug: string; category
             className="group bg-white/[0.04] rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all"
           >
             <p className="text-sm font-semibold text-white group-hover:text-cyan-brand transition-colors line-clamp-2 leading-snug mb-2">
-              {p.title}
+              {stripMarkdown(p.title)}
             </p>
             <p className="text-xs text-white/40 flex items-center gap-1">
               {p.readingTime} min <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -271,7 +272,7 @@ const PrevNextNav = ({ currentSlug }: { currentSlug: string }) => {
             <ArrowLeft className="w-3 h-3" /> Vorheriger Artikel
           </span>
           <span className="text-sm font-semibold text-white/70 group-hover:text-white transition-colors line-clamp-2 leading-snug">
-            {prev.title}
+            {stripMarkdown(prev.title)}
           </span>
         </Link>
       ) : (
@@ -286,7 +287,7 @@ const PrevNextNav = ({ currentSlug }: { currentSlug: string }) => {
             Nächster Artikel <ArrowRight className="w-3 h-3" />
           </span>
           <span className="text-sm font-semibold text-white/70 group-hover:text-white transition-colors line-clamp-2 leading-snug">
-            {next.title}
+            {stripMarkdown(next.title)}
           </span>
         </Link>
       ) : (
@@ -333,8 +334,8 @@ const BlogPostDetailPage = () => {
   }, [post?.slug, post?.jsonLd]);
 
   useSeoMeta({
-    title: post ? `${post.title} | Gastro Master Blog` : "Blog | Gastro Master",
-    description: post?.metaDescription || post?.description || "",
+    title: post ? `${stripMarkdown(post.title)} | Gastro Master Blog` : "Blog | Gastro Master",
+    description: stripMarkdown(post?.metaDescription || post?.description || ""),
     canonical: `https://gastro-master.de/de/blog/${slug}`,
     ogImage: "https://gastro-master.de/logo-gastro-master.png",
     type: post ? "article" : "website",
@@ -409,7 +410,7 @@ const BlogPostDetailPage = () => {
             transition={{ delay: 0.1, duration: 0.7 }}
             className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-5"
           >
-            {post.title}
+            {stripMarkdown(post.title)}
           </motion.h1>
 
           <motion.div
@@ -488,7 +489,7 @@ const BlogPostDetailPage = () => {
                         className="flex items-center justify-between bg-white/5 rounded-lg p-5 border border-white/10 hover:border-cyan-brand/40 group transition-all"
                       >
                         <span className="text-white/80 group-hover:text-white transition-colors text-sm">
-                          {link.title}
+                          {stripMarkdown(link.title)}
                         </span>
                         <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-cyan-brand transition-colors shrink-0" />
                       </Link>

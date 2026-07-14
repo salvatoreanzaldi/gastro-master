@@ -2491,6 +2491,21 @@ const escapeHtml = (s) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+// Entfernt Markdown-Reste aus META-Feldern (title/description/keywords), die der
+// Blog-Generator versehentlich unverarbeitet gelassen hat — z.B. `[Praxis-Guide](/de/...)`.
+// NUR für Meta-Text gedacht; der Body (post.bodyHtml) ist bereits gerendertes HTML
+// und wird hier NICHT durchlaufen. Immer VOR escapeHtml anwenden.
+const stripMarkdown = (s) =>
+  String(s ?? '')
+    // Verschachtelte Links zuerst: [text]([text](url)) → text
+    .replace(/\[([^\]]+)\]\(\[[^\]]+\]\([^)]*\)\)/g, '$1')
+    // Standard-Markdown-Links [text](url) → text
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    // Fett / Kursiv / Inline-Code
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/`([^`]+)`/g, '$1');
+
 // Approximate word count from bodyHtml (strip tags, count whitespace-separated tokens).
 const countWords = (html) => {
   if (!html) return 0;
@@ -2591,8 +2606,8 @@ const buildBlogPostingSchema = (post) => {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "@id": `${url}#article`,
-    headline: post.title,
-    description: post.metaDescription || post.description,
+    headline: stripMarkdown(post.title),
+    description: stripMarkdown(post.metaDescription || post.description),
     image: `${SITE_URL}/logo-gastro-master.png`,
     datePublished: post.publishedDate,
     dateModified: post.publishedDate,
@@ -2605,7 +2620,7 @@ const buildBlogPostingSchema = (post) => {
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     articleSection: post.category,
-    keywords: [...(post.keywords ?? []), ...(post.tags ?? [])].join(", "),
+    keywords: [...(post.keywords ?? []), ...(post.tags ?? [])].map(stripMarkdown).join(", "),
     wordCount: countWords(post.bodyHtml),
     inLanguage: "de-DE",
     // Welle C: SpeakableSpecification — Voice-Assistants + LLM-Citation auf
@@ -2669,8 +2684,8 @@ let blogCount = 0;
 let faqPostsCount = 0;
 for (const post of generatedBlogPosts) {
   const url = `${SITE_URL}/de/blog/${post.slug}`;
-  const title = `${post.title} | Gastro Master Blog`;
-  const description = post.metaDescription || post.description || '';
+  const title = `${stripMarkdown(post.title)} | Gastro Master Blog`;
+  const description = stripMarkdown(post.metaDescription || post.description || '');
   const schema = buildBlogPostingSchema(post);
 
   // Heuristic content extraction from bodyHtml.
@@ -2719,7 +2734,7 @@ for (const post of generatedBlogPosts) {
     : '';
   const staticArticle = [
     '<article itemscope itemtype="https://schema.org/BlogPosting" style="max-width:760px;margin:2rem auto;padding:1rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-    `<h1 itemprop="headline">${escapeHtml(post.title)}</h1>`,
+    `<h1 itemprop="headline">${escapeHtml(stripMarkdown(post.title))}</h1>`,
     `<p><small>Von <span itemprop="author">${escapeHtml(post.author)}</span> · `,
     `<time itemprop="datePublished" datetime="${escapeHtml(post.publishedDate)}">${escapeHtml(post.publishedDate)}</time>`,
     ` · ${post.readingTime || 5} Min. Lesezeit · `,
@@ -2757,7 +2772,7 @@ for (const post of generatedBlogPosts) {
     ...(post.tags ?? [])
       .slice(0, 6)
       .map((t) => `<meta property="article:tag" content="${escapeHtml(t)}">`),
-    `<meta name="keywords" content="${escapeHtml([...(post.keywords ?? []), ...(post.tags ?? [])].join(', '))}">`,
+    `<meta name="keywords" content="${escapeHtml([...(post.keywords ?? []), ...(post.tags ?? [])].map(stripMarkdown).join(', '))}">`,
   ].join('\n  ');
 
   // Hreflang: DE-only blog → self-canonical for `de` + `x-default` (both → DE).
