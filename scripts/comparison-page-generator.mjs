@@ -16,6 +16,12 @@
  * h1Approved=false: Wechselangebot-Zeile wird durch softFallback ersetzt.
  */
 
+// Lokalisierte Kontakt-Slugs — MUSS synchron zu src/config/routes.ts:contact
+// bleiben (slugs("/kontakt","/contact","/contatto") mit fa/si/ru = en). Vorher
+// war /{lang}/kontakt hardcodiert → /en/kontakt, /it/kontakt … existieren nicht.
+const CONTACT_SLUG = { de: '/kontakt', en: '/contact', it: '/contatto', fa: '/contact', si: '/contact', ru: '/contact' };
+const contactHref = (lang) => `/${lang}${CONTACT_SLUG[lang] ?? '/contact'}`;
+
 const SITE_URL = "https://gastro-master.de";
 
 const LOCALE_FOR_LANG = {
@@ -191,7 +197,7 @@ export function buildComparisonSchemas(data, { h1Approved = false, lang = "de" }
                 : lang === "si"
                 ? "නොමිලේ මාරු-පරීක්ෂණය වෙන්කරවන්න"
                 : "Kostenlosen Wechsel-Check buchen",
-            url: `${SITE_URL}/${lang}/kontakt`,
+            url: `${SITE_URL}${contactHref(lang)}`,
           },
           {
             "@type": "HowToStep",
@@ -374,7 +380,7 @@ export function buildComparisonStaticHtml(data, { h1Approved = false, lang = "de
 
   <section class="comparison-risk-reversal" data-speakable>
     <ul>${reversalLines}</ul>
-    <a href="/${lang}/kontakt" class="comparison-cta-primary"><strong>${escapeHtml(t.cta.primaryText)}</strong></a>
+    <a href="${contactHref(lang)}" class="comparison-cta-primary"><strong>${escapeHtml(t.cta.primaryText)}</strong></a>
   </section>
 </article>`;
 }

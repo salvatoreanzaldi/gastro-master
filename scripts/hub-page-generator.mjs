@@ -11,6 +11,11 @@
  * deshalb Meta-FAQs inline als HTML-Text), AggregateRating (UWG §6 Risiko über Konkurrenten).
  */
 
+// Lokalisierte Kontakt-Slugs — synchron zu src/config/routes.ts:contact
+// (fa/si/ru = en). Vorher /{lang}/kontakt hardcodiert → nur /de existierte.
+const HUB_CONTACT_SLUG = { de: '/kontakt', en: '/contact', it: '/contatto', fa: '/contact', si: '/contact', ru: '/contact' };
+const hubContactHref = (lang) => `/${lang}${HUB_CONTACT_SLUG[lang] ?? '/contact'}`;
+
 const SITE_URL = "https://gastro-master.de";
 
 const LOCALE_FOR_LANG = {
@@ -231,7 +236,7 @@ export function buildHubStaticHtml(data, { lang = "de" } = {}) {
   <section class="hub-our-position" data-speakable>
     <h2>${escapeHtml(data.ourPosition.heading)}</h2>
     <p>${escapeHtml(data.ourPosition.body)}</p>
-    <a href="/${lang}/kontakt" class="hub-cta-primary"><strong>${escapeHtml(data.hardCtaLabel)}</strong></a>
+    <a href="${hubContactHref(lang)}" class="hub-cta-primary"><strong>${escapeHtml(data.hardCtaLabel)}</strong></a>
   </section>
 </article>`;
 }
