@@ -3596,6 +3596,14 @@ const relatedPostsFor = (post, n = 6) => {
 //    greift die Ersetzung nicht mehr — kein Client-Drift, weil das Ziel
 //    ohnehin nirgends existiert.
 const validBlogSlugsPre = new Set(allBlogPosts.map((p) => p.slug));
+// Auch Nicht-Post-Landingpages unter /blog/ (aus routes.ts, z.B.
+// was-kostet-bestellsystem, warum-lieferando-verzichten, 5-fehler-lieferdienst-eroffnen)
+// sind valide, in der Sitemap gelistete Ziele. Ohne sie würde defuseDeadBlogLinks
+// gültige interne Links auf diese Seiten fälschlich entschärfen.
+for (const r of routes) {
+  const de = r.slugs?.de || '';
+  if (de.startsWith('/blog/')) validBlogSlugsPre.add(de.slice('/blog/'.length));
+}
 let defusedLinkCount = 0;
 const defuseDeadBlogLinks = (html) =>
   html.replace(
