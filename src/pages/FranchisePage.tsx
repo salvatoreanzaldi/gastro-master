@@ -52,6 +52,7 @@ import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
 import imgWebseite    from "@/assets/loesungen/Loesung - Webpage.png";
 import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 // ─── Static maps (order must match JSON products) ────────────────────────────
 const productImages = [imgApp, imgWebshop, imgKasse, imgWebseite, imgTransaktion];
 const productIcons  = [<Smartphone className="w-4 h-4" />, <ShoppingCart className="w-4 h-4" />, <Monitor className="w-4 h-4" />, <Globe className="w-4 h-4" />, <Percent className="w-4 h-4" />];
@@ -741,6 +742,7 @@ const FranchisePage = () => {
         </div>
       </section>
 
+      <MoneyPageBacklinks routeKey="franchise" hub="loesungen" />
       <Footer />
     </div>
   );

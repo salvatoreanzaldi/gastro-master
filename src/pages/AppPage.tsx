@@ -66,6 +66,7 @@ import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png";
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
 
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 // ─── Feature card images (order must match JSON) ─────────────────────────────
 const featureImages = [mockPush, mockBranding, mockLieferart, mockFilialen, mockMenu, mockLogin, mockZahlung, mockAppStore];
 const featureIcons: LucideIcon[] = [Bell, Palette, MapPin, Users, RefreshCw, Star, CreditCard, Smartphone];
@@ -1078,6 +1079,7 @@ const AppPage = () => {
         <CTASection {...getCTAConfig("/produkte/pakete/bestell-app")} />
       </div>
 
+      <MoneyPageBacklinks routeKey="ordering-app" hub="produkte" />
       <Footer />
       </Suspense>
     </div>

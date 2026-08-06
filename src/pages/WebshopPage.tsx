@@ -45,7 +45,9 @@ import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png";
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
 import teamMohammadImg  from "@/assets/team/team-mohammad-motakalemi.png";
+import { FLAG_ICONS } from "@/config/flag-icons";
 
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 // ─── Schema ──────────────────────────────────────────────────────────────────
 const SCHEMA_BREADCRUMB = {
   "@context": "https://schema.org",
@@ -292,19 +294,19 @@ const WebshopTeamCTA = () => {
             {/* Language pills */}
             <div className="flex flex-wrap gap-2 mb-10">
               {[
-                { label: "Deutsch",       flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
-                { label: "Englisch",      flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
-                { label: "Italienisch",   flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
-                { label: "Persisch",      flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
-                { label: "Russisch",      flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
-                { label: "Singhalesisch", flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+                { label: "Deutsch",       flag: FLAG_ICONS.de, color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
+                { label: "Englisch",      flag: FLAG_ICONS.gb, color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
+                { label: "Italienisch",   flag: FLAG_ICONS.it, color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
+                { label: "Persisch",      flag: FLAG_ICONS.ir, color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
+                { label: "Russisch",      flag: FLAG_ICONS.ru, color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
+                { label: "Singhalesisch", flag: FLAG_ICONS.lk, color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
               ].map((lang, i) => (
                 <motion.div
                   key={lang.label}
                   whileHover={{ scale: 1.08, y: -2 }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${lang.color}`}
                 >
-                  <span className="text-lg leading-none">{lang.flag}</span>
+                  <img src={lang.flag} alt="" className="w-5 h-5 rounded-full object-cover" loading="lazy" />
                   {lang.label}
                 </motion.div>
               ))}
@@ -1075,6 +1077,7 @@ const WebshopPage = () => {
         <CTASection {...getCTAConfig("/produkte/pakete/online-bestellshop")} />
       </div>
 
+      <MoneyPageBacklinks routeKey="online-shop" hub="produkte" />
       <Footer />
       </Suspense>
     </div>

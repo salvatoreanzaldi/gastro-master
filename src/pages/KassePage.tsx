@@ -73,6 +73,8 @@ import logoIlSorriso    from "@/assets/logos/kunden/logo-il-sorriso.png";
 import logoArtemis      from "@/assets/logos/kunden/logo-artemis.png";
 import logoTake         from "@/assets/logos/kunden/logo-take.png";
 import logoBurger       from "@/assets/logos/kunden/logo-burger-brothers.png";
+import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 const POSSection = lazy(() => import("@/components/landing/POSSection"));
 const PickUpScreenSection = lazy(() => import("@/components/landing/PickUpScreenSection"));
 
@@ -147,7 +149,7 @@ const customerLogos = [
 
 const teamMemberImgs = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg];
 
-const langFlags = ["🇩🇪", "🇬🇧", "🇮🇹", "🇮🇷", "🇷🇺", "🇱🇰"];
+const langFlags = FLAG_ICONS_ORDERED;
 const langColors = [
   "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300",
   "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300",
@@ -345,7 +347,7 @@ const TeamCTASection = ({ t, lp }: { t: (k: string, o?: any) => any; lp: (p: str
                   whileHover={{ scale: 1.08, y: -2 }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${langColors[i]}`}
                 >
-                  <span className="text-lg leading-none">{langFlags[i]}</span>
+                  <img src={langFlags[i]} alt="" className="w-5 h-5 rounded-full object-cover" loading="lazy" />
                   {label}
                 </motion.div>
               ))}
@@ -1236,6 +1238,7 @@ const tiles = arr("featuresGrid.tiles") as { title: string; text: string; taglin
       </div>
     </section>
 
+    <MoneyPageBacklinks routeKey="pos-system" hub="produkte" />
     <Footer />
     </Suspense>
   </div>

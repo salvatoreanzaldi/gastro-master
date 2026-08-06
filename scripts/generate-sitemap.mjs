@@ -81,41 +81,37 @@ const buildHref = (lang, slug) => {
   return `${BASE_URL}/${lang}${pathPart}`;
 };
 
+// Batch 4 (vorgezogen): nur DE-Routen in die Sitemap. en/it/fa/si/ru sind jetzt
+// noindex → sie gehören nicht in die Sitemap (sonst widersprüchliches Signal).
+// hreflang-Alternates entfallen, weil nur eine indexierbare Sprache bleibt.
 for (const route of routes) {
-  for (const lang of LANGUAGES) {
-    const loc = buildHref(lang, route.slugs[lang]);
-
-    const alternates = LANGUAGES.map(
-      (altLang) =>
-        `    <xhtml:link rel="alternate" hreflang="${altLang}" href="${buildHref(altLang, route.slugs[altLang])}" />`,
-    ).join("\n");
-
-    const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${buildHref("de", route.slugs.de)}" />`;
-
-    urlEntries.push(`  <url>
+  const loc = buildHref("de", route.slugs.de);
+  urlEntries.push(`  <url>
     <loc>${loc}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority.toFixed(1)}</priority>
-${alternates}
-${xDefault}
   </url>`);
-  }
 }
 
 // ─── Blog post URLs ───────────────────────────────────────────────────────────
-// Parse slug + publishedDate from src/data/blog-posts-generated.ts (single source of truth).
+// Parse slug + publishedDate from BOTH blog data files: blog-posts-generated.ts
+// (generierte Posts) und blog-posts.ts (handgeschriebene lbp-Posts — der
+// Spread `...generatedBlogPosts` dort enthält keine Slug-Literale, daher
+// keine Duplikate; zur Sicherheit wird per Set dedupliziert).
 // Blog is DE-only (no hreflang alternates).
-const blogPostsSource = readFileSync(
-  resolve(ROOT, "src/data/blog-posts-generated.ts"),
-  "utf-8",
-);
-
 const blogPostRegex = /slug:\s*"([^"]+)"[\s\S]*?publishedDate:\s*"([^"]+)"/g;
 const blogPosts = [];
-let bp;
-while ((bp = blogPostRegex.exec(blogPostsSource)) !== null) {
-  blogPosts.push({ slug: bp[1], publishedDate: bp[2] });
+const seenBlogSlugs = new Set();
+for (const file of ["src/data/blog-posts-generated.ts", "src/data/blog-posts.ts"]) {
+  const source = readFileSync(resolve(ROOT, file), "utf-8");
+  let bp;
+  blogPostRegex.lastIndex = 0;
+  while ((bp = blogPostRegex.exec(source)) !== null) {
+    if (seenBlogSlugs.has(bp[1])) continue;
+    seenBlogSlugs.add(bp[1]);
+    blogPosts.push({ slug: bp[1], publishedDate: bp[2] });
+  }
 }
 
 for (const { slug, publishedDate } of blogPosts) {
@@ -126,6 +122,13 @@ for (const { slug, publishedDate } of blogPosts) {
     `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>`,
   );
 }
+
+// ─── Standalone: /request-data-delete (präfixlos, DE-only, keine Alternates) ──
+// Stabile URL für App-Store-Datenlöschungsangaben; pre-rendered via
+// generate-prerendered-html.mjs (gleicher Pfad, eigenes statisches HTML).
+urlEntries.push(
+  `  <url>\n    <loc>${BASE_URL}/request-data-delete</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
+);
 
 // ─── Comparison-URLs (multilingual, alle 6 Sprachen, lokalisiertes Segment) ─
 // EN nutzt SaaS-Industrienorm "vs" (monday.com/vs/asana). Muss synchron mit
@@ -138,17 +141,13 @@ const COMPARISON_SEGMENT = {
   si: "vs",
   ru: "vs",
 };
-// Hub-Page (Übersicht aller Konkurrenz-Vergleiche) unter /{lang}/{seg}.
+// Hub-Page (Übersicht aller Konkurrenz-Vergleiche) — nur DE (Batch 4: Nicht-DE
+// noindex, daher nicht in die Sitemap und ohne hreflang-Alternates).
 let hubUrlCount = 0;
-for (const lang of LANGUAGES) {
-  const loc = `${BASE_URL}/${lang}/${COMPARISON_SEGMENT[lang]}`;
-  const alternates = LANGUAGES.map(
-    (l) =>
-      `    <xhtml:link rel="alternate" hreflang="${l}" href="${BASE_URL}/${l}/${COMPARISON_SEGMENT[l]}" />`,
-  ).join("\n");
-  const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/de/${COMPARISON_SEGMENT.de}" />`;
+{
+  const loc = `${BASE_URL}/de/${COMPARISON_SEGMENT.de}`;
   urlEntries.push(
-    `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n${alternates}\n${xDefault}\n  </url>`,
+    `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
   );
   hubUrlCount += 1;
 }
@@ -170,18 +169,12 @@ try {
 }
 let comparisonUrlCount = 0;
 for (const slug of comparisonSlugs) {
-  for (const lang of LANGUAGES) {
-    const loc = `${BASE_URL}/${lang}/${COMPARISON_SEGMENT[lang]}/${slug}`;
-    const alternates = LANGUAGES.map(
-      (l) =>
-        `    <xhtml:link rel="alternate" hreflang="${l}" href="${BASE_URL}/${l}/${COMPARISON_SEGMENT[l]}/${slug}" />`,
-    ).join("\n");
-    const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/de/${COMPARISON_SEGMENT.de}/${slug}" />`;
-    urlEntries.push(
-      `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n${alternates}\n${xDefault}\n  </url>`,
-    );
-    comparisonUrlCount += 1;
-  }
+  // Nur DE (Batch 4).
+  const loc = `${BASE_URL}/de/${COMPARISON_SEGMENT.de}/${slug}`;
+  urlEntries.push(
+    `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
+  );
+  comparisonUrlCount += 1;
 }
 
 // Image-Sitemap-Block für die Hauptseite (alle 6 Sprachen). Ergänzt das
@@ -237,5 +230,5 @@ const outPath = resolve(ROOT, "dist/sitemap.xml");
 writeFileSync(outPath, sitemap, "utf-8");
 
 const blogUrlCount = blogPosts.length;
-console.log(`✅ Sitemap generated: ${routes.length} routes × ${LANGUAGES.length} languages = ${routes.length * LANGUAGES.length} route URLs + ${blogUrlCount} blog URLs (DE only) + ${hubUrlCount} comparison-hub URLs + ${comparisonUrlCount} comparison detail URLs (${comparisonSlugs.length} × ${LANGUAGES.length}, segments: ${[...new Set(Object.values(COMPARISON_SEGMENT))].join("/")}) = ${urlEntries.length} total URLs`);
+console.log(`✅ Sitemap generated (DE-only, Batch 4): ${routes.length} route URLs + ${blogUrlCount} blog URLs + ${hubUrlCount} comparison-hub URL + ${comparisonUrlCount} comparison detail URLs = ${urlEntries.length} total URLs`);
 console.log(`   → ${outPath}`);

@@ -40,16 +40,19 @@ const buildHref = (lang, slug) => {
   return `${SITE_URL}/${lang}${pathPart}`;
 };
 
-// Returns hreflang <link> tags (one per language + x-default) for the given DE-canonical slug.
-// Falls back to root URLs when the slug is unknown (e.g. for the root index.html which
-// represents all language landing pages combined).
+// Returns hreflang <link> tags for the given DE-canonical slug.
+// Batch 4 (vorgezogen): en/it/fa/si/ru sind jetzt noindex — hreflang darf nur
+// indexierbare Alternates referenzieren, sonst widerspricht es dem noindex.
+// Daher bleibt nur die DE-Version (self + x-default). Fällt Deutsch als einzige
+// indexierte Sprache weg, wäre der Cluster leer → wir behalten das eine
+// DE/x-default-Paar als klares Signal, welche Version zu indexieren ist.
 const buildHreflangTags = (deSlug) => {
   const route = routeByDeSlug.get(deSlug) ?? { slugs: Object.fromEntries(LANGUAGES.map((l) => [l, '/'])) };
-  const langTags = LANGUAGES.map(
-    (lang) => `  <link rel="alternate" hreflang="${lang}" href="${buildHref(lang, route.slugs[lang])}" />`,
-  ).join('\n');
-  const xDefault = `  <link rel="alternate" hreflang="x-default" href="${buildHref(DEFAULT_LANG, route.slugs[DEFAULT_LANG])}" />`;
-  return `${langTags}\n${xDefault}`;
+  const deHref = buildHref(DEFAULT_LANG, route.slugs[DEFAULT_LANG]);
+  return [
+    `  <link rel="alternate" hreflang="de" href="${deHref}" />`,
+    `  <link rel="alternate" hreflang="x-default" href="${deHref}" />`,
+  ].join('\n');
 };
 
 // ─── Read base index.html and SEO metadata ───────────────────────────────────
@@ -1343,74 +1346,24 @@ const hubHref = (lang, key) => {
 
 // ─── Batch 3 B5: kontextuelle Rückwärts-Links Money-Page → Blog ─────────────
 // Der Blog verlinkt bereits in die Money-Pages; der Rückweg fehlte. Pro Seite
-// 4–6 statische Links auf thematisch passende Posts (Auswahl über das
-// category-Feld). Nur DE — der Blog ist DE-only; Nicht-DE-Money-Pages bleiben
-// unberührt.
-const MONEY_BLOG_CATEGORIES = {
-  'pos-system': ['Kassensysteme', 'Recht & Compliance', 'Finanzen'],
-  'ordering-app': ['Bestellsysteme', 'Lieferservice'],
-  'online-shop': ['Bestellsysteme', 'Lieferservice'],
-  'website': ['Website & Marketing', 'Trends & Zukunft'],
-  'hardware': ['Kassensysteme', 'Bestellsysteme'],
-  'restaurant': ['Betrieb & Service', 'Gründung'],
-  'cafe-bakery': ['Betrieb & Service', 'Website & Marketing'],
-  'start-delivery': ['Lieferservice', 'Gründung'],
-  'delivery': ['Lieferservice', 'Bestellsysteme'],
-  'franchise': ['Gründung', 'Betrieb & Service'],
-  'ghost-kitchen': ['Lieferservice', 'Trends & Zukunft'],
-};
-// Index category → Posts (stabil nach slug sortiert). Lazy/memoisiert, weil
-// allBlogPosts erst nach diesem Modul-Abschnitt initialisiert ist (TDZ).
-let _blogByCatMoney = null;
-const blogPostsByCategoryMoney = () => {
-  if (_blogByCatMoney) return _blogByCatMoney;
-  const map = new Map();
-  for (const p of allBlogPosts) {
-    const c = p.category || '';
-    if (!map.has(c)) map.set(c, []);
-    map.get(c).push(p);
-  }
-  for (const arr of map.values()) arr.sort((a, b) => (a.slug < b.slug ? -1 : 1));
-  _blogByCatMoney = map;
-  return map;
-};
-const relatedBlogLinksForMoney = (routeKey, lang) => {
-  if (lang !== 'de') return '';
-  const cats = MONEY_BLOG_CATEGORIES[routeKey];
-  if (!cats) return '';
-  const byCat = blogPostsByCategoryMoney();
-  const picked = [];
-  const seen = new Set();
-  const perCat = Math.ceil(6 / cats.length);
-  for (const c of cats) {
-    let n = 0;
-    for (const p of byCat.get(c) || []) {
-      if (seen.has(p.slug)) continue;
-      seen.add(p.slug); picked.push(p); n += 1;
-      if (n >= perCat || picked.length >= 6) break;
-    }
-    if (picked.length >= 6) break;
-  }
-  // Auffüllen, falls die ersten Kategorien zu dünn waren (Ziel min. 4).
-  if (picked.length < 6) {
-    for (const c of cats) {
-      for (const p of byCat.get(c) || []) {
-        if (seen.has(p.slug)) continue;
-        seen.add(p.slug); picked.push(p);
-        if (picked.length >= 6) break;
-      }
-      if (picked.length >= 6) break;
-    }
-  }
-  if (picked.length < 4) return '';
-  const items = picked
-    .slice(0, 6)
+// 4–6 Links auf thematisch passende Posts + ein Breadcrumb, als EIN Block.
+// Die Auswahl kommt aus src/data/money-page-links.ts — dieselbe Funktion nutzt
+// die React-Komponente MoneyPageBacklinks.tsx, damit statisches HTML und
+// hydriertes DOM identische Links tragen (kein Drift). Nur DE (Blog DE-only).
+let moneyPageBlogLinksImpl = null; // wird nach dem blog-posts-Import gesetzt
+const relatedBlogLinksForMoney = (routeKey, lang, hubKey) => {
+  if (lang !== 'de' || !moneyPageBlogLinksImpl) return '';
+  const posts = moneyPageBlogLinksImpl(routeKey, allBlogPosts);
+  if (!posts || posts.length < 4) return '';
+  const hubLabel = hubKey === 'produkte' ? navLabel(lang, 'produkte') : 'Lösungen';
+  const breadcrumb = `<nav style="font-size:0.9rem;margin:2rem 0 0.75rem;color:#475569;"><a href="/${lang}" style="color:#475569;">Home</a> › <a href="${hubHref(lang, hubKey)}" style="color:#475569;">${escapeHtmlMin(hubLabel)}</a></nav>`;
+  const items = posts
     .map(
       (p) =>
         `<li style="padding:0.35rem 0;"><a href="/de/blog/${p.slug}" style="color:#0A264A;font-weight:600;text-decoration:underline;">${escapeHtmlMin(plainText(p.title))}</a></li>`,
     )
     .join('');
-  return `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.75rem;">Passende Artikel aus dem Blog</h2><ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${items}</ul>`;
+  return `${breadcrumb}<h2 style="font-size:1.35rem;font-weight:800;margin:1rem 0 0.75rem;">Passende Artikel aus dem Blog</h2><ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${items}</ul>`;
 };
 
 const buildPackagePageStatic = (pkg, lang, bundle = null, routeKey = null) => {
@@ -1423,10 +1376,8 @@ const buildPackagePageStatic = (pkg, lang, bundle = null, routeKey = null) => {
   const priceLine = pkg.price ? `${fromLabel} ${pkg.price} ${perMonth}` : customLabel;
   const headline = norm?.headline || localizedPackageName(pkg, lang);
   const subline = norm?.subline || pkg.description || '';
-  const produkteHref = hubHref(lang, 'produkte');
   return [
     '<article style="max-width:880px;margin:3rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-    `<nav style="font-size:0.9rem;margin:0 0 1rem;color:#475569;"><a href="/${lang}" style="color:#475569;">Home</a> › <a href="${produkteHref}" style="color:#475569;">${escapeHtmlMin(navLabel(lang, 'produkte'))}</a></nav>`,
     norm?.badge
       ? `<p style="display:inline-block;background:#0A264A;color:#fff;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:0.25rem 0.75rem;border-radius:999px;margin:0 0 1rem;">${escapeHtmlMin(norm.badge)}</p>`
       : '',
@@ -1443,7 +1394,7 @@ const buildPackagePageStatic = (pkg, lang, bundle = null, routeKey = null) => {
     // Batch 3: reiche Bundle-Sektionen (features, comparison, pricing,
     // testimonials, steps, faq …) sichtbar ins statische HTML.
     renderMoneySections(bundle),
-    relatedBlogLinksForMoney(routeKey || pkg.key, lang),
+    relatedBlogLinksForMoney(routeKey || pkg.key, lang, 'produkte'),
     `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>`,
     '</article>',
   ]
@@ -1830,11 +1781,8 @@ const buildSolutionPageStatic = ({ lang, bundle, routeKey }) => {
     bundle?.hero?.pills ||
     bundle?.hero?.trustPills ||
     [];
-  const loesungenHref = hubHref(lang, 'loesungen');
-  const loesungenLabel = i18nNav[lang]?.loesungen ?? i18nNav.de?.loesungen ?? 'Lösungen';
   return [
     '<article style="max-width:880px;margin:3rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-    `<nav style="font-size:0.9rem;margin:0 0 1rem;color:#475569;"><a href="/${lang}" style="color:#475569;">Home</a> › <a href="${loesungenHref}" style="color:#475569;">${escapeHtmlMin(loesungenLabel)}</a></nav>`,
     norm.badge
       ? `<p style="display:inline-block;background:#0A264A;color:#fff;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:0.25rem 0.75rem;border-radius:999px;margin:0 0 1rem;">${escapeHtmlMin(norm.badge)}</p>`
       : '',
@@ -1850,7 +1798,7 @@ const buildSolutionPageStatic = ({ lang, bundle, routeKey }) => {
     // Batch 3: reiche Bundle-Sektionen (problem, products, process, compare,
     // stats, trust, faq …) sichtbar ins statische HTML.
     renderMoneySections(bundle),
-    relatedBlogLinksForMoney(routeKey, lang),
+    relatedBlogLinksForMoney(routeKey, lang, 'loesungen'),
     `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>`,
     '</article>',
   ]
@@ -2591,6 +2539,10 @@ const buildHardwareItemList = (canonicalUrl, lang) => {
 const { blogPosts: allBlogPosts } = await import(
   new URL('../src/data/blog-posts.ts', import.meta.url).href
 );
+// Geteilte Backlink-Auswahl (identisch mit der React-Komponente) laden.
+({ moneyPageBlogLinks: moneyPageBlogLinksImpl } = await import(
+  new URL('../src/data/money-page-links.ts', import.meta.url).href
+));
 const sortedBlogPosts = [...allBlogPosts].sort(
   (a, b) => new Date(b.publishedDate) - new Date(a.publishedDate),
 );
@@ -2751,6 +2703,11 @@ for (const route of routes) {
     // localised name, etc.) and would duplicate the entity otherwise.
     const useCuratedSchema = curatedSchema && !isSolution && !isSolutionsHub;
     const headExtras = [
+      // Batch 4 (vorgezogen): Nicht-DE-Sprachen auf noindex,follow — sie sollen
+      // erreichbar/verlinkt bleiben, aber nicht um Indexierung konkurrieren.
+      // Muss VOR dem Canonical stehen und überlebt die Hydration (React fasst
+      // robots nie an). Gleiche Direktive setzt useSeoMeta client-seitig.
+      lang !== DEFAULT_LANG ? `<meta name="robots" content="noindex, follow">` : null,
       `<link rel="canonical" href="${canonicalUrl}">`,
       hreflangTags,
       useCuratedSchema

@@ -35,6 +35,7 @@ import imgWebseite    from "@/assets/loesungen/Loesung - Webpage.png";
 import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
 import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 /* ─── Static maps ────────────────────────────────────────── */
 const smallImages = [imgWebshop, imgWebseite, imgApp, imgTransaktion];
 const smallHrefs  = ["/produkte/pakete/online-bestellshop", "/produkte/pakete/webseite", "/produkte/pakete/bestell-app", "/produkte/add-ons/transaktionsumlage"];
@@ -636,6 +637,7 @@ const CafeBaeckereiPage = () => {
         </div>
       </section>
 
+      <MoneyPageBacklinks routeKey="cafe-bakery" hub="loesungen" />
       <Footer />
     </div>
   );

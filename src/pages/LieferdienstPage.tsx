@@ -46,6 +46,7 @@ import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 import { buildOrgGraph, SITE_URL, ORG_ID } from "@/data/schemaOrg";
 import { PACKAGES } from "@/data/packages";
 
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 const LIEFERDIENST_SERVICE_NODE = {
   "@type": "Service",
   "@id": `${SITE_URL}/loesungen/lieferdienst#service`,
@@ -737,6 +738,7 @@ const LieferdienstPage = () => {
         </div>
       </section>
 
+      <MoneyPageBacklinks routeKey="delivery" hub="loesungen" />
       <Footer />
     </div>
   );

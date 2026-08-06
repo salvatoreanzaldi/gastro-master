@@ -18,8 +18,13 @@ import Navbar from "@/components/landing/Navbar";
 import { GlobeStickers } from "@/components/ui/cobe-globe-stickers";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getCTAConfig } from "@/data/cta-config";
-import { buildOrgGraph } from "@/data/schemaOrg";
+import { buildOrgGraph, DIGITAL_MERCHANT_OFFER_FIELDS, SITE_AGGREGATE_RATING } from "@/data/schemaOrg";
 import { PACKAGES, buildPackageSoftwareNode } from "@/data/packages";
+import webseiteProduktImg from "@/assets/products/Webseite - Produkt.png";
+
+// GSC-Fix: absolute, stabile Bild-URL für das Product-JSON-LD (GSC „Feld image
+// fehlt"). Vite liefert den gehashten /assets/-Pfad; new URL macht ihn absolut.
+const WEBSEITE_PRODUCT_IMAGE = new URL(webseiteProduktImg, "https://gastro-master.de").href;
 
 const WEBSEITE_PACKAGE = PACKAGES.find((p) => p.slug === "/produkte/pakete/webseite")!;
 const WEBSEITE_GRAPH = buildOrgGraph([buildPackageSoftwareNode(WEBSEITE_PACKAGE)]);
@@ -71,7 +76,9 @@ import wpImmobilienTablet    from "@/assets/webpage/Immobilien - Tablet.png";
 import wpFinanzenDesktop     from "@/assets/webpage/Finanzen - Desktop.png";
 import wpFinanzenMobile      from "@/assets/webpage/Finanzen - Mobile.png";
 import wpFinanzenTablet      from "@/assets/webpage/Finanzen - Tablet.png";
+import { FLAG_ICONS } from "@/config/flag-icons";
 
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 const ZIELGRUPPEN = [
   { label: "Restaurant", desktop: wpRestaurantDesktop, mobile: wpRestaurantMobile, tablet: wpRestaurantTablet },
   { label: "Bar", desktop: wpBarDesktop, mobile: wpBarMobile, tablet: wpBarTablet },
@@ -106,12 +113,12 @@ const FEATURE_ICONS = [Images, Instagram, Mail, Users, Briefcase, Building2, Lin
 const BRANCHEN_ICONS = [UtensilsCrossed, Coffee, Wrench, GraduationCap, ConciergeBell, Building2, Hotel, Store];
 
 const LANG_META = [
-  { flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
-  { flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
-  { flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
-  { flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
-  { flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
-  { flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+  { flag: FLAG_ICONS.de, color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
+  { flag: FLAG_ICONS.gb, color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
+  { flag: FLAG_ICONS.it, color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
+  { flag: FLAG_ICONS.ir, color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
+  { flag: FLAG_ICONS.ru, color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
+  { flag: FLAG_ICONS.lk, color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
 ];
 
 // ─── JSON-LD Schema (bleibt statisch DE für SEO) ─────────────────────────────
@@ -130,15 +137,36 @@ const SCHEMA_PRODUCT = {
   "@type": "Product",
   "name": "Professionelle Webseite für Gastronomie und weitere Branchen",
   "description": "Professionelle Webseite ab 49 €/Monat oder Einmalkauf ab 990 €. Für Gastronomen, Handwerker, Schulen und alle weiteren Branchen. Inkl. Domain, Hosting, DSGVO-konform.",
+  "image": WEBSEITE_PRODUCT_IMAGE,
   "brand": { "@type": "Brand", "name": "Gastro Master" },
+  // GSC-Fix 2026-07-23 (Batch 5): aggregateRating + review am Client-Product-Node
+  // (Batch 2 fixte nur Prerenderer + addOns.ts, diese Seite wurde übersehen →
+  // „aggregateRating/review fehlt" im gerenderten DOM). aggregateRating aus der
+  // Single Source SITE_AGGREGATE_RATING (identisch zum Prerenderer-Wert 5,0/131).
+  "aggregateRating": SITE_AGGREGATE_RATING,
+  // Reales 5-Sterne-Google-Review (Yamen Sharaf) aus public/data/google-reviews.json,
+  // konsistent mit dem Review am Prerenderer-Product-Node (buildProductSchema).
+  "review": [
+    {
+      "@type": "Review",
+      "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5", "worstRating": "1" },
+      "author": { "@type": "Person", "name": "Yamen Sharaf" },
+      "reviewBody": "Wir sind super zufrieden , Sie haben hervorragende Arbeit geleistet egal ob es beim erstellen der  Webseite oder das Onlineshop. Das Team war äußerst kompetent, sehr hilfsbereit und jederzeit erreichbar. Die Zusammenarbeit verlief reibungslos, und alle Wünsche wurden schnell und professionell umgesetzt. Eine klare Empfehlung.",
+      "datePublished": "2026-04-15",
+    },
+  ],
   "offers": [
     {
       "@type": "Offer",
       "price": "49",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
-      "priceSpecification": { "@type": "UnitPriceSpecification", "billingIncrement": 1, "unitCode": "MON" },
+      // GSC-Fix 2026-07-23 (Batch 5): price + priceCurrency IN die priceSpecification
+      // („price fehlt in offers.priceSpecification").
+      "priceSpecification": { "@type": "UnitPriceSpecification", "price": "49", "priceCurrency": "EUR", "billingIncrement": 1, "unitCode": "MON" },
       "seller": { "@type": "Organization", "name": "Gastro Master Deutschland" },
+      // GSC-Fix 2026-07-22 (Batch 2): Merchant-Listing-Felder für digitale Güter.
+      ...DIGITAL_MERCHANT_OFFER_FIELDS,
     },
     {
       "@type": "Offer",
@@ -147,6 +175,7 @@ const SCHEMA_PRODUCT = {
       "availability": "https://schema.org/InStock",
       "description": "Simple Website (Onepager) Einmalkauf ab 990 €",
       "seller": { "@type": "Organization", "name": "Gastro Master Deutschland" },
+      ...DIGITAL_MERCHANT_OFFER_FIELDS,
     },
   ],
 };
@@ -267,7 +296,7 @@ const TeamCTA = () => {
                   whileHover={{ scale: 1.08, y: -2 }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${LANG_META[i]?.color ?? ""}`}
                 >
-                  <span className="text-lg leading-none">{LANG_META[i]?.flag}</span>
+                  {LANG_META[i]?.flag && <img src={LANG_META[i].flag} alt="" className="w-5 h-5 rounded-full object-cover" loading="lazy" />}
                   {label}
                 </motion.div>
               ))}
@@ -1114,6 +1143,7 @@ const WebseitePage = () => {
           <CTASection {...getCTAConfig("/produkte/pakete/webseite")} />
         </div>
 
+      <MoneyPageBacklinks routeKey="website" hub="produkte" />
       <Footer />
       </Suspense>
       </div>

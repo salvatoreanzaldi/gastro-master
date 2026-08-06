@@ -44,6 +44,7 @@ import imgWebseite    from "@/assets/loesungen/Loesung - Webpage.png";
 import imgApp         from "@/assets/loesungen/Loesung - Bestell-App.png";
 import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 // ─── Static maps (order must match JSON products) ────────────────────────────
 const productImages = [imgKasse, imgWebshop, imgWebseite, imgApp, imgTransaktion];
 const productIcons  = [<Monitor className="w-4 h-4" />, <ShoppingCart className="w-4 h-4" />, <Globe className="w-4 h-4" />, <Smartphone className="w-4 h-4" />, <Percent className="w-4 h-4" />];
@@ -696,6 +697,7 @@ const RestaurantPage = () => {
         </div>
       </section>
 
+      <MoneyPageBacklinks routeKey="restaurant" hub="loesungen" />
       <Footer />
     </div>
   );

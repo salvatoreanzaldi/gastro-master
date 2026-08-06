@@ -20,6 +20,7 @@ import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
 import imgWebseite    from "@/assets/loesungen/Loesung - Webpage.png";
 import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function renderWithLinks(text: string, lp: (p: string) => string): React.ReactNode {
@@ -694,6 +695,7 @@ const LieferserviceGruendenPage = () => {
         </div>
       </section>
 
+      <MoneyPageBacklinks routeKey="start-delivery" hub="loesungen" />
       <Footer />
     </div>
   );

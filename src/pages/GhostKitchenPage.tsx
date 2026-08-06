@@ -20,6 +20,7 @@ import imgKasse       from "@/assets/loesungen/Loesung - Kasse.png";
 import imgWebseite    from "@/assets/loesungen/Loesung - Webpage.png";
 import imgTransaktion from "@/assets/loesungen/Loesung - Zahlungsgebühren.png";
 
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 // ─── Static maps ────────────────────────────────────────────────────────────
 const productImages = [imgWebshop, imgApp, imgKasse, imgTransaktion, imgWebseite];
 const productHrefs  = ["/produkte/pakete/online-bestellshop", "/produkte/pakete/bestell-app", "/produkte/pakete/kassensystem", "/produkte/add-ons/transaktionsumlage", "/produkte/pakete/webseite"];
@@ -433,6 +434,7 @@ const GhostKitchenPage = () => {
         </div>
       </section>
 
+      <MoneyPageBacklinks routeKey="ghost-kitchen" hub="loesungen" />
       <Footer />
     </div>
   );
