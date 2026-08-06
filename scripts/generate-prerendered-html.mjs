@@ -271,8 +271,13 @@ const resolveAssetUrl = (matchPrefix) => {
   if (!assetCache) {
     assetCache = readdirSync(ASSETS_DIR);
   }
+  // NFC-Normalisierung beidseitig: macOS schreibt Dateinamen in NFD
+  // (Umlaute dekomponiert) — ein NFC-Prefix („Tablet Ständer") würde sonst
+  // nie matchen. Zurückgegeben wird der ORIGINAL-Dateiname (URL muss den
+  // tatsächlichen Bytes auf dem Server entsprechen).
+  const want = matchPrefix.normalize('NFC');
   const found = assetCache.find(
-    (f) => f.startsWith(matchPrefix) && /\.(png|jpe?g|webp|avif)$/i.test(f),
+    (f) => f.normalize('NFC').startsWith(want) && /\.(png|jpe?g|webp|avif)$/i.test(f),
   );
   return found ? `${SITE_URL}/assets/${encodeURIComponent(found)}` : null;
 };
@@ -296,6 +301,36 @@ const localizedPackageName = (pkg, lang) => {
   }
 };
 
+// GSC-Fix 2026-07-22 (Batch 2 „Händlereinträge", orange): Merchant-Listings
+// empfehlen Rückgaberichtlinie + Lieferdetails im Offer. Gastro Master verkauft
+// digitale SaaS-Module — keine physische Lieferung, keine klassische Rückgabe.
+// `MerchantReturnNotPermitted` + kostenlose 0-Tage-„Lieferung" (0 €) nach DE/AT/CH ist
+// der Google-empfohlene, valide Weg für digitale Güter. `doesNotShip` NICHT setzen — es
+// widerspricht shippingRate/deliveryTime (GSC Batch 5: „ungültiger Wert"). `shippingDestination`
+// ist Pflicht. Wird in jeden gültigen (preisbehafteten) Offer gespreizt, den ein Product
+// referenziert oder inline hält. Muss mit DIGITAL_MERCHANT_OFFER_FIELDS in schemaOrg.ts identisch bleiben.
+const DIGITAL_MERCHANT_OFFER_FIELDS = {
+  hasMerchantReturnPolicy: {
+    "@type": "MerchantReturnPolicy",
+    applicableCountry: ["DE", "AT", "CH"],
+    returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+  },
+  shippingDetails: {
+    "@type": "OfferShippingDetails",
+    shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "EUR" },
+    shippingDestination: [
+      { "@type": "DefinedRegion", addressCountry: "DE" },
+      { "@type": "DefinedRegion", addressCountry: "AT" },
+      { "@type": "DefinedRegion", addressCountry: "CH" },
+    ],
+    deliveryTime: {
+      "@type": "ShippingDeliveryTime",
+      handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+      transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+    },
+  },
+};
+
 const buildServiceNodes = () =>
   PACKAGES.map((p) => {
     const offer = p.price
@@ -313,6 +348,7 @@ const buildServiceNodes = () =>
           },
           availability: 'https://schema.org/InStock',
           url: `${SITE_URL}${p.url}`,
+          ...DIGITAL_MERCHANT_OFFER_FIELDS,
         }
       : {
           // Custom-quote tier: PriceSpecification without numeric price
@@ -350,13 +386,13 @@ const buildSoftwareApplicationNode = () => ({
   operatingSystem: 'Web, iOS, Android',
   url: SITE_URL,
   publisher: { "@id": `${SITE_URL}/#organization` },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: String(REVIEW_META.totalRating || 5),
-    reviewCount: REVIEW_META.totalCount || 0,
-    bestRating: '5',
-    worstRating: '1',
-  },
+  // GSC-Fix 2026-07-21 (Rezensions-Snippet „Die Rezension hat mehrere
+  // zusammengefasste Bewertungen"): KEINE aggregateRating hier. Die 10 Review-
+  // Nodes zeigen via itemReviewed auf #organization, und die Organization trägt
+  // bereits die (review-gestützte) aggregateRating. Eine zweite, identische
+  // aggregateRating auf der SoftwareApplication erzeugte site-weit zwei
+  // zusammengefasste Bewertungen pro Seite → Google flaggt das. Die Organization
+  // bleibt die einzige bewertete Entität.
   offers: PACKAGES.map((p) => ({ "@id": `${SITE_URL}${p.url}#offer` })),
 });
 
@@ -367,12 +403,23 @@ const truncate = (s, max = 600) => {
   return t.length > max ? t.slice(0, max - 1) + '…' : t;
 };
 
+// Nur deutschsprachige Reviews dürfen ins öffentliche Review-Schema (JSON-LD).
+// Grund: Google zog sonst einen englischen Mitarbeiter-Review ("… is a software
+// company … Highly Recommended") als Search-Snippet heran. Heuristik: englische
+// Satzmuster OHNE deutsche Marker → aussortieren. Robust auch gegen künftige Syncs.
+const looksEnglishReview = (text) => {
+  const t = String(text || '');
+  const hasEnglish = /\b(is a|is an|company|provides|highly recommended|the best|thank you|great service|very good|excellent|best service|so good)\b/i.test(t);
+  const hasGerman = /[äöüß]|\b(und|der|die|das|ist|sind|wir|für|sehr|nicht|kann|Team|schnell|zufrieden|super|immer|gut|Service läuft|Kassensystem|Bestell)\b/i.test(t);
+  return hasEnglish && !hasGerman;
+};
+
 const buildReviewNodes = () => {
   // Use the "5-Sterne" tab if available (curated 5-star testimonials),
-  // fall back to "Alle". Pick top 10 with non-trivial text.
+  // fall back to "Alle". Pick top 10 with non-trivial DEUTSCHEN text.
   const all = reviewsData?.tabs?.['5-Sterne'] ?? reviewsData?.tabs?.Alle ?? [];
   const candidates = all
-    .filter((r) => r.text && String(r.text).trim().length >= 40)
+    .filter((r) => r.text && String(r.text).trim().length >= 40 && !looksEnglishReview(r.text))
     .slice(0, 10);
   return candidates.map((r, i) => {
     // Convert epoch (seconds) to ISO date if available.
@@ -549,6 +596,66 @@ const pages = [
 
 mkdirSync(distDir, { recursive: true });
 
+// ─── Font-Preload (FCP) ──────────────────────────────────────────────────────
+// Die Outfit-Variable-Font wird bisher erst entdeckt, wenn das CSS geparst ist
+// (HTML → CSS → @font-face → Font). Der Preload startet den Download parallel
+// zum CSS und spart diese Rundreise. Der Dateiname wird zur Build-Zeit aus
+// dist/assets aufgelöst — kein hartkodierter Hash, der beim nächsten Build bricht.
+// Injektion in baseHtml: alle daraus geklonten Seiten erben den Tag automatisch.
+{
+  const fontFile = existsSync(ASSETS_DIR)
+    ? readdirSync(ASSETS_DIR).find((f) => /^outfit-latin-wght-normal-.*\.woff2$/.test(f))
+    : null;
+  if (fontFile) {
+    const tag = `<link rel="preload" href="/assets/${fontFile}" as="font" type="font/woff2" crossorigin>`;
+    baseHtml = baseHtml.replace('</head>', `  ${tag}\n  </head>`);
+    console.log(`✅ Font-Preload injiziert: ${fontFile}`);
+  } else {
+    console.warn('⚠️  Outfit-woff2 in dist/assets nicht gefunden — Font-Preload übersprungen');
+  }
+}
+
+// Mobile-Hero-Preload: Das Hero-Bild ist das LCP-Element auf Handys, wird aber
+// von React (HeroScrollSection in einem framer-motion-Wrapper) erst NACH der
+// JS-Hydration ins DOM gehängt. Ohne Preload beginnt sein Download deshalb erst,
+// nachdem das große JS-Bundle geladen+ausgeführt ist — genau das treibt den
+// Mobile-LCP hoch. Der Preload startet den Download schon beim HTML-Parsing,
+// parallel zum JS. `media` verhindert, dass Desktop das Handy-Bild unnötig lädt.
+// Dateiname (Hash) wird zur Build-Zeit aus dist/assets aufgelöst — kein
+// hartkodierter Hash, der beim nächsten Build bricht.
+// WICHTIG: Nur auf die Startseite injizieren (route.key === 'home' + Root-
+// index.html) — das Bild existiert nur dort. Ein Preload in baseHtml würde auf
+// allen 371 Seiten landen und auf Blog-/Produktseiten 47 KB ungenutzt laden
+// (plus "preloaded but not used"-Warnung im Browser).
+const heroPreloadTag = (() => {
+  const heroFile = existsSync(ASSETS_DIR)
+    ? readdirSync(ASSETS_DIR).find((f) =>
+        /^Main_20Hero_20Tablet_20Animation_20-_20Mobile_20Version-.*\.webp$/.test(f),
+      )
+    : null;
+  if (heroFile) {
+    console.log(`✅ Mobile-Hero-Preload vorbereitet: ${heroFile}`);
+    return `<link rel="preload" href="/assets/${heroFile}" as="image" type="image/webp" media="(max-width: 767px)" fetchpriority="high">`;
+  }
+  console.warn('⚠️  Mobile-Hero-WebP in dist/assets nicht gefunden — Preload übersprungen');
+  return '';
+})();
+
+// ─── Crawler-Nav-Fallback (Ahrefs „Page has no outgoing links") ──────────────
+// Client-gerenderte Seiten (Blog-Posts + Produkt-/Add-on-Hubs) haben im statischen
+// Prerender-HTML 0 ausgehende Links — die echte Navigation rendert React erst zur
+// Laufzeit in #root. JS-lose Crawler (Ahrefs Raw-Crawl) sehen dann „keine Links".
+// Dieser Off-Screen-<nav> steht AUSSERHALB von #root → wird von createRoot() NICHT
+// überschrieben und überlebt die Hydration. Spiegelt 3 Kern-Ziele; sichtbare Nav
+// kommt weiterhin aus React. Ziele self-canonical-konform (ohne Trailing-Slash),
+// alle drei sind echte, indexierbare Seiten.
+const CRAWLER_NAV =
+  `<nav aria-label="Seiten-Navigation" style="position:absolute;left:-9999px">` +
+  `<a href="${SITE_URL}/de">Startseite</a>` +
+  `<a href="${SITE_URL}/de/blog">Alle Blogartikel</a>` +
+  `<a href="${SITE_URL}/de/preise">Pakete &amp; Preise</a>` +
+  `</nav>`;
+
 // Inject hreflang + canonical into the root index.html (the SPA fallback served
 // for any not-yet-prerendered route). The root represents the language-neutral
 // entry point — alternates point to the localised /<lang>/ home variants.
@@ -558,9 +665,9 @@ const rootHreflangTags = buildHreflangTags('/');
 const rootCanonical = `<link rel="canonical" href="${SITE_URL}/de">`;
 const rootHtmlPatched = baseHtml.replace(
   '</head>',
-  `${rootCanonical}\n${rootHreflangTags}\n  </head>`,
+  `${rootCanonical}\n${rootHreflangTags}\n${heroPreloadTag ? '  ' + heroPreloadTag + '\n' : ''}  </head>`,
 );
-writeFileSync(join(distDir, 'index.html'), rootHtmlPatched);
+writeFileSync(join(distDir, 'index.html'), rootHtmlPatched.replace('</body>', `  ${CRAWLER_NAV}\n</body>`));
 console.log('✅ Hreflang + canonical injected: dist/index.html');
 
 for (const page of pages) {
@@ -577,14 +684,32 @@ for (const page of pages) {
     .replace(
       /<meta property="og:description" content="[^"]*"/,
       `<meta property="og:description" content="${page.description}"`,
+    )
+    .replace(
+      /<meta property="og:url" content="[^"]*"/,
+      `<meta property="og:url" content="${SITE_URL}${page.path}"`,
+    )
+    .replace(
+      /<meta name="twitter:title" content="[^"]*"/,
+      `<meta name="twitter:title" content="${page.title}"`,
+    )
+    .replace(
+      /<meta name="twitter:description" content="[^"]*"/,
+      `<meta name="twitter:description" content="${page.description}"`,
     );
 
   const canonicalUrl = `${SITE_URL}${page.path}`;
   const hreflangTags = buildHreflangTags(page.path);
 
+  // GSC-Fix 2026-07-28: Diese präfixlosen Phase-1-Seiten (/preise, /loesungen/lieferdienst,
+  // /produkte/add-ons) sind DE-Root-Duplikate ihrer /de/…-Version → noindex, damit Google
+  // die /de/…-Variante als einzige indexiert. noindex (statt Canonical-auf-/de/…), weil:
+  //  (a) der Client (useSeoMeta) die Canonical zur Laufzeit wieder self-referenziell
+  //      überschreibt, `robots` aber NIE anfasst → das noindex überlebt die Hydration;
+  //  (b) validate-canonical die SELF-Canonical erwartet — ein /de/…-Canonical hier bräche es.
   const htmlWithExtras = htmlWithMeta.replace(
     '</head>',
-    `<link rel="canonical" href="${canonicalUrl}">\n${hreflangTags}\n  <script type="application/ld+json">${JSON.stringify(page.schema)}</script>\n  </head>`,
+    `<meta name="robots" content="noindex">\n  <link rel="canonical" href="${canonicalUrl}">\n${hreflangTags}\n  <script type="application/ld+json">${JSON.stringify(page.schema)}</script>\n  </head>`,
   );
 
   const filepath = join(distDir, page.path, 'index.html');
@@ -656,6 +781,18 @@ const escapeHtmlMin = (s) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+// Bundle-Prosa mischt Markdown-Links (`[Text](/pfad)`) und Inline-HTML
+// (`<strong>`). Für Static-Fallback-Text + Schema-Answers beides zu
+// Klartext reduzieren — immer VOR escapeHtmlMin anwenden.
+const plainText = (s) =>
+  String(s ?? '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
+
 // Localised contact-route slug — must match routes.ts so the hero CTA never 404s.
 const contactRoute = routes.find((r) => r.key === 'contact');
 const contactSlug = (lang) => contactRoute?.slugs?.[lang] ?? '/kontakt';
@@ -726,6 +863,51 @@ const buildStaticQuotables = (lang) => {
     '<section style="max-width:880px;margin:2rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
     '<h2 style="font-size:1.5rem;font-weight:800;margin:0 0 1rem;">Was Gastro Master auszeichnet</h2>',
     `<ul style="list-style:disc;padding-left:1.25rem;margin:0;line-height:1.6;">${items}</ul>`,
+    '</section>',
+  ].join('');
+};
+
+// YouTube-IDs der 5 Kunden-Testimonials (Quelle: VideoTestimonialSection.tsx).
+// Bewusst hier oben definiert: sowohl der statische Player-Block als auch die
+// VideoObject-Schemas weiter unten lesen dieselbe Liste — so können Markup und
+// strukturierte Daten nicht auseinanderlaufen.
+const YOUTUBE_TESTIMONIAL_IDS = ['JkkVyIFewO0', 'Qv-YDj9gjPk', 'Zx_UJJjQTso', 'A0K7TJ_dwLM', '6dBBN_mohWU'];
+
+/**
+ * Statischer Video-Block für die DE-Homepage (GSC „Video nicht auf
+ * Wiedergabeseite"). Liefert zu jedem VideoObject-Schema ein tatsächlich
+ * abspielbares Embed im ausgelieferten HTML — ohne auf React-Hydration zu
+ * warten. `loading="lazy"` verhindert, dass die Embeds echte Nutzer Bandbreite
+ * kosten (React ersetzt den Block ohnehin beim Mount).
+ */
+const buildStaticVideos = (lang) => {
+  if (lang !== 'de') return '';
+  const bundle = loadBundle(lang, 'common');
+  const items = Array.isArray(bundle?.video?.items) ? bundle.video.items : [];
+  if (!items.length) return '';
+  const figures = items
+    .slice(0, YOUTUBE_TESTIMONIAL_IDS.length)
+    .map((vid, idx) => {
+      const ytId = YOUTUBE_TESTIMONIAL_IDS[idx];
+      if (!ytId || !vid?.name) return '';
+      const label = `${vid.name} — Kundenreferenz Gastro Master`;
+      return [
+        '<figure style="margin:0 0 1.5rem;">',
+        `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}" title="${escapeHtmlMin(label)}"`,
+        ' width="560" height="315" loading="lazy" frameborder="0"',
+        ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"',
+        ' allowfullscreen style="max-width:100%;border:0;"></iframe>',
+        `<figcaption style="font-size:0.875rem;margin-top:0.5rem;">${escapeHtmlMin(label)}</figcaption>`,
+        vid.quote ? `<blockquote style="margin:0.5rem 0 0;font-style:italic;">${escapeHtmlMin(String(vid.quote))}</blockquote>` : '',
+        '</figure>',
+      ].join('');
+    })
+    .join('');
+  if (!figures) return '';
+  return [
+    '<section style="max-width:880px;margin:2rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
+    '<h2 style="font-size:1.5rem;font-weight:800;margin:0 0 1rem;">Kundenstimmen im Video</h2>',
+    figures,
     '</section>',
   ].join('');
 };
@@ -866,6 +1048,7 @@ const buildOfferFromPricing = (canonicalUrl, pricing) => {
       },
       availability: 'https://schema.org/InStock',
       url: canonicalUrl,
+      ...DIGITAL_MERCHANT_OFFER_FIELDS,
     };
   }
 
@@ -888,24 +1071,21 @@ const buildOfferFromPricing = (canonicalUrl, pricing) => {
       priceSpecification: ps,
       availability: 'https://schema.org/InStock',
       url: canonicalUrl,
+      ...DIGITAL_MERCHANT_OFFER_FIELDS,
     };
   }
 
-  // No numeric price: custom quote / on request.
-  return {
-    "@type": "Offer",
-    "@id": `${canonicalUrl}#offer`,
-    priceSpecification: {
-      "@type": "PriceSpecification",
-      priceCurrency: 'EUR',
-      description: priceText || note || 'Auf Anfrage',
-    },
-    availability: 'https://schema.org/InStock',
-    url: canonicalUrl,
-  };
+  // No numeric price: custom quote / on request → KEIN Offer.
+  // GSC-Fix 2026-07-22: Ein Offer ohne `price` UND ohne `priceSpecification.price`
+  // ist ungültig („Feld 'price' fehlt in offers" / „…in offers.priceSpecification").
+  // Statt eines preislosen Offers geben wir null zurück; der Aufrufer lässt den
+  // offers-Block weg und qualifiziert das Product über aggregateRating.
+  return null;
 };
 
 // FAQPage schema from bundle.faq.items[]. AI engines prize FAQPage citations.
+// Antworten in Bundles enthalten Markdown-Links (`[Text](/pfad)`) — für
+// Schema-Text zu Klartext strippen (gleiches Muster wie buildFaqHubFaqSchema).
 const buildFaqPageFromBundle = (canonicalUrl, faqItems) => {
   if (!Array.isArray(faqItems) || faqItems.length < 2) return null;
   return {
@@ -914,8 +1094,11 @@ const buildFaqPageFromBundle = (canonicalUrl, faqItems) => {
     "@id": `${canonicalUrl}#faq`,
     mainEntity: faqItems.map((item) => ({
       "@type": "Question",
-      name: item.q ?? item.question ?? '',
-      acceptedAnswer: { "@type": "Answer", text: item.a ?? item.answer ?? '' },
+      name: String(item.q ?? item.question ?? '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: String(item.a ?? item.answer ?? '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'),
+      },
     })),
   };
 };
@@ -982,19 +1165,51 @@ const RESTAURANT_AUDIENCE = {
 // the global @graph (so Offers don't duplicate; AI engines see one canonical
 // price node referenced from both Service and Product). Uses the real
 // product mockup image where available, falls back to logo.
+// GSC-Fix 2026-07-23 (Batch 5): ein reales 5-Sterne-Review für den Product-Node
+// (buildProductSchema hatte aggregateRating, aber „review fehlt"). Bevorzugt das
+// Yamen-Sharaf-Testimonial (Webseite-Bezug) — identisch zum Client-Node in
+// WebseitePage.tsx —, Fallback: erstes 5-Sterne-Review mit ausreichend Text.
+// Ohne itemReviewed: als nested Product.review ist das Bezugsobjekt impliziert.
+const buildProductReviewNode = () => {
+  const all = reviewsData?.tabs?.['5-Sterne'] ?? reviewsData?.tabs?.Alle ?? [];
+  const pick =
+    all.find((r) => r.author_name === 'Yamen Sharaf') ??
+    all.find((r) => r.text && String(r.text).trim().length >= 60) ??
+    all[0];
+  if (!pick) return null;
+  const datePublished =
+    typeof pick.time === 'number' && pick.time > 0
+      ? new Date(pick.time * 1000).toISOString().slice(0, 10)
+      : undefined;
+  const node = {
+    "@type": "Review",
+    author: { "@type": "Person", name: pick.author_name || 'Anonym' },
+    reviewRating: { "@type": "Rating", ratingValue: String(pick.rating || 5), bestRating: '5', worstRating: '1' },
+    reviewBody: truncate(pick.text),
+  };
+  if (datePublished) node.datePublished = datePublished;
+  return node;
+};
+const PRODUCT_REVIEW_NODE = buildProductReviewNode();
+
 const buildProductSchema = (pkg, canonicalUrl, lang) => ({
   "@context": "https://schema.org",
   "@type": "Product",
   "@id": `${canonicalUrl}#product`,
   name: localizedPackageName(pkg, lang),
   description: pkg.description,
-  brand: { "@id": `${SITE_URL}/#organization` },
+  // GSC-Fix: brand als Brand-Objekt (die @id-Referenz auf die Organization
+  // meldete GSC als „Ungültiger Objekttyp für Feld brand").
+  brand: { "@type": "Brand", name: 'Gastro Master' },
   category: 'Restaurant Software',
   url: canonicalUrl,
   image: packageImageUrl(pkg),
   inLanguage: localeOf(lang),
   offers: { "@id": `${SITE_URL}${pkg.url}#offer` },
-  audience: RESTAURANT_AUDIENCE,
+  // GSC-Fix 2026-07-22 (Batch 2): `audience` entfernt. Der Merchant-Validator
+  // meldet generisches Audience als „Ungültiger Objekttyp für Feld audience"
+  // (erwartet PeopleAudience für physische Waren) — für B2B-SaaS ohne
+  // Rich-Result-Wert. Service.audience (BusinessAudience) bleibt unberührt.
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: String(REVIEW_META.totalRating || 5),
@@ -1002,6 +1217,8 @@ const buildProductSchema = (pkg, canonicalUrl, lang) => ({
     bestRating: '5',
     worstRating: '1',
   },
+  // GSC-Fix 2026-07-23 (Batch 5): „review fehlt" — ein reales Google-Review ergänzt.
+  ...(PRODUCT_REVIEW_NODE ? { review: [PRODUCT_REVIEW_NODE] } : {}),
 });
 
 // Static crawler fallback for a single package page. Uses the localised
@@ -1162,6 +1379,10 @@ const MISC_BUNDLE_MAP = {
   'imprint':         { bundle: 'impressum',     kind: 'legal' },
   'privacy':         { bundle: 'datenschutz',   kind: 'legal' },
   'terms':           { bundle: 'agb',           kind: 'legal' },
+  // GEO-Fix 2026-07: /preise + /blog fielen durch ALLE Registries → Head ok,
+  // aber leerer <div id="root"> für JS-lose AI-Crawler (Live-Crawl-Score 68).
+  'pricing':         { bundle: 'preise',        kind: 'pricing' },
+  'blog':            { bundle: 'blog',          kind: 'blog' },
 };
 
 // Industry / business-type label per solution — fed into Service.audience
@@ -1259,8 +1480,15 @@ const addonImageUrl = (routeKey) => {
 const buildAddonProductSchema = ({ canonicalUrl, lang, bundle, registry, routeKey }) => {
   const meta = bundle?.meta ?? {};
   const hero = bundle?.hero ?? {};
-  const name = meta.breadcrumbName ?? hero.headline ?? routeKey;
-  const description = meta.description ?? hero.subline ?? '';
+  const seo = bundle?.seo ?? {};
+  // GSC-Fix 2026-07-22 (B4-1): Custom-Page-Add-ons (z. B. transaktionsumlage)
+  // haben kein `meta`/`hero.headline`, sondern `seo` + `hero.title1`/`hero.desc`.
+  // Ohne erweiterte Fallback-Kette fiel der Name auf den rohen Route-Key
+  // ("transaction-fee-sharing") und die description auf '' zurück → GSC „Feld
+  // description fehlt". Reihenfolge: kuratiertes meta → hero → seo → Route-Key.
+  // Für normale Add-ons (mit meta.breadcrumbName) ändert sich NICHTS.
+  const name = meta.breadcrumbName ?? hero.headline ?? hero.title1 ?? seo.title ?? routeKey;
+  const description = meta.description ?? hero.subline ?? hero.desc ?? seo.description ?? '';
   const offer = buildOfferFromPricing(canonicalUrl, bundle?.pricing);
   return {
     "@context": "https://schema.org",
@@ -1268,13 +1496,18 @@ const buildAddonProductSchema = ({ canonicalUrl, lang, bundle, registry, routeKe
     "@id": `${canonicalUrl}#product`,
     name,
     description,
-    brand: { "@id": `${SITE_URL}/#organization` },
+    // GSC-Fix (wie buildProductSchema): Brand-Objekt statt @id-Referenz,
+    // Audience statt BusinessAudience — Product-Feldtypen laut Search Console.
+    brand: { "@type": "Brand", name: 'Gastro Master' },
     category: `Restaurant Software / ${registry.category}`,
     url: canonicalUrl,
     image: addonImageUrl(routeKey),
     inLanguage: localeOf(lang),
-    offers: offer,
-    audience: RESTAURANT_AUDIENCE,
+    // offers nur wenn ein gültiger (preisbehafteter) Offer existiert — sonst
+    // qualifiziert die aggregateRating unten (GSC-Fix 2026-07-22).
+    ...(offer ? { offers: offer } : {}),
+    // GSC-Fix 2026-07-22 (Batch 2): `audience` entfernt (Merchant-Validator
+    // meldet generisches Audience als ungültigen Objekttyp; für SaaS wertlos).
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: String(REVIEW_META.totalRating || 5),
@@ -1369,13 +1602,11 @@ const buildSolutionServiceSchema = ({ canonicalUrl, lang, bundle, routeKey }) =>
       audienceType: SOLUTION_AUDIENCE[routeKey] ?? 'Restaurant operators',
       geographicArea: { "@type": "Country", name: ['DE', 'AT', 'CH'] },
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: String(REVIEW_META.totalRating || 5),
-      reviewCount: REVIEW_META.totalCount || 0,
-      bestRating: '5',
-      worstRating: '1',
-    },
+    // GSC-Fix (Rezensions-Snippets „Ungültiger Objekttyp für Feld
+    // <parent_node>"): KEIN aggregateRating am Service-Node — Service ist kein
+    // von Google für Review-Snippets akzeptierter Typ. Das Rating wird auf
+    // denselben Seiten weiterhin über die Organization- und
+    // SoftwareApplication-Nodes (beide zulässig) ausgeliefert.
     // Reference the Pakete that fit this solution — closes the entity loop:
     // Solution → uses → Service-Pakete → has → Offers.
     ...(relatedKeys.length
@@ -1486,20 +1717,138 @@ const buildAboutPageSchema = ({ canonicalUrl, lang, title, description }) => ({
   },
 });
 
+// E-E-A-T-Foundation der Site: Team (Gründer + Mitarbeitende), Trust-Zahlen
+// (800+ Restaurants, 16 Bundesländer, 30+ Team), Story, Timeline, Werte,
+// Prozess und FAQ — alles aus ueber-uns.json. Der frühere Mini-Block (nur
+// H1 + CTA) ließ die komplette Über-uns-Substanz für JS-lose Crawler
+// unsichtbar, obwohl die Meta-Description sie versprach.
 const buildAboutPageStatic = ({ lang, bundle }) => {
-  const norm = normalizeHeroFromBundle(bundle);
+  const b = bundle ?? {};
+  const norm = normalizeHeroFromBundle(b);
   const cta = norm.cta || i18nHero[lang]?.cta || 'Kostenlose Beratung';
+
+  const h2 = (t) =>
+    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.75rem;">${escapeHtmlMin(plainText(t))}</h2>`;
+  const para = (t) =>
+    `<p style="margin:0 0 0.75rem;line-height:1.55;color:#334155;">${escapeHtmlMin(plainText(t))}</p>`;
+  const parts = [];
+
+  parts.push(
+    `<h1 style="font-size:2rem;font-weight:900;line-height:1.2;margin:0 0 1rem;">${escapeHtmlMin(norm.headline || '')}</h1>`,
+  );
+  if (norm.subline) parts.push(para(norm.subline));
+
+  // Trust-Zahlen (800+ Restaurants · 16 Bundesländer · 30+ Team · seit 2021 · 0 %)
+  if (Array.isArray(b.trustBar) && b.trustBar.length) {
+    parts.push(
+      `<ul style="list-style:none;padding:0;margin:0 0 1rem;display:flex;gap:1rem;flex-wrap:wrap;font-weight:600;">${b.trustBar
+        .map((t) => `<li>✓ ${escapeHtmlMin(plainText(`${t.value ?? ''} ${t.label ?? ''}`))}</li>`)
+        .join('')}</ul>`,
+    );
+  }
+
+  if (b.story?.heading) {
+    parts.push(h2(b.story.heading));
+    for (const key of ['block1', 'block2']) {
+      const blk = b.story[key];
+      if (blk?.p1) parts.push(para(blk.p1));
+      if (blk?.p2) parts.push(para(blk.p2));
+    }
+  }
+
+  if (b.location?.heading) {
+    parts.push(h2(b.location.heading));
+    if (b.location.p1) parts.push(para(b.location.p1));
+    if (b.location.p2) parts.push(para(b.location.p2));
+  }
+
+  if (b.timeline?.heading && Array.isArray(b.timeline.milestones) && b.timeline.milestones.length) {
+    parts.push(h2(b.timeline.heading));
+    parts.push(
+      `<ul style="list-style:none;padding:0;margin:0 0 1rem;">${b.timeline.milestones
+        .map(
+          (m) =>
+            `<li style="padding:0.35rem 0;"><strong>${escapeHtmlMin(m.year ?? '')} — ${escapeHtmlMin(plainText(m.title ?? ''))}:</strong> ${escapeHtmlMin(plainText(m.text ?? ''))}</li>`,
+        )
+        .join('')}</ul>`,
+    );
+  }
+
+  // Team: Gründer + Mitarbeitende mit Rolle, Fokus und Bio (E-E-A-T-Kern).
+  const teamPeople = [
+    ...(Array.isArray(b.team?.founders) ? b.team.founders : []),
+    ...(Array.isArray(b.team?.members) ? b.team.members : []),
+  ];
+  if (b.team?.heading && teamPeople.length) {
+    parts.push(h2(b.team.heading));
+    if (b.team.subtitle) parts.push(para(b.team.subtitle));
+    parts.push(
+      `<ul style="list-style:none;padding:0;margin:0 0 1rem;">${teamPeople
+        .map(
+          (m) =>
+            `<li style="margin:0 0 0.75rem;padding:0.75rem 1rem;border:1px solid #e5e7eb;border-radius:0.5rem;"><strong>${escapeHtmlMin(m.name ?? '')}</strong> — ${escapeHtmlMin(plainText([m.role, m.focus].filter(Boolean).join(' · ')))}<br/><span style="color:#475569;font-size:0.95rem;">${escapeHtmlMin(plainText(m.bio ?? ''))}</span></li>`,
+        )
+        .join('')}</ul>`,
+    );
+  }
+
+  if (b.languages?.heading && Array.isArray(b.languages.items) && b.languages.items.length) {
+    parts.push(h2(b.languages.heading));
+    parts.push(
+      para(
+        `${plainText(b.languages.subtitle ?? '')} ${b.languages.items.map((i) => i.label).filter(Boolean).join(', ')}`.trim(),
+      ),
+    );
+  }
+
+  for (const sectionKey of ['values', 'why']) {
+    const sec = b[sectionKey];
+    if (sec?.heading && Array.isArray(sec.items) && sec.items.length) {
+      parts.push(h2(sec.heading));
+      parts.push(
+        `<ul style="list-style:none;padding:0;margin:0 0 1rem;">${sec.items
+          .map(
+            (i) =>
+              `<li style="padding:0.35rem 0;"><strong>${escapeHtmlMin(plainText(i.title ?? ''))}:</strong> ${escapeHtmlMin(plainText(i.text ?? ''))}</li>`,
+          )
+          .join('')}</ul>`,
+      );
+    }
+  }
+
+  if (b.process?.heading && Array.isArray(b.process.steps) && b.process.steps.length) {
+    parts.push(h2(b.process.heading));
+    parts.push(
+      `<ol style="padding-left:1.25rem;margin:0 0 1rem;">${b.process.steps
+        .map(
+          (s) =>
+            `<li style="padding:0.35rem 0;"><strong>${escapeHtmlMin(plainText(s.title ?? ''))}:</strong> ${escapeHtmlMin(plainText(s.text ?? ''))}</li>`,
+        )
+        .join('')}</ol>`,
+    );
+  }
+
+  if (Array.isArray(b.faq?.items) && b.faq.items.length) {
+    parts.push(h2(b.faq.heading ?? 'FAQ'));
+    parts.push(
+      `<ul style="list-style:none;padding:0;margin:0 0 1rem;">${b.faq.items
+        .map(
+          (it) =>
+            `<li style="margin:0 0 0.75rem;padding:0.75rem 1rem;border:1px solid #e5e7eb;border-radius:0.5rem;"><strong>${escapeHtmlMin(plainText(it.q ?? ''))}</strong><br/><span style="color:#475569;font-size:0.95rem;">${escapeHtmlMin(plainText(it.a ?? ''))}</span></li>`,
+        )
+        .join('')}</ul>`,
+    );
+  }
+
+  parts.push(
+    `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>`,
+  );
+
   return [
     '<article style="max-width:880px;margin:3rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-    `<h1 style="font-size:2rem;font-weight:900;line-height:1.2;margin:0 0 1rem;">${escapeHtmlMin(norm.headline || '')}</h1>`,
-    norm.subline
-      ? `<p style="font-size:1.125rem;line-height:1.5;margin:0 0 1.5rem;color:#0A264A;opacity:0.85;">${escapeHtmlMin(norm.subline)}</p>`
-      : '',
-    `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>`,
+    ...parts,
     '</article>',
-  ]
-    .filter(Boolean)
-    .join('');
+  ].join('');
 };
 
 // Comprehensive FAQPage from the /faq bundle's categories[].items[].
@@ -1675,6 +2024,190 @@ const buildLegalPageStatic = ({ lang, bundle }) => {
   ].join('');
 };
 
+// /preise — wichtigste transaktionale Seite der Site ("was kostet Gastro
+// Master?"). Baut den kompletten Pricing-Content aus preise.json: Hero mit
+// Trust-Pills, die 4 Pakete (aus PACKAGES via buildStaticPackages), Kasse,
+// Kassen-Add-ons, Bestellsystem-Add-ons, Empfehlungsprogramm, Integration,
+// FAQ und CTA. Vorher: leerer <div id="root"> → Pricing-Queries für alle
+// AI-Engines unsichtbar.
+const buildPricingPageStatic = ({ lang, bundle }) => {
+  const b = bundle ?? {};
+  const h2 = (t) =>
+    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.75rem;">${escapeHtmlMin(plainText(t))}</h2>`;
+  const para = (t) =>
+    `<p style="margin:0 0 0.75rem;line-height:1.55;color:#334155;">${escapeHtmlMin(plainText(t))}</p>`;
+  const priceEm = (t) =>
+    `<p style="font-size:1.25rem;color:#ED8400;font-weight:700;margin:0 0 0.5rem;">${escapeHtmlMin(plainText(t))}</p>`;
+  const featureList = (items) =>
+    `<ul style="list-style:none;padding:0;margin:0 0 1rem;">${items
+      .map((f) => `<li style="padding:0.25rem 0;">✓ ${escapeHtmlMin(plainText(f))}</li>`)
+      .join('')}</ul>`;
+  const parts = [];
+
+  const norm = normalizeHeroFromBundle(b);
+  parts.push(
+    `<h1 style="font-size:2rem;font-weight:900;line-height:1.2;margin:0 0 1rem;">${escapeHtmlMin(norm.headline || 'Gastro Master Preise')}</h1>`,
+  );
+  const heroDesc = [b.hero?.desc1, b.hero?.desc2].filter(Boolean).join(' ');
+  if (heroDesc) parts.push(para(heroDesc));
+  if (Array.isArray(b.hero?.pills) && b.hero.pills.length) {
+    parts.push(
+      `<ul style="list-style:none;padding:0;margin:0 0 1rem;display:flex;gap:1rem;flex-wrap:wrap;font-weight:600;">${b.hero.pills
+        .map((pill) => `<li>✓ ${escapeHtmlMin(plainText(pill))}</li>`)
+        .join('')}</ul>`,
+    );
+  }
+
+  // Die 4 Pakete inkl. Preisen — identische Quelle wie Homepage-Static-Block.
+  parts.push(buildStaticPackages(lang));
+
+  if (b.kasse?.title) {
+    parts.push(h2(b.kasse.title));
+    if (b.kasse.desc) parts.push(para(b.kasse.desc));
+    const kassePrice = [b.kasse.price, b.kasse.priceDetail].filter(Boolean).join(' ');
+    if (kassePrice) parts.push(priceEm(kassePrice));
+    if (b.kasse.priceSub) parts.push(para(b.kasse.priceSub));
+    if (Array.isArray(b.kasse.features) && b.kasse.features.length) {
+      parts.push(featureList(b.kasse.features));
+    }
+    if (b.kasse.legalNote) parts.push(para(b.kasse.legalNote));
+  }
+
+  if (b.addonsKasse?.title && Array.isArray(b.addonsKasse.items) && b.addonsKasse.items.length) {
+    parts.push(h2(b.addonsKasse.title));
+    if (b.addonsKasse.desc) parts.push(para(b.addonsKasse.desc));
+    parts.push(
+      `<ul style="list-style:none;padding:0;margin:0 0 1rem;">${b.addonsKasse.items
+        .map((item) => {
+          const price = [item.price, item.priceDetail].filter(Boolean).join(' ');
+          const features = Array.isArray(item.features)
+            ? item.features.map((f) => `✓ ${plainText(f)}`).join(' · ')
+            : '';
+          return `<li style="margin:0 0 0.75rem;padding:0.75rem 1rem;border:1px solid #e5e7eb;border-radius:0.5rem;"><strong>${escapeHtmlMin(plainText(item.title ?? ''))}</strong> — <span style="color:#ED8400;font-weight:600;">${escapeHtmlMin(price)}</span><br/><span style="color:#475569;font-size:0.95rem;">${escapeHtmlMin(features)}</span></li>`;
+        })
+        .join('')}</ul>`,
+    );
+    if (b.addonsKasse.footnote) parts.push(para(b.addonsKasse.footnote));
+  }
+
+  if (b.addonsOrder?.title) {
+    parts.push(h2(b.addonsOrder.title));
+    if (b.addonsOrder.desc) parts.push(para(b.addonsOrder.desc));
+    if (b.addonsOrder.txTitle) {
+      parts.push(para(`${plainText(b.addonsOrder.txTitle)}: ${plainText(b.addonsOrder.txDesc ?? '')}`));
+    }
+    if (b.addonsOrder.flyerTitle) {
+      const flyerPrice = [b.addonsOrder.flyerPrice, b.addonsOrder.flyerPriceDetail].filter(Boolean).join(' ');
+      const flyerFeatures = Array.isArray(b.addonsOrder.flyerFeatures)
+        ? ` — ${b.addonsOrder.flyerFeatures.map(plainText).join(' · ')}`
+        : '';
+      parts.push(
+        para(`${plainText(b.addonsOrder.flyerTitle)} (${flyerPrice})${flyerFeatures}. ${plainText(b.addonsOrder.flyerHighlight ?? '')}`),
+      );
+    }
+  }
+
+  if (b.referral?.desc) {
+    parts.push(h2([b.referral.title1, b.referral.title2].filter(Boolean).join(' ') || 'Empfehlungsprogramm'));
+    parts.push(para(b.referral.desc));
+    if (Array.isArray(b.referral.steps) && b.referral.steps.length) {
+      parts.push(
+        `<ol style="padding-left:1.25rem;margin:0 0 1rem;">${b.referral.steps
+          .map(
+            (s) =>
+              `<li style="padding:0.25rem 0;"><strong>${escapeHtmlMin(plainText(s.title ?? ''))}:</strong> ${escapeHtmlMin(plainText(s.text ?? ''))}</li>`,
+          )
+          .join('')}</ol>`,
+      );
+    }
+    if (b.referral.noLimitText) parts.push(para(`${plainText(b.referral.noLimit ?? '')} ${plainText(b.referral.noLimitText)}`));
+  }
+
+  if (b.integration?.title) {
+    parts.push(h2(b.integration.title));
+    if (b.integration.desc) parts.push(para(b.integration.desc));
+    if (Array.isArray(b.integration.items) && b.integration.items.length) {
+      parts.push(
+        `<ul style="list-style:none;padding:0;margin:0 0 1rem;">${b.integration.items
+          .map(
+            (i) =>
+              `<li style="padding:0.25rem 0;"><strong>${escapeHtmlMin(plainText(i.title ?? ''))}:</strong> ${escapeHtmlMin(plainText(i.text ?? ''))}</li>`,
+          )
+          .join('')}</ul>`,
+      );
+    }
+    if (b.integration.connDesc) parts.push(para(b.integration.connDesc));
+  }
+
+  if (Array.isArray(b.faq?.items) && b.faq.items.length) {
+    parts.push(h2(b.faq.title ?? 'FAQ'));
+    parts.push(
+      `<ul style="list-style:none;padding:0;margin:0 0 1rem;">${b.faq.items
+        .map(
+          (it) =>
+            `<li style="margin:0 0 0.75rem;padding:0.75rem 1rem;border:1px solid #e5e7eb;border-radius:0.5rem;"><strong>${escapeHtmlMin(plainText(it.q ?? ''))}</strong><br/><span style="color:#475569;font-size:0.95rem;">${escapeHtmlMin(plainText(it.a ?? ''))}</span></li>`,
+        )
+        .join('')}</ul>`,
+    );
+  }
+
+  const ctaText = b.cta?.button || b.hero?.cta || i18nHero[lang]?.cta || 'Kostenlose Beratung';
+  if (b.cta?.title) parts.push(h2(b.cta.title));
+  if (b.cta?.desc) parts.push(para(b.cta.desc));
+  parts.push(
+    `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(plainText(ctaText))}</a>`,
+  );
+  if (Array.isArray(b.cta?.trust) && b.cta.trust.length) {
+    parts.push(
+      `<ul style="list-style:none;padding:0;margin:1rem 0 0;display:flex;gap:1rem;flex-wrap:wrap;font-size:0.875rem;font-weight:600;">${b.cta.trust
+        .map((t) => `<li>✓ ${escapeHtmlMin(plainText(t))}</li>`)
+        .join('')}</ul>`,
+    );
+  }
+
+  return [
+    '<article style="max-width:880px;margin:3rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
+    ...parts,
+    '</article>',
+  ].join('');
+};
+
+// /blog Index — der Discovery-Einstiegspunkt für alle Blog-Posts. Ohne die
+// statische Post-Liste sehen JS-lose AI-Crawler 117+ perfekt pre-renderte
+// Posts, aber keinen Weg dorthin. Blog-Content ist DE-only → Links zeigen
+// immer auf /de/blog/<slug> (identisch zum SPA-Verhalten auf allen Sprachen).
+const buildBlogIndexStatic = ({ lang, bundle, posts }) => {
+  const b = bundle ?? {};
+  const h1 = plainText(b.hero?.title || 'Blog');
+  const sub = plainText(b.hero?.subtitle || '');
+  const cta = i18nHero[lang]?.cta || 'Kostenlose Beratung';
+  const items = posts
+    .map((post) => {
+      const url = `/de/blog/${post.slug}`;
+      const postTitle = plainText(post.title);
+      const desc = plainText(post.metaDescription || post.description || post.excerpt || '');
+      const meta = [post.publishedDate, post.category].filter(Boolean);
+      return [
+        '<li style="margin:0 0 1rem;padding:0.75rem 1rem;border:1px solid #e5e7eb;border-radius:0.5rem;">',
+        `<a href="${url}" style="font-weight:700;color:#0A264A;text-decoration:none;">${escapeHtmlMin(postTitle)}</a><br/>`,
+        meta.length
+          ? `<small style="color:#64748b;"><time datetime="${escapeHtmlMin(post.publishedDate ?? '')}">${escapeHtmlMin(post.publishedDate ?? '')}</time>${post.category ? ` · ${escapeHtmlMin(post.category)}` : ''}</small><br/>`
+          : '',
+        `<span style="color:#475569;font-size:0.95rem;">${escapeHtmlMin(desc)}</span>`,
+        '</li>',
+      ].join('');
+    })
+    .join('');
+  return [
+    '<article style="max-width:880px;margin:3rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
+    `<h1 style="font-size:2rem;font-weight:900;line-height:1.2;margin:0 0 1rem;">${escapeHtmlMin(h1)}</h1>`,
+    sub ? `<p style="font-size:1.125rem;line-height:1.5;margin:0 0 1.5rem;color:#475569;">${escapeHtmlMin(sub)}</p>` : '',
+    `<ol style="list-style:none;padding:0;margin:0 0 1.5rem;">${items}</ol>`,
+    `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>`,
+    '</article>',
+  ].join('');
+};
+
 // Static fallback for the /produkte/add-ons hub: pulls structured cards from
 // addons-hub.json (5 add-ons with title/price/desc/benefits/compatibility).
 const buildAddonsHubStatic = (lang) => {
@@ -1728,6 +2261,55 @@ const buildAddonsHubStatic = (lang) => {
   ].join('');
 };
 
+// ── GSC-Fix 2026-07-18 (Product-Snippets: „offers/review/aggregateRating fehlt",
+// „image fehlt", „Ungültiger Objekttyp brand") ─────────────────────────────────
+// Positions-Mapping pro Bundle-Sektion: Hersteller + Asset-Prefix des echten
+// Produktbilds. Positional statt Titel-Match, damit es für alle 6 Sprachen
+// funktioniert (Titel sind übersetzt, Sektions-Reihenfolge ist identisch).
+// Prefixe mit abschließendem "-" treffen exakt das Haupt-Produktfoto
+// (z. B. „…TM-M30III-<hash>.png", nicht „…TM-M30III Frontal-<hash>.png").
+const HARDWARE_PRODUCT_META = {
+  kasse: [
+    { brand: 'Elo',           img: 'Hardware - Elo Front-' },
+    { brand: 'Elo',           img: 'Hardware - Elo Double Screen Front-' },
+    { brand: 'Microsoft',     img: 'Hardware - Microsoft Surface Tablet Front-' },
+    // ThinkPad X12: bewusst kein offers (kein Fixpreis, „Auf Anfrage") → sonst
+    // GSC-Fehler „price fehlt". sku/mpn helfen Google bei der Produkt-Zuordnung.
+    { brand: 'Lenovo',        img: 'Lenovo ThinkPad X12 Detachable - 1', sku: 'THINKPAD-X12-DETACHABLE', mpn: '20UWS0AX00' },
+  ],
+  terminals: [
+    { brand: 'Adyen',         img: 'Adyen POS-Terminal - S1F2L-' },
+    { brand: 'Adyen',         img: 'Adyen AMS1 Terminal-' },
+    { brand: 'Gastro Master', img: 'Gastro Master - 58mm Bon-Drucker-' },
+  ],
+  printers: [
+    { brand: 'Gastro Master', img: 'Gastro Master - 80mm Drucker-' },
+    { brand: 'Epson',         img: 'Epson Bondrucker TM-M30III-' },
+    { brand: 'Epson',         img: 'Epson Bondrucker TM-T20III-' },
+  ],
+  accessories: [
+    { brand: 'APG',           img: 'Gastro Master - Kassenschublade-' },
+    { brand: 'Gastro Master', img: 'Tablet Ständer-' },
+    { brand: 'Microsoft',     img: 'Microsoft Surface Pro - Schutzhülle 1' },
+    { brand: 'Gastro Master', img: 'Lan Kabel' },
+  ],
+};
+
+// GSC-Fix 2026-07-20 (Produkt-Snippets „Feld 'price' fehlt (in offers)"):
+// Die Hardware-Seite zeigt bewusst keine Preise (CTA „Auf Anfrage"). Ein Offer
+// ohne price/priceSpecification ist laut Google ungültig. Statt eines
+// Preis-Offers qualifizieren wir die Produkt-Snippets über aggregateRating —
+// ein gültiges Qualifying-Feld. Werte kommen aus DERSELBEN zentralen Quelle
+// (REVIEW_META) wie Organization/SoftwareApplication → site-weit konsistent
+// und zukunftssicher (aktualisiert automatisch beim Google-Reviews-Sync).
+const buildHardwareAggregateRating = () => ({
+  "@type": "AggregateRating",
+  ratingValue: String(REVIEW_META.totalRating || 5),
+  reviewCount: REVIEW_META.totalCount || 0,
+  bestRating: '5',
+  worstRating: '1',
+});
+
 // ItemList of hardware products from the bundle (when available, ~13 real
 // items across 4 sections), falling back to the hardcoded category list.
 const buildHardwareItemList = (canonicalUrl, lang) => {
@@ -1735,11 +2317,12 @@ const buildHardwareItemList = (canonicalUrl, lang) => {
   const sections = bundle?.sections;
   if (sections && typeof sections === 'object') {
     const all = [];
-    for (const sec of Object.values(sections)) {
+    for (const [secKey, sec] of Object.entries(sections)) {
       if (Array.isArray(sec?.products)) {
-        for (const p of sec.products) {
-          all.push({ title: p.title, desc: p.desc, sectionBadge: sec.badge });
-        }
+        sec.products.forEach((p, idx) => {
+          const meta = HARDWARE_PRODUCT_META[secKey]?.[idx];
+          all.push({ title: p.title, desc: p.desc, sectionBadge: sec.badge, meta });
+        });
       }
     }
     if (all.length) {
@@ -1756,7 +2339,14 @@ const buildHardwareItemList = (canonicalUrl, lang) => {
             name: p.title,
             description: p.desc,
             category: p.sectionBadge ? `Restaurant Hardware / ${p.sectionBadge}` : 'Restaurant Hardware',
-            brand: { "@id": `${SITE_URL}/#organization` },
+            image: (p.meta && resolveAssetUrl(p.meta.img)) ?? `${SITE_URL}/logo-gastro-master.png`,
+            brand: { "@type": "Brand", name: p.meta?.brand ?? 'Gastro Master' },
+            // sku/mpn nur wo bekannt (z. B. ThinkPad X12) — hilft Google bei der
+            // Produkt-Zuordnung. Kein offers: Hardware ist „Auf Anfrage",
+            // aggregateRating ist das GSC-gültige Qualifying-Feld.
+            ...(p.meta?.sku ? { sku: p.meta.sku } : {}),
+            ...(p.meta?.mpn ? { mpn: p.meta.mpn } : {}),
+            aggregateRating: buildHardwareAggregateRating(),
           },
         })),
       };
@@ -1776,11 +2366,24 @@ const buildHardwareItemList = (canonicalUrl, lang) => {
         name: c.name,
         description: c.description,
         category: 'Restaurant Hardware',
-        brand: { "@id": `${SITE_URL}/#organization` },
+        image: `${SITE_URL}/logo-gastro-master.png`,
+        brand: { "@type": "Brand", name: 'Gastro Master' },
+        aggregateRating: buildHardwareAggregateRating(),
       },
     })),
   };
 };
+
+// Blog-Daten VOR der Route-Schleife laden: der /blog-Index-Static-Block
+// braucht die Post-Liste, Phase 3 (per-Post-Pre-Render) nutzt sie danach.
+// Quelle ist blog-posts.ts (nicht blog-posts-generated.ts) — das schließt
+// die handgeschriebenen lbp-Posts mit ein, die BlogPage auch rendert.
+const { blogPosts: allBlogPosts } = await import(
+  new URL('../src/data/blog-posts.ts', import.meta.url).href
+);
+const sortedBlogPosts = [...allBlogPosts].sort(
+  (a, b) => new Date(b.publishedDate) - new Date(a.publishedDate),
+);
 
 let perLangCount = 0;
 for (const route of routes) {
@@ -1851,9 +2454,12 @@ for (const route of routes) {
       }
     } else if (addonRegistry) {
       // Per-language SEO meta from the add-on's i18n bundle (or DE fallback).
+      // Manche Add-on-Bundles nutzen `seo.*` (z. B. transaktionsumlage), andere
+      // `meta.*` — daher BEIDE prüfen. `||` (nicht `??`), damit ein leerer String
+      // im ersten Feld auf das zweite durchfällt (sonst leere Description im HTML).
       const b = loadBundle(lang, addonRegistry.bundle) ?? loadBundle('de', addonRegistry.bundle);
-      pageTitle = b?.meta?.title ?? `${addonRegistry.bundle} | Gastro Master`;
-      pageDesc = b?.meta?.description ?? '';
+      pageTitle = b?.seo?.title || b?.meta?.title || `${addonRegistry.bundle} | Gastro Master`;
+      pageDesc = b?.seo?.description || b?.meta?.description || '';
     } else if (isAddonsHub) {
       const h = loadBundle(lang, 'addons-hub') ?? loadBundle('de', 'addons-hub');
       pageTitle = h?.seo?.title ?? `${navLabel(lang, 'add-ons')} | Gastro Master`;
@@ -1891,15 +2497,41 @@ for (const route of routes) {
       const b = loadBundle(lang, miscEntry.bundle) ?? loadBundle('de', miscEntry.bundle);
       pageTitle = b?.seo?.title ?? b?.meta?.title ?? `${miscEntry.bundle} | Gastro Master`;
       pageDesc = b?.seo?.description ?? b?.meta?.description ?? '';
+    } else if (route.key === 'contact') {
+      // Kontakt hat kein eigenes Bundle — SEO-Meta liegt in common.json
+      // unter contact.seoTitle/seoDesc (per Sprache gepflegt).
+      const c = loadBundle(lang, 'common') ?? loadBundle('de', 'common');
+      pageTitle = c?.contact?.seoTitle;
+      pageDesc = c?.contact?.seoDesc;
+    } else if (route.key === 'integrations') {
+      // Integrations hat weder Bundle noch seo-Block — Titel aus dem
+      // Slider-Heading + Hero-Subtitle in common.json (per Sprache).
+      const c = loadBundle(lang, 'common') ?? loadBundle('de', 'common');
+      const sliderTitle = plainText(c?.integrationSlider?.title ?? '');
+      pageTitle = sliderTitle ? `Gastro Master | ${sliderTitle}` : undefined;
+      // Dedizierte seo.description bevorzugen (Hero-Subtitle war als Meta zu lang);
+      // Hero-Subtitle nur als Fallback. Der sichtbare Hero-Text bleibt unberührt.
+      pageDesc = plainText(c?.integrationsPage?.seo?.description ?? c?.integrationsPage?.hero?.subtitle ?? '') || undefined;
     }
-    const title = curatedMeta?.title ?? langFallback?.title ?? pageTitle ?? ROOT_TITLE;
-    const description = curatedMeta?.description ?? langFallback?.description ?? pageDesc ?? ROOT_DESC;
+    // curatedMeta (seoMeta.json) ist DE-only-Content → nur für DE verwenden, sonst
+    // leakt der deutsche Titel/Description auf /en, /it, /fa, /ru, /si. Nicht-DE
+    // nimmt stattdessen das per-Sprache-Bundle (pageTitle/pageDesc).
+    const curated = lang === 'de' ? curatedMeta : undefined;
+    const title = curated?.title ?? langFallback?.title ?? pageTitle ?? ROOT_TITLE;
+    const description = curated?.description ?? langFallback?.description ?? pageDesc ?? ROOT_DESC;
 
     let html = baseHtml
       .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
       .replace(/<meta name="description" content="[^"]*"/, `<meta name="description" content="${description}"`)
       .replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${title}"`)
-      .replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${description}"`);
+      .replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${description}"`)
+      // og:url MUSS die kanonische URL der Seite sein — der Template-Wert
+      // (Homepage /de) würde sonst sitewide als Duplicate-Content-Signal
+      // an Facebook/LLM-Crawler gehen. Gleiches für twitter:title/description.
+      .replace(/<meta property="og:url" content="[^"]*"/, `<meta property="og:url" content="${canonicalUrl}"`)
+      .replace(/<meta property="og:locale" content="[^"]*"/, `<meta property="og:locale" content="${localeOf(lang).replace('-', '_')}"`)
+      .replace(/<meta name="twitter:title" content="[^"]*"/, `<meta name="twitter:title" content="${title}"`)
+      .replace(/<meta name="twitter:description" content="[^"]*"/, `<meta name="twitter:description" content="${description}"`);
 
     // Set the <html lang> attribute so headless crawlers can detect language.
     html = html.replace(/<html\s+lang="[^"]*"/, `<html lang="${lang}"`);
@@ -1927,7 +2559,15 @@ for (const route of routes) {
       const heroHtml = buildStaticHero(lang);
       const packagesHtml = buildStaticPackages(lang);
       const quotablesHtml = buildStaticQuotables(lang);
-      const homeStatic = `${heroHtml}${packagesHtml}${quotablesHtml}`;
+      // GSC-Fix „Video nicht auf Wiedergabeseite": Die VideoObject-Schemas
+      // (siehe 3c) beschreiben 5 YouTube-Testimonials — das eigentliche
+      // <iframe> entsteht aber erst nach Hydration (VideoTestimonialSection ist
+      // lazy() + im Carousel). Googlebot fand auf der Seite daher kein
+      // abspielbares Video zum Schema. Der statische Fallback liefert jetzt für
+      // jedes beschriebene Video ein echtes Player-Embed; React ersetzt den
+      // Block bei createRoot(), für Nutzer ändert sich nichts.
+      const videosHtml = lang === 'de' ? buildStaticVideos(lang) : '';
+      const homeStatic = `${heroHtml}${packagesHtml}${quotablesHtml}${videosHtml}`;
       if (homeStatic) {
         html = html.replace(/<div id="root"><\/div>/, `<div id="root">${homeStatic}</div>`);
       }
@@ -1966,6 +2606,7 @@ for (const route of routes) {
         "@type": "LocalBusiness",
         "@id": `${SITE_URL}/#local-business`,
         name: "Gastro Master",
+        legalName: "Epit Global GmbH",
         url: SITE_URL,
         logo: `${SITE_URL}/logo-gastro-master.png`,
         image: `${SITE_URL}/logo-gastro-master.png`,
@@ -2027,7 +2668,8 @@ for (const route of routes) {
       // Quotes sind im DE-Original). Hilft Gemini + Bing Copilot bei Video-
       // Citation. YouTube-IDs aus VideoTestimonialSection.tsx, Texte aus
       // common.json bundle["video"]["items"].
-      const YOUTUBE_TESTIMONIAL_IDS = ["JkkVyIFewO0", "Qv-YDj9gjPk", "Zx_UJJjQTso", "A0K7TJ_dwLM", "6dBBN_mohWU"];
+      // IDs kommen aus der gemeinsamen Konstante oben (gleiche Quelle wie der
+      // statische Player-Block) — kein zweiter Ort, der gepflegt werden muss.
       if (lang === 'de') {
         const commonBundle = loadBundle(lang, 'common');
         const videoItems = Array.isArray(commonBundle?.video?.items) ? commonBundle.video.items : [];
@@ -2041,7 +2683,14 @@ for (const route of routes) {
             name: `${vid.name} — Kundenreferenz Gastro Master`,
             description: String(vid.quote),
             thumbnailUrl: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
-            uploadDate: BUILD_DATE,
+            // NICHT BUILD_DATE: das behauptete bei jedem Build, alle Videos
+            // seien am Build-Tag hochgeladen worden (Google wertet uploadDate
+            // als Aktualitätssignal). Fester Platzhalter, bis die echten
+            // YouTube-Upload-Daten vorliegen — die oEmbed-API liefert sie
+            // nicht, dafür wäre die YouTube Data API nötig.
+            // GSC-Fix: uploadDate MUSS eine Zeitzone tragen (ISO 8601), sonst
+            // „Zeitzone in Datum/Uhrzeit-Attribut 'uploadDate' fehlt".
+            uploadDate: '2025-01-01T00:00:00+00:00',
             contentUrl: `https://www.youtube.com/watch?v=${ytId}`,
             embedUrl: `https://www.youtube-nocookie.com/embed/${ytId}`,
             publisher: { "@id": `${SITE_URL}/#organization` },
@@ -2181,6 +2830,10 @@ for (const route of routes) {
               item: { "@id": `${SITE_URL}/#service-${p.key}` },
             })),
           },
+          speakable: {
+            "@type": "SpeakableSpecification",
+            cssSelector: ['h1', 'article p:first-of-type'],
+          },
         });
         extraSchemas.push(
           buildBreadcrumbList(canonicalUrl, [
@@ -2209,8 +2862,12 @@ for (const route of routes) {
         );
         // Breadcrumb: Home → Produkte → Add-Ons → [Add-on name]. The
         // Add-Ons crumb points to the hub which DOES exist as a route.
+        // GSC-Fix 2026-07-22 (B4-1): gleiche erweiterte Fallback-Kette wie
+        // buildAddonProductSchema — Custom-Page-Add-ons (transaktionsumlage)
+        // sonst mit rohem route.key ("transaction-fee-sharing") im Breadcrumb.
         const addonName =
-          bundle?.meta?.breadcrumbName ?? bundle?.hero?.headline ?? route.key;
+          bundle?.meta?.breadcrumbName ?? bundle?.hero?.headline ??
+          bundle?.hero?.title1 ?? bundle?.seo?.title ?? route.key;
         extraSchemas.push(
           buildBreadcrumbList(canonicalUrl, [
             ...baseCrumbs,
@@ -2345,6 +3002,32 @@ for (const route of routes) {
           // ueber-uns has 5 FAQs at top-level faq.items.
           const aboutFaq = buildFaqPageFromBundle(canonicalUrl, mBundle?.faq?.items);
           if (aboutFaq) extraSchemas.push(aboutFaq);
+          // GSC-Fix „Video nicht indexiert": VideoObject-Schemas für die 5
+          // Testimonial-Videos auf /de/uber-uns (DE only — Quotes sind DE).
+          // videoId/name/quote direkt aus ueber-uns.json testimonials.items;
+          // Format identisch zum Homepage-Video-Schema (uploadDate mit Zeitzone,
+          // hqdefault-Thumbnail — beides GSC-erprobt).
+          if (lang === 'de') {
+            const aboutVideos = Array.isArray(mBundle?.testimonials?.items) ? mBundle.testimonials.items : [];
+            aboutVideos.forEach((vid) => {
+              const ytId = vid?.videoId;
+              if (!ytId || !vid?.name || !vid?.quote) return;
+              extraSchemas.push({
+                "@context": "https://schema.org",
+                "@type": "VideoObject",
+                "@id": `${canonicalUrl}#video-${ytId}`,
+                name: `${vid.name}${vid.restaurant ? ` (${vid.restaurant})` : ''} — Kundenreferenz Gastro Master`,
+                description: String(vid.quote),
+                thumbnailUrl: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
+                uploadDate: '2025-01-01T00:00:00+00:00',
+                contentUrl: `https://www.youtube.com/watch?v=${ytId}`,
+                embedUrl: `https://www.youtube-nocookie.com/embed/${ytId}`,
+                publisher: { "@id": `${SITE_URL}/#organization` },
+                inLanguage: localeOf(lang),
+                isFamilyFriendly: true,
+              });
+            });
+          }
           extraSchemas.push(
             buildBreadcrumbList(canonicalUrl, [
               { name: 'Home', url: `${SITE_URL}/${lang}` },
@@ -2388,6 +3071,10 @@ for (const route of routes) {
             datePublished: BUILD_DATE,
             dateModified: BUILD_DATE,
             ...(itemList ? { mainEntity: itemList } : {}),
+            speakable: {
+              "@type": "SpeakableSpecification",
+              cssSelector: ['h1', 'article p:first-of-type'],
+            },
           });
           // Breadcrumb: Home → Downloads (→ Druckertreiber).
           const crumbs = [
@@ -2415,6 +3102,83 @@ for (const route of routes) {
             buildBreadcrumbList(canonicalUrl, [
               { name: 'Home', url: `${SITE_URL}/${lang}` },
               { name: mBundle?.title || title.split(' | ')[0], url: canonicalUrl },
+            ]),
+          );
+        } else if (miscEntry.kind === 'pricing') {
+          staticContent = buildPricingPageStatic({ lang, bundle: mBundle });
+          // FAQPage aus den 6 Preis-FAQs ("Was kostet das Kassensystem?" etc.)
+          // — die direkteste AI-Citation-Quelle für Pricing-Queries.
+          const pricingFaq = buildFaqPageFromBundle(canonicalUrl, mBundle?.faq?.items);
+          if (pricingFaq) extraSchemas.push(pricingFaq);
+          extraSchemas.push(
+            buildPageWebPageSchema({
+              canonicalUrl,
+              name: title,
+              description,
+              lang,
+            }),
+          );
+          extraSchemas.push(
+            buildBreadcrumbList(canonicalUrl, [
+              { name: 'Home', url: `${SITE_URL}/${lang}` },
+              { name: i18nNav[lang]?.preise ?? 'Preise', url: canonicalUrl },
+            ]),
+          );
+        } else if (miscEntry.kind === 'blog') {
+          staticContent = buildBlogIndexStatic({ lang, bundle: mBundle, posts: sortedBlogPosts });
+          // Blog-Node mit blogPost-Referenzen auf alle BlogPosting-@ids —
+          // gibt AI-Engines die komplette Post-Inventur in einem Knoten.
+          extraSchemas.push({
+            "@context": "https://schema.org",
+            "@type": "Blog",
+            "@id": `${canonicalUrl}#blog`,
+            url: canonicalUrl,
+            name: title,
+            description,
+            inLanguage: localeOf(lang),
+            isPartOf: { "@id": `${SITE_URL}/#website` },
+            publisher: { "@id": `${SITE_URL}/#organization` },
+            blogPost: sortedBlogPosts.map((p) => ({
+              "@id": `${SITE_URL}/de/blog/${p.slug}#article`,
+            })),
+          });
+          // CollectionPage (WebPage-Subtyp, ersetzt den generischen WebPage-
+          // Node) mit ItemList: Top 30 Posts als benannte ListItems,
+          // numberOfItems = Gesamtzahl (121). AI-Engines discovern Blog-
+          // Sammlungen über genau dieses Muster — wie ein strukturiertes
+          // Inhaltsverzeichnis (gleiches Pattern wie Solutions-/Add-ons-Hub).
+          extraSchemas.push({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "@id": `${canonicalUrl}#collection`,
+            url: canonicalUrl,
+            name: title,
+            description,
+            inLanguage: localeOf(lang),
+            isPartOf: { "@id": `${SITE_URL}/#website` },
+            about: { "@id": `${SITE_URL}/#organization` },
+            datePublished: BUILD_DATE,
+            dateModified: BUILD_DATE,
+            mainEntity: {
+              "@type": "ItemList",
+              name: title,
+              numberOfItems: sortedBlogPosts.length,
+              itemListElement: sortedBlogPosts.slice(0, 30).map((p, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                url: `${SITE_URL}/de/blog/${p.slug}`,
+                name: plainText(p.title),
+              })),
+            },
+            speakable: {
+              "@type": "SpeakableSpecification",
+              cssSelector: ['h1', 'article p:first-of-type'],
+            },
+          });
+          extraSchemas.push(
+            buildBreadcrumbList(canonicalUrl, [
+              { name: 'Home', url: `${SITE_URL}/${lang}` },
+              { name: mBundle?.breadcrumb?.blog ?? 'Blog', url: canonicalUrl },
             ]),
           );
         }
@@ -2458,7 +3222,91 @@ for (const route of routes) {
           .join('\n');
         html = html.replace('</head>', `${blocks}\n  </head>`);
       }
+    } else {
+      // Fallback für Routen ohne dedizierten Builder (kontakt, integrations,
+      // 3 Legacy-Blog-Routen mit eigenen React-Components): H1 + Beschreibung
+      // + CTA, damit KEINE Seite mit leerem <div id="root"> ausgeliefert wird.
+      // Kein erfundener Content — Quellen: common.json bzw. Title/Description
+      // der Seite selbst.
+      const c = loadBundle(lang, 'common') ?? loadBundle('de', 'common');
+      let h1 = '';
+      let sub = '';
+      const extraLines = [];
+      if (route.key === 'contact') {
+        h1 = plainText(c?.contact?.heroTitle ?? '') || 'Kontakt';
+        sub = plainText(c?.contact?.heroSub ?? '') || description;
+        // Kontaktdaten wie im LocalBusiness-Schema (Homepage) — für Crawler
+        // die direkteste Antwort auf "Wie erreiche ich Gastro Master?".
+        extraLines.push('Gastro Master · Herzbergstr. 9 · 61250 Usingen (Hessen)');
+        extraLines.push('Telefon: +49 6081 9128913 · E-Mail: info@gastro-master.de');
+      } else if (route.key === 'integrations') {
+        h1 = plainText(c?.integrationSlider?.title ?? '') || 'Integrationen';
+        sub = plainText(c?.integrationsPage?.hero?.subtitle ?? '') || description;
+      } else {
+        h1 = String(title)
+          .replace(/^Gastro Master \| /, '')
+          .replace(/ \| Gastro Master.*$/, '');
+        sub = description;
+      }
+      const cta = i18nHero[lang]?.cta || 'Kostenlose Beratung';
+      const fallbackStatic = [
+        '<article style="max-width:880px;margin:3rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
+        `<h1 style="font-size:2rem;font-weight:900;line-height:1.2;margin:0 0 1rem;">${escapeHtmlMin(h1)}</h1>`,
+        sub
+          ? `<p style="font-size:1.125rem;line-height:1.5;margin:0 0 1rem;color:#0A264A;opacity:0.85;">${escapeHtmlMin(sub)}</p>`
+          : '',
+        ...extraLines.map(
+          (line) => `<p style="margin:0 0 0.5rem;color:#334155;">${escapeHtmlMin(line)}</p>`,
+        ),
+        `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;margin-top:0.5rem;">${escapeHtmlMin(cta)}</a>`,
+        '</article>',
+      ]
+        .filter(Boolean)
+        .join('');
+      html = html.replace(/<div id="root"><\/div>/, `<div id="root">${fallbackStatic}</div>`);
+
+      const fallbackSchemas = [];
+      if (route.key === 'contact') {
+        fallbackSchemas.push({
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          "@id": `${canonicalUrl}#contact`,
+          url: canonicalUrl,
+          name: title,
+          description,
+          inLanguage: localeOf(lang),
+          isPartOf: { "@id": `${SITE_URL}/#website` },
+          about: { "@id": `${SITE_URL}/#organization` },
+          speakable: {
+            "@type": "SpeakableSpecification",
+            cssSelector: ['h1', 'article p:first-of-type'],
+          },
+        });
+      } else {
+        fallbackSchemas.push(
+          buildPageWebPageSchema({ canonicalUrl, name: title, description, lang }),
+        );
+      }
+      fallbackSchemas.push(
+        buildBreadcrumbList(canonicalUrl, [
+          { name: 'Home', url: `${SITE_URL}/${lang}` },
+          { name: h1, url: canonicalUrl },
+        ]),
+      );
+      const blocks = fallbackSchemas
+        .map((s) => `  <script type="application/ld+json">${JSON.stringify(s)}</script>`)
+        .join('\n');
+      html = html.replace('</head>', `${blocks}\n  </head>`);
     }
+
+    // Mobile-Hero-Preload nur auf der Startseite (dort lebt HeroScrollSection).
+    if (route.key === 'home' && heroPreloadTag) {
+      html = html.replace('</head>', `  ${heroPreloadTag}\n  </head>`);
+    }
+
+    // Crawler-Nav vor </body> (außerhalb #root → überlebt Hydration) — behebt
+    // Ahrefs „Page has no outgoing links" auf den client-gerenderten Route-/Hub-Seiten.
+    html = html.replace('</body>', `  ${CRAWLER_NAV}\n</body>`);
 
     // Build output path: dist/<lang>/<slug>/index.html.
     // For the home route (slug === '/') write dist/<lang>/index.html.
@@ -2474,14 +3322,12 @@ console.log(`\n✅ Per-language pre-render: ${perLangCount} files (${routes.leng
 console.log('✅ Pre-rendered critical pages created (with hreflang + x-default)');
 
 // ─── Phase 3: Per-post blog pre-render (DE-only) ─────────────────────────────
-// Reads blog data from src/data/blog-posts-generated.ts via Node 24 native TS
-// import (`import type` only is stripped). For every post writes
-// dist/de/blog/<slug>/index.html with: localised meta, BlogPosting JSON-LD,
-// article OpenGraph tags, and a static <article> block inside #root that
-// crawlers can read without executing JS (createRoot replaces it on hydration).
-const { generatedBlogPosts } = await import(
-  new URL('../src/data/blog-posts-generated.ts', import.meta.url).href
-);
+// Nutzt die vor Phase 2 gehoistete `allBlogPosts`-Liste aus blog-posts.ts —
+// das sind die generierten Posts PLUS die handgeschriebenen lbp-Posts, die
+// vorher nie pre-rendered wurden (SPA rendert sie via getBlogPostBySlug).
+// For every post writes dist/de/blog/<slug>/index.html with: localised meta,
+// BlogPosting JSON-LD, article OpenGraph tags, and a static <article> block
+// inside #root that crawlers can read without executing JS.
 
 const escapeHtml = (s) =>
   String(s ?? '')
@@ -2602,15 +3448,29 @@ const buildBlogPostingSchema = (post) => {
     const known = personSchemaByName.get(name);
     return known ? { "@id": known["@id"] } : { "@type": "Person", name };
   });
+  // Welle F — per-post Cover-ImageObject; Logo nur noch als Fallback
+  const image = post.coverImage
+    ? {
+        "@type": "ImageObject",
+        "@id": `${SITE_URL}${post.coverImage}#image`,
+        url: `${SITE_URL}${post.coverImage}`,
+        contentUrl: `${SITE_URL}${post.coverImage}`,
+        width: post.coverImageWidth ?? 1200,
+        height: post.coverImageHeight ?? 630,
+        caption: post.coverImageAlt ?? stripMarkdown(post.title),
+        encodingFormat: "image/webp",
+      }
+    : `${SITE_URL}/logo-gastro-master.png`;
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "@id": `${url}#article`,
     headline: stripMarkdown(post.title),
     description: stripMarkdown(post.metaDescription || post.description),
-    image: `${SITE_URL}/logo-gastro-master.png`,
+    image,
     datePublished: post.publishedDate,
-    dateModified: post.publishedDate,
+    // Aktualitäts-Signal: überarbeitete Artikel melden ihr Rewrite-Datum.
+    dateModified: post.lastModified ?? post.publishedDate,
     author: author.length === 1 ? author[0] : author,
     publisher: {
       "@type": "Organization",
@@ -2680,11 +3540,61 @@ const extractFaqItemsFromJsonLd = (post) => {
   return null;
 };
 
+// ── Blog body: heading-id injection — identisch zum Client
+//    (BlogPostDetailPage.tsx computeHeadingIds/injectHeadingIds), damit die
+//    statischen H2-Anker 1:1 zum hydrierten DOM passen (kein Drift/Cloaking).
+const slugifyHeadingPre = (text) =>
+  text
+    .toLowerCase()
+    .replace(/[äÄ]/g, 'ae')
+    .replace(/[öÖ]/g, 'oe')
+    .replace(/[üÜ]/g, 'ue')
+    .replace(/ß/g, 'ss')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+const injectHeadingIdsPre = (html) => {
+  const seen = new Map();
+  return html.replace(/<h2([^>]*)>([\s\S]*?)<\/h2>/gi, (_m, attrs, inner) => {
+    const text = inner.replace(/<[^>]+>/g, '').trim();
+    const existing = attrs.match(/\bid=["']([^"']+)["']/)?.[1];
+    let id = existing ?? slugifyHeadingPre(text);
+    const n = (seen.get(id) ?? 0) + 1;
+    seen.set(id, n);
+    if (n > 1) id = `${id}-${n}`;
+    const cleaned = attrs.replace(/\s*\bid=["'][^"']*["']/, '');
+    return `<h2${cleaned} id="${id}">${inner}</h2>`;
+  });
+};
+
+// ── Related-Posts als zirkulanter "next-6"-Ring über eine nach (Kategorie, Datum)
+//    sortierte Reihenfolge. In einem next-k-Ring hat JEDER Post exakt k ausgehende
+//    UND k eingehende Links → garantiert 6 eingehende interne Links pro Post
+//    (die kategorie-basierte "immer die neuesten 6"-Auswahl ließ 100+ Posts mit 0
+//    eingehenden zurück). Die Kategorie-Sortierung hält die 6 Related topisch nah.
+const blogRing = [...sortedBlogPosts].sort((a, b) => {
+  if (a.category !== b.category) return a.category < b.category ? -1 : 1;
+  return new Date(b.publishedDate) - new Date(a.publishedDate);
+});
+const ringIndexBySlug = new Map(blogRing.map((p, i) => [p.slug, i]));
+const relatedPostsFor = (post, n = 6) => {
+  const N = blogRing.length;
+  const i = ringIndexBySlug.get(post.slug);
+  if (i == null || N <= 1) return [];
+  const picks = [];
+  for (let k = 1; k <= N && picks.length < n; k++) {
+    const cand = blogRing[(i + k) % N];
+    if (cand.slug !== post.slug) picks.push(cand);
+  }
+  return picks;
+};
+
 let blogCount = 0;
 let faqPostsCount = 0;
-for (const post of generatedBlogPosts) {
+for (const post of allBlogPosts) {
   const url = `${SITE_URL}/de/blog/${post.slug}`;
-  const title = `${stripMarkdown(post.title)} | Gastro Master Blog`;
+  // Doppel-Suffix vermeiden: manche Post-Titel enthalten " | Gastro Master" schon
+  // (aus der Obsidian-Quelle) → vorhandenen Suffix strippen, dann genau einmal anhängen.
+  const title = `${stripMarkdown(post.title).replace(/\s*\|\s*Gastro Master\s*$/i, '')} | Gastro Master`;
   const description = stripMarkdown(post.metaDescription || post.description || '');
   const schema = buildBlogPostingSchema(post);
 
@@ -2732,18 +3642,73 @@ for (const post of generatedBlogPosts) {
         .join('') +
       '</section>'
     : '';
+  // Volltext ins Prerender-HTML: der komplette Artikel-Body (GEO-Box, alle
+  // Sektionen, FAQ als H2/H3, ALLE internen Links) statt der bisherigen
+  // First-Section-Kürzung. Der Block bleibt in #root und wird bei Hydration
+  // durch das identische React-Rendering ersetzt (kein Cloaking).
+  // Fallback (kein bodyHtml — z.B. LBP-Posts mit `sections`): die alten Blöcke,
+  // damit KEIN Post nach dem Fix weniger Content hat als vorher.
+  const injectedBody = post.bodyHtml
+    ? `<div itemprop="articleBody">${injectHeadingIdsPre(post.bodyHtml)}</div>`
+    : [sectionBlock, quotableBlock, faqBlock].join('');
+  // A4-Regressions-Fallback: Einige Posts (z. B. bestellsystem-gastronomie,
+  // gastronomie-website-erstellen, wolt-integration-restaurants) haben ihre FAQ
+  // NUR in faqItems/Override, NICHT im bodyHtml. Ohne den entfernten faqBlock wäre
+  // der sichtbare FAQ-Text weg (das JSON-LD im <head> bliebe, aber der crawlbare
+  // Text ginge verloren). Deshalb faqBlock genau dann anhängen, wenn die FAQ noch
+  // NICHT im Body steht — kein Duplikat für die ~167 Posts mit In-Body-FAQ.
+  // Quelle für den Fallback ist post.faqItems (das strukturierte TS-Feld) — dort
+  // liegt die FAQ dieser Posts, während extractFaqItemsFromJsonLd/-Body null liefert.
+  const rawFaqFallback = (post.faqItems ?? [])
+    .map((it) => ({
+      q: stripTagsToText(it.question ?? it.q ?? ''),
+      a: stripTagsToText(it.answer ?? it.a ?? ''),
+    }))
+    .filter((x) => x.q && x.a && x.a.length > 10);
+  const bodyTextLc = stripTagsToText(post.bodyHtml || '').toLowerCase();
+  const faqInBody =
+    rawFaqFallback.length === 0 ||
+    rawFaqFallback.some((x) => bodyTextLc.includes(x.q.toLowerCase().slice(0, 50)));
+  const faqFallback =
+    post.bodyHtml && rawFaqFallback.length > 0 && !faqInBody
+      ? '<section itemscope itemtype="https://schema.org/FAQPage"><h2>Häufige Fragen</h2>' +
+        rawFaqFallback
+          .map(
+            ({ q, a }) =>
+              `<div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">` +
+              `<h3 itemprop="name">${escapeHtml(q)}</h3>` +
+              `<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">` +
+              `<p itemprop="text">${escapeHtml(a)}</p></div></div>`,
+          )
+          .join('') +
+        '</section>'
+      : '';
+  // Statischer Related-Posts-Block: 6 interne Links auf verwandte Posts.
+  const related = relatedPostsFor(post, 6);
+  const relatedBlock =
+    related.length > 0
+      ? '<nav class="related-posts" aria-label="Weitere Artikel"><h2>Weitere Artikel</h2><ul>' +
+        related
+          .map(
+            (p) =>
+              `<li><a href="/de/blog/${p.slug}">${escapeHtml(stripMarkdown(p.title))}</a></li>`,
+          )
+          .join('') +
+        '</ul></nav>'
+      : '';
   const staticArticle = [
     '<article itemscope itemtype="https://schema.org/BlogPosting" style="max-width:760px;margin:2rem auto;padding:1rem;font-family:system-ui,sans-serif;color:#0A264A;">',
+    '<nav class="post-breadcrumb" aria-label="Brotkrümel"><a href="/de">Home</a> › <a href="/de/blog">Blog</a></nav>',
     `<h1 itemprop="headline">${escapeHtml(stripMarkdown(post.title))}</h1>`,
     `<p><small>Von <span itemprop="author">${escapeHtml(post.author)}</span> · `,
     `<time itemprop="datePublished" datetime="${escapeHtml(post.publishedDate)}">${escapeHtml(post.publishedDate)}</time>`,
     ` · ${post.readingTime || 5} Min. Lesezeit · `,
     `<span itemprop="articleSection">${escapeHtml(post.category)}</span></small></p>`,
     `<p itemprop="description">${escapeHtml(post.excerpt || description)}</p>`,
-    sectionBlock,
-    quotableBlock,
-    faqBlock,
+    injectedBody,
+    faqFallback,
     '</article>',
+    relatedBlock,
   ].join('');
 
   let html = baseHtml
@@ -2761,10 +3726,42 @@ for (const post of generatedBlogPosts) {
       `<meta property="og:description" content="${escapeHtml(description)}"`,
     )
     .replace(/<meta property="og:type" content="[^"]*"/, `<meta property="og:type" content="article"`)
+    // og:url = Artikel-URL statt Template-Homepage — jeder Post sendet sonst
+    // /de als Canonical-Signal an Facebook/LLM-Crawler. twitter:* analog.
+    .replace(/<meta property="og:url" content="[^"]*"/, `<meta property="og:url" content="${url}"`)
+    .replace(/<meta name="twitter:title" content="[^"]*"/, `<meta name="twitter:title" content="${escapeHtml(title)}"`)
+    .replace(/<meta name="twitter:description" content="[^"]*"/, `<meta name="twitter:description" content="${escapeHtml(description)}"`)
+    // Blog-Posts existieren NUR auf DE — die 5 og:locale:alternate-Tags aus
+    // dem Template kündigen Sprachvarianten an, die es nicht gibt (falsches
+    // International-Targeting-Signal). Analog zum DE-only-hreflang unten.
+    .replace(/\n?\s*<meta property="og:locale:alternate" content="[^"]*"\s*\/?>/g, '')
     .replace(/<html\s+lang="[^"]*"/, `<html lang="de"`)
-    .replace(/<div id="root"><\/div>/, `<div id="root">${staticArticle}</div>`);
+    // Funktions-Replacement statt String: der volle bodyHtml könnte `$`-Sequenzen
+    // ($1, $&, $$) enthalten, die String.replace sonst als Rückreferenz deutet.
+    .replace(/<div id="root"><\/div>/, () => `<div id="root">${staticArticle}</div>`);
+
+  // Welle F — page-spezifisches og:image/twitter:image (JPG für Social-Kompatibilität;
+  // WebP bleibt Primärformat für Website-Rendering + Schema). Ersetzt den
+  // Welle-E-Restbug „117× Logo als Social-Thumbnail". Ohne Cover: Template-Logo bleibt.
+  if (post.coverImageFallback) {
+    const ogImageUrl = `${SITE_URL}${post.coverImageFallback}`;
+    const ogImageAlt = post.coverImageAlt ?? stripMarkdown(post.title);
+    html = html
+      .replace(/<meta property="og:image" content="[^"]*"/, `<meta property="og:image" content="${ogImageUrl}"`)
+      .replace(/<meta property="og:image:width" content="[^"]*"/, `<meta property="og:image:width" content="${post.coverImageWidth ?? 1200}"`)
+      .replace(/<meta property="og:image:height" content="[^"]*"/, `<meta property="og:image:height" content="${post.coverImageHeight ?? 630}"`)
+      .replace(/<meta property="og:image:alt" content="[^"]*"/, `<meta property="og:image:alt" content="${escapeHtml(ogImageAlt)}"`)
+      .replace(/<meta name="twitter:image" content="[^"]*"/, `<meta name="twitter:image" content="${ogImageUrl}"`);
+  }
 
   const articleMeta = [
+    // Welle F — og:image:type + twitter:image:alt (Tags fehlen im Basis-Template)
+    ...(post.coverImageFallback
+      ? [
+          `<meta property="og:image:type" content="image/jpeg">`,
+          `<meta name="twitter:image:alt" content="${escapeHtml(post.coverImageAlt ?? stripMarkdown(post.title))}">`,
+        ]
+      : []),
     `<meta property="article:published_time" content="${escapeHtml(post.publishedDate)}">`,
     `<meta property="article:modified_time" content="${escapeHtml(post.publishedDate)}">`,
     `<meta property="article:author" content="${escapeHtml(post.author)}">`,
@@ -2780,11 +3777,20 @@ for (const post of generatedBlogPosts) {
     `  <link rel="alternate" hreflang="de" href="${url}" />\n` +
     `  <link rel="alternate" hreflang="x-default" href="${url}" />`;
 
+  // BreadcrumbList Home → Blog → Post: war die einzige Seiten-Gruppe ohne
+  // Breadcrumbs (121 Posts) — Route-Pages, Homepage und Comparisons haben sie.
+  const breadcrumbSchema = buildBreadcrumbList(url, [
+    { name: 'Home', url: `${SITE_URL}/de` },
+    { name: 'Blog', url: `${SITE_URL}/de/blog` },
+    { name: stripMarkdown(post.title), url },
+  ]);
+
   const headExtras = [
     `<link rel="canonical" href="${url}">`,
     hreflangTags,
     articleMeta,
     `<script type="application/ld+json">${JSON.stringify(schema)}</script>`,
+    `<script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}</script>`,
     faqItems
       ? `<script type="application/ld+json">${JSON.stringify(buildFaqPageSchema(post, faqItems))}</script>`
       : null,
@@ -2793,6 +3799,10 @@ for (const post of generatedBlogPosts) {
     .join('\n  ');
 
   html = html.replace('</head>', `  ${headExtras}\n  </head>`);
+
+  // Crawler-Nav vor </body> (außerhalb #root → überlebt Hydration) — behebt
+  // Ahrefs „Page has no outgoing links" auf den client-gerenderten Blog-Posts.
+  html = html.replace('</body>', `  ${CRAWLER_NAV}\n</body>`);
 
   const outDir = join(distDir, 'de', 'blog', post.slug);
   mkdirSync(outDir, { recursive: true });
@@ -2894,3 +3904,200 @@ for (const lang of COMPARISON_LANGS) {
 console.log(
   `✅ Comparison-Hub pre-render: ${hubCount} Hub-Pages (1 hub × ${COMPARISON_LANGS.length} languages · CollectionPage + ItemList + Dataset + BreadcrumbList + hreflang)`,
 );
+
+// ─── Standalone: /request-data-delete (präfixlos, DE-only) ───────────────────
+// Stabile URL für App-Store-Datenlöschungsangaben. Statisches HTML mit
+// vollständigem Inhalt im #root-Fallback, damit Nicht-JS-Crawler (u.a.
+// Play-Store-Review) die Anleitung lesen können. Kein hreflang-Alternate
+// (einsprachig), Canonical auf sich selbst.
+{
+  const url = `${SITE_URL}/request-data-delete`;
+  const title = 'Konto und Daten löschen | Gastro Master';
+  const description =
+    'Anleitung zur Löschung Ihres Gastro Master Benutzerkontos und persönlicher Daten gemäß DSGVO.';
+
+  const staticContent = [
+    '<main style="max-width:42rem;margin:2rem auto;padding:1rem;font-family:system-ui,sans-serif;color:#0A264A;">',
+    '<h1>Konto und persönliche Daten löschen</h1>',
+    '<p>Sie können Ihr Benutzerkonto und die damit verbundenen persönlichen Daten jederzeit direkt in Ihrem Profil löschen.</p>',
+    '<h2>Gehen Sie dazu wie folgt vor:</h2>',
+    '<ol>',
+    '<li>Melden Sie sich in Ihrem Benutzerkonto an.</li>',
+    '<li>Öffnen Sie den Bereich „Profil".</li>',
+    '<li>Klicken Sie auf „Mein Konto und meine Daten löschen".</li>',
+    '<li>Sie erhalten anschließend per E-Mail einen einmalig gültigen Bestätigungscode.</li>',
+    '<li>Geben Sie diesen Code in das dafür vorgesehene Feld ein und bestätigen Sie die Löschung.</li>',
+    '<li>Nach erfolgreicher Bestätigung wird die Löschung Ihres Kontos und Ihrer persönlichen Daten veranlasst.</li>',
+    '</ol>',
+    '<h2>Probleme bei der Kontolöschung?</h2>',
+    '<p>Sollten bei der Kontolöschung Probleme auftreten oder sollten Sie keinen Zugriff mehr auf Ihr Benutzerkonto haben, kontaktieren Sie uns bitte unter <a href="mailto:info@epitglobal.de">info@epitglobal.de</a>. Wir prüfen Ihre Anfrage und können die Löschung Ihres Kontos manuell für Sie durchführen.</p>',
+    '</main>',
+  ].join('');
+
+  let html = baseHtml
+    .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`)
+    .replace(/<meta name="description" content="[^"]*"/, `<meta name="description" content="${escapeHtml(description)}"`)
+    .replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${escapeHtml(title)}"`)
+    .replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${escapeHtml(description)}"`)
+    .replace(/<meta property="og:url" content="[^"]*"/, `<meta property="og:url" content="${url}"`)
+    .replace(/<meta name="twitter:title" content="[^"]*"/, `<meta name="twitter:title" content="${escapeHtml(title)}"`)
+    .replace(/<meta name="twitter:description" content="[^"]*"/, `<meta name="twitter:description" content="${escapeHtml(description)}"`)
+    // Einsprachige Seite: Sprachvarianten-Ankündigungen entfernen
+    .replace(/\n?\s*<meta property="og:locale:alternate" content="[^"]*"\s*\/?>/g, '')
+    .replace(/<div id="root"><\/div>/, `<div id="root">${staticContent}</div>`);
+
+  const headExtras = [
+    `<link rel="canonical" href="${url}">`,
+    `<link rel="alternate" hreflang="de" href="${url}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${url}" />`,
+  ].join('\n  ');
+  html = html.replace('</head>', `  ${headExtras}\n  </head>`);
+
+  const outDir = join(distDir, 'request-data-delete');
+  mkdirSync(outDir, { recursive: true });
+  writeFileSync(join(outDir, 'index.html'), html);
+  console.log('✅ Standalone pre-render: /request-data-delete (Konto-/Datenlöschung, DE-only)');
+}
+
+// ─── WP→React Migrations-Redirect-Stubs (GSC „gecrawlt – nicht indexiert") ────
+// Alte WordPress-URLs MIT inhaltlichem Nachfolger bekommen einen statischen
+// Meta-Refresh-Stub (0s) + canonical auf den Nachfolger + noindex,follow. Google
+// behandelt den Meta-Refresh wie einen 301 und konsolidiert auf das Ziel; die alte
+// URL fällt aus dem Index, Link-Equity fließt via follow weiter. Alt-URLs OHNE
+// Nachfolger sind hier bewusst NICHT gelistet → Sanju setzt sie per nginx auf 410
+// (siehe scripts/sanju-nginx-redirects.md). Diese Stubs stehen NICHT in Sitemap/RSS
+// (die nutzen routes.ts) und werden von validate-canonical.mjs via noindex übersprungen.
+const LEGACY_REDIRECT_STUBS = [
+  // Slug-Rename 2026-07-29: alter Blog-Slug → neuer Ziel-Keyword-Slug (301)
+  ['de/blog/alternativen-zu-lieferando-2026', '/de/blog/lieferando-alternative'],
+  // Direkter Blog-Nachfolger → /de/blog/…
+  ['bestellsystemen-fur-kellner-2', '/de/blog/bestellsystem-fuer-kellner'],
+  ['bestellsystem-gastronomie-blog', '/de/blog/bestellsystem-gastronomie'],
+  ['darf-man-mit-14-in-der-gastronomie-arbeiten-2', '/de/blog/darf-man-mit-14-in-der-gastronomie-arbeiten'],
+  ['cloud-pos-post', '/de/blog/cloud-pos-system-gastronomie'],
+  ['lieferservice-shopsystem-new', '/de/blog/lieferservice-shopsystem'],
+  ['lieferservice-shopsystem-new-2-2', '/de/blog/lieferservice-shopsystem'],
+  ['lieferservice-online-shop-software', '/de/blog/lieferservice-shopsystem'],
+  ['software-fur-lieferdienste-new', '/de/blog/lieferservice-shopsystem'],
+  ['software-lieferdienst', '/de/blog/lieferservice-shopsystem'],
+  ['gastro-master-app-funktioniert', '/de/blog/gastro-master-app-erklaerung'],
+  ['werbespruche-die-sich-reimen', '/de/blog/lustige-werbesprueche-gastronomie'],
+  ['gastronomie-trends-2024', '/de/blog/gastronomie-trends-2026'],
+  ['restaurant-website-erstellen', '/de/blog/gastronomie-website-erstellen'],
+  ['zukunft-der-essenslieferungen', '/de/blog/zukunft-essenslieferungen-2026'],
+  ['offene-kuche-restaurant', '/de/blog/offene-kueche-restaurant'],
+  ['umsatzsteigerung-gastronomie', '/de/blog/umsatzsteigerung-gastronomie'],
+  ['online-bestellsystem-gastro-new', '/de/blog/online-bestellsystem-restaurant-2026'],
+  ['mit-gastro-master-das-standard-setzen-hygiene-in-der-gastronomie', '/de/blog/haccp-lebensmittelsicherheit-2026'],
+  // Produkt-/Lösungs-Nachfolger
+  ['gastro-master-app', '/de/produkte/pakete/bestell-app'],
+  ['gastro-master-blogposts', '/de/blog'],
+  ['order-online', '/de/produkte/pakete/online-bestellshop'],
+  ['webshop-funktionen-2', '/de/produkte/pakete/online-bestellshop'],
+  ['die-zukunft-des-essens-ghost-kitchen-deutschland', '/de/loesungen/ghost-kitchen'],
+  // ── GSC-Fix 2026-07-28: gecrawlte Alt-/Falsch-URLs mit Traffic → Meta-Refresh auf korrektes Ziel ──
+  ['lieferando-bar-bezahlen',         '/de/blog/lieferando-bar-bezahlen'],          // Blog-Post existiert (blog-posts.ts) — Root-Variante konsolidieren
+  ['google-unternehmensprofil-login', '/de/blog/google-unternehmensprofil-login'],  // Blog-Post existiert (blog-posts-generated.ts)
+  ['en/vergleiche/sides',             '/en/vs/sides'],                                // EN-Segment ist /vs/ (routes.ts:172), /vergleiche/ ist DE-only
+  ['bestellannahme',                  '/de/produkte/pakete/bestell-app'],            // war App.tsx:164 nur JS-Redirect → jetzt auch statisch (nicht dead: Nachfolger existiert)
+  // Soft-404-Fixes — GSC 2026-07-30 (Sprach-/Segment-Fehlpfade → korrekte DE-Seite)
+  ['en/vergleiche',          '/de/vergleiche'],
+  ['it/vergleiche/sides',    '/de/vergleiche'],
+  ['ru/loesungen/baeckerei', '/de/loesungen/cafe-baeckerei'],   // Ziel korrigiert: /de/loesungen/baeckerei existiert nicht (echte Seite = cafe-baeckerei)
+  ['loesungen/baeckerei',    '/de/loesungen/cafe-baeckerei'],   // dito
+  // ── GSC-Batch 2026-07-31: weitere Soft-404 / 403 → sinnvolles Ziel ──
+  ['en/confronti/sides',       '/de/vergleiche'],   // IT-Segment „confronti" unter /en/ existiert nicht → DE-Vergleichs-Hub
+  ['index.php',                '/de'],               // WP-Artefakt → Startseite
+  ['home',                     '/de'],               // WP-Startseite: vorher DEAD-Stub (aus DEAD_URL_STUBS entfernt) → Redirect ist sinnvoller
+  ['kostenloses-erstgespraech','/de/kontakt'],       // toter WP-Slug MIT sinnvollem Ziel → Kontakt
+  ['loesungen',                '/de/loesungen'],      // 403-Fix: dist/loesungen/ war Verzeichnis OHNE index.html (Apache 403) → legt index.html an
+  // ── Bing-Fix 2026-07-31: WP-Alt-URLs hatten nur Client-JS-Redirect (App.tsx) → statischer 301-Stub, damit Bing echten Redirect sieht ──
+  ['kontakt',    '/de/kontakt'],
+  ['uber-uns',   '/de/uber-uns'],
+  ['impressum',  '/de/impressum'],
+  // ── Alt-WP-URL 2026-08: Migration → neuer Blog-Artikel (301) ──
+  ['lieferando-partner-werden', '/de/blog/lieferando-partner-werden-vor-und-nachteile'],
+  ['bestellsystem-gastronomie', '/de/blog/online-bestellsystem-restaurant-2026'],
+];
+
+{
+  let stubCount = 0;
+  for (const [fromSlug, toPath] of LEGACY_REDIRECT_STUBS) {
+    const target = `${SITE_URL}${toPath}`;
+    const stubHtml = `<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0;url=${target}">
+<link rel="canonical" href="${target}">
+<meta name="robots" content="noindex, follow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seite umgezogen – Gastro Master</title>
+<script>location.replace(${JSON.stringify(target)});</script>
+</head>
+<body>
+<p>Diese Seite ist umgezogen. Weiter zu <a href="${target}">${target}</a>.</p>
+</body>
+</html>`;
+    const outDir = join(distDir, fromSlug);
+    mkdirSync(outDir, { recursive: true });
+    writeFileSync(join(outDir, 'index.html'), stubHtml);
+    stubCount += 1;
+  }
+  console.log(`✅ Migrations-Redirect-Stubs: ${stubCount} Meta-Refresh-Seiten (WP-Altlasten → Nachfolger)`);
+}
+
+// ─── Tote WP-Alt-URLs OHNE Nachfolger (GSC „Soft 404" / „gecrawlt – nicht indexiert") ──
+// Statischer noindex,nofollow-Stub: KEIN Meta-Refresh (es gibt kein sinnvolles Ziel) und
+// SELF-Canonical (Pflicht — ohne Refresh überspringt validate-canonical die Datei NICHT,
+// sie muss also self-referenziell sein). Das noindex im HTML gewinnt via „most restrictive
+// wins" gegen den globalen X-Robots-Tag: index → Google nimmt die URL dauerhaft aus dem
+// Index, komplett ohne .htaccess. Apache serviert dist/<slug>/index.html direkt (das
+// Verzeichnis existiert → SPA-Fallback greift nicht). Alt-URLs MIT Nachfolger stehen in
+// LEGACY_REDIRECT_STUBS; invalide Pfade (/>Click, /?p=…, /author/…, /wp-json/…) lassen
+// sich nur per .htaccess/nginx auf 410 setzen und bleiben vorerst Soft-404.
+const DEAD_URL_STUBS = [
+  'gastro-master-2',
+  'gloriafood',
+  'seacuterie',
+  'kosten-umzugsunternehmen',
+  'thai-lieferung-offenbach',
+  'pizza-knielingen',
+  'sushi-bestellen-nurnberg',
+  'lieferservice-online-shop-software-new',
+  'lieferservice-shopsystem',
+  'smart-kundigen',
+  // 'home' → verschoben nach LEGACY_REDIRECT_STUBS (jetzt Redirect auf /de statt Dead-Stub)
+  // ── GSC-Batch 2026-07-31: echte 404 ohne sinnvolles Ziel → noindex,nofollow (200) ──
+  'software-fur-lieferservice/info@gastro-master.de',   // 1a: WP-Alt-URL, defekter mailto-Link (kein Code-Link vorhanden)
+  'bestellsystem-gastronomie-blog/info@gastro-master.de', // 1b: Sub-Pfad des Blog-Stubs, defekter mailto-Link
+  'saramart-zahlungsmethoden',
+  'tim-malzer-restaurant-hamburg',
+  'burger-in-troisdorf',
+  'pizza-flitza-quelkhorn-karte',
+  'quart',
+  'burger-webshop',
+];
+
+{
+  let deadCount = 0;
+  for (const slug of DEAD_URL_STUBS) {
+    const stubHtml = `<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Seite nicht gefunden | Gastro Master</title>
+  <link rel="canonical" href="${SITE_URL}/${slug}/">
+</head>
+<body>
+  <a href="${SITE_URL}/de" style="position:absolute;left:-9999px">Startseite</a>
+</body>
+</html>`;
+    const outDir = join(distDir, slug);
+    mkdirSync(outDir, { recursive: true });
+    writeFileSync(join(outDir, 'index.html'), stubHtml);
+    deadCount += 1;
+  }
+  console.log(`✅ Dead-URL-Stubs: ${deadCount} noindex,nofollow-Seiten (WP-Altlasten ohne Nachfolger)`);
+}
