@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/generate-prerendered-html.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-rss-feed.mjs && node scripts/validate-schema.mjs && node scripts/validate-jsonld.mjs && node scripts/validate-comparisons.mjs",
+    "build": "node scripts/lint-canonical-source.mjs && vite build && node scripts/generate-prerendered-html.mjs && node scripts/validate-canonical.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-rss-feed.mjs && node scripts/validate-schema.mjs && node scripts/validate-schema.mjs --merchant && node scripts/validate-jsonld.mjs && node scripts/validate-comparisons.mjs && node scripts/validate-internal-links.mjs",
+    "submit:bing": "node scripts/submit-indexnow.mjs",
+    "build:deploy": "npm run build && node scripts/submit-indexnow.mjs",
     "validate:jsonld": "node scripts/validate-jsonld.mjs",
     "validate:comparisons": "node scripts/validate-comparisons.mjs",
     "build:dev": "vite build --mode development",
@@ -14,13 +16,17 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "validate:schema": "node scripts/validate-schema.mjs",
+    "validate:merchant": "node scripts/validate-schema.mjs --merchant",
+    "validate:canonical": "node scripts/validate-canonical.mjs",
+    "lint:canonical": "node scripts/lint-canonical-source.mjs",
     "audit:hreflang": "node scripts/audit-hreflang-canonical.mjs",
     "audit:vercel-leaks": "if grep -rIl 'vercel\\.app' dist/ 2>/dev/null; then echo '❌ vercel.app references leaked into dist/' >&2; exit 1; else echo '✅ No vercel.app leaks in dist/'; fi",
     "audit:all": "npm run audit:hreflang && npm run audit:vercel-leaks",
     "generate:blog-posts": "node scripts/generate-blog-posts.mjs",
     "sync-reviews": "node scripts/sync-reviews.js",
     "import-reviews": "node scripts/import-reviews-to-sheet.js",
-    "download-avatars": "node scripts/download-review-avatars.js"
+    "download-avatars": "node scripts/download-review-avatars.js",
+    "validate:internal-links": "node scripts/validate-internal-links.mjs"
   },
   "dependencies": {
     "@fontsource-variable/outfit": "^5.2.8",
@@ -87,6 +93,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@google/genai": "^2.12.0",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/typography": "^0.5.16",
     "@testing-library/jest-dom": "^6.6.0",
@@ -107,6 +114,7 @@
     "marked": "^18.0.3",
     "postcss": "^8.5.6",
     "sharp": "^0.34.5",
+    "svgo": "^4.0.2",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",

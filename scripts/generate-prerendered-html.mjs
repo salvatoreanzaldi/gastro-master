@@ -3588,6 +3588,25 @@ const relatedPostsFor = (post, n = 6) => {
   return picks;
 };
 
+// ── B3: Selbstheilende Absicherung gegen tote interne Blog-Links.
+//    Ein <a href="/de/blog/X"> (oder "/blog/X") auf einen Slug, den es in der
+//    generierten Post-Menge NICHT gibt, würde wegen des SPA-Fallbacks HTTP 200
+//    liefern → indexierbare Soft-404. Solche Links werden zu <span> entschärft
+//    (Ankertext bleibt erhalten). Sobald die Quelle stimmt (Slug existiert),
+//    greift die Ersetzung nicht mehr — kein Client-Drift, weil das Ziel
+//    ohnehin nirgends existiert.
+const validBlogSlugsPre = new Set(allBlogPosts.map((p) => p.slug));
+let defusedLinkCount = 0;
+const defuseDeadBlogLinks = (html) =>
+  html.replace(
+    /<a\b([^>]*?)href="\/(?:de\/)?blog\/([a-z0-9-]+)\/?"([^>]*)>([\s\S]*?)<\/a>/gi,
+    (m, _pre, slug, _post, inner) => {
+      if (validBlogSlugsPre.has(slug)) return m;
+      defusedLinkCount += 1;
+      return `<span class="defused-link">${inner}</span>`;
+    },
+  );
+
 let blogCount = 0;
 let faqPostsCount = 0;
 for (const post of allBlogPosts) {
@@ -3649,7 +3668,7 @@ for (const post of allBlogPosts) {
   // Fallback (kein bodyHtml — z.B. LBP-Posts mit `sections`): die alten Blöcke,
   // damit KEIN Post nach dem Fix weniger Content hat als vorher.
   const injectedBody = post.bodyHtml
-    ? `<div itemprop="articleBody">${injectHeadingIdsPre(post.bodyHtml)}</div>`
+    ? `<div itemprop="articleBody">${defuseDeadBlogLinks(injectHeadingIdsPre(post.bodyHtml))}</div>`
     : [sectionBlock, quotableBlock, faqBlock].join('');
   // A4-Regressions-Fallback: Einige Posts (z. B. bestellsystem-gastronomie,
   // gastronomie-website-erstellen, wolt-integration-restaurants) haben ihre FAQ
@@ -3810,7 +3829,7 @@ for (const post of allBlogPosts) {
   blogCount += 1;
 }
 
-console.log(`✅ Blog pre-render: ${blogCount} DE posts (BlogPosting schema + static article fallback) — ${faqPostsCount} with FAQPage schema`);
+console.log(`✅ Blog pre-render: ${blogCount} DE posts (BlogPosting schema + static article fallback) — ${faqPostsCount} with FAQPage schema — ${defusedLinkCount} tote Blog-Links entschärft`);
 
 // ─── Phase 4: /vergleiche/<slug>-Pages (multilingual, alle 6 Sprachen) ────────
 // Each file in src/data/comparisons/<slug>.ts exports `<slug>ByLang: ComparisonByLang`
