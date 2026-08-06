@@ -1223,24 +1223,227 @@ const buildProductSchema = (pkg, canonicalUrl, lang) => ({
 
 // Static crawler fallback for a single package page. Uses the localised
 // package name + the structured features array (no parsing).
-const buildPackagePageStatic = (pkg, lang) => {
+// ─── Batch 3: Generischer Content-Sektions-Renderer für Money-Pages ─────────
+// Package-/Solution-Bundles tragen reiche Sektionen (features, comparison,
+// pricing, testimonials, steps, faq …), die zuvor NUR client-seitig gerendert
+// wurden — der JS-lose Crawler sah nur Hero + CTA. Dieser Walker läuft über
+// jede Top-Level-Sektion und erzeugt echte h2/h3 + Listen, damit Prerender und
+// hydriertes DOM inhaltsgleich sind (Dual-Layer-Regel). Shapes sind heterogen
+// (heading=title|headline, items=items|cards|rows|steps, item={title,text}|
+// {q,a}|{value,label}) → generische Extraktion statt Per-Key-Hardcoding.
+// Nur echte Meta-/Media-Sektionen ausnehmen — der Client rendert demo, social,
+// pricing, testimonials etc., also müssen sie ins statische HTML (Dual-Layer).
+const MONEY_SKIP_SECTIONS = new Set(['seo', 'meta', 'schema', 'hero', 'video']);
+const MONEY_HEADING_KEYS = ['heading', 'title', 'headline'];
+const MONEY_INTRO_KEYS = ['subtitle', 'sub', 'text', 'desc', 'intro'];
+const MONEY_ITEM_TITLE_KEYS = ['title', 'q', 'question', 'headline', 'name', 'label', 'value', 'year'];
+// UI-/Attribut-Keys, die keinen sichtbaren Fließtext tragen → aus Items raus.
+const MONEY_ITEM_SKIP_KEYS = new Set([
+  'icon', 'imgAlt', 'alt', 'href', 'num', 'initials', 'iconLabel', 'badgeLabel',
+  'linkLabel', 'img', 'image', 'color', 'id', 'badge', 'cta', 'ctaLabel',
+  'popular', 'per', 'price', 'priceSuffix', 'mainPriceSuffix',
+]);
+
+const moneyLi = (inner) => (inner ? `<li style="padding:0.35rem 0;">${inner}</li>` : '');
+
+// Ein Item (String oder Objekt) → <li>. Titel-Feld fett, alle übrigen
+// String-/String-Array-Werte (außer UI-Keys) als Body — maximiert die
+// Wort-Deckung robust gegenüber unbekannten Shapes.
+const renderMoneyItem = (it) => {
+  if (typeof it === 'string') {
+    const s = plainText(it);
+    return s ? moneyLi(escapeHtmlMin(s)) : '';
+  }
+  if (!it || typeof it !== 'object') return '';
+  let titleKey = null;
+  for (const k of MONEY_ITEM_TITLE_KEYS) {
+    if (it[k] != null && String(it[k]).trim() !== '') { titleKey = k; break; }
+  }
+  const title = titleKey ? plainText(it[titleKey]) : '';
+  const body = [];
+  for (const [k, v] of Object.entries(it)) {
+    if (k === titleKey || MONEY_ITEM_SKIP_KEYS.has(k)) continue;
+    if (typeof v === 'string' && v.trim()) body.push(plainText(v));
+    else if (Array.isArray(v)) {
+      const strs = v.filter((x) => typeof x === 'string' && x.trim()).map(plainText);
+      if (strs.length) body.push(strs.join(', '));
+    }
+  }
+  const b = body.filter(Boolean).join(' — ');
+  if (!title && !b) return '';
+  return moneyLi(
+    `${title ? `<strong>${escapeHtmlMin(title)}</strong>${b ? ': ' : ''}` : ''}${b ? escapeHtmlMin(b) : ''}`,
+  );
+};
+
+// Eine Sektion → h2 (+optional h3 für verschachtelte Objekte) + Intro + Listen.
+const renderMoneySection = (sec, headingTag) => {
+  if (!sec || typeof sec !== 'object' || Array.isArray(sec)) return '';
+  const hOpen = headingTag === 'h3'
+    ? '<h3 style="font-size:1.1rem;font-weight:700;margin:1.25rem 0 0.5rem;">'
+    : '<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.75rem;">';
+  const hClose = headingTag === 'h3' ? '</h3>' : '</h2>';
+  const para = (t) => `<p style="margin:0 0 0.75rem;line-height:1.55;color:#334155;">${escapeHtmlMin(t)}</p>`;
+  const parts = [];
+  let headingKey = null;
+  for (const k of MONEY_HEADING_KEYS) { if (sec[k] && String(sec[k]).trim()) { headingKey = k; break; } }
+  if (headingKey) parts.push(`${hOpen}${escapeHtmlMin(plainText(sec[headingKey]))}${hClose}`);
+  let introKey = null;
+  for (const k of MONEY_INTRO_KEYS) { if (sec[k] && String(sec[k]).trim()) { introKey = k; parts.push(para(plainText(sec[k]))); break; } }
+  // Jedes Array in der Sektion → eine Liste (cards/items/rows/steps/…).
+  for (const v of Object.values(sec)) {
+    if (Array.isArray(v) && v.length) {
+      const lis = v.map(renderMoneyItem).filter(Boolean).join('');
+      if (lis) parts.push(`<ul style="list-style:none;padding:0;margin:0 0 1rem;">${lis}</ul>`);
+    }
+  }
+  // Übrige längere Fließtext-Skalare (z.B. features.textEnd, geoStat) als
+  // Absatz — Kurz-Labels/Badges (< 4 Wörter) und UI-Keys bleiben draußen.
+  for (const [k, v] of Object.entries(sec)) {
+    if (k === headingKey || k === introKey || MONEY_ITEM_SKIP_KEYS.has(k)) continue;
+    if (typeof v === 'string' && plainText(v).split(' ').length >= 4) parts.push(para(plainText(v)));
+  }
+  // Eine Ebene verschachtelte Content-Objekte (z.B. products.featured,
+  // pricing.abo) → h3-Unterblock.
+  for (const [k, v] of Object.entries(sec)) {
+    if (MONEY_HEADING_KEYS.includes(k) || MONEY_INTRO_KEYS.includes(k)) continue;
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      const nested = renderMoneySection(v, 'h3');
+      if (nested) parts.push(nested);
+    }
+  }
+  return parts.join('');
+};
+
+// Läuft über alle Content-Sektionen eines Money-Bundles (Hero/Meta/Media
+// ausgenommen) und rendert sie in Datei-Reihenfolge ≈ visueller Reihenfolge.
+const renderMoneySections = (bundle) => {
+  if (!bundle || typeof bundle !== 'object') return '';
+  const out = [];
+  for (const [key, sec] of Object.entries(bundle)) {
+    if (MONEY_SKIP_SECTIONS.has(key)) continue;
+    if (Array.isArray(sec)) {
+      // Top-Level-Array-Sektion (z.B. kasse.alternating, benefits) → Liste.
+      const lis = sec.map(renderMoneyItem).filter(Boolean).join('');
+      if (lis) out.push(`<ul style="list-style:none;padding:0;margin:0 0 1rem;">${lis}</ul>`);
+    } else {
+      out.push(renderMoneySection(sec, 'h2'));
+    }
+  }
+  return out.filter(Boolean).join('');
+};
+
+// Lokalisierter Hub-Pfad (z.B. produkte→/de/produkte, /en/products) aus der
+// Routen-Tabelle — buildHref übersetzt den Slug NICHT, daher direkter Lookup.
+const hubHref = (lang, key) => {
+  const r = routes.find((rt) => rt.key === key);
+  const slug = r?.slugs?.[lang] ?? r?.slugs?.de ?? `/${key}`;
+  return `/${lang}${slug}`;
+};
+
+// ─── Batch 3 B5: kontextuelle Rückwärts-Links Money-Page → Blog ─────────────
+// Der Blog verlinkt bereits in die Money-Pages; der Rückweg fehlte. Pro Seite
+// 4–6 statische Links auf thematisch passende Posts (Auswahl über das
+// category-Feld). Nur DE — der Blog ist DE-only; Nicht-DE-Money-Pages bleiben
+// unberührt.
+const MONEY_BLOG_CATEGORIES = {
+  'pos-system': ['Kassensysteme', 'Recht & Compliance', 'Finanzen'],
+  'ordering-app': ['Bestellsysteme', 'Lieferservice'],
+  'online-shop': ['Bestellsysteme', 'Lieferservice'],
+  'website': ['Website & Marketing', 'Trends & Zukunft'],
+  'hardware': ['Kassensysteme', 'Bestellsysteme'],
+  'restaurant': ['Betrieb & Service', 'Gründung'],
+  'cafe-bakery': ['Betrieb & Service', 'Website & Marketing'],
+  'start-delivery': ['Lieferservice', 'Gründung'],
+  'delivery': ['Lieferservice', 'Bestellsysteme'],
+  'franchise': ['Gründung', 'Betrieb & Service'],
+  'ghost-kitchen': ['Lieferservice', 'Trends & Zukunft'],
+};
+// Index category → Posts (stabil nach slug sortiert). Lazy/memoisiert, weil
+// allBlogPosts erst nach diesem Modul-Abschnitt initialisiert ist (TDZ).
+let _blogByCatMoney = null;
+const blogPostsByCategoryMoney = () => {
+  if (_blogByCatMoney) return _blogByCatMoney;
+  const map = new Map();
+  for (const p of allBlogPosts) {
+    const c = p.category || '';
+    if (!map.has(c)) map.set(c, []);
+    map.get(c).push(p);
+  }
+  for (const arr of map.values()) arr.sort((a, b) => (a.slug < b.slug ? -1 : 1));
+  _blogByCatMoney = map;
+  return map;
+};
+const relatedBlogLinksForMoney = (routeKey, lang) => {
+  if (lang !== 'de') return '';
+  const cats = MONEY_BLOG_CATEGORIES[routeKey];
+  if (!cats) return '';
+  const byCat = blogPostsByCategoryMoney();
+  const picked = [];
+  const seen = new Set();
+  const perCat = Math.ceil(6 / cats.length);
+  for (const c of cats) {
+    let n = 0;
+    for (const p of byCat.get(c) || []) {
+      if (seen.has(p.slug)) continue;
+      seen.add(p.slug); picked.push(p); n += 1;
+      if (n >= perCat || picked.length >= 6) break;
+    }
+    if (picked.length >= 6) break;
+  }
+  // Auffüllen, falls die ersten Kategorien zu dünn waren (Ziel min. 4).
+  if (picked.length < 6) {
+    for (const c of cats) {
+      for (const p of byCat.get(c) || []) {
+        if (seen.has(p.slug)) continue;
+        seen.add(p.slug); picked.push(p);
+        if (picked.length >= 6) break;
+      }
+      if (picked.length >= 6) break;
+    }
+  }
+  if (picked.length < 4) return '';
+  const items = picked
+    .slice(0, 6)
+    .map(
+      (p) =>
+        `<li style="padding:0.35rem 0;"><a href="/de/blog/${p.slug}" style="color:#0A264A;font-weight:600;text-decoration:underline;">${escapeHtmlMin(plainText(p.title))}</a></li>`,
+    )
+    .join('');
+  return `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.75rem;">Passende Artikel aus dem Blog</h2><ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${items}</ul>`;
+};
+
+const buildPackagePageStatic = (pkg, lang, bundle = null, routeKey = null) => {
   const fromLabel = PACKAGES_PRICE_LABEL[lang] ?? PACKAGES_PRICE_LABEL.de;
   const perMonth = PACKAGES_PER_MONTH[lang] ?? PACKAGES_PER_MONTH.de;
   const customLabel = PACKAGES_CUSTOM[lang] ?? PACKAGES_CUSTOM.de;
   const features = pkg.features ?? [];
-  const cta = i18nHero[lang]?.cta ?? 'Kostenlose Beratung';
+  const norm = bundle ? normalizeHeroFromBundle(bundle) : null;
+  const cta = norm?.cta || i18nHero[lang]?.cta || 'Kostenlose Beratung';
   const priceLine = pkg.price ? `${fromLabel} ${pkg.price} ${perMonth}` : customLabel;
-  const localizedName = localizedPackageName(pkg, lang);
+  const headline = norm?.headline || localizedPackageName(pkg, lang);
+  const subline = norm?.subline || pkg.description || '';
+  const produkteHref = hubHref(lang, 'produkte');
   return [
     '<article style="max-width:880px;margin:3rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-    `<h1 style="font-size:2rem;font-weight:900;line-height:1.2;margin:0 0 0.5rem;">${escapeHtmlMin(localizedName)}</h1>`,
+    `<nav style="font-size:0.9rem;margin:0 0 1rem;color:#475569;"><a href="/${lang}" style="color:#475569;">Home</a> › <a href="${produkteHref}" style="color:#475569;">${escapeHtmlMin(navLabel(lang, 'produkte'))}</a></nav>`,
+    norm?.badge
+      ? `<p style="display:inline-block;background:#0A264A;color:#fff;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:0.25rem 0.75rem;border-radius:999px;margin:0 0 1rem;">${escapeHtmlMin(norm.badge)}</p>`
+      : '',
+    `<h1 style="font-size:2rem;font-weight:900;line-height:1.2;margin:0 0 0.5rem;">${escapeHtmlMin(headline)}</h1>`,
     `<p style="font-size:1.5rem;color:#ED8400;font-weight:700;margin:0 0 1rem;">${escapeHtmlMin(priceLine)}</p>`,
-    `<p style="font-size:1.125rem;line-height:1.5;margin:0 0 1.5rem;color:#0A264A;opacity:0.85;">${escapeHtmlMin(pkg.description)}</p>`,
+    subline
+      ? `<p style="font-size:1.125rem;line-height:1.5;margin:0 0 1.5rem;color:#0A264A;opacity:0.85;">${escapeHtmlMin(plainText(subline))}</p>`
+      : '',
     features.length > 0
       ? `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${features
           .map((f) => `<li style="padding:0.5rem 0;">✓ ${escapeHtmlMin(f)}</li>`)
           .join('')}</ul>`
       : '',
+    // Batch 3: reiche Bundle-Sektionen (features, comparison, pricing,
+    // testimonials, steps, faq …) sichtbar ins statische HTML.
+    renderMoneySections(bundle),
+    relatedBlogLinksForMoney(routeKey || pkg.key, lang),
     `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>`,
     '</article>',
   ]
@@ -1627,8 +1830,11 @@ const buildSolutionPageStatic = ({ lang, bundle, routeKey }) => {
     bundle?.hero?.pills ||
     bundle?.hero?.trustPills ||
     [];
+  const loesungenHref = hubHref(lang, 'loesungen');
+  const loesungenLabel = i18nNav[lang]?.loesungen ?? i18nNav.de?.loesungen ?? 'Lösungen';
   return [
     '<article style="max-width:880px;margin:3rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
+    `<nav style="font-size:0.9rem;margin:0 0 1rem;color:#475569;"><a href="/${lang}" style="color:#475569;">Home</a> › <a href="${loesungenHref}" style="color:#475569;">${escapeHtmlMin(loesungenLabel)}</a></nav>`,
     norm.badge
       ? `<p style="display:inline-block;background:#0A264A;color:#fff;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:0.25rem 0.75rem;border-radius:999px;margin:0 0 1rem;">${escapeHtmlMin(norm.badge)}</p>`
       : '',
@@ -1641,6 +1847,10 @@ const buildSolutionPageStatic = ({ lang, bundle, routeKey }) => {
           .map((t) => `<li>✓ ${escapeHtmlMin(t)}</li>`)
           .join('')}</ul>`
       : '',
+    // Batch 3: reiche Bundle-Sektionen (problem, products, process, compare,
+    // stats, trust, faq …) sichtbar ins statische HTML.
+    renderMoneySections(bundle),
+    relatedBlogLinksForMoney(routeKey, lang),
     `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>`,
     '</article>',
   ]
@@ -2750,39 +2960,9 @@ for (const route of routes) {
         const pkgBundle = bundleName
           ? loadBundle(lang, bundleName) ?? loadBundle('de', bundleName)
           : null;
-        const norm = pkgBundle ? normalizeHeroFromBundle(pkgBundle) : null;
-        if (norm?.headline) {
-          // Marketing-grade hero from bundle: badge, headline, subline,
-          // pricing display from PACKAGES (already structured), CTA.
-          const fromLabel = PACKAGES_PRICE_LABEL[lang] ?? PACKAGES_PRICE_LABEL.de;
-          const perMonth = PACKAGES_PER_MONTH[lang] ?? PACKAGES_PER_MONTH.de;
-          const customLabel = PACKAGES_CUSTOM[lang] ?? PACKAGES_CUSTOM.de;
-          const cta = norm.cta || i18nHero[lang]?.cta || 'Kostenlose Beratung';
-          const priceLine = pkg.price ? `${fromLabel} ${pkg.price} ${perMonth}` : customLabel;
-          const features = pkg.features ?? [];
-          staticContent = [
-            '<article style="max-width:880px;margin:3rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-            norm.badge
-              ? `<p style="display:inline-block;background:#0A264A;color:#fff;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:0.25rem 0.75rem;border-radius:999px;margin:0 0 1rem;">${escapeHtmlMin(norm.badge)}</p>`
-              : '',
-            `<h1 style="font-size:2rem;font-weight:900;line-height:1.2;margin:0 0 0.75rem;">${escapeHtmlMin(norm.headline)}</h1>`,
-            `<p style="font-size:1.5rem;color:#ED8400;font-weight:700;margin:0 0 1rem;">${escapeHtmlMin(priceLine)}</p>`,
-            norm.subline
-              ? `<p style="font-size:1.125rem;line-height:1.5;margin:0 0 1.5rem;color:#0A264A;opacity:0.85;">${escapeHtmlMin(norm.subline)}</p>`
-              : '',
-            features.length > 0
-              ? `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${features
-                  .map((f) => `<li style="padding:0.5rem 0;">✓ ${escapeHtmlMin(f)}</li>`)
-                  .join('')}</ul>`
-              : '',
-            `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>`,
-            '</article>',
-          ]
-            .filter(Boolean)
-            .join('');
-        } else {
-          staticContent = buildPackagePageStatic(pkg, lang);
-        }
+        // Batch 3: ein Builder für beide Fälle — Hero aus Bundle (falls
+        // vorhanden) plus alle reichen Content-Sektionen; sonst PACKAGES-Fallback.
+        staticContent = buildPackagePageStatic(pkg, lang, pkgBundle, route.key);
         extraSchemas.push(buildProductSchema(pkg, canonicalUrl, lang));
         // FAQPage from bundle.faq.items[] — Pakete bundles have 6-7 FAQs each.
         const pkgFaq = buildFaqPageFromBundle(canonicalUrl, pkgBundle?.faq?.items);
@@ -3232,6 +3412,7 @@ for (const route of routes) {
       let h1 = '';
       let sub = '';
       const extraLines = [];
+      let extraHtml = '';
       if (route.key === 'contact') {
         h1 = plainText(c?.contact?.heroTitle ?? '') || 'Kontakt';
         sub = plainText(c?.contact?.heroSub ?? '') || description;
@@ -3239,6 +3420,25 @@ for (const route of routes) {
         // die direkteste Antwort auf "Wie erreiche ich Gastro Master?".
         extraLines.push('Gastro Master · Herzbergstr. 9 · 61250 Usingen (Hessen)');
         extraLines.push('Telefon: +49 6081 9128913 · E-Mail: info@gastro-master.de');
+        // Batch 3 B3: dieselben Sektionen, die Kontakt.tsx client-seitig rendert
+        // (Trust, Versprechen, Sprachen) — Dual-Layer-Parität, kein erfundener
+        // Content. Alles aus common.json.contact.
+        const ct = c?.contact ?? {};
+        const trust = [ct.trust1, ct.trust2, ct.trust3].filter(Boolean).map(plainText);
+        const promises = Array.isArray(ct.promises) ? ct.promises.map(plainText).filter(Boolean) : [];
+        const langs = Array.isArray(ct.languageLabels) ? ct.languageLabels.map(plainText).filter(Boolean) : [];
+        const h2c = (t) => `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.75rem;">${escapeHtmlMin(t)}</h2>`;
+        const bits = [];
+        if (trust.length) bits.push(`<ul style="list-style:none;padding:0;margin:0 0 1rem;display:flex;gap:1rem;flex-wrap:wrap;font-weight:600;">${trust.map((t) => `<li>✓ ${escapeHtmlMin(t)}</li>`).join('')}</ul>`);
+        if (promises.length && ct.promiseTitle) {
+          bits.push(h2c(plainText(ct.promiseTitle)));
+          bits.push(`<ul style="list-style:none;padding:0;margin:0 0 1rem;">${promises.map((p) => `<li style="padding:0.35rem 0;">✓ ${escapeHtmlMin(p)}</li>`).join('')}</ul>`);
+        }
+        if (langs.length && ct.languageTitle) {
+          bits.push(h2c(plainText(ct.languageTitle)));
+          bits.push(`<p style="margin:0 0 0.75rem;line-height:1.55;color:#334155;">${escapeHtmlMin(langs.join(' · '))}</p>`);
+        }
+        extraHtml = bits.join('');
       } else if (route.key === 'integrations') {
         h1 = plainText(c?.integrationSlider?.title ?? '') || 'Integrationen';
         sub = plainText(c?.integrationsPage?.hero?.subtitle ?? '') || description;
@@ -3258,6 +3458,7 @@ for (const route of routes) {
         ...extraLines.map(
           (line) => `<p style="margin:0 0 0.5rem;color:#334155;">${escapeHtmlMin(line)}</p>`,
         ),
+        extraHtml,
         `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;margin-top:0.5rem;">${escapeHtmlMin(cta)}</a>`,
         '</article>',
       ]
