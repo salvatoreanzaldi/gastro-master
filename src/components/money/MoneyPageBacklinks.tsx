@@ -23,30 +23,40 @@ export function MoneyPageBacklinks({ routeKey, hub }: Props) {
   if (links.length < 4) return null;
   const hubLabel = hub === "produkte" ? "Produkte" : "Lösungen";
   const hubPath = hub === "produkte" ? "/produkte" : "/loesungen";
+  // Farben ausschließlich über Theme-Tokens (foreground/muted-foreground/border/
+  // accent) — so passt sich der Block Light UND Dark Mode an. Der frühere
+  // hardcodierte Navy-Ton (text-[#0A264A] ohne dark:-Variante) war auf dunklem
+  // Grund unsichtbar (hidden text).
   return (
-    <section className="max-w-[880px] mx-auto px-6 my-8 text-[#0A264A]">
-      <nav className="text-sm text-slate-600 mb-3">
-        <Link to={lp("/")} className="text-slate-600 hover:underline">
+    <div className="max-w-[880px] mx-auto px-6">
+      <nav aria-label="Brotkrumen" className="text-sm text-muted-foreground mt-8 mb-1">
+        <Link to={lp("/")} className="hover:text-accent transition-colors">
           Home
         </Link>
-        {" › "}
-        <Link to={lp(hubPath)} className="text-slate-600 hover:underline">
+        <span aria-hidden="true" className="mx-1.5">
+          ›
+        </span>
+        <Link to={lp(hubPath)} className="hover:text-accent transition-colors">
           {hubLabel}
         </Link>
       </nav>
-      <h2 className="text-xl font-extrabold mb-3">Passende Artikel aus dem Blog</h2>
-      <ul className="list-none p-0 m-0">
-        {links.map((l) => (
-          <li key={l.slug} className="py-1">
-            <Link
-              to={lp(`/blog/${l.slug}`)}
-              className="text-[#0A264A] font-semibold underline"
-            >
-              {l.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+      <nav aria-label="Passende Beiträge" className="border-t border-border py-10 mb-6">
+        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
+          Passende Beiträge
+        </p>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 list-none p-0 m-0 text-[0.9rem]">
+          {links.map((l) => (
+            <li key={l.slug}>
+              <Link
+                to={lp(`/blog/${l.slug}`)}
+                className="text-foreground hover:text-accent hover:underline transition-colors"
+              >
+                {l.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
   );
 }
