@@ -699,9 +699,22 @@ const CRAWLER_NAV =
 // (GPTBot, ClaudeBot, PerplexityBot) get a kanonical hint.
 const rootHreflangTags = buildHreflangTags('/');
 const rootCanonical = `<link rel="canonical" href="${SITE_URL}/de">`;
+// Batch 6 C2: Root-Shell bekommt dasselbe 1-Ebenen-Breadcrumb wie /de —
+// konsistent mit dem Canonical auf /de; damit tragen 100 % der
+// indexierbaren Seiten ein BreadcrumbList-Schema.
+// Inline statt buildBreadcrumbList: die Helper-const ist an dieser Stelle
+// noch nicht initialisiert (TDZ — Root-Patch läuft früh im Skript).
+const rootBreadcrumb = `<script type="application/ld+json">${JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": `${SITE_URL}/de#breadcrumb`,
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: 'Startseite', item: `${SITE_URL}/de` },
+  ],
+})}</script>`;
 const rootHtmlPatched = baseHtml.replace(
   '</head>',
-  `${rootCanonical}\n${rootHreflangTags}\n${heroPreloadTag ? '  ' + heroPreloadTag + '\n' : ''}  </head>`,
+  `${rootCanonical}\n${rootHreflangTags}\n  ${rootBreadcrumb}\n${heroPreloadTag ? '  ' + heroPreloadTag + '\n' : ''}  </head>`,
 );
 writeFileSync(join(distDir, 'index.html'), rootHtmlPatched.replace('</body>', `  ${CRAWLER_NAV}\n</body>`));
 console.log('✅ Hreflang + canonical injected: dist/index.html');
@@ -4284,6 +4297,13 @@ console.log(
     `<link rel="canonical" href="${url}">`,
     `<link rel="alternate" hreflang="de" href="${url}" />`,
     `<link rel="alternate" hreflang="x-default" href="${url}" />`,
+    // Batch 6 C2: letzte indexierbare Seite ohne BreadcrumbList → 100 %.
+    `<script type="application/ld+json">${JSON.stringify(
+      buildBreadcrumbList(url, [
+        { name: 'Startseite', url: `${SITE_URL}/de` },
+        { name: 'Konto und Daten löschen', url },
+      ]),
+    )}</script>`,
   ].join('\n  ');
   html = html.replace('</head>', `  ${headExtras}\n  </head>`);
 
