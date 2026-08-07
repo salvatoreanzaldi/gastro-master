@@ -52,3 +52,7 @@ php-backend/config.php
 # Runtime rate-limit data (server-side state)
 php-backend/data/rate-limits/*
 !php-backend/data/rate-limits/.gitkeep
+
+# Credential-Dateien (Service-Accounts, API-Keys) — nie committen
+*credentials*.json
+*service-account*.json
