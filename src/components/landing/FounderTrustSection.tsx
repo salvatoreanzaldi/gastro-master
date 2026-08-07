@@ -10,6 +10,7 @@ import salvatorePortrait from "@/assets/team/team-salvatore-anzaldi.png?w=800&fo
 import andrejPortrait from "@/assets/team/team-andrej-krutsch.png?w=800&format=webp";
 import mohammadPortrait from "@/assets/team/team-mohammad-motakalemi.png?w=800&format=webp";
 import { useTranslation } from "react-i18next";
+import { FLAG_ICONS } from "@/config/flag-icons";
 
 const founderImgs = [ceoPortrait, sanjayaPortrait];
 const teamImgs = [salvatorePortrait, andrejPortrait, mohammadPortrait];
@@ -17,12 +18,12 @@ const founderKeys = ["rene", "sanjaya"] as const;
 const teamKeys = ["salvatore", "andrej", "mohammad"] as const;
 
 const languageMeta = [
-  { flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
-  { flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
-  { flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
-  { flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
-  { flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
-  { flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+  { flag: FLAG_ICONS.de, color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
+  { flag: FLAG_ICONS.gb, color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
+  { flag: FLAG_ICONS.it, color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
+  { flag: FLAG_ICONS.ir, color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
+  { flag: FLAG_ICONS.ru, color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
+  { flag: FLAG_ICONS.lk, color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
 ];
 
 type PersonKey = "rene" | "sanjaya" | "salvatore" | "andrej" | "mohammad";
@@ -272,7 +273,7 @@ const FounderTrustSection = () => {
                   ${lang.color}
                 `}
               >
-                <span className="text-2xl leading-none">{lang.flag}</span>
+                <img src={lang.flag} alt="" className="w-6 h-6 rounded-full object-cover" loading="lazy" />
                 {lang.label}
               </motion.div>
             ))}

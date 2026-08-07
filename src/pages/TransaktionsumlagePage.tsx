@@ -34,6 +34,8 @@ import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
 import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png";
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
+import { FLAG_ICONS } from "@/config/flag-icons";
+import { SITE_AGGREGATE_RATING } from "@/data/schemaOrg";
 
 // ─── Payment Logos (module-level, reused in both heroes) ─────────────────────
 const PAYMENT_LOGOS_B = [
@@ -85,13 +87,14 @@ const SCHEMA_PRODUCT = {
   "@type": "Product",
   "name": "Transaktionsumlage Gastronomie",
   "description": "Add-On für Gastronomen zum transparenten Weitergeben von Zahlungsgebühren (PayPal, Kreditkarte, Apple Pay, Google Pay, Klarna) an Kunden. Kompatibel mit Gastro Master Webshop und App.",
+  // GSC-Fix: absolute Bild-URL (GSC „Feld image fehlt")
+  "image": new URL(paymentScreen, "https://gastro-master.de").href,
   "brand": { "@type": "Brand", "name": "Gastro Master" },
-  "offers": {
-    "@type": "Offer",
-    "availability": "https://schema.org/InStock",
-    "priceCurrency": "EUR",
-    "seller": { "@type": "Organization", "name": "Gastro Master Deutschland" },
-  },
+  // GSC-Fix 2026-07-22: KEIN offers-Block — die Transaktionsumlage hat keinen
+  // Fixpreis („nach Vereinbarung"), ein Offer mit priceCurrency aber ohne price
+  // ist ungültig. Qualifizierung über die site-weite aggregateRating (5,0/131),
+  // konsistent mit allen anderen Add-on-Product-Schemas.
+  "aggregateRating": { ...SITE_AGGREGATE_RATING },
 };
 
 const SCHEMA_FAQ = {
@@ -157,12 +160,12 @@ const TEAM_IMGS = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg]
 const TEAM_NAMES = ["Sanjaya Pattiyage", "René Ebert", "Salvatore Anzaldi", "Andrej Krutsch"];
 
 const LANG_META = [
-  { flag: "🇩🇪", color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
-  { flag: "🇬🇧", color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
-  { flag: "🇮🇹", color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
-  { flag: "🇮🇷", color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
-  { flag: "🇷🇺", color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
-  { flag: "🇱🇰", color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+  { flag: FLAG_ICONS.de, color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
+  { flag: FLAG_ICONS.gb, color: "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300" },
+  { flag: FLAG_ICONS.it, color: "hover:border-green-500 hover:bg-green-50 hover:text-green-900 dark:hover:bg-green-500/10 dark:hover:text-green-300" },
+  { flag: FLAG_ICONS.ir, color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
+  { flag: FLAG_ICONS.ru, color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
+  { flag: FLAG_ICONS.lk, color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
 ];
 
 const FEATURE_ICONS = [Wallet, CreditCard, Percent, Banknote, TrendingUp, CheckCircle2, Zap];
@@ -440,7 +443,7 @@ const TeamCTA = () => {
                   whileHover={{ scale: 1.08, y: -2 }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${LANG_META[i]?.color ?? ""}`}
                 >
-                  <span className="text-lg leading-none">{LANG_META[i]?.flag}</span>
+                  {LANG_META[i]?.flag && <img src={LANG_META[i].flag} alt="" className="w-5 h-5 rounded-full object-cover" loading="lazy" />}
                   {label}
                 </motion.div>
               ))}
@@ -656,7 +659,7 @@ const TransaktionsumlagePage = () => {
                 <div>
                   <label className="block text-white/65 text-sm font-medium mb-2">{t("calculator.ordersLabel")}</label>
                   <input
-                    type="range" min={50} max={3000} step={50} value={orders}
+                    type="range" aria-label={t("calculator.ordersLabel")} min={50} max={3000} step={50} value={orders}
                     onChange={(e) => setOrders(Number(e.target.value))}
                     className="w-full accent-cyan-brand mb-2"
                   />
@@ -665,7 +668,7 @@ const TransaktionsumlagePage = () => {
                 <div>
                   <label className="block text-white/65 text-sm font-medium mb-2">{t("calculator.avgCartLabel")}</label>
                   <input
-                    type="range" min={10} max={80} step={1} value={avgCart}
+                    type="range" aria-label={t("calculator.avgCartLabel")} min={10} max={80} step={1} value={avgCart}
                     onChange={(e) => setAvgCart(Number(e.target.value))}
                     className="w-full accent-cyan-brand mb-2"
                   />

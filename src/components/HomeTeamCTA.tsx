@@ -13,10 +13,11 @@ import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png?w=800&for
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png?w=800&format=webp";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png?w=800&format=webp";
 import teamMohammadImg  from "@/assets/team/team-mohammad-motakalemi.png?w=800&format=webp";
+import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
 
 const teamMemberImgs = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg, teamMohammadImg];
 
-const langFlags = ["🇩🇪", "🇬🇧", "🇮🇹", "🇮🇷", "🇷🇺", "🇱🇰"];
+const langFlags = FLAG_ICONS_ORDERED;
 const langColors = [
   "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300",
   "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300",
@@ -80,7 +81,7 @@ const HomeTeamCTA = () => {
                   whileHover={{ scale: 1.08, y: -2 }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${langColors[i]}`}
                 >
-                  <span className="text-lg leading-none">{langFlags[i]}</span>
+                  <img src={langFlags[i]} alt="" className="w-5 h-5 rounded-full object-cover" loading="lazy" />
                   {label}
                 </motion.div>
               ))}

@@ -11,10 +11,11 @@ import rene     from "@/assets/kontakt/Rene Ebert - Kontakt.png";
 import salva    from "@/assets/kontakt/Salvatore Anzaldi - Kontakt.png";
 import andrej   from "@/assets/kontakt/Andrej Krutsch - Kontakt.png";
 import mohammad from "@/assets/kontakt/Mohammad Motakalemi - Kontakt.png";
+import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
 
 const teamImages = [rene, salva, andrej, mohammad];
 const teamNames = ["René Ebert", "Salvatore Anzaldi", "Andrej Krutsch", "Mohammad Motakalemi"];
-const languageFlags = ["🇩🇪", "🇬🇧", "🇮🇹", "🇮🇷", "🇷🇺", "🇱🇰"];
+const languageFlags = FLAG_ICONS_ORDERED;
 const promiseIcons = [Clock, Lightbulb, Lock];
 
 const Kontakt = () => {
@@ -123,8 +124,8 @@ const Kontakt = () => {
                 <div className="space-y-3.5">
                   {/* Name */}
                   <div>
-                    <label className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelName")}</label>
-                    <input
+                    <label htmlFor="contact-name" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelName")}</label>
+                    <input id="contact-name"
                       required type="text" value={form.name}
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
@@ -134,8 +135,8 @@ const Kontakt = () => {
 
                   {/* Restaurant */}
                   <div>
-                    <label className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelBusiness")}</label>
-                    <input
+                    <label htmlFor="contact-business" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelBusiness")}</label>
+                    <input id="contact-business"
                       required type="text" value={form.restaurant}
                       onChange={e => setForm(f => ({ ...f, restaurant: e.target.value }))}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
@@ -146,8 +147,8 @@ const Kontakt = () => {
                   {/* PLZ + Phone */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelZip")}</label>
-                      <input
+                      <label htmlFor="contact-zip" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelZip")}</label>
+                      <input id="contact-zip"
                         type="text" value={form.plz}
                         onChange={e => setForm(f => ({ ...f, plz: e.target.value }))}
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
@@ -155,8 +156,8 @@ const Kontakt = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelPhone")}</label>
-                      <input
+                      <label htmlFor="contact-phone" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelPhone")}</label>
+                      <input id="contact-phone"
                         required type="tel" value={form.phone}
                         onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
@@ -167,8 +168,8 @@ const Kontakt = () => {
 
                   {/* E-Mail */}
                   <div>
-                    <label className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">E-Mail</label>
-                    <input
+                    <label htmlFor="contact-email" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">E-Mail</label>
+                    <input id="contact-email"
                       type="email" value={form.email}
                       onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
@@ -178,8 +179,8 @@ const Kontakt = () => {
 
                   {/* Message */}
                   <div>
-                    <label className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelMessage")}</label>
-                    <textarea
+                    <label htmlFor="contact-message" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelMessage")}</label>
+                    <textarea id="contact-message"
                       value={form.message} rows={3} maxLength={5000}
                       onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition resize-none"
@@ -329,7 +330,7 @@ const Kontakt = () => {
                         key={label}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/8 border border-white/10 text-white/65 text-sm font-medium"
                       >
-                        <span className="text-base leading-none">{languageFlags[i]}</span>
+                        <img src={languageFlags[i]} alt="" className="w-4 h-4 rounded-full object-cover" loading="lazy" />
                         {label}
                       </span>
                     ))}

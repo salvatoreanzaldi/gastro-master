@@ -28,6 +28,7 @@ import imgSanjaya   from "@/assets/team/team-sanjaya-pattiyage.png";
 import imgSalvatore from "@/assets/team/team-salvatore-anzaldi.png";
 import imgAndrej    from "@/assets/team/team-andrej-krutsch.png";
 import imgMohammad  from "@/assets/team/team-mohammad-motakalemi.png";
+import { FLAG_ICONS } from "@/config/flag-icons";
 
 // ─── Icon Maps ──────────────────────────────────────────────────────────────
 
@@ -47,9 +48,7 @@ const TEAM_IMG_MAP: Record<string, string> = {
   rene: imgRene, sanjaya: imgSanjaya, salvatore: imgSalvatore, andrej: imgAndrej, mohammad: imgMohammad,
 };
 
-const FLAG_MAP: Record<string, string> = {
-  de: "🇩🇪", gb: "🇬🇧", it: "🇮🇹", ir: "🇮🇷", ru: "🇷🇺", lk: "🇱🇰",
-};
+const FLAG_MAP: Record<string, string> = FLAG_ICONS;
 
 const FLAG_COLOR_MAP: Record<string, string> = {
   de: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300",
@@ -601,7 +600,7 @@ const UeberUnsPage = () => {
               {langItems.map((lang, i) => (
                 <motion.div key={lang.flag} whileHover={{ scale: 1.08, y: -3 }}
                   className={`flex-shrink-0 flex items-center justify-center md:inline-flex gap-2 px-5 md:px-4 py-2.5 rounded-full border-2 border-border bg-surface-light text-foreground font-semibold text-sm cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${FLAG_COLOR_MAP[lang.flag] || ""}`}>
-                  <span className="text-2xl leading-none">{FLAG_MAP[lang.flag] || ""}</span>
+                  {FLAG_MAP[lang.flag] && <img src={FLAG_MAP[lang.flag]} alt="" className="w-6 h-6 rounded-full object-cover" loading="lazy" />}
                   {lang.label}
                 </motion.div>
               ))}
