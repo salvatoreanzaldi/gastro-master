@@ -23,33 +23,41 @@ export function MoneyPageBacklinks({ routeKey, hub }: Props) {
   if (links.length < 4) return null;
   const hubLabel = hub === "produkte" ? "Produkte" : "Lösungen";
   const hubPath = hub === "produkte" ? "/produkte" : "/loesungen";
-  // Farben ausschließlich über Theme-Tokens (foreground/muted-foreground/border/
-  // accent) — so passt sich der Block Light UND Dark Mode an. Der frühere
-  // hardcodierte Navy-Ton (text-[#0A264A] ohne dark:-Variante) war auf dunklem
-  // Grund unsichtbar (hidden text).
+  // Der Untergrund variiert je Money-Page (Produktseiten: fester Navy-Root
+  // bg-[#0A264A]; Lösungsseiten: weiß). Ein fester Textton würde also auf einem
+  // der beiden unsichtbar. Lösung: der Block bringt seinen EIGENEN Navy-Grund
+  // mit (identisch zum Footer-Navy) und nutzt dessen weiße Textfarben —
+  // konsistent lesbar auf jeder Seite und optisch als Vorlauf zum Footer.
   return (
+    <div className="bg-[#0A264A] text-primary-foreground">
     <div className="max-w-[880px] mx-auto px-6">
-      <nav aria-label="Brotkrumen" className="text-sm text-muted-foreground mt-8 mb-1">
-        <Link to={lp("/")} className="hover:text-accent transition-colors">
+      <nav aria-label="Brotkrumen" className="text-sm text-primary-foreground/60 pt-5">
+        <Link to={lp("/")} className="hover:text-primary-foreground transition-colors">
           Home
         </Link>
         <span aria-hidden="true" className="mx-1.5">
           ›
         </span>
-        <Link to={lp(hubPath)} className="hover:text-accent transition-colors">
+        <Link to={lp(hubPath)} className="hover:text-primary-foreground transition-colors">
           {hubLabel}
         </Link>
       </nav>
-      <nav aria-label="Passende Beiträge" className="border-t border-border py-10 mb-6">
-        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
+      <nav
+        aria-label="Passende Beiträge"
+        className="border-t border-primary-foreground/10 mt-3 pt-5 pb-7"
+      >
+        <p className="text-xs font-bold uppercase tracking-widest text-primary-foreground/50 mb-3">
           Passende Beiträge
         </p>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 list-none p-0 m-0 text-[0.9rem]">
+        {/* Einzeilige Links (truncate) halten den Block kompakt; der volle Titel
+            bleibt als Ankertext im DOM (SEO), visuell abgeschnitten mit Ellipse. */}
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5 list-none p-0 m-0 text-[0.9rem]">
           {links.map((l) => (
-            <li key={l.slug}>
+            <li key={l.slug} className="min-w-0">
               <Link
                 to={lp(`/blog/${l.slug}`)}
-                className="text-foreground hover:text-accent hover:underline transition-colors"
+                title={l.title}
+                className="block truncate text-primary-foreground/90 hover:text-accent hover:underline transition-colors"
               >
                 {l.title}
               </Link>
@@ -57,6 +65,7 @@ export function MoneyPageBacklinks({ routeKey, hub }: Props) {
           ))}
         </ul>
       </nav>
+    </div>
     </div>
   );
 }

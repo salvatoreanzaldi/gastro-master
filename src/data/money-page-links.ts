@@ -79,5 +79,9 @@ export function moneyPageBlogLinks(
       if (picked.length >= 6) break;
     }
   }
-  return picked.slice(0, 6).map((p) => ({ slug: p.slug, title: p.title }));
+  // Ankertext = Thema, nicht Markenname → " | Gastro Master"-Suffix strippen.
+  return picked.slice(0, 6).map((p) => ({
+    slug: p.slug,
+    title: p.title.replace(/\s*\|\s*Gastro Master\s*$/i, "").trim(),
+  }));
 }

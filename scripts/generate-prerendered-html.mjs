@@ -1355,20 +1355,20 @@ const relatedBlogLinksForMoney = (routeKey, lang, hubKey) => {
   if (lang !== 'de' || !moneyPageBlogLinksImpl) return '';
   const posts = moneyPageBlogLinksImpl(routeKey, allBlogPosts);
   if (!posts || posts.length < 4) return '';
-  // Farben über Theme-Tokens (hsl(var(--…))) statt fester Hex — passt sich der
-  // Prerender damit Light/Dark an, exakt wie die React-Komponente
-  // MoneyPageBacklinks (Markup + Tokens gespiegelt → keine Parität-/Sichtbar-
-  // keitslücke). Kompakter Wegweiser: Trennlinie, kleine Uppercase-Überschrift,
-  // 6 Textlinks in 2 Spalten.
+  // Der Untergrund variiert je Money-Page (Produkt: fester Navy-Root; Lösung:
+  // weiß). Deshalb bringt der Block wie im Client seinen EIGENEN Navy-Grund mit
+  // (identisch zum Footer) + weiße Textfarben — überall lesbar, gespiegelt zur
+  // React-Komponente MoneyPageBacklinks (kein Drift). Einzeilige Links (truncate)
+  // halten den Block kompakt; voller Titel bleibt Ankertext im DOM.
   const hubLabel = hubKey === 'produkte' ? navLabel(lang, 'produkte') : 'Lösungen';
-  const breadcrumb = `<nav aria-label="Brotkrumen" style="font-size:0.875rem;color:hsl(var(--muted-foreground));margin:2rem 0 0.25rem;"><a href="/${lang}" style="color:inherit;text-decoration:none;">Home</a> <span aria-hidden="true">›</span> <a href="${hubHref(lang, hubKey)}" style="color:inherit;text-decoration:none;">${escapeHtmlMin(hubLabel)}</a></nav>`;
+  const breadcrumb = `<nav aria-label="Brotkrumen" style="font-size:0.875rem;color:rgba(255,255,255,0.6);padding-top:1.25rem;"><a href="/${lang}" style="color:inherit;text-decoration:none;">Home</a> <span aria-hidden="true">›</span> <a href="${hubHref(lang, hubKey)}" style="color:inherit;text-decoration:none;">${escapeHtmlMin(hubLabel)}</a></nav>`;
   const items = posts
     .map(
       (p) =>
-        `<li><a href="/de/blog/${p.slug}" style="color:hsl(var(--foreground));text-decoration:none;">${escapeHtmlMin(plainText(p.title))}</a></li>`,
+        `<li style="min-width:0;"><a href="/de/blog/${p.slug}" style="color:rgba(255,255,255,0.9);text-decoration:none;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtmlMin(plainText(p.title))}</a></li>`,
     )
     .join('');
-  return `${breadcrumb}<nav aria-label="Passende Beiträge" style="border-top:1px solid hsl(var(--border));padding:2.5rem 0;margin-bottom:1.5rem;"><p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:hsl(var(--muted-foreground));margin:0 0 1rem;">Passende Beiträge</p><ul style="list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 2rem;font-size:0.9rem;">${items}</ul></nav>`;
+  return `<div style="background:#0A264A;color:#fff;margin-top:1.5rem;padding:0 1.5rem 0.5rem;">${breadcrumb}<nav aria-label="Passende Beiträge" style="border-top:1px solid rgba(255,255,255,0.1);margin-top:0.75rem;padding:1.25rem 0 1.75rem;"><p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.5);margin:0 0 0.75rem;">Passende Beiträge</p><ul style="list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0.375rem 2rem;font-size:0.9rem;">${items}</ul></nav></div>`;
 };
 
 const buildPackagePageStatic = (pkg, lang, bundle = null, routeKey = null) => {
