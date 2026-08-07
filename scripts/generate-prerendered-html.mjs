@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'fs';
 import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -62,7 +63,39 @@ let baseHtml = readFileSync(join(distDir, 'index.html'), 'utf-8')
   // Strip prior hreflang alternates (have hreflang="...") but keep
   // type="application/rss+xml" alternates intact.
   .replace(/\n?\s*<link rel="alternate"[^>]*\shreflang="[^"]+"[^>]*\/?>/g, '')
-  .replace(/\n?\s*<link rel="canonical"[^>]+>/g, '');
+  .replace(/\n?\s*<link rel="canonical"[^>]+>/g, '')
+  // Idempotenz: früheren Build-Stempel entfernen (Re-Run ohne vite build).
+  .replace(/\n?\s*<meta name="build-commit"[^>]*\/?>/g, '');
+
+// ─── Build-Herkunft: Commit-SHA in jede Seite + dist/build-info.json ─────────
+// Nach dem BlogPostDetailPage-Vorfall (2026-08): Ohne Stempel ist nicht
+// nachvollziehbar, aus welchem Quellstand ein ausgeliefertes dist gebaut
+// wurde. "-dirty" markiert Builds mit ungecommitteten Änderungen.
+const BUILD_COMMIT = (() => {
+  try {
+    const sha = execSync('git rev-parse --short HEAD', { cwd: ROOT }).toString().trim();
+    const dirty = execSync('git status --porcelain', { cwd: ROOT }).toString().trim().length > 0;
+    return sha + (dirty ? '-dirty' : '');
+  } catch {
+    return 'unknown';
+  }
+})();
+const BUILD_BRANCH = (() => {
+  try {
+    return execSync('git branch --show-current', { cwd: ROOT }).toString().trim();
+  } catch {
+    return 'unknown';
+  }
+})();
+baseHtml = baseHtml.replace(
+  '<head>',
+  `<head>\n    <meta name="build-commit" content="${BUILD_COMMIT}" />`,
+);
+writeFileSync(
+  join(distDir, 'build-info.json'),
+  JSON.stringify({ commit: BUILD_COMMIT, branch: BUILD_BRANCH, builtAt: new Date().toISOString() }, null, 2) + '\n',
+);
+console.log(`🔖 Build-Stempel: ${BUILD_COMMIT} (${BUILD_BRANCH}) → build-info.json + <meta name="build-commit">`);
 
 // ─── Reviews + Founders metadata (used by AggregateRating + Person schemas) ─
 const reviewsData = JSON.parse(

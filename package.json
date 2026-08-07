@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/lint-canonical-source.mjs && vite build && node scripts/generate-prerendered-html.mjs && node scripts/validate-canonical.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-rss-feed.mjs && node scripts/validate-schema.mjs && node scripts/validate-schema.mjs --merchant && node scripts/validate-jsonld.mjs && node scripts/validate-comparisons.mjs && node scripts/validate-internal-links.mjs",
+    "build": "node scripts/preflight-clean-tree.mjs && node scripts/lint-canonical-source.mjs && vite build && node scripts/generate-prerendered-html.mjs && node scripts/validate-canonical.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-rss-feed.mjs && node scripts/validate-schema.mjs && node scripts/validate-schema.mjs --merchant && node scripts/validate-jsonld.mjs && node scripts/validate-comparisons.mjs && node scripts/validate-internal-links.mjs",
     "submit:bing": "node scripts/submit-indexnow.mjs",
     "build:deploy": "npm run build && node scripts/submit-indexnow.mjs",
     "validate:jsonld": "node scripts/validate-jsonld.mjs",
