@@ -1008,5 +1008,11 @@
         }
       }
     }
+  },
+  "notFound": {
+    "metaTitle": "Gastro Master | 404 — Pagina non trovata",
+    "headline": "Questa pagina non è nel nostro menù.",
+    "text": "Forse è stata spostata — o non è mai esistita. Sulla homepage trovi tutto ciò che ti serve.",
+    "cta": "Torna alla homepage"
   }
 }

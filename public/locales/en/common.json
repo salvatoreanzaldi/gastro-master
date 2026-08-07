@@ -1015,5 +1015,11 @@
         }
       }
     }
+  },
+  "notFound": {
+    "metaTitle": "Gastro Master | 404 — Page Not Found",
+    "headline": "This page isn't on our menu.",
+    "text": "Maybe it moved — or it never existed. You'll find everything you need on our homepage.",
+    "cta": "Back to homepage"
   }
 }

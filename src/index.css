@@ -98,12 +98,53 @@
     @apply border-border;
   }
   html, body {
+    /* overflow-x: hidden macht body zum Scroll-Container und killt damit
+       position:sticky überall (z.B. Blog-TOC). `clip` clippt identisch,
+       erzeugt aber KEINEN Scroll-Container. `hidden` bleibt als Fallback
+       für alte Browser ohne clip-Support (dort Status quo). */
     overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
     max-width: 100%;
   }
   body {
     @apply bg-background text-foreground font-outfit antialiased;
+  }
+
+  /* Cookiebot: BEWUSST keine eigenen CSS-Regeln. Das Consent-Banner bringt
+     seine eigene DOM-Struktur + Positionierungs-Logik (JS) mit. Overrides auf
+     #CybotCookiebotDialog / Kindelementen (position/transform/width) kämpften
+     dagegen und schnitten den Banner ab (Desktop unten links, Mobile nur linke
+     Hälfte). Cookiebot verwaltet sein Layout selbst. Falls dadurch CLS
+     zurückkehrt, wird das Cookiebot-agnostisch gelöst (z. B. scrollbar-gutter),
+     NICHT über Cookiebot-Element-Overrides. */
+
+  /* Touch-Targets: WCAG 2.5.5 verlangt min. 44x44px für Bedienelemente.
+     Bewusst NUR button/[role="button"] — eine Regel auf `a` würde jeden
+     Inline-Link im Blog-Fließtext auf 44px Höhe aufblähen und die
+     Zeilenabstände zerstören. Navigations- und CTA-Links sind Buttons oder
+     haben bereits ausreichend Padding. `min-*` statt `height`, damit
+     bestehende größere Buttons unverändert bleiben. */
+  @media (max-width: 767px) {
+    button:not([aria-hidden="true"]),
+    [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    /* Ausnahme: Buttons, die als Inline-Text im Fließtext sitzen (z. B.
+       "mehr anzeigen"), sollen keine 44px-Blöcke werden. */
+    .prose button,
+    .blog-post-content button,
+    /* Karussell-Indikatoren/Pfeile (Hardware-Produktkarten): dekorative
+       Bild-Navigation innerhalb des Bildes. Ohne diese Ausnahme bläht die
+       44px-Regel die 8px-Punkte zu riesigen Kreisen auf, die das Bild
+       überlagern. Primäre Navigation bleibt der Lightbox-Tap (dort 44px+).
+       `button.` statt nur `.` — sonst verliert die Ausnahme per Spezifität
+       gegen `button:not([aria-hidden])` (beide 0,1,1 → Source-Order gewinnt). */
+    button.hw-carousel-btn {
+      min-height: 0;
+      min-width: 0;
+    }
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-outfit font-bold tracking-tight;

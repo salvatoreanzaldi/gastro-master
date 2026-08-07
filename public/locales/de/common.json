@@ -680,7 +680,7 @@
       "Deine Informationen werden ausschließlich für die Kontaktaufnahme verwendet."
     ],
     "seoTitle": "Gastro Master | Kontakt — Kostenlose Beratung für Gastronomen",
-    "seoDesc": "Gastro Master kontaktieren – kostenlose Beratung für Gastronomen. Webshop, App, Kassensystem und Webseite für die Gastronomie. Wir melden uns innerhalb von 24 Stunden.",
+    "seoDesc": "Gastro Master kontaktieren – kostenlose Beratung für Gastronomen. Webshop, App, Kassensystem und Webseite. Wir melden uns in 24 Stunden.",
     "heroTitle": "Buche jetzt dein kostenloses Erstgespräch",
     "heroSub": "Im unverbindlichen Erstgespräch stellt dir einer unserer Experten Gastro Master im Detail vor und geht auf deine Fragen ein.",
     "placeholderEmail": "deine@email.de",
@@ -941,11 +941,26 @@
     "eyebrow": "UNSERE PRODUKTE",
     "title": "Das komplette Paket. Aus einer Hand.",
     "products": {
-      "webseite": { "title": "Webseite", "cta": "Webseiten entdecken" },
-      "online-shop": { "title": "Online Shop", "cta": "Mehr erfahren" },
-      "app-system": { "title": "App System", "cta": "Apps ansehen" },
-      "kasse": { "title": "Kasse", "cta": "Hier ansehen" },
-      "kiosk": { "title": "Kiosk", "cta": "Mehr erfahren" }
+      "webseite": {
+        "title": "Webseite",
+        "cta": "Webseiten entdecken"
+      },
+      "online-shop": {
+        "title": "Online Shop",
+        "cta": "Mehr erfahren"
+      },
+      "app-system": {
+        "title": "App System",
+        "cta": "Apps ansehen"
+      },
+      "kasse": {
+        "title": "Kasse",
+        "cta": "Hier ansehen"
+      },
+      "kiosk": {
+        "title": "Kiosk",
+        "cta": "Mehr erfahren"
+      }
     }
   },
   "a11y": {
@@ -1043,6 +1058,15 @@
           "telekom": "Deutsche Telekom Hochleistungs-Internet für Gastronomie"
         }
       }
+    },
+    "seo": {
+      "description": "Gastro Master Integrationen: Verbinde dein Bestellsystem mit Kasse, Lieferando, DATEV und weiteren Tools — nahtlos und ohne technischen Aufwand."
     }
+  },
+  "notFound": {
+    "metaTitle": "Gastro Master | 404 — Seite nicht gefunden",
+    "headline": "Diese Seite steht nicht auf unserer Karte.",
+    "text": "Vielleicht wurde sie verschoben — oder es gab sie nie. Auf der Startseite findest du alles Wichtige.",
+    "cta": "Zurück zur Startseite"
   }
 }
