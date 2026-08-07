@@ -63,6 +63,9 @@ const LAZY_COMPONENTS: Record<string, ComponentType> = {
   "@/pages/add-ons/KioskPage":          lazy(() => import("@/pages/add-ons/KioskPage")),
 };
 
+// Standalone-Seite ohne Sprach-Präfix (stabile URL für App-Store-Datenlöschungsangabe)
+const RequestDataDeletePage = lazy(() => import("@/pages/RequestDataDeletePage"));
+
 const queryClient = new QueryClient();
 
 /** Build the child routes for a single language tree. */
@@ -142,6 +145,9 @@ const App = () => (
               <Route path="/blog/*"      element={<LegacyNoLangRedirect />} />
               <Route path="/add-ons"     element={<Navigate to="/de/produkte/add-ons" replace />} />
               <Route path="/add-ons/:slug" element={<AddOnsLegacyRedirect />} />
+              {/* Konto-/Datenlöschung: echte Seite OHNE Sprach-Präfix (kein Redirect) —
+                  die URL wird extern referenziert (App-Store) und muss stabil sein. */}
+              <Route path="/request-data-delete" element={<RequestDataDeletePage />} />
               <Route path="/impressum"   element={<Navigate to="/de/impressum" replace />} />
               <Route path="/datenschutz" element={<Navigate to="/de/datenschutz" replace />} />
               <Route path="/agb"         element={<Navigate to="/de/agb" replace />} />
@@ -149,6 +155,13 @@ const App = () => (
               <Route path="/faq"         element={<Navigate to="/de/faq" replace />} />
               <Route path="/preise"      element={<Navigate to="/de/preise" replace />} />
               <Route path="/uber-uns"    element={<Navigate to="/de/uber-uns" replace />} />
+
+              {/* WP→React Migrations-Altlasten ohne Sprach-Präfix (GSC „gecrawlt –
+                  nicht indexiert"). path deckt Trailing-Slash + Case-insensitive mit ab:
+                  /app → auch /app/ · /restaurant → auch /Restaurant. */}
+              <Route path="/app"            element={<Navigate to="/de/produkte/pakete/bestell-app" replace />} />
+              <Route path="/restaurant"     element={<Navigate to="/de/loesungen/restaurant" replace />} />
+              <Route path="/bestellannahme" element={<Navigate to="/de/produkte/pakete/bestell-app" replace />} />
 
               {/* Umlaut-Schreibweise → ASCII-Variante (Legacy-Schutz für externe Links) */}
               <Route path="/ueber-uns"     element={<Navigate to="/de/uber-uns" replace />} />
