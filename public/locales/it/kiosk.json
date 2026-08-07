@@ -87,5 +87,37 @@
       { "q": "Il chiosco viene collegato al mio sistema POS?", "a": "Se usi già un sistema POS Gastro Master, il chiosco è immediatamente pronto. Gli ordini dal terminale arrivano automaticamente al cloud POS, sul monitor cucina e sul pick-up screen — con numero d'ordine, articoli, richieste speciali e stato del pagamento. Nessuna configurazione separata, nessuna interfaccia di terze parti, nessuno sviluppatore necessario." },
       { "q": "Cosa succede in caso di interruzione di internet o corrente?", "a": "Il terminale richiede una connessione internet stabile. Consigliamo pertanto una connessione via cavo LAN per evitare problemi WiFi a breve termine. È anche possibile una funzione WiFi opzionale. In caso di interruzione di corrente, il display si riavvia automaticamente dopo il ripristino e ricarica l'ultimo stato dal cloud." }
     ]
+  },
+  "hardwareSections": {
+    "multicolor": {
+      "title": "Terminale Kiosk nel tuo colore preferito — design secondo il tuo branding",
+      "subtitle": "Design a colori flessibile per ristoranti, panetterie e fast food",
+      "description": "Il tuo terminale self-ordering può fare di più che funzionare — può rappresentare il tuo ristorante. Con il nostro <0>kiosk in diversi colori</0> scegli il design adatto alla tua location. Nero moderno per un design minimalista, bianco classico per ambienti luminosi o sfumature personalizzate — il terminale d'ordine diventa l'ingresso visivo del tuo brand. Così il tuo <1>terminale self-ordering</1> crea non solo efficienza al bancone, ma anche un'<0>impressione di marca coerente</0> per i tuoi ospiti.",
+      "alt1": "Terminale kiosk in diversi colori per ristoranti e panetterie"
+    },
+    "doublescreen": {
+      "title": "Kiosk dual-screen — due schermi, doppia efficienza nel self-ordering",
+      "subtitle": "Varianti nere e bianche — ottimizzate per food court e fast food",
+      "description": "Con il nostro <0>kiosk doublescreen</0> ordini su uno schermo mentre il tuo ospite paga contemporaneamente sul secondo terminale — senza attese. Questo <0>sistema a due schermi</0> è ideale per food court con alto volume di ordini, dove la velocità conta. Che sia <0>doublescreen in nero</0> per location moderne o in bianco classico — entrambe le varianti sono <1>integrate con TSE</1> e lavorano perfettamente con la tua cassa. Il tempo medio di ordinazione si riduce sensibilmente e i tuoi ospiti non fanno più la fila.",
+      "alt1": "Kiosk doublescreen nero per ristoranti",
+      "alt2": "Kiosk doublescreen bianco per la ristorazione",
+      "label1": "Nero",
+      "label2": "Bianco"
+    },
+    "wallmount": {
+      "title": "Kiosk a parete 15,6\" e 21,5\" — terminale d'ordine salvaspazio per ambienti stretti",
+      "subtitle": "Elegante montaggio a parete per panetterie, piccoli negozi e filiali in franchising",
+      "description": "Hai poco spazio dietro il bancone? Con il nostro <0>kiosk a parete</0> risparmi spazio prezioso senza rinunciare a un <0>terminale self-ordering completo</0>. Scegli tra <0>15,6 pollici per filiali compatte</0> (ad es. <1>panetterie con poca superficie di vendita</1>) o <0>21,5 pollici per negozi più grandi e stand nei food court</0> — entrambe le misure permettono un <0>utilizzo ergonomico</0> anche a distanza. L'installazione a parete è rapida, discreta e trasforma ogni angolo del tuo ristorante in un canale d'ordine, senza compromettere tavoli o spazi di passaggio.",
+      "alt1": "Kiosk a parete 15,6 pollici per panetterie",
+      "alt2": "Kiosk a parete 21,5 pollici per ristoranti",
+      "label1": "15,6 pollici",
+      "label2": "21,5 pollici"
+    },
+    "outdoor": {
+      "title": "Kiosk outdoor — terminale d'ordine resistente alle intemperie per terrazza ed esterni",
+      "subtitle": "Certificato IP65 per pioggia, sole e condizioni meteo difficili",
+      "description": "La tua terrazza o il tuo biergarten è una miniera d'oro — ma i tuoi ospiti vogliono ordinare comodamente anche all'aperto. Con il nostro <0>kiosk outdoor</0> offri <0>self-ordering resistente alle intemperie</0> negli spazi esterni. Il terminale è <0>certificato IP65</0> e resiste a pioggia, sole e sbalzi di temperatura. Che sia sulla <1>terrazza del tuo ristorante</1>, nel biergarten o al chiosco in spiaggia — il tuo <0>terminale outdoor</0> funziona in modo affidabile anche in condizioni estreme. Crei così un'<0>esperienza d'ordine premium</0> ovunque i tuoi ospiti amino trascorrere il tempo, aumentando il fatturato anche all'esterno.",
+      "alt1": "Kiosk outdoor resistente alle intemperie per terrazza e biergarten"
+    }
   }
 }

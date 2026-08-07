@@ -87,5 +87,37 @@
       { "q": "Is the kiosk connected to my POS system?", "a": "If you already use a Gastro Master POS system, the kiosk is immediately ready. Orders from the terminal land automatically in the cloud POS, on the kitchen monitor and on the pick-up screen — with order number, items, special requests and payment status. No separate setup, no third-party interface, no developers needed." },
       { "q": "What happens during an internet or power outage?", "a": "The terminal requires a stable internet connection. We therefore recommend a LAN cable connection to avoid short-term WiFi issues. An optional WiFi function is also possible. During a power outage, the display restarts automatically after recovery and reloads the last state from the cloud." }
     ]
+  },
+  "hardwareSections": {
+    "multicolor": {
+      "title": "Kiosk Terminal in Your Favourite Colour — Designed to Match Your Branding",
+      "subtitle": "Flexible colour design for restaurants, bakeries and quick-service restaurants",
+      "description": "Your self-ordering terminal can do more than just work — it can represent your restaurant. With our <0>kiosk in different colours</0>, you choose the design that fits your location. Whether modern black for a minimalist look, classic white for bright rooms or individual shades — the order terminal becomes the visual entrance to your brand. That way your <1>self-ordering terminal</1> creates not only efficiency at the counter but also a <0>consistent brand impression</0> for your guests.",
+      "alt1": "Kiosk terminal in different colours for restaurants and bakeries"
+    },
+    "doublescreen": {
+      "title": "Dual-Screen Kiosk — Two Screens, Double the Self-Ordering Efficiency",
+      "subtitle": "Black & white variants — optimised for food courts and quick-service restaurants",
+      "description": "With our <0>double-screen kiosk</0>, you take an order on one screen while your guest pays on the second terminal at the same time — no waiting. This <0>two-screen system</0> is ideal for food courts with high order volume where speed matters. Whether <0>double-screen in black</0> for modern locations or in classic white — both variants are <1>TSE-integrated</1> and work seamlessly with your POS. Average order time drops significantly, and your guests never queue again.",
+      "alt1": "Double-screen kiosk in black for restaurants",
+      "alt2": "Double-screen kiosk in white for hospitality",
+      "label1": "Black",
+      "label2": "White"
+    },
+    "wallmount": {
+      "title": "Wall Kiosk 15.6\" & 21.5\" — Space-Saving Order Terminal for Tight Spaces",
+      "subtitle": "Elegant wall mounting for bakeries, small shops and franchise branches",
+      "description": "Short on space behind the counter? With our <0>wall-mounted kiosk</0> you save valuable room without giving up a <0>fully-fledged self-ordering terminal</0>. Choose between <0>15.6 inches for compact branches</0> (e.g. <1>bakeries with little sales floor</1>) or <0>21.5 inches for larger shops and food-court stands</0> — both sizes allow <0>ergonomic operation</0> even from a distance. The wall-mounted installation is fast, unobtrusive and turns every corner of your restaurant into an ordering channel without affecting tables or walkways.",
+      "alt1": "Wall kiosk 15.6 inch wall mounting for bakeries",
+      "alt2": "Wall kiosk 21.5 inch wall-mounted terminal for restaurants",
+      "label1": "15.6 inch",
+      "label2": "21.5 inch"
+    },
+    "outdoor": {
+      "title": "Outdoor Kiosk — Weatherproof Order Terminal for Terrace and Outdoor Areas",
+      "subtitle": "IP65-certified for rain, sun and harsh weather conditions",
+      "description": "Your terrace or beer garden is a gold mine — but your guests want to order comfortably outside too. With our <0>outdoor kiosk</0> you offer <0>weatherproof self-ordering</0> outdoors. The terminal is <0>IP65-certified</0> and withstands rain, sun and temperature swings. Whether on the <1>terrace of your restaurant</1>, in the beer garden or at a beach kiosk — your <0>outdoor terminal</0> works reliably even under extreme conditions. You create a <0>premium ordering experience</0> wherever your guests like to spend time, and grow your revenue outdoors as well.",
+      "alt1": "Weatherproof outdoor kiosk for terrace and beer garden"
+    }
   }
 }
