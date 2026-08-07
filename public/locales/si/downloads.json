@@ -15,25 +15,55 @@
   "storeLabel": "Store",
   "categories": [
     {
+      "category": "Kassensoftware",
+      "items": [
+        {
+          "label": "GM Installer",
+          "ext": ".zip"
+        }
+      ]
+    },
+    {
       "category": "Windows",
       "items": [
-        { "label": "GM Windows", "ext": ".zip" },
-        { "label": "GM Windows Client", "ext": ".zip" }
+        {
+          "label": "GM Windows",
+          "ext": ".zip"
+        },
+        {
+          "label": "GM Windows Client",
+          "ext": ".zip"
+        }
       ]
     },
     {
       "category": "Android",
       "items": [
-        { "label": "GM Terminal – Android", "ext": ".apk" },
-        { "label": "Fully Single APK", "ext": ".apk" },
-        { "label": "GM Merchant – Playstore", "ext": null }
+        {
+          "label": "GM Terminal – Android",
+          "ext": ".apk"
+        },
+        {
+          "label": "Fully Single APK",
+          "ext": ".apk"
+        },
+        {
+          "label": "GM Merchant – Playstore",
+          "ext": null
+        }
       ]
     },
     {
       "category": "iOS",
       "items": [
-        { "label": "GM Terminal – iOS", "ext": null },
-        { "label": "GM Merchant – App Store", "ext": null }
+        {
+          "label": "GM Terminal – iOS",
+          "ext": null
+        },
+        {
+          "label": "GM Merchant – App Store",
+          "ext": null
+        }
       ]
     }
   ]

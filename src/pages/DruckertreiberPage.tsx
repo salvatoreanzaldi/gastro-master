@@ -47,7 +47,9 @@ const DruckertreiberPage = () => {
       <ScrollProgressBar />
       <ScrollToTopButton />
       <Navbar />
-      <main className="section-padding pt-28 md:pt-32">
+      {/* !pt erzwingt das Top-Padding gegen das `padding`-Shorthand von
+          .section-padding (sonst Titel hinter der fixed Navbar). */}
+      <main className="section-padding !pt-32 md:!pt-36">
         <div className="container-tight max-w-3xl">
 
           {/* Breadcrumb */}

@@ -7,7 +7,11 @@ import { useLangPath } from "@/components/LanguageLayout";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 
+// Positionell zu categories in public/locales/<lang>/downloads.json:
+// [0] Kassensoftware · [1] Windows · [2] Android · [3] iOS.
+// GM Installer wurde von Windows in die neue Kategorie Kassensoftware verschoben.
 const DOWNLOAD_URLS = [
+  ["https://gastro-master.de/dd/gminstaller.zip"],
   ["https://gastro-master.de/dd/gmwindows13.zip", "https://gastro-master.de/dd/GMClientDesktopV1.0.0.zip"],
   ["https://gastro-master.de/dd/v1.apk", "https://gastro-master.de/dd/full2025.apk", "https://play.google.com/store/apps/details?id=com.epitglobal.gmmerchantnew&hl"],
   ["https://apps.apple.com/us/app/gastro-master-terminal/id6502642590", "https://apps.apple.com/de/app/gm-merchant/id1631565715"],
@@ -45,7 +49,10 @@ const DownloadsPage = () => {
       <ScrollProgressBar />
       <ScrollToTopButton />
       <Navbar />
-      <main className="section-padding pt-28 md:pt-32">
+      {/* !pt erzwingt das Top-Padding: .section-padding nutzt das `padding`-
+          Shorthand und liegt (gleiche Spezifität) später im utilities-Layer als
+          pt-*, würde es also überschreiben → Titel sonst hinter der fixed Navbar. */}
+      <main className="section-padding !pt-32 md:!pt-36">
         <div className="container-tight max-w-3xl">
           <h1 className="text-4xl font-black text-foreground mb-2">{t("title")}</h1>
           <p className="text-muted-foreground text-sm mb-12">{t("subtitle")}</p>

@@ -25,7 +25,9 @@ const Impressum = () => {
       <ScrollProgressBar />
       <ScrollToTopButton />
       <Navbar />
-      <main className="section-padding pt-44 md:pt-52">
+      {/* !pt erzwingt das Top-Padding gegen das `padding`-Shorthand von
+          .section-padding (sonst Titel hinter der fixed Navbar). */}
+      <main className="section-padding !pt-44 md:!pt-52">
         <div className="container-tight max-w-3xl">
           <h1 className="text-4xl font-black text-foreground mb-2">{t("title")}</h1>
           <p className="text-muted-foreground text-sm mb-12">{t("subtitle")}</p>

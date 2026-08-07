@@ -67,7 +67,7 @@ const AccordionSection = ({ title, open, onToggle, children }: AccordionSectionP
   </div>
 );
 
-const SECTION_COUNT = 30;
+const SECTION_COUNT = 31;
 
 const Datenschutz = () => {
   const { t } = useTranslation("datenschutz");
@@ -103,7 +103,9 @@ const Datenschutz = () => {
       <ScrollProgressBar />
       <ScrollToTopButton />
       <Navbar />
-      <main className="section-padding pt-44 md:pt-52">
+      {/* !pt erzwingt das Top-Padding gegen das `padding`-Shorthand von
+          .section-padding (sonst Titel hinter der fixed Navbar). */}
+      <main className="section-padding !pt-44 md:!pt-52">
         <div className="container-tight">
 
           <h1 className="text-4xl font-black text-foreground mb-2">{t("title")}</h1>
@@ -1149,6 +1151,32 @@ const Datenschutz = () => {
             >
               <p className="text-muted-foreground leading-relaxed">
                 {t("s29.p1")}
+              </p>
+            </AccordionSection>
+
+            {/* s30 — 24. Einsatz von KI zur Inhaltserstellung */}
+            <AccordionSection
+              title={t("s30.title")}
+              open={openSections.has(30)}
+              onToggle={() => toggle(30)}
+            >
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                {t("s30.p1")}
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                {t("s30.p2")}
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                <strong>{t("s30.linksLabel")}</strong>{" "}
+                <ExternLink href="https://www.anthropic.com/privacy">{t("s30.link1Text")}</ExternLink>
+                {" · "}
+                <ExternLink href="https://policies.google.com/privacy">{t("s30.link2Text")}</ExternLink>
+                {" · "}
+                <ExternLink href="https://openai.com/privacy">{t("s30.link3Text")}</ExternLink>
+                {" · "}
+                <ExternLink href="https://www.midjourney.com/privacy">{t("s30.link4Text")}</ExternLink>
+                {" · "}
+                <ExternLink href="https://www.canva.com/policies/privacy-policy/">{t("s30.link5Text")}</ExternLink>
               </p>
             </AccordionSection>
 
