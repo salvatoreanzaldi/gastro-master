@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { google } from 'googleapis';
 import dotenv from 'dotenv';
 
@@ -98,6 +99,27 @@ const BLOCKED_REVIEWERS = new Set([
 ]);
 
 /**
+ * Stabile, deterministische Review-ID: slug(Name) + 8-Zeichen-Hash der
+ * Bewertungs-URL (identifiziert genau diese eine Google-Bewertung; 81/81
+ * Zeilen führen sie). Bewusst OHNE Text (nachträgliche Text-Edits ändern die
+ * ID nicht), OHNE Datum (Spalte D enthält relative Angaben wie "vor einem
+ * Jahr", die mit der Zeit wandern) und OHNE Sync-Zeitstempel (die frühere
+ * `Date.now()`-ID erzeugte bei JEDEM Lauf ein Voll-Diff → der Bot hätte
+ * täglich ohne inhaltliche Änderung committet).
+ */
+function stableReviewId(name, reviewUrl, index) {
+  const slug = String(name || `review-${index}`)
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9\-äöüß]/g, '')
+    .replace(/-+/g, '-') || `review-${index}`;
+  const basis = reviewUrl ? String(reviewUrl) : `name:${slug}`;
+  const hash = crypto.createHash('sha1').update(basis).digest('hex').slice(0, 8);
+  return `${slug}-${hash}`;
+}
+
+/**
  * Converts a sheet row to a GoogleReview object
  * Row format: [Name, Sterne, Text, Datum, Foto-URL, Bewertung-URL]
  */
@@ -105,8 +127,11 @@ function parseRowToReview(row, index) {
   const [name, starsStr, text, dateStr, photoUrl, reviewUrl] = row;
   const rating = Math.max(1, Math.min(5, Math.round(parseFloat(starsStr) || 0)));
 
-  // Parse date - handle various formats
-  let timestamp = Math.floor(Date.now() / 1000);
+  // `time` nur setzen, wenn Spalte D ein echtes Datum enthält. Der frühere
+  // Date.now()-Fallback machte das Feld pro Lauf verschieden (Voll-Diff).
+  // Konsumenten sind abgesichert: der Prerenderer guarded mit
+  // `typeof r.time === 'number' && r.time > 0` + Fallback, das Grid nutzt es nicht.
+  let timestamp = null;
   if (dateStr) {
     const parsed = new Date(dateStr);
     if (!isNaN(parsed.getTime())) {
@@ -118,14 +143,14 @@ function parseRowToReview(row, index) {
   const avatarUrl = getAvatarPath(name, photoUrl);
 
   return {
-    id: `${timestamp}-${name || `review-${index}`}`,
+    id: stableReviewId(name, reviewUrl, index),
     rating,
     text: text || '',
     author_name: name || 'Anonymous',
     relative_time_description: dateStr || 'Recently',
     profile_photo_url: avatarUrl || null,
     author_url: reviewUrl || null,
-    time: timestamp,
+    ...(timestamp != null ? { time: timestamp } : {}),
   };
 }
 
@@ -220,12 +245,30 @@ async function syncReviews() {
       },
     };
 
-    // Step 6: Write to file
+    // Step 6: Write to file — aber NUR bei inhaltlicher Änderung.
+    // meta.syncedAt wird für den Vergleich ausgeklammert, sonst würde allein
+    // der frische Zeitstempel jeden Tag einen Bot-Commit erzeugen. syncedAt
+    // bedeutet damit ab jetzt: "Zeitpunkt der letzten INHALTLICHEN Änderung".
     const outputPath = path.join(process.cwd(), 'public/data/google-reviews.json');
     const outputDir = path.dirname(outputPath);
 
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
+    }
+
+    const withoutSyncedAt = (obj) =>
+      JSON.stringify({ ...obj, meta: { ...obj.meta, syncedAt: undefined } });
+    let previous = null;
+    try {
+      previous = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+    } catch {
+      /* keine/kaputte Bestandsdatei → regulär schreiben */
+    }
+
+    if (previous && withoutSyncedAt(previous) === withoutSyncedAt(output)) {
+      console.log('✅ Keine inhaltlichen Änderungen — Datei bleibt unangetastet.');
+      console.log(`   Bestand: ${previous.meta?.syncedAt ?? 'unbekannt'} (${Object.values(previous.tabs ?? {})[0]?.length ?? '?'} Reviews)\n`);
+      return;
     }
 
     fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
