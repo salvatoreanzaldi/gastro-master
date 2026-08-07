@@ -3429,6 +3429,7 @@ for (const route of routes) {
         `<nav aria-label="Brotkrumen" style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin:0 0 1.5rem;">` +
         `<a href="/de" style="color:inherit;text-decoration:none;">Startseite</a> <span aria-hidden="true">›</span> ` +
         `<a href="/de/blog" style="color:inherit;text-decoration:none;">Blog</a> <span aria-hidden="true">›</span> ` +
+        `<span>${escapeHtmlMin(post.meta.category)}</span> <span aria-hidden="true">›</span> ` +
         `<span style="color:rgba(255,255,255,0.7);">${escapeHtmlMin(post.meta.title)}</span></nav>`;
 
       const backlinksHtml = backlinks.length >= 4
@@ -3494,6 +3495,7 @@ for (const route of routes) {
         buildBreadcrumbList(canonicalUrl, [
           { name: 'Startseite', url: `${SITE_URL}/de` },
           { name: 'Blog', url: `${SITE_URL}/de/blog` },
+          { name: post.meta.category },
           { name: post.meta.title, url: canonicalUrl },
         ]),
       ];
@@ -4025,7 +4027,9 @@ for (const post of allBlogPosts) {
       : '';
   const staticArticle = [
     '<article itemscope itemtype="https://schema.org/BlogPosting" style="max-width:760px;margin:2rem auto;padding:1rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-    '<nav class="post-breadcrumb" aria-label="Brotkrümel"><a href="/de">Home</a> › <a href="/de/blog">Blog</a></nav>',
+    // Sichtbarer Breadcrumb inkl. Kategorie-Ebene (Batch 6) — Kategorie und
+    // Titel als Text (Hub-URLs folgen später); voller Titel steht im H1.
+    `<nav class="post-breadcrumb" aria-label="Brotkrümel"><a href="/de">Home</a> › <a href="/de/blog">Blog</a>${post.category ? ` › <span>${escapeHtml(post.category)}</span>` : ''} › <span>${escapeHtml(stripMarkdown(post.title).slice(0, 60))}${stripMarkdown(post.title).length > 60 ? '…' : ''}</span></nav>`,
     `<h1 itemprop="headline">${escapeHtml(stripMarkdown(post.title))}</h1>`,
     `<p><small>Von <span itemprop="author">${escapeHtml(post.author)}</span> · `,
     `<time itemprop="datePublished" datetime="${escapeHtml(post.publishedDate)}">${escapeHtml(post.publishedDate)}</time>`,
@@ -4104,11 +4108,14 @@ for (const post of allBlogPosts) {
     `  <link rel="alternate" hreflang="de" href="${url}" />\n` +
     `  <link rel="alternate" hreflang="x-default" href="${url}" />`;
 
-  // BreadcrumbList Home → Blog → Post: war die einzige Seiten-Gruppe ohne
-  // Breadcrumbs (121 Posts) — Route-Pages, Homepage und Comparisons haben sie.
+  // BreadcrumbList Home → Blog → Kategorie → Post (Batch 6). Die Kategorie-
+  // Ebene hat bewusst noch KEINE item-URL (Hubs sind noch nicht gebaut) —
+  // buildBreadcrumbList lässt `item` bei fehlender url automatisch weg.
+  // Sobald Kategorie-Hubs existieren, wird hier die Hub-URL eingesetzt.
   const breadcrumbSchema = buildBreadcrumbList(url, [
     { name: 'Home', url: `${SITE_URL}/de` },
     { name: 'Blog', url: `${SITE_URL}/de/blog` },
+    ...(post.category ? [{ name: post.category }] : []),
     { name: stripMarkdown(post.title), url },
   ]);
 

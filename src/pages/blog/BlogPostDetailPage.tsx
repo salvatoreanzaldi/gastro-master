@@ -436,7 +436,16 @@ const BlogPostDetailPage = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] rounded-full bg-[#007DCF]/10 blur-[140px] pointer-events-none" />
 
         <div className="max-w-4xl mx-auto relative z-10 w-full">
-          <nav className="flex items-center gap-1.5 text-xs text-white/40 mb-8">
+          <nav className="flex items-center gap-1.5 text-xs text-white/40 mb-8 flex-wrap" aria-label="Brotkrumen">
+            {/* Batch 6: volle Kette Home › Blog › Kategorie › Artikel — gespiegelt
+                zum statischen Breadcrumb + BreadcrumbList-Schema des Prerenderers. */}
+            <button
+              onClick={() => navigate(lp("/"))}
+              className="hover:text-white/70 transition-colors"
+            >
+              Startseite
+            </button>
+            <ChevronRight className="w-3 h-3 flex-shrink-0" />
             <button
               onClick={() => navigate(lp("/blog"))}
               className="hover:text-white/70 transition-colors flex items-center gap-1"
@@ -444,8 +453,12 @@ const BlogPostDetailPage = () => {
               <ArrowLeft className="w-3 h-3" />
               Blog
             </button>
-            <ChevronRight className="w-3 h-3" />
+            <ChevronRight className="w-3 h-3 flex-shrink-0" />
             <span className={`${cat.text} font-semibold`}>{cat.label}</span>
+            <ChevronRight className="w-3 h-3 flex-shrink-0" />
+            <span className="text-white/60 truncate max-w-[180px] sm:max-w-[320px]">
+              {stripMarkdown(post.title)}
+            </span>
           </nav>
 
           <motion.span

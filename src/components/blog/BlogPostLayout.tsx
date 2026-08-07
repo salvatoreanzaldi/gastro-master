@@ -67,10 +67,13 @@ export const BlogPostLayout = ({
       <section className="mesh-gradient px-5 md:px-8 lg:px-16 pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full bg-[#007DCF]/8 blur-[160px] pointer-events-none" />
         <div className="max-w-3xl mx-auto relative z-10">
-          <nav className="flex items-center gap-1.5 text-xs text-white/40 mb-8 flex-wrap">
+          <nav className="flex items-center gap-1.5 text-xs text-white/40 mb-8 flex-wrap" aria-label="Brotkrumen">
             <Link to={lp("/")} className="hover:text-white/70 transition-colors">Startseite</Link>
             <ChevronRight className="w-3 h-3 flex-shrink-0" />
             <Link to={lp("/blog")} className="hover:text-white/70 transition-colors">Blog</Link>
+            <ChevronRight className="w-3 h-3 flex-shrink-0" />
+            {/* Kategorie-Ebene (Batch 6): noch ohne Link — Hub-URLs folgen. */}
+            <span className="text-white/50">{category}</span>
             <ChevronRight className="w-3 h-3 flex-shrink-0" />
             <span className="text-white/60 truncate max-w-[180px] sm:max-w-none">{title}</span>
           </nav>
