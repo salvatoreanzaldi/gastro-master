@@ -1,6 +1,18 @@
 <!doctype html>
 <html lang="de">
   <head>
+    <!-- Verbindungsaufbau zu Cookiebot vorziehen (DNS + TLS parallel zum HTML-Parsing).
+         Spart den Handshake aus dem kritischen Pfad — ohne Verhaltensänderung. -->
+    <link rel="preconnect" href="https://consent.cookiebot.com" crossorigin />
+    <link rel="preconnect" href="https://consentcdn.cookiebot.com" crossorigin />
+    <!-- Cookiebot Consent Management — erstes Script im <head>, damit
+         data-blockingmode="auto" nachfolgende Ressourcen vor Consent blockiert.
+         ACHTUNG: `async` nimmt das Script aus dem Critical Path (LCP/FCP), hebt
+         aber die garantierte Ausführungsreihenfolge auf. Auf dieser Seite gibt es
+         aktuell keine JS-Tracker (kein GTM/GA/Pixel) — zu blocken sind allein die
+         YouTube-Embeds (youtube-nocookie). Nach Deploy live prüfen, dass diese
+         weiterhin erst nach Consent laden; falls nicht, `async` wieder entfernen. -->
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="d088aaa8-b12e-479b-be95-953307a61e7d" data-blockingmode="auto" type="text/javascript" async></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -48,11 +60,16 @@
       URL-independent organization + website data.
     -->
     <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://gastro-master.de/#organization","name":"Gastro Master","url":"https://gastro-master.de","logo":"https://gastro-master.de/logo-gastro-master.png","foundingDate":"2021","description":"Kassensystem, eigene Lieferservice-App, Webshop und Webseite für deutsche Restaurants. Provisionsfreie Direktbestellungen, monatlich kündbar.","address":{"@type":"PostalAddress","streetAddress":"Herzbergstr. 9","postalCode":"61250","addressLocality":"Usingen","addressRegion":"Hessen","addressCountry":"DE"},"contactPoint":{"@type":"ContactPoint","contactType":"customer support","areaServed":["DE","AT","CH"],"availableLanguage":["de","en","it","ru","fa","si"]},"numberOfEmployees":{"@type":"QuantitativeValue","value":"30+"},"areaServed":{"@type":"Country","name":"Deutschland"},"sameAs":["https://www.facebook.com/gastromasterde","https://www.instagram.com/gastromasterde","https://www.linkedin.com/in/sanjaya-pattiyage/","https://www.linkedin.com/in/rene-ebert/"]},{"@type":"WebSite","@id":"https://gastro-master.de/#website","url":"https://gastro-master.de","name":"Gastro Master","inLanguage":"de-DE","publisher":{"@id":"https://gastro-master.de/#organization"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://gastro-master.de/blog?q={search_term_string}"},"query-input":"required name=search_term_string"}}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://gastro-master.de/#organization","name":"Gastro Master","legalName":"Epit Global GmbH","url":"https://gastro-master.de","logo":"https://gastro-master.de/logo-gastro-master.png","foundingDate":"2021","description":"Kassensystem, eigene Lieferservice-App, Webshop und Webseite für deutsche Restaurants. Provisionsfreie Direktbestellungen, monatlich kündbar.","address":{"@type":"PostalAddress","streetAddress":"Herzbergstr. 9","postalCode":"61250","addressLocality":"Usingen","addressRegion":"Hessen","addressCountry":"DE"},"contactPoint":{"@type":"ContactPoint","contactType":"customer support","areaServed":["DE","AT","CH"],"availableLanguage":["de","en","it","ru","fa","si"]},"numberOfEmployees":{"@type":"QuantitativeValue","value":"30+"},"areaServed":{"@type":"Country","name":"Deutschland"},"sameAs":["https://www.facebook.com/gastromasterde","https://www.instagram.com/gastromasterde","https://www.linkedin.com/in/sanjaya-pattiyage/","https://www.linkedin.com/in/rene-ebert/"]},{"@type":"WebSite","@id":"https://gastro-master.de/#website","url":"https://gastro-master.de","name":"Gastro Master","inLanguage":"de-DE","publisher":{"@id":"https://gastro-master.de/#organization"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://gastro-master.de/blog?q={search_term_string}"},"query-input":"required name=search_term_string"}}]}
     </script>
+
+    <!-- Ahrefs Web Analytics — erbt via baseHtml (dist/index.html) auf alle prerenderten Seiten -->
+    <script src="https://analytics.ahrefs.com/analytics.js" data-key="6GbtIa1x0pIjSvvyNZ07BA" async></script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- Superchat Widget -->
+    <script src='https://widget.superchat.de/snippet.js?applicationKey=WCw1eoQpN7v9WOX4982laD63KR' referrerpolicy='no-referrer-when-downgrade'></script>
   </body>
 </html>
