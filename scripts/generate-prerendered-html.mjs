@@ -2545,9 +2545,18 @@ const { blogPosts: allBlogPosts } = await import(
   new URL('../src/data/blog-posts.ts', import.meta.url).href
 );
 // Geteilte Backlink-Auswahl (identisch mit der React-Komponente) laden.
-({ moneyPageBlogLinks: moneyPageBlogLinksImpl } = await import(
+let blogLinksForCategoriesImpl = null;
+({ moneyPageBlogLinks: moneyPageBlogLinksImpl, blogLinksForCategories: blogLinksForCategoriesImpl } = await import(
   new URL('../src/data/money-page-links.ts', import.meta.url).href
 ));
+// Batch 3b: geteilter Content der drei Blog-Landing-Routen — dieselben Blöcke
+// rendert die React-Seite (LandingBlocks.tsx); hier wird daraus das statische
+// Article. EINE Quelle, kein in den Prerenderer kopierter JSX-Text.
+const {
+  LANDING_POSTS: landingPosts,
+  LANDING_BLOG_CATEGORIES: landingBlogCategories,
+  renderLandingArticleHtml,
+} = await import(new URL('../src/data/blog-landing-content.ts', import.meta.url).href);
 const sortedBlogPosts = [...allBlogPosts].sort(
   (a, b) => new Date(b.publishedDate) - new Date(a.publishedDate),
 );
@@ -3364,6 +3373,101 @@ for (const route of routes) {
           .join('\n');
         html = html.replace('</head>', `${blocks}\n  </head>`);
       }
+    } else if (
+      lang === 'de' &&
+      route.slugs.de.startsWith('/blog/') &&
+      landingPosts[route.slugs.de.slice('/blog/'.length)]
+    ) {
+      // ── Batch 3b: die drei Blog-Landing-Routen (was-kostet-bestellsystem,
+      // warum-lieferando-verzichten, 5-fehler-lieferdienst-eroffnen) bekommen
+      // ihr VOLLES Article statisch — aus derselben Quelle, die der Client
+      // rendert (src/data/blog-landing-content.ts). Nur DE; die Nicht-DE-
+      // Varianten dieser Routen bleiben im generischen Stub (noindex).
+      const landingSlug = route.slugs.de.slice('/blog/'.length);
+      const post = landingPosts[landingSlug];
+      const articleInner = renderLandingArticleHtml(landingSlug);
+      const backlinks = blogLinksForCategoriesImpl
+        ? blogLinksForCategoriesImpl(landingBlogCategories[landingSlug] ?? [], allBlogPosts)
+        : [];
+
+      // Sichtbarer Breadcrumb Home › Blog › Titel — gespiegelt zum Layout-
+      // Breadcrumb der React-Seite (BlogPostLayout).
+      const crumb =
+        `<nav aria-label="Brotkrumen" style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin:0 0 1.5rem;">` +
+        `<a href="/de" style="color:inherit;text-decoration:none;">Startseite</a> <span aria-hidden="true">›</span> ` +
+        `<a href="/de/blog" style="color:inherit;text-decoration:none;">Blog</a> <span aria-hidden="true">›</span> ` +
+        `<span style="color:rgba(255,255,255,0.7);">${escapeHtmlMin(post.meta.title)}</span></nav>`;
+
+      const backlinksHtml = backlinks.length >= 4
+        ? `<nav aria-label="Passende Beiträge" style="border-top:1px solid rgba(255,255,255,0.1);margin-top:2rem;padding-top:1.25rem;">` +
+          `<p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.5);margin:0 0 0.75rem;">Passende Beiträge</p>` +
+          `<ul style="list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0.375rem 2rem;font-size:0.9rem;">` +
+          backlinks
+            .map(
+              (l) =>
+                `<li style="min-width:0;"><a href="/de/blog/${l.slug}" style="color:rgba(255,255,255,0.9);text-decoration:none;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtmlMin(plainText(l.title))}</a></li>`,
+            )
+            .join('') +
+          `</ul></nav>`
+        : '';
+
+      // Untergrund = der echte Untergrund der hydrierten Seite (#091A33,
+      // Article-Bereich von BlogPostLayout) → weiße Textfarben (B3-Konvention).
+      const landingStatic =
+        `<div class="landing-static" style="background:#091A33;color:rgba(255,255,255,0.85);">` +
+        `<style>.landing-static a{color:#7CC4F5;}` +
+        `.landing-static article h2{color:#fff;font-size:1.5rem;font-weight:900;margin:2.5rem 0 1rem;}` +
+        `.landing-static article h3{color:#fff;font-size:1.1rem;font-weight:700;margin:1.75rem 0 0.5rem;}` +
+        `.landing-static article p{line-height:1.6;margin:0 0 1rem;}` +
+        `.landing-static article ul{margin:0 0 1rem;padding-left:1.25rem;line-height:1.6;}` +
+        `.landing-static article table{border-collapse:collapse;width:100%;margin:0 0 1.5rem;font-size:0.875rem;}` +
+        `.landing-static article th,.landing-static article td{border:1px solid rgba(255,255,255,0.15);padding:0.5rem 0.75rem;text-align:left;}` +
+        `.landing-static article dl div{display:flex;justify-content:space-between;gap:1rem;padding:0.375rem 0;border-bottom:1px solid rgba(255,255,255,0.08);}` +
+        `.landing-static article dd{margin:0;font-weight:700;}</style>` +
+        `<div style="max-width:768px;margin:0 auto;padding:7rem 1.25rem 3rem;">` +
+        crumb +
+        `<article>` +
+        `<p style="font-size:0.75rem;color:rgba(255,255,255,0.45);margin:0 0 0.75rem;">${escapeHtmlMin(post.meta.category)} · ${escapeHtmlMin(post.meta.readingTime)} · ${escapeHtmlMin(post.meta.publishDateDisplay)}</p>` +
+        `<h1 style="color:#fff;font-size:2rem;font-weight:900;line-height:1.2;margin:0 0 1rem;">${escapeHtmlMin(post.meta.title)}</h1>` +
+        `<p style="font-size:1.125rem;color:rgba(255,255,255,0.6);line-height:1.55;margin:0 0 2rem;">${escapeHtmlMin(post.meta.description)}</p>` +
+        articleInner +
+        `</article>` +
+        backlinksHtml +
+        `<p style="margin:2rem 0 0;"><a href="/de/kontakt" style="display:inline-block;background:#ED8400;color:#0A264A;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">Kostenloses Erstgespräch</a></p>` +
+        `</div></div>`;
+      html = html.replace(/<div id="root"><\/div>/, `<div id="root">${landingStatic}</div>`);
+
+      // Schema: BlogPosting + BreadcrumbList — genau EINMAL, hier im <head>.
+      // Die frühere client-seitige Schema-Injektion in BlogPostLayout wurde
+      // entfernt (hätte nach Hydration Dubletten erzeugt).
+      const landingWordCount = plainText(articleInner).split(/\s+/).filter(Boolean).length;
+      const landingSchemas = [
+        {
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          "@id": `${canonicalUrl}#article`,
+          headline: post.meta.title,
+          description: post.meta.description,
+          image: `${SITE_URL}/logo-gastro-master.png`,
+          datePublished: post.meta.publishedDateIso,
+          dateModified: post.meta.publishedDateIso,
+          author: { "@type": "Organization", name: "Gastro Master", "@id": `${SITE_URL}/#organization` },
+          publisher: { "@id": `${SITE_URL}/#organization` },
+          mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+          articleSection: post.meta.category,
+          wordCount: landingWordCount,
+          inLanguage: 'de-DE',
+        },
+        buildBreadcrumbList(canonicalUrl, [
+          { name: 'Startseite', url: `${SITE_URL}/de` },
+          { name: 'Blog', url: `${SITE_URL}/de/blog` },
+          { name: post.meta.title, url: canonicalUrl },
+        ]),
+      ];
+      const landingBlocks = landingSchemas
+        .map((s) => `  <script type="application/ld+json">${JSON.stringify(s)}</script>`)
+        .join('\n');
+      html = html.replace('</head>', `${landingBlocks}\n  </head>`);
     } else {
       // Fallback für Routen ohne dedizierten Builder (kontakt, integrations,
       // 3 Legacy-Blog-Routen mit eigenen React-Components): H1 + Beschreibung

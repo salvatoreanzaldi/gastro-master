@@ -53,6 +53,16 @@ export function moneyPageBlogLinks(
 ): MoneyBlogLink[] {
   const cats = MONEY_BLOG_CATEGORIES[routeKey];
   if (!cats) return [];
+  return blogLinksForCategories(cats, posts);
+}
+
+// Batch 3b: Kernauswahl auch für die Blog-Landing-Routen nutzbar (Kategorien
+// direkt statt über MONEY_BLOG_CATEGORIES) — dieselbe Logik, keine dritte
+// Implementierung.
+export function blogLinksForCategories(
+  cats: string[],
+  posts: MoneyBlogPost[],
+): MoneyBlogLink[] {
   const byCat = byCategory(posts);
   const picked: MoneyBlogPost[] = [];
   const seen = new Set<string>();

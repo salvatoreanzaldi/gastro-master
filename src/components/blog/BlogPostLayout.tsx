@@ -5,7 +5,9 @@ import { useLangPath } from "@/components/LanguageLayout";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { ChevronRight, Clock, ArrowLeft, ArrowRight } from "lucide-react";
-import { FOUNDERS, ORG_ID } from "@/data/schemaOrg";
+import { blogLinksForCategories } from "@/data/money-page-links";
+import { LANDING_BLOG_CATEGORIES } from "@/data/blog-landing-content";
+import { blogPosts } from "@/data/blog-posts";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "Meinung":       "bg-orange-500/15 text-orange-400 border border-orange-500/25",
@@ -39,56 +41,26 @@ export const BlogPostLayout = ({
   const lp = useLangPath();
   const colorClass = CATEGORY_COLORS[category] ?? "bg-white/10 text-white/70 border border-white/20";
 
-  const SCHEMA_BREADCRUMB = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Startseite", item: "https://gastro-master.de" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://gastro-master.de/blog" },
-      { "@type": "ListItem", position: 3, name: title, item: `https://gastro-master.de/blog/${slug}` },
-    ],
-  };
+  // Batch 3b: BlogPosting + BreadcrumbList kommen jetzt AUSSCHLIESSLICH vom
+  // Prerenderer in den <head> (den React nie ersetzt) — die früheren
+  // client-seitigen Schema-<script>s hier würden nach der Hydration Dubletten
+  // erzeugen (dieselbe Falle wie die aggregateRating-Dublette in Batch 3).
 
-  const SCHEMA_BLOGPOSTING = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: title,
-    description,
-    datePublished: "2026-04-20",
-    author: { "@type": "Organization", name: "Gastro Master" },
-    contributor: [
-      {
-        "@type": "Person",
-        name: FOUNDERS.reneEbert.name,
-        sameAs: [FOUNDERS.reneEbert.linkedin],
-        worksFor: { "@id": ORG_ID },
-      },
-      {
-        "@type": "Person",
-        name: FOUNDERS.sanjayaPattiyage.name,
-        sameAs: [FOUNDERS.sanjayaPattiyage.linkedin],
-        worksFor: { "@id": ORG_ID },
-      },
-    ],
-    publisher: {
-      "@type": "Organization",
-      name: "Gastro Master",
-      url: "https://gastro-master.de",
-    },
-    url: `https://gastro-master.de/blog/${slug}`,
-    inLanguage: "de-DE",
-  };
+  // Kontextuelle Blog-Backlinks — gleiche Auswahllogik wie die Money-Pages
+  // (blogLinksForCategories), Kategorien je Landing-Slug aus einer Quelle.
+  const backlinks = blogLinksForCategories(
+    LANDING_BLOG_CATEGORIES[slug] ?? [],
+    blogPosts,
+  );
 
   useSeoMeta({
-    title: `${title} | Gastro Master Blog`,
+    title: `${title} | Gastro Master`,
     description,
     canonical: `https://gastro-master.de/blog/${slug}`,
   });
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#0A264A" }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BREADCRUMB) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_BLOGPOSTING) }} />
       <Navbar />
 
       {/* ── Article Header ─────────────────────────────────────────────────────── */}
@@ -144,6 +116,33 @@ export const BlogPostLayout = ({
           {children}
         </div>
       </article>
+
+      {/* ── Passende Beiträge (Batch 3b) ────────────────────────────────────────
+          Gespiegelt zum Prerenderer-Block (gleiche Quelle blogLinksForCategories
+          → identische 6 Ziele in rohem HTML und DOM). Untergrund ist der echte
+          Article-Untergrund #091A33 → text-primary-foreground-Konvention. */}
+      {backlinks.length >= 4 && (
+        <div className="px-5 md:px-8 lg:px-16 pb-4 bg-[#091A33] text-primary-foreground">
+          <nav aria-label="Passende Beiträge" className="max-w-3xl mx-auto border-t border-primary-foreground/10 pt-6 pb-2">
+            <p className="text-xs font-bold uppercase tracking-widest text-primary-foreground/50 mb-3">
+              Passende Beiträge
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5 list-none p-0 m-0 text-[0.9rem]">
+              {backlinks.map((l) => (
+                <li key={l.slug} className="min-w-0">
+                  <Link
+                    to={lp(`/blog/${l.slug}`)}
+                    title={l.title}
+                    className="block truncate text-primary-foreground/90 hover:text-accent hover:underline transition-colors"
+                  >
+                    {l.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      )}
 
       {/* ── Inline CTA ──────────────────────────────────────────────────────────── */}
       <section className="px-5 md:px-8 lg:px-16 py-16 bg-[#091A33]">
