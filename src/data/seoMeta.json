@@ -4,11 +4,23 @@
     "description": "Alle Gastro Master Pakete im Überblick: Von der Website über Webshop bis zur Kasse. Transparente Preise, monatlich kündbar."
   },
   "/loesungen/lieferdienst": {
-    "title": "Gastro Master | Lieferdienst — Provisionsfreie Lieferplattform",
+    "title": "Gastro Master | Lieferdienst — Provisionsfreie Plattform",
     "description": "Starten Sie Ihren eigenen Lieferdienst mit 0 % Provision. Gastro Master bietet die komplette Lösung: Lieferapp, Fahrerverwaltung, Telemetrie."
   },
   "/produkte/add-ons": {
     "title": "Gastro Master | Add-Ons — Erweitern Sie Ihr System",
     "description": "Add-Ons für Gastro Master: QR-Code-Flyer, Fahrer-App, Tischbestell-System, Kitchen Display, Kiosk Self-Ordering."
+  },
+  "/blog/warum-lieferando-verzichten": {
+    "title": "Warum dein Lieferservice auf Lieferando verzichten sollte | Gastro Master",
+    "description": "Lieferando nimmt bis zu 30 % Provision pro Bestellung. Was das für deine Marge wirklich bedeutet — und welche Alternative sich lohnt."
+  },
+  "/blog/5-fehler-lieferdienst-eroffnen": {
+    "title": "5 Fehler beim Eröffnen eines Lieferdienstes (und wie du sie vermeidest) | Gastro Master",
+    "description": "Von falscher Standortwahl bis fehlendem Bestellsystem: Diese Fehler kosten Gründer Monate und Tausende Euro."
+  },
+  "/blog/was-kostet-bestellsystem": {
+    "title": "Was kostet ein eigenes Bestellsystem wirklich? (Ehrlicher Vergleich) | Gastro Master",
+    "description": "Setup, Provision, Support — wir rechnen alle Kosten durch und zeigen, was Gastro Master im Vergleich zu Lieferando wirklich kostet."
   }
 }

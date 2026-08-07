@@ -425,7 +425,7 @@ const de = buildHubData("de", {
   hardCtaLabel: "Kostenlose Beratung",
   meta: {
     title: "Bestellsystem-Vergleich: Alle 5 Anbieter im Faktencheck — Gastro Master",
-    description: "Markt-Übersicht aller 5 Bestellsystem-Anbieter (OrderSmart, SIDES, DISH Order, Foodamigos, resmio) mit Pricing, Eigentums-Struktur und Sitz — wörtliche Primärquellen, keine Wertungen.",
+    description: "Markt-Übersicht der 5 Bestellsystem-Anbieter — OrderSmart, SIDES, DISH Order, Foodamigos, resmio — mit Pricing, Eigentümer und Sitz. Primärquellen.",
     dateModified: DATE_MODIFIED,
   },
 });

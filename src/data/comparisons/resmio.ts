@@ -310,7 +310,7 @@ const DE: ComparisonData = {
     title:
       "Gastro Master vs. resmio — Faktencheck mit Quellen | Gastro Master",
     description:
-      "Sachlicher Vergleich von Gastro Master und resmio: Architektur (Lieferdienst-First vs. Reservierungs-First), Pricing-Modell (Festpreis vs. Provision), modulare Add-Ons, Service-Sprachen. Mit Quellen-URLs.",
+      "Sachlicher Vergleich von Gastro Master und resmio: Lieferdienst- vs. Reservierungs-First, Festpreis vs. Provision und modulare Add-Ons — mit Quellen-URLs.",
     dateModified: SOURCE_DATE,
   },
 };

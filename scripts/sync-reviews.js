@@ -87,6 +87,17 @@ function getAvatarPath(authorName, googlePhotoUrl) {
 }
 
 /**
+ * Interne Mitarbeiter-Bewertungen, die NICHT ins öffentliche Review-Schema/Grid
+ * gehören (Sri-Lanka-Team). Google zog sonst einen englischen Mitarbeiter-Review
+ * als Search-Snippet heran. Namen exakt wie in der Sheet-Spalte "Name".
+ */
+const BLOCKED_REVIEWERS = new Set([
+  "Tithira De Silva",
+  "Chathura Shamika Indraguptha",
+  "Imesh Nuwanga",
+]);
+
+/**
  * Converts a sheet row to a GoogleReview object
  * Row format: [Name, Sterne, Text, Datum, Foto-URL, Bewertung-URL]
  */
@@ -154,7 +165,9 @@ async function syncReviews() {
           });
 
           const rows = response.data.values || [];
-          const validRows = rows.filter(row => row && row[0]); // Skip empty rows
+          const validRows = rows
+            .filter(row => row && row[0]) // Skip empty rows
+            .filter(row => !BLOCKED_REVIEWERS.has(String(row[0]).trim())); // Mitarbeiter-Reviews raus
           const reviews = validRows.map((row, index) => parseRowToReview(row, index));
 
           console.log(`   "${tabName}": ${reviews.length} reviews`);

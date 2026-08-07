@@ -522,5 +522,16 @@
   "s29": {
     "title": "23. Änderung dieser Datenschutzerklärung",
     "p1": "Wir behalten uns vor, diese Datenschutzerklärung anzupassen, um sie an geänderte Rechtslagen, technische Neuerungen oder geänderte Geschäftsprozesse anzupassen. Die aktuelle Fassung ist stets auf unserer Website abrufbar. Sofern Änderungen eine erneute Einwilligung erfordern, werden wir Sie gesondert darüber informieren."
+  },
+  "s30":   {
+    "title": "24. Einsatz von Künstlicher Intelligenz zur Inhaltserstellung",
+    "p1": "Zur Erstellung von Texten und Bildmaterialien auf dieser Website wurden KI-gestützte Werkzeuge eingesetzt. Für Texte wurde Claude (Anthropic, USA) verwendet; für die Bildgenerierung kamen Google Gemini (Google LLC, USA), ChatGPT/DALL·E (OpenAI, USA) sowie Midjourney (Midjourney Inc., USA) zum Einsatz. Bildmaterialien wurden ergänzend mit Canva (Canva Pty Ltd, Australien) bearbeitet.",
+    "p2": "Alle mit KI-Unterstützung erstellten Inhalte wurden von der Geschäftsführung inhaltlich geprüft, freigegeben und verantwortet. Die redaktionelle und rechtliche Verantwortung für sämtliche veröffentlichten Inhalte liegt ausschließlich bei der Geschäftsführung der Epit Global GmbH. Die genannten KI-Dienste verarbeiten keine personenbezogenen Daten der Websitebesucher.",
+    "linksLabel": "Datenschutzhinweise der Anbieter:",
+    "link1Text": "Anthropic",
+    "link2Text": "Google",
+    "link3Text": "OpenAI",
+    "link4Text": "Midjourney",
+    "link5Text": "Canva"
   }
 }

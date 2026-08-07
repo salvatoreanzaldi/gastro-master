@@ -1,7 +1,7 @@
 {
   "seo": {
     "title": "Gastro Master | Add-Ons for — Extensions for Webshop, App & POS System",
-    "description": "Add-Ons for Gastro Master: QR Code Flyer, Driver App with GPS, QR Code Table System, Display Function, Self-Ordering Kiosk and more. Modularly combinable, fully integrated into cloud POS, webshop and app."
+    "description": "Gastro Master add-ons for restaurants: QR-code flyer, driver app with GPS, table ordering, kitchen display and self-service kiosk — extend your system."
   },
   "hero": {
     "badge": "Add-Ons · Extensions",
@@ -16,7 +16,11 @@
       "title": "QR Code Flyer",
       "price": "from €65 / 2,500 pieces",
       "desc": "Turn every paper flyer into a measurable ordering channel. One scan leads directly to your webshop or app — without Deliveroo commission, with live tracking per campaign.",
-      "benefits": ["First 2,500 flyers included in subscription", "DIN-A6, double-sided, your own branding", "Per-campaign tracking in dashboard"],
+      "benefits": [
+        "First 2,500 flyers included in subscription",
+        "DIN-A6, double-sided, your own branding",
+        "Per-campaign tracking in dashboard"
+      ],
       "compatibility": "Webshop · App"
     },
     {
@@ -24,7 +28,11 @@
       "title": "Driver App with GPS",
       "price": "+€10 / month per driver",
       "desc": "Live GPS tracking for every delivery, automatic route optimisation and dispatch directly in the POS system. Customers see where the driver is — your team drives more efficiently.",
-      "benefits": ["Real-time GPS for all drivers", "Automatic route optimisation", "iOS and Android app for drivers"],
+      "benefits": [
+        "Real-time GPS for all drivers",
+        "Automatic route optimisation",
+        "iOS and Android app for drivers"
+      ],
       "compatibility": "POS System"
     },
     {
@@ -32,7 +40,11 @@
       "title": "QR Code Table System",
       "price": "+€50 / 5 tables, +€5 per additional",
       "desc": "Guests scan at the table, choose, order, pay — all via their smartphone. Order lands instantly in POS and kitchen. Less waiting time, higher table turnover, +18% basket through upselling.",
-      "benefits": ["Order without app installation", "Multilingual menu (DE/EN/FR/IT/ES/TR)", "Pay directly at the table"],
+      "benefits": [
+        "Order without app installation",
+        "Multilingual menu (DE/EN/FR/IT/ES/TR)",
+        "Pay directly at the table"
+      ],
       "compatibility": "POS System"
     },
     {
@@ -40,7 +52,11 @@
       "title": "Display Function",
       "price": "On request",
       "desc": "Pick-up screen for guests, kitchen monitor for your team. All open orders in real time, colour-prioritised by product group, without paper chaos. For fast food, bakeries, food courts.",
-      "benefits": ["Pick-up screen + kitchen monitor", "Priority by order time", "Counter, freestanding & outdoor"],
+      "benefits": [
+        "Pick-up screen + kitchen monitor",
+        "Priority by order time",
+        "Counter, freestanding & outdoor"
+      ],
       "compatibility": "POS System"
     },
     {
@@ -48,7 +64,11 @@
       "title": "Self-Ordering Kiosk",
       "price": "On request",
       "desc": "The terminal takes over the counter. Guests order and pay directly on the touchscreen — multilingual, with active upselling, without waiting time. −50% waiting time, +25% average basket.",
-      "benefits": ["Touch operation in 6+ languages", "All payment methods integrated", "Counter, freestanding & wall-mounted"],
+      "benefits": [
+        "Touch operation in 6+ languages",
+        "All payment methods integrated",
+        "Counter, freestanding & wall-mounted"
+      ],
       "compatibility": "POS System"
     }
   ],
@@ -57,9 +77,18 @@
     "headline": "An Ecosystem of Specialists",
     "sub": "Each add-on solves a concrete problem in day-to-day operations — cleanly integrated into what's already running at your place.",
     "items": [
-      { "title": "Modularly combinable", "desc": "Each add-on runs independently — but unfolds its full effect in combination with webshop, app or POS system." },
-      { "title": "One central management", "desc": "All add-ons are managed via your existing Gastro Master backoffice — no third parties, no additional logins." },
-      { "title": "Ready immediately", "desc": "After booking, add-ons are active within hours to days. Hardware add-ons (screens, kiosks) are installed on-site on request." }
+      {
+        "title": "Modularly combinable",
+        "desc": "Each add-on runs independently — but unfolds its full effect in combination with webshop, app or POS system."
+      },
+      {
+        "title": "One central management",
+        "desc": "All add-ons are managed via your existing Gastro Master backoffice — no third parties, no additional logins."
+      },
+      {
+        "title": "Ready immediately",
+        "desc": "After booking, add-ons are active within hours to days. Hardware add-ons (screens, kiosks) are installed on-site on request."
+      }
     ]
   },
   "grid": {
@@ -82,12 +111,30 @@
     "headline": "Frequently Asked Questions about Add-Ons",
     "sub": "Answers to the questions restaurateurs ask us most often about our extensions.",
     "items": [
-      { "q": "What are Add-Ons at Gastro Master?", "a": "Add-Ons are extensions for your existing Gastro Master solution — [Webshop](/produkte/webshop), [App](/produkte/app) or [POS System](/produkte/kassensystem). Each solves a concrete problem (marketing, delivery, table service, kitchen monitor, self-ordering) and is fully integrated. You book only what you actually need." },
-      { "q": "Which Add-Ons are currently available?", "a": "Currently live: [QR Code Flyer](/add-ons/qr-code-flyer) (Marketing), [Driver App with GPS](/add-ons/fahrer-app-gps) (Delivery), [QR Code Table System](/add-ons/qr-code-tischsystem) (Table Service), [Display Function](/add-ons/bildschirmfunktion) (Kitchen & Counter) and [Self-Ordering Kiosk](/add-ons/kiosk) (Self-Service). More extensions are in preparation." },
-      { "q": "Do I need the POS system for Add-Ons?", "a": "It depends. The QR Code Flyer works with webshop or app alone. The Driver App, QR Code Table System, Display Function and Kiosk add-ons require the [Gastro Master POS System](/produkte/kassensystem) because they synchronise orders directly with the cloud POS, kitchen monitor and pick-up screen." },
-      { "q": "What do the Add-Ons cost?", "a": "Prices vary by function: The QR Code Flyer starts from €65 for 2,500 pieces. Driver App costs +€10 per month per driver, QR Code Table System +€50 per month for 5 tables. Display Function and Self-Ordering Kiosk are hardware-dependent and are calculated individually in a free consultation." },
-      { "q": "Can I cancel or add an Add-On later?", "a": "Yes. Add-ons can be activated and cancelled monthly (hardware excluded). You can, for example, use the QR Code Table System during peak season and pause in winter — or start with one kiosk and add more terminals as your business grows." },
-      { "q": "How quickly are Add-Ons ready to use?", "a": "Software add-ons (QR Code Flyer, Driver App, QR Code Table System) are active within a few hours after booking. Hardware add-ons (Display Function, Kiosk) require 2–4 weeks for delivery, configuration and on-site installation." }
+      {
+        "q": "What are Add-Ons at Gastro Master?",
+        "a": "Add-Ons are extensions for your existing Gastro Master solution — [Webshop](/produkte/webshop), [App](/produkte/app) or [POS System](/produkte/kassensystem). Each solves a concrete problem (marketing, delivery, table service, kitchen monitor, self-ordering) and is fully integrated. You book only what you actually need."
+      },
+      {
+        "q": "Which Add-Ons are currently available?",
+        "a": "Currently live: [QR Code Flyer](/add-ons/qr-code-flyer) (Marketing), [Driver App with GPS](/add-ons/fahrer-app-gps) (Delivery), [QR Code Table System](/add-ons/qr-code-tischsystem) (Table Service), [Display Function](/add-ons/bildschirmfunktion) (Kitchen & Counter) and [Self-Ordering Kiosk](/add-ons/kiosk) (Self-Service). More extensions are in preparation."
+      },
+      {
+        "q": "Do I need the POS system for Add-Ons?",
+        "a": "It depends. The QR Code Flyer works with webshop or app alone. The Driver App, QR Code Table System, Display Function and Kiosk add-ons require the [Gastro Master POS System](/produkte/kassensystem) because they synchronise orders directly with the cloud POS, kitchen monitor and pick-up screen."
+      },
+      {
+        "q": "What do the Add-Ons cost?",
+        "a": "Prices vary by function: The QR Code Flyer starts from €65 for 2,500 pieces. Driver App costs +€10 per month per driver, QR Code Table System +€50 per month for 5 tables. Display Function and Self-Ordering Kiosk are hardware-dependent and are calculated individually in a free consultation."
+      },
+      {
+        "q": "Can I cancel or add an Add-On later?",
+        "a": "Yes. Add-ons can be activated and cancelled monthly (hardware excluded). You can, for example, use the QR Code Table System during peak season and pause in winter — or start with one kiosk and add more terminals as your business grows."
+      },
+      {
+        "q": "How quickly are Add-Ons ready to use?",
+        "a": "Software add-ons (QR Code Flyer, Driver App, QR Code Table System) are active within a few hours after booking. Hardware add-ons (Display Function, Kiosk) require 2–4 weeks for delivery, configuration and on-site installation."
+      }
     ]
   }
 }

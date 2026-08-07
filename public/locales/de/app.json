@@ -1,7 +1,7 @@
 {
   "seo": {
-    "title": "Gastro Master | Bestell-App Gastronomie — eigene App ab 149 €",
-    "description": "Eigene Bestell-App für die Gastronomie: iOS & Android, eigenes Branding, 0 % Provision, Push-Benachrichtigungen. Ab 149 €/Monat. Jetzt kostenlos beraten lassen."
+    "title": "Gastro Master | Bestell-App Gastronomie ab 149 €",
+    "description": "Eigene Bestell-App für die Gastronomie: iOS und Android, eigenes Branding, 0 % Provision und Push-Nachrichten. Ab 149 €/Monat. Jetzt beraten lassen."
   },
   "hero": {
     "badge": "Bestell-App für Gastronomie",
@@ -24,8 +24,8 @@
   },
   "video": {
     "badge": "Deine App in Aktion",
-    "title": "Sieh deine App in\u00a0Aktion.",
-    "text": "Über 800 Gastronomen in Deutschland nutzen bereits ihre eigene Bestell-App – mit eigenem Logo, eigenem Branding und 0\u00a0% Provision. Sieh selbst, wie einfach und überzeugend eine eigene Bestell-App für deine Gäste ist.",
+    "title": "Sieh deine App in Aktion.",
+    "text": "Über 800 Gastronomen in Deutschland nutzen bereits ihre eigene Bestell-App – mit eigenem Logo, eigenem Branding und 0 % Provision. Sieh selbst, wie einfach und überzeugend eine eigene Bestell-App für deine Gäste ist.",
     "cta": "Kostenlose Beratung"
   },
   "features": {
@@ -115,16 +115,48 @@
     "badge": "Social Proof",
     "title": "800+ Gastronomen, die bereits ihre eigene App betreiben.",
     "items": [
-      { "initials": "HL", "quote": "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein.", "name": "Ha Lim Lee", "restaurant": "Kojo Sushi" },
-      { "initials": "MG", "quote": "Also der Support ist einfach 1a und den würdest du nirgend wo anders so bekommen!", "name": "Marco Greco", "restaurant": "Pizzeria Il Sorriso" },
-      { "initials": "SH", "quote": "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren.", "name": "Sven Heinrich", "restaurant": "61 Burger & More" },
-      { "initials": "GM", "quote": "Wir haben durch die App viel mehr Kunden und Reichweite gewonnen.", "name": "Georgios Madatsidis", "restaurant": "Artemis Grill" }
+      {
+        "initials": "HL",
+        "quote": "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein.",
+        "name": "Ha Lim Lee",
+        "restaurant": "Kojo Sushi"
+      },
+      {
+        "initials": "MG",
+        "quote": "Also der Support ist einfach 1a und den würdest du nirgend wo anders so bekommen!",
+        "name": "Marco Greco",
+        "restaurant": "Pizzeria Il Sorriso"
+      },
+      {
+        "initials": "SH",
+        "quote": "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren.",
+        "name": "Sven Heinrich",
+        "restaurant": "61 Burger & More"
+      },
+      {
+        "initials": "GM",
+        "quote": "Wir haben durch die App viel mehr Kunden und Reichweite gewonnen.",
+        "name": "Georgios Madatsidis",
+        "restaurant": "Artemis Grill"
+      }
     ],
     "stats": [
-      { "value": "800+", "label": "aktive Gastro Master Kunden" },
-      { "value": "0 %", "label": "Provision auf Direktbestellungen" },
-      { "value": "2–3 Wo.", "label": "bis zur fertigen App im Store" },
-      { "value": "ab 149 € / Mo", "label": "App + Webshop, netto" }
+      {
+        "value": "800+",
+        "label": "aktive Gastro Master Kunden"
+      },
+      {
+        "value": "0 %",
+        "label": "Provision auf Direktbestellungen"
+      },
+      {
+        "value": "2–3 Wo.",
+        "label": "bis zur fertigen App im Store"
+      },
+      {
+        "value": "ab 149 € / Mo",
+        "label": "App + Webshop, netto"
+      }
     ]
   },
   "pricing": {
@@ -164,25 +196,67 @@
     "flyerPriceListToggle": "Nachbestell-Preisliste"
   },
   "flyerTiers": [
-    { "qty": "2.500 Stück", "price": "65,00 €" },
-    { "qty": "5.000 Stück", "price": "117,00 €" },
-    { "qty": "7.500 Stück", "price": "175,50 €" },
-    { "qty": "10.000 Stück", "price": "234,00 €" },
-    { "qty": "12.500 Stück", "price": "295,50 €" },
-    { "qty": "15.000 Stück", "price": "351,00 €" },
-    { "qty": "20.000 Stück", "price": "468,00 €" },
-    { "qty": "30.000 Stück", "price": "702,00 €" },
-    { "qty": "40.000 Stück", "price": "936,00 €" },
-    { "qty": "50.000 Stück", "price": "1.117,00 €" }
+    {
+      "qty": "2.500 Stück",
+      "price": "65,00 €"
+    },
+    {
+      "qty": "5.000 Stück",
+      "price": "117,00 €"
+    },
+    {
+      "qty": "7.500 Stück",
+      "price": "175,50 €"
+    },
+    {
+      "qty": "10.000 Stück",
+      "price": "234,00 €"
+    },
+    {
+      "qty": "12.500 Stück",
+      "price": "295,50 €"
+    },
+    {
+      "qty": "15.000 Stück",
+      "price": "351,00 €"
+    },
+    {
+      "qty": "20.000 Stück",
+      "price": "468,00 €"
+    },
+    {
+      "qty": "30.000 Stück",
+      "price": "702,00 €"
+    },
+    {
+      "qty": "40.000 Stück",
+      "price": "936,00 €"
+    },
+    {
+      "qty": "50.000 Stück",
+      "price": "1.117,00 €"
+    }
   ],
   "steps": {
     "badge": "So einfach geht's",
     "title": "In 3 Schritten zu deiner eigenen Gastro-App.",
     "text": "Du musst kein Entwickler sein. Wir übernehmen alles – du gibst die Richtung vor.",
     "items": [
-      { "num": "01", "title": "Beratungsgespräch & Konfiguration", "text": "Wir besprechen gemeinsam, wie deine App aussehen soll: Name, Logo, Farben, Speisekarte, Liefergebiete, Zahlungsmethoden. Kein Technik-Vorwissen nötig." },
-      { "num": "02", "title": "Wir richten alles ein", "text": "Unser Team konfiguriert deine App, richtet den Webshop ein und stellt sicher, dass alles reibungslos läuft. Du musst nichts selbst programmieren oder hochladen." },
-      { "num": "03", "title": "Live im App Store & erste Bestellungen", "text": "Nach 2–3 Wochen ist deine App live im Apple App Store und Google Play Store. Ab sofort bestellst du direkt – 0 % Provision, 100 % dein Umsatz." }
+      {
+        "num": "01",
+        "title": "Beratungsgespräch & Konfiguration",
+        "text": "Wir besprechen gemeinsam, wie deine App aussehen soll: Name, Logo, Farben, Speisekarte, Liefergebiete, Zahlungsmethoden. Kein Technik-Vorwissen nötig."
+      },
+      {
+        "num": "02",
+        "title": "Wir richten alles ein",
+        "text": "Unser Team konfiguriert deine App, richtet den Webshop ein und stellt sicher, dass alles reibungslos läuft. Du musst nichts selbst programmieren oder hochladen."
+      },
+      {
+        "num": "03",
+        "title": "Live im App Store & erste Bestellungen",
+        "text": "Nach 2–3 Wochen ist deine App live im Apple App Store und Google Play Store. Ab sofort bestellst du direkt – 0 % Provision, 100 % dein Umsatz."
+      }
     ]
   },
   "faq": {
@@ -229,19 +303,49 @@
     "expectText": "In einem kostenlosen Erstgespräch entwickelt einer unserer App-Experten ein individuelles Konzept für deine eigene Bestell-App – mit deinem Branding, deiner Speisekarte und 0 % Provision. Unverbindlich und komplett kostenlos.",
     "expectSubtext": "Deine App kann bereits in 2–3 Wochen live im Apple App Store und Google Play Store sein. Keine Programmierkenntnisse nötig – wir übernehmen alles.",
     "languages": [
-      { "label": "Deutsch", "flag": "\ud83c\udde9\ud83c\uddea" },
-      { "label": "Englisch", "flag": "\ud83c\uddec\ud83c\udde7" },
-      { "label": "Italienisch", "flag": "\ud83c\uddee\ud83c\uddf9" },
-      { "label": "Persisch", "flag": "\ud83c\uddee\ud83c\uddf7" },
-      { "label": "Russisch", "flag": "\ud83c\uddf7\ud83c\uddfa" },
-      { "label": "Singhalesisch", "flag": "\ud83c\uddf1\ud83c\uddf0" }
+      {
+        "label": "Deutsch",
+        "flag": "🇩🇪"
+      },
+      {
+        "label": "Englisch",
+        "flag": "🇬🇧"
+      },
+      {
+        "label": "Italienisch",
+        "flag": "🇮🇹"
+      },
+      {
+        "label": "Persisch",
+        "flag": "🇮🇷"
+      },
+      {
+        "label": "Russisch",
+        "flag": "🇷🇺"
+      },
+      {
+        "label": "Singhalesisch",
+        "flag": "🇱🇰"
+      }
     ],
     "cta": "Kostenlose Beratung",
     "teamMembers": [
-      { "name": "Sanjaya Pattiyage", "role": "Gründer & Geschäftsführer" },
-      { "name": "René Ebert", "role": "Gründer & Geschäftsführer" },
-      { "name": "Salvatore Anzaldi", "role": "Head of Sales" },
-      { "name": "Andrej Krutsch", "role": "Head of Operations" }
+      {
+        "name": "Sanjaya Pattiyage",
+        "role": "Gründer & Geschäftsführer"
+      },
+      {
+        "name": "René Ebert",
+        "role": "Gründer & Geschäftsführer"
+      },
+      {
+        "name": "Salvatore Anzaldi",
+        "role": "Head of Sales"
+      },
+      {
+        "name": "Andrej Krutsch",
+        "role": "Head of Operations"
+      }
     ]
   }
 }

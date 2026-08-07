@@ -522,5 +522,16 @@
   "s29": {
     "title": "23. Modifiche alla presente informativa sulla privacy",
     "p1": "Ci riserviamo il diritto di adeguare la presente informativa sulla privacy per adattarla a modifiche normative, innovazioni tecniche o processi aziendali modificati. La versione attuale è sempre disponibile sul nostro sito web. Qualora le modifiche richiedano un nuovo consenso, La informeremo separatamente."
+  },
+  "s30":   {
+    "title": "24. Utilizzo dell'intelligenza artificiale per la creazione di contenuti",
+    "p1": "Per la creazione di testi e materiali visivi su questo sito web sono stati utilizzati strumenti basati sull'intelligenza artificiale. Per i testi è stato utilizzato Claude (Anthropic, USA); per la generazione di immagini sono stati impiegati Google Gemini (Google LLC, USA), ChatGPT/DALL·E (OpenAI, USA) e Midjourney (Midjourney Inc., USA). I materiali visivi sono stati inoltre elaborati con Canva (Canva Pty Ltd, Australia).",
+    "p2": "Tutti i contenuti creati con il supporto dell'IA sono stati verificati, approvati e assunti sotto la responsabilità della direzione. La responsabilità editoriale e legale per tutti i contenuti pubblicati spetta esclusivamente alla direzione di Epit Global GmbH. I servizi di IA menzionati non trattano dati personali dei visitatori del sito.",
+    "linksLabel": "Informative sulla privacy dei fornitori:",
+    "link1Text": "Anthropic",
+    "link2Text": "Google",
+    "link3Text": "OpenAI",
+    "link4Text": "Midjourney",
+    "link5Text": "Canva"
   }
 }

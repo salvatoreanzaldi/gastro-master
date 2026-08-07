@@ -23,9 +23,21 @@
     "title2": "raccomandi — risparmi ogni mese.",
     "desc": "Per ogni referral andato a buon fine riceve un mese completo gratuito.",
     "steps": [
-      { "num": "1", "title": "Raccomandare", "text": "Raccomandi Gastro Master a un altro ristoratore." },
-      { "num": "2", "title": "Contratto", "text": "Il Suo referral sottoscrive un contratto e menziona il Suo nome." },
-      { "num": "3", "title": "Mese gratuito", "text": "Riceve un mese completo gratuito. Automaticamente." }
+      {
+        "num": "1",
+        "title": "Raccomandare",
+        "text": "Raccomandi Gastro Master a un altro ristoratore."
+      },
+      {
+        "num": "2",
+        "title": "Contratto",
+        "text": "Il Suo referral sottoscrive un contratto e menziona il Suo nome."
+      },
+      {
+        "num": "3",
+        "title": "Mese gratuito",
+        "text": "Riceve un mese completo gratuito. Automaticamente."
+      }
     ],
     "stepLabel": "Passo",
     "notice": "Importante: ",
@@ -65,7 +77,7 @@
     "badge": "Sistema di cassa",
     "title": "La cassa cloud Gastro Master",
     "desc": "Conforme TSE, certificata GoBD — per ristorante, servizio di consegna e ritiro.",
-    "legalNote": "Obbligo TSE dal 01.01.2020 (§146a AO, KassenSichV) — sanzioni fino a 25.000 € in caso di mancata conformità.",
+    "legalNote": "Obbligo TSE per tutte le attività con sistema di cassa elettronico (§ 146a AO, KassenSichV) — sanzioni fino a 25.000 € in caso di mancata conformità.",
     "cardBadge": "Software cassa cloud",
     "price": "da 69 €",
     "priceDetail": "/ mese (netto)",
@@ -132,10 +144,22 @@
     "desc": "Tutti i prodotti sono collegati nativamente — nessun trasferimento manuale, nessun caos.",
     "hubLabel": "Centrale",
     "items": [
-      { "title": "Sito web", "text": "Il Suo biglietto da visita digitale — ottimizzato per Google, professionale." },
-      { "title": "Sistema di ordinazione", "text": "Shop online con 0 % di commissione sul Suo dominio." },
-      { "title": "App", "text": "La Sua app sotto il Suo nome nell'App Store." },
-      { "title": "Sistema di cassa", "text": "Cassa cloud conforme TSE per servizio al tavolo, ritiro e consegna." }
+      {
+        "title": "Sito web",
+        "text": "Il Suo biglietto da visita digitale — ottimizzato per Google, professionale."
+      },
+      {
+        "title": "Sistema di ordinazione",
+        "text": "Shop online con 0 % di commissione sul Suo dominio."
+      },
+      {
+        "title": "App",
+        "text": "La Sua app sotto il Suo nome nell'App Store."
+      },
+      {
+        "title": "Sistema di cassa",
+        "text": "Cassa cloud conforme TSE per servizio al tavolo, ritiro e consegna."
+      }
     ],
     "connTitle": "Tutto in un unico sistema — gestione centralizzata",
     "connDesc": "Gli ordini dallo shop online, dall'app e dalla cassa confluiscono in un unico dashboard centrale. Tutte le statistiche, tutte le sedi, un solo login."

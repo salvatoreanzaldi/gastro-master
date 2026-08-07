@@ -56,7 +56,15 @@
     { "source": "/arbeitsbedingungen-bei-wolt/",                                                              "destination": "/de/blog/wolt-fahrer-arbeitsbedingungen",                   "permanent": true },
     { "source": "/wie-viele-pizzen-verkauft-eine-pizzeria-am-tag-hinter-den-ofenkulissen/",                   "destination": "/de/blog/wie-viele-pizzen-verkauft-pizzeria-pro-tag",       "permanent": true },
     { "source": "/lieferando-partner-werden/",                                                                "destination": "/de/blog/lieferando-partner-werden-vor-und-nachteile",      "permanent": true },
-    { "source": "/best-food-delivery-apps-in-germany/",                                                       "destination": "/de/blog/beste-bestell-apps-deutschland-2026",              "permanent": true }
+    { "source": "/best-food-delivery-apps-in-germany/",                                                       "destination": "/de/blog/beste-bestell-apps-deutschland-2026",              "permanent": true },
+    { "source": "/onlineshop",                        "destination": "/bestellsystem-gastronomie/", "permanent": true },
+    { "source": "/onlineshop/",                       "destination": "/bestellsystem-gastronomie/", "permanent": true },
+    { "source": "/burger-webshop",                    "destination": "/bestellsystem-gastronomie/", "permanent": true },
+    { "source": "/burger-webshop/",                   "destination": "/bestellsystem-gastronomie/", "permanent": true },
+    { "source": "/indische-restaurants",              "destination": "/bestellsystem-gastronomie/", "permanent": true },
+    { "source": "/indische-restaurants/",             "destination": "/bestellsystem-gastronomie/", "permanent": true },
+    { "source": "/unser-versprechen-bestellannahme",  "destination": "/",                           "permanent": true },
+    { "source": "/unser-versprechen-bestellannahme/", "destination": "/",                           "permanent": true }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }

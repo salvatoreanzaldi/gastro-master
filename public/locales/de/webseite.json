@@ -1,7 +1,7 @@
 {
   "seo": {
     "title": "Gastro Master | Webseite Gastronomie — ab 49 €/Monat",
-    "description": "Professionelle Webseite für Gastronomie — ab 49 €/Monat. Eigene Domain, DSGVO-konform, Hosting & Support inklusive. In wenigen Tagen online. Jetzt beraten lassen."
+    "description": "Professionelle Webseite für die Gastronomie ab 49 €/Monat: eigene Domain, DSGVO-konform, Hosting und Support inklusive. In wenigen Tagen online."
   },
   "hero": {
     "badge": "Professionelle Webseite · ab 49 €/Monat",
@@ -131,11 +131,31 @@
     "title": "Websites, die wir gebaut haben.",
     "desc": "Für Gastronomie, Bäckereien und weitere Branchen – jede Webseite individuell auf den Betrieb zugeschnitten.",
     "items": [
-      { "label": "Gastronomie", "name": "Gastro Master", "alt": "Professionelle Webseite für Gastronomie — Beispiel Gastro Master" },
-      { "label": "Bäckerei", "name": "Bäckerei Zimmer", "alt": "Website für Bäckerei Zimmer — Restaurant Webseite Beispiel" },
-      { "label": "Restaurant", "name": "Et Manus", "alt": "Restaurant Webseite Et Manus — professionelle Gastronomie Website" },
-      { "label": "Dienstleister", "name": "D&T", "alt": "Professionelle Website für Dienstleister D&T — Webseite erstellen lassen" },
-      { "label": "Gastronomie", "name": "D&T Gastro", "alt": "Gastronomie Website D&T Gastro — eigene Restaurant Webseite" }
+      {
+        "label": "Gastronomie",
+        "name": "Gastro Master",
+        "alt": "Professionelle Webseite für Gastronomie — Beispiel Gastro Master"
+      },
+      {
+        "label": "Bäckerei",
+        "name": "Bäckerei Zimmer",
+        "alt": "Website für Bäckerei Zimmer — Restaurant Webseite Beispiel"
+      },
+      {
+        "label": "Restaurant",
+        "name": "Et Manus",
+        "alt": "Restaurant Webseite Et Manus — professionelle Gastronomie Website"
+      },
+      {
+        "label": "Dienstleister",
+        "name": "D&T",
+        "alt": "Professionelle Website für Dienstleister D&T — Webseite erstellen lassen"
+      },
+      {
+        "label": "Gastronomie",
+        "name": "D&T Gastro",
+        "alt": "Gastronomie Website D&T Gastro — eigene Restaurant Webseite"
+      }
     ],
     "cta": "Deine Webseite anfragen"
   },
@@ -158,9 +178,21 @@
     "badge": "So läuft's ab",
     "title": "In 3 Schritten zu deiner professionellen Webseite.",
     "steps": [
-      { "num": "01", "title": "Kostenloses Beratungsgespräch", "desc": "Wir besprechen deine Wünsche, Ziele, Zielgruppe und den gewünschten Umfang – und erstellen ein individuelles Angebot." },
-      { "num": "02", "title": "Design & Umsetzung", "desc": "Unser Team baut deine Webseite professionell, DSGVO-konform und optimiert für alle Geräte. Du wirst während des Prozesses eingebunden." },
-      { "num": "03", "title": "Go-Live", "desc": "Deine neue Webseite ist in wenigen Tagen online – mit eigener Domain, Hosting und vollem Support von unserem Team." }
+      {
+        "num": "01",
+        "title": "Kostenloses Beratungsgespräch",
+        "desc": "Wir besprechen deine Wünsche, Ziele, Zielgruppe und den gewünschten Umfang – und erstellen ein individuelles Angebot."
+      },
+      {
+        "num": "02",
+        "title": "Design & Umsetzung",
+        "desc": "Unser Team baut deine Webseite professionell, DSGVO-konform und optimiert für alle Geräte. Du wirst während des Prozesses eingebunden."
+      },
+      {
+        "num": "03",
+        "title": "Go-Live",
+        "desc": "Deine neue Webseite ist in wenigen Tagen online – mit eigener Domain, Hosting und vollem Support von unserem Team."
+      }
     ]
   },
   "pricing": {
@@ -219,16 +251,48 @@
     "badge": "Kundenstimmen",
     "title": "+800 Unternehmen,<br/>die bereits auf Gastro Master vertrauen.",
     "items": [
-      { "initials": "HL", "quote": "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein.", "name": "Ha Lim Lee", "restaurant": "Kojo Sushi" },
-      { "initials": "MG", "quote": "Also der Support ist einfach 1a und den würdest du nirgend wo anders so bekommen!", "name": "Marco Greco", "restaurant": "Pizzeria Il Sorriso" },
-      { "initials": "SH", "quote": "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren.", "name": "Sven Heinrich", "restaurant": "61 Burger & More" },
-      { "initials": "GM", "quote": "Wir haben durch die App viel mehr Kunden und Reichweite gewonnen.", "name": "Georgios Madatsidis", "restaurant": "Artemis Grill" }
+      {
+        "initials": "HL",
+        "quote": "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein.",
+        "name": "Ha Lim Lee",
+        "restaurant": "Kojo Sushi"
+      },
+      {
+        "initials": "MG",
+        "quote": "Also der Support ist einfach 1a und den würdest du nirgend wo anders so bekommen!",
+        "name": "Marco Greco",
+        "restaurant": "Pizzeria Il Sorriso"
+      },
+      {
+        "initials": "SH",
+        "quote": "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren.",
+        "name": "Sven Heinrich",
+        "restaurant": "61 Burger & More"
+      },
+      {
+        "initials": "GM",
+        "quote": "Wir haben durch die App viel mehr Kunden und Reichweite gewonnen.",
+        "name": "Georgios Madatsidis",
+        "restaurant": "Artemis Grill"
+      }
     ],
     "stats": [
-      { "value": "800+", "label": "Unternehmen vertrauen Gastro Master" },
-      { "value": "Tage", "label": "Nicht Wochen – so schnell bist du online" },
-      { "value": "Alle", "label": "Branchen & Betriebsgrößen" },
-      { "value": "Inkl.", "label": "Support, Hosting & Domain im Abo" }
+      {
+        "value": "800+",
+        "label": "Unternehmen vertrauen Gastro Master"
+      },
+      {
+        "value": "Tage",
+        "label": "Nicht Wochen – so schnell bist du online"
+      },
+      {
+        "value": "Alle",
+        "label": "Branchen & Betriebsgrößen"
+      },
+      {
+        "value": "Inkl.",
+        "label": "Support, Hosting & Domain im Abo"
+      }
     ]
   },
   "faq": {

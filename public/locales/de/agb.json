@@ -1,25 +1,21 @@
 {
   "meta": {
     "title": "Gastro Master | AGB — Allgemeine Geschäftsbedingungen",
-    "description": "Allgemeine Geschäftsbedingungen der Epit Global GmbH / Gastro Master.",
+    "description": "Die AGB von Gastro Master (Epit Global GmbH): Vertragsbedingungen, Laufzeit und Kündigung unserer provisionsfreien Gastronomie-Software im Überblick.",
     "canonical": "https://gastro-master.de/agb"
   },
   "title": "Allgemeine Geschäftsbedingungen",
   "subtitle": "Epit Global GmbH · Herzbergstr. 9 · 61250 Usingen",
-
   "s0": {
     "title": "Kaufvertrag Online Bestellsystem",
-
     "praeambel": {
       "heading": "Präambel",
       "text": "Die Parteien schließen einen Kaufvertrag über die Erstellung eines Online-Shops und einer App (iOS & Android). Das Angebot richtet sich an den genannten Betreiber. Vertragsgegenstand ist die App- und Webshop-Erstellung durch Epit Global GmbH. Der Anbieter pflegt die Produkte gemäß der Produktliste ein. Nach Fertigstellung des Projekts kann der Betreiber die Produkte selbstständig pflegen. Der Restaurantbetreiber kann optional das Gastro Master Gerät erwerben. Über dieses Gerät werden eingehende Bestellungen automatisch ausgedruckt, anstatt per E-Mail abgerufen werden zu müssen."
     },
-
     "p1": {
       "heading": "§ 1 Vertragsparteien",
       "text": "Ausschließliche Vertragsparteien sind die Epit Global GmbH (nachfolgend „Anbieter“) und der im Auftragsformular genannte Endkunde (nachfolgend „Kunde“)."
     },
-
     "p2": {
       "heading": "§ 2 Vertragsgegenstand",
       "a": {
@@ -43,7 +39,6 @@
         "text": "Der Anbieter übernimmt keine Verantwortung für die Rechtmäßigkeit der Inhalte der App/des Webshops. Die alleinige rechtliche Verantwortung liegt ausschließlich beim jeweiligen Kunden. Gemäß § 5 Abs. 1 TMG ist im Impressum ausschließlich der Kunde angegeben. Auf besondere gesetzliche Bestimmungen für den Lebensmittel- und Getränkeverkauf, insbesondere den Jugendschutz, wird ausdrücklich hingewiesen."
       }
     },
-
     "p3": {
       "heading": "§ 3 Preise / Zahlung",
       "sub1": {
@@ -59,17 +54,14 @@
         "text": "Die Bestellübermittlung erfolgt per E-Mail-Programm. Nach Abschluss erläutert der Anbieter alles umfassend."
       }
     },
-
     "p4": {
       "heading": "§ 4 Nutzungsrechte",
       "text": "Der Anbieter gewährt dem Kunden zeitlich unbegrenzte, einfache, nicht übertragbare Rechte zur Nutzung der Apps/des Webshops im vertragsgemäßen Umfang. Der Kunde kann die Nutzungsrechte ohne Zustimmung des Anbieters nicht auf Dritte übertragen."
     },
-
     "p5": {
       "heading": "§ 5 Mitwirkungspflichten",
       "text": "Der Kunde ist verpflichtet, Softwaremängel dem Anbieter unverzüglich zu melden."
     },
-
     "p6": {
       "heading": "§ 6 Haftungsbeschränkungen",
       "sub1": {
@@ -85,12 +77,10 @@
         "text": "Die Vorschriften des Produkthaftungsgesetzes bleiben unberührt."
       }
     },
-
     "p7": {
       "heading": "§ 7 Support / Updates",
       "text": "Der Kaufvertrag umfasst einen kostenlosen 6-monatigen Support sowie monatliche Updates."
     },
-
     "p8": {
       "heading": "§ 8 Datenschutz",
       "a": {
@@ -102,7 +92,6 @@
         "text": "Der Anbieter erhebt und verarbeitet personenbezogene Daten nur, soweit dies zur Vertragserfüllung erforderlich ist, eine Einwilligung vorliegt oder berechtigte Interessen dies rechtfertigen. Die Verarbeitung personenbezogener Daten des Kunden dient ausschließlich der Vertragserfüllung. Hinsichtlich der Verarbeitung personenbezogener Daten von Gästen schließen die Parteien einen Auftragsverarbeitungsvertrag."
       }
     },
-
     "p10": {
       "heading": "§ 10 Sonstige Bestimmungen",
       "sub1": {
@@ -123,15 +112,12 @@
       }
     }
   },
-
   "s1": {
     "title": "Kaufvertrag Webseite",
-
     "p1": {
       "heading": "§ 1 Vertragsgegenstand",
       "text": "Vertragsgegenstand ist die Einrichtung sowie die zeitlich unbegrenzte Nutzungsrechtsübertragung für eine Website gemäß Kaufvertrag. Der Endkunde erhält über eine Internet- oder Telekommunikationsverbindung Zugang zur Website. Bei Kauf geht das System in das Eigentum des Kunden über. Entscheidet sich der Käufer, sein System auf anderen Servern zu speichern, übernimmt er die ausschließliche Haftung für Komplikationen bei der Datenverarbeitung oder bei Datenverlust, einschließlich Kundendaten und Bestellhistorie."
     },
-
     "p2": {
       "heading": "§ 2 Kundenzugang und Rechtsdokumente",
       "item1": "Der Kunde erhält einen separaten Zugang und kann die Inhalte der Website eigenständig bearbeiten.",
@@ -142,22 +128,18 @@
       "item6": "Die alleinige rechtliche Verantwortung liegt ausschließlich beim Kunden.",
       "item7": "Gemäß § 5 Abs. 1 TMG ist im Impressum ausschließlich der Kunde angegeben."
     },
-
     "p3": {
       "heading": "§ 3 Preise / Zahlung",
       "text": "Durch den Kauf entfallen die monatlichen Gebühren. Die Kaufsumme (gemäß vorherigem Angebot) kann in maximal 5 Raten bezahlt werden."
     },
-
     "p4": {
       "heading": "§ 4 Rechteübertragung",
       "text": "Der Anbieter überträgt dem Kunden alle Rechte an der Plattform. Bei fortlaufendem Support für monatliche Updates/Wartung erfolgen alle Änderungen mit Zustimmung des Kunden."
     },
-
     "p5": {
       "heading": "§ 5 Mitwirkungspflichten",
       "text": "Der Kunde ist verpflichtet, Mängel der Website dem Anbieter unverzüglich zu melden."
     },
-
     "p6": {
       "heading": "§ 6 Haftungsbeschränkungen",
       "sub1": {
@@ -173,12 +155,10 @@
         "text": "Die Vorschriften des Produkthaftungsgesetzes bleiben unberührt."
       }
     },
-
     "p7": {
       "heading": "§ 7 Support / Updates",
       "text": "Der Kaufvertrag stellt eine abgeschlossene Leistung dar, die keine weitere Beratung erfordert. Sollten die Parteien eine fortlaufende Zusammenarbeit vereinbaren, erfolgt diese vergütet und vertraglich dokumentiert. Anschließend wird eine monatliche Pauschale für Änderungen (Entwicklung) und technischen Support festgelegt."
     },
-
     "p8": {
       "heading": "§ 8 Datenschutz",
       "a": {
@@ -190,7 +170,6 @@
         "text": "Der Anbieter erhebt und verarbeitet personenbezogene Daten nur, soweit dies zur Vertragserfüllung erforderlich ist, eine Einwilligung vorliegt oder berechtigte Interessen dies rechtfertigen. Die Verarbeitung personenbezogener Daten des Kunden dient ausschließlich der Vertragserfüllung."
       }
     },
-
     "p9": {
       "heading": "§ 9 Sonstige Bestimmungen",
       "sub1": {
@@ -207,20 +186,16 @@
       }
     }
   },
-
   "s2": {
     "title": "Leasingvertrag Webseite",
-
     "praeambel": {
       "heading": "Präambel",
       "text": "Die Parteien schließen einen Leasingvertrag über die Erstellung einer Website. Das Angebot richtet sich an den genannten Betreiber. Vertragsgegenstand ist die Website-Erstellung durch Epit Global GmbH (nachfolgend „Anbieter“). Der Anbieter pflegt die vom Kunden bereitgestellten Inhalte, Bilder und Beschreibungen ein und gewährleistet den laufenden Betrieb der Website."
     },
-
     "p1": {
       "heading": "§ 1 Vertragsparteien",
       "text": "Ausschließliche Vertragsparteien sind die Epit Global GmbH (nachfolgend „Anbieter“) und der im Angebot genannte Kunde (nachfolgend „Kunde“)."
     },
-
     "p2": {
       "heading": "§ 2 Vertragsgegenstand",
       "a1": {
@@ -244,22 +219,18 @@
         "text": "Der Anbieter übernimmt keine Verantwortung für die Rechtmäßigkeit der Website-Inhalte. Die alleinige rechtliche Verantwortung liegt ausschließlich beim Kunden. Gemäß § 5 Abs. 1 TMG ist im Impressum ausschließlich der Kunde angegeben."
       }
     },
-
     "p3": {
       "heading": "§ 3 Preise / Zahlung",
       "text": "Die monatliche Nutzungsgebühr für die Website ist im Auftragsformular aufgeführt."
     },
-
     "p4": {
       "heading": "§ 4 Nutzungsrechte",
       "text": "Der Anbieter gewährt dem Kunden zeitlich begrenzte, einfache, nicht übertragbare Rechte zur Nutzung der Website im vertragsgemäßen Umfang."
     },
-
     "p5": {
       "heading": "§ 5 Mitwirkungspflichten",
       "text": "Der Kunde ist verpflichtet, Softwaremängel dem Anbieter unverzüglich zu melden."
     },
-
     "p6": {
       "heading": "§ 6 Haftungsbeschränkungen",
       "sub1": {
@@ -275,7 +246,6 @@
         "text": "Die Vorschriften des Produkthaftungsgesetzes bleiben unberührt."
       }
     },
-
     "p7": {
       "heading": "§ 7 Support / Updates",
       "sub1": {
@@ -287,7 +257,6 @@
         "text": "Der Support umfasst die kostenlose Integration weiterer Filialen für den Käufer."
       }
     },
-
     "p8": {
       "heading": "§ 8 Datenschutz",
       "a": {
@@ -299,7 +268,6 @@
         "text": "Der Anbieter erhebt und verarbeitet personenbezogene Daten nur, soweit dies zur Vertragserfüllung erforderlich ist, eine Einwilligung vorliegt oder berechtigte Interessen dies rechtfertigen. Die Verarbeitung personenbezogener Daten des Kunden dient ausschließlich der Vertragserfüllung. Hinsichtlich der Verarbeitung personenbezogener Daten von Gästen schließen die Parteien einen Auftragsverarbeitungsvertrag."
       }
     },
-
     "p9": {
       "heading": "§ 9 Sonstige Bestimmungen",
       "sub1": {
@@ -316,20 +284,16 @@
       }
     }
   },
-
   "s3": {
     "title": "Leasingvertrag Online Shop & App",
-
     "praeambel": {
       "heading": "Präambel",
       "text": "Die Parteien schließen einen Leasingvertrag über die Erstellung eines Ionic-basierten App-Systems. Das Angebot richtet sich an den genannten Betreiber. Vertragsgegenstand ist die App-System-Erstellung durch Epit Global GmbH (nachfolgend „Anbieter“). Endkunden bestellen Produkte des Betreibers über die Apps und sind zur Zahlung verpflichtet. Der Anbieter pflegt die vom Kunden bereitgestellten Inhalte, Bilder und Beschreibungen ein und gewährleistet den laufenden Betrieb der App. Der Kunde erhält eigenständigen Zugang zur App und kann Inhalte (Produkte, Rabatte, Kategorien, Beschreibungen) eigenständig bearbeiten."
     },
-
     "p1": {
       "heading": "§ 1 Vertragsparteien",
       "text": "Ausschließliche Vertragsparteien sind die Epit Global GmbH (nachfolgend „Anbieter“) und der im Angebot genannte Kunde (nachfolgend „Kunde“)."
     },
-
     "p2": {
       "heading": "§ 2 Vertragsgegenstand",
       "a1": {
@@ -353,7 +317,6 @@
         "text": "Der Anbieter übernimmt keine Verantwortung für die Rechtmäßigkeit der Inhalte der App/des Webshops. Die alleinige rechtliche Verantwortung liegt ausschließlich beim Kunden. Gemäß § 5 Abs. 1 TMG ist im Impressum ausschließlich der Kunde angegeben."
       }
     },
-
     "p3": {
       "heading": "§ 3 Preise / Zahlung",
       "sub1": {
@@ -365,17 +328,14 @@
         "text": "Die Einrichtungsgebühren werden individuell je nach Umfang des Betriebs vereinbart. Die Einrichtung von Filialen erfolgt digital."
       }
     },
-
     "p4": {
       "heading": "§ 4 Nutzungsrechte",
       "text": "Der Anbieter gewährt dem Kunden zeitlich unbegrenzte, einfache, nicht übertragbare Rechte zur Nutzung der Apps/des Webshops im vertragsgemäßen Umfang. Der Kunde kann die Nutzungsrechte ohne Zustimmung des Anbieters nicht auf Dritte übertragen."
     },
-
     "p5": {
       "heading": "§ 5 Mitwirkungspflichten",
       "text": "Der Kunde ist verpflichtet, Softwaremängel dem Anbieter unverzüglich zu melden."
     },
-
     "p6": {
       "heading": "§ 6 Haftungsbeschränkungen",
       "sub1": {
@@ -391,7 +351,6 @@
         "text": "Die Vorschriften des Produkthaftungsgesetzes bleiben unberührt."
       }
     },
-
     "p7": {
       "heading": "§ 7 Datenschutz",
       "a": {
@@ -403,7 +362,6 @@
         "text": "Der Anbieter erhebt und verarbeitet personenbezogene Daten nur, soweit dies zur Vertragserfüllung erforderlich ist, eine Einwilligung vorliegt oder berechtigte Interessen dies rechtfertigen. Die Verarbeitung personenbezogener Daten des Kunden dient ausschließlich der Vertragserfüllung. Hinsichtlich der Verarbeitung personenbezogener Daten von Gästen schließen die Parteien einen Auftragsverarbeitungsvertrag."
       }
     },
-
     "p8": {
       "heading": "§ 8 Sonstige Bestimmungen",
       "sub1": {

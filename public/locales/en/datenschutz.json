@@ -522,5 +522,16 @@
   "s29": {
     "title": "23. Amendment of this Privacy Policy",
     "p1": "We reserve the right to amend this privacy policy to adapt it to changes in the legal situation, technical developments or changed business processes. The current version is always available on our website. If changes require renewed consent, we will inform you separately."
+  },
+  "s30":   {
+    "title": "24. Use of Artificial Intelligence for Content Creation",
+    "p1": "AI-assisted tools were used to create text and image content on this website. Claude (Anthropic, USA) was used for text; image generation used Google Gemini (Google LLC, USA), ChatGPT/DALL·E (OpenAI, USA) and Midjourney (Midjourney Inc., USA). Image content was additionally edited with Canva (Canva Pty Ltd, Australia).",
+    "p2": "All content created with AI support was reviewed and approved by the management, which bears responsibility for it. Editorial and legal responsibility for all published content lies exclusively with the management of Epit Global GmbH. The AI services named do not process any personal data of website visitors.",
+    "linksLabel": "Providers' privacy notices:",
+    "link1Text": "Anthropic",
+    "link2Text": "Google",
+    "link3Text": "OpenAI",
+    "link4Text": "Midjourney",
+    "link5Text": "Canva"
   }
 }

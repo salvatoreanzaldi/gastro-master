@@ -220,7 +220,7 @@ const DE: ComparisonData = {
   meta: {
     title: "Gastro Master vs. OrderSmart — Faktencheck mit Quellen | Gastro Master",
     description:
-      "Sachlicher Vergleich von Gastro Master und OrderSmart: Vertragslaufzeit, konkrete Preise (79 €/Mo. vs. 119 €/Mo.), Service-Modell. Mit Quellen-URLs und Stand-Datum.",
+      "Sachlicher Vergleich von Gastro Master und OrderSmart: Vertragslaufzeit, konkrete Preise (79 € vs. 119 €/Mo.) und Service-Modell — mit Quellen und Stand.",
     dateModified: SOURCE_DATE,
   },
 };

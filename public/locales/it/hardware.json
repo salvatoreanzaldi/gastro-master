@@ -67,6 +67,23 @@
             "Retro",
             "Lato"
           ]
+        },
+        {
+          "title": "Lenovo ThinkPad X12 Detachable",
+          "desc": "Tablet business 2-in-1 compatto per gastronomia all'aperto, food truck e pop-up. Il touchscreen da 12,3\" con supporto penna consente input precisi al tavolo.",
+          "features": [
+            "2-in-1 detachable",
+            "Penna & touch",
+            "Windows 11 Pro",
+            "Intel Core i5"
+          ],
+          "labels": [
+            "Con penna",
+            "Angolato",
+            "Retro",
+            "Porte",
+            "Bordi"
+          ]
         }
       ]
     },
@@ -324,5 +341,14 @@
       }
     ]
   },
-  "inquiryCta": "Su richiesta"
+  "inquiryCta": "Su richiesta",
+  "view": {
+    "label": "Scegli vista",
+    "threeCol": "3 colonne",
+    "twoCol": "2 colonne",
+    "list": "Elenco",
+    "oneCol": "1 colonna",
+    "more": "Leggi di più",
+    "less": "Mostra meno"
+  }
 }

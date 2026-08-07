@@ -301,7 +301,7 @@ const DE: ComparisonData = {
     title:
       "Gastro Master vs. DISH Order — Faktencheck mit Quellen | Gastro Master",
     description:
-      "Sachlicher Vergleich von Gastro Master und DISH Order: Ökosystem-Breite (Pakete + Add-Ons + Plattform-Integrationen), Eigentums-Struktur (eigentümergeführt vs. METRO-Tochter), Service-Modell. Mit Quellen-URLs.",
+      "Sachlicher Vergleich von Gastro Master und DISH Order: Ökosystem-Breite, Eigentümer-Modell (eigentümergeführt vs. METRO) und Service — mit Quellen.",
     dateModified: SOURCE_DATE,
   },
 };

@@ -1,14 +1,14 @@
 {
   "meta": {
     "title": "Gastro Master | Impressum",
-    "description": "Impressum der Gastro Master / Epit Global GmbH gemäß § 5 TMG.",
+    "description": "Impressum von Gastro Master (Epit Global GmbH) gemäß § 5 TMG: Anbieterkennzeichnung, Kontaktdaten und Vertretungsberechtigte des Software-Anbieters.",
     "canonical": "https://gastro-master.de/impressum"
   },
   "title": "Impressum",
   "subtitle": "Angaben gemäß § 5 TMG",
   "anbieter": {
     "heading": "Anbieter",
-    "text": "Epit Global GmbH\nHerzbergstr. 9\n61250 Usingen\nDeutschland"
+    "text": "Epit Global GmbH\nHerzbergstr. 9\n61250 Usingen\nDeutschland\n\nGastro Master ist eine Marke der Epit Global GmbH."
   },
   "kontakt": {
     "heading": "Kontakt",

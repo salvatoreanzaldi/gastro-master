@@ -1,7 +1,7 @@
 {
   "seo": {
     "title": "Gastro Master | Kassenhardware für Restaurants",
-    "description": "Professionelle Kassenhardware: POS-Terminals, Bondrucker, EC-Kartenterminals & Zubehör. Direkt von Gastro Master — inkl. Installation für Berlin, München, Hamburg, Köln & Frankfurt."
+    "description": "Professionelle Kassenhardware: POS-Terminals, Bondrucker, EC-Kartenterminals und Zubehör — direkt von Gastro Master, inkl. Installation deutschlandweit."
   },
   "hero": {
     "badge": "Professionelle Kassenhardware",
@@ -66,6 +66,23 @@
             "Schräg",
             "Hinten",
             "Seite"
+          ]
+        },
+        {
+          "title": "Lenovo ThinkPad X12 Detachable",
+          "desc": "Kompaktes 2-in-1 Business-Tablet für Außengastronomie, Foodtrucks und Pop-ups. Der 12,3\"-Touchscreen mit Stift-Support ermöglicht präzise Eingaben direkt am Tisch.",
+          "features": [
+            "2-in-1 Detachable",
+            "Stift & Touch",
+            "Windows 11 Pro",
+            "Intel Core i5"
+          ],
+          "labels": [
+            "Mit Stift",
+            "Schräg",
+            "Hinten",
+            "Anschlüsse",
+            "Kanten"
           ]
         }
       ]
@@ -271,5 +288,14 @@
       }
     ]
   },
-  "inquiryCta": "Auf Anfrage"
+  "inquiryCta": "Auf Anfrage",
+  "view": {
+    "label": "Ansicht wählen",
+    "threeCol": "3 Spalten",
+    "twoCol": "2 Spalten",
+    "list": "Liste",
+    "oneCol": "1 Spalte",
+    "more": "Mehr lesen",
+    "less": "Weniger"
+  }
 }

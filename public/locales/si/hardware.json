@@ -67,6 +67,23 @@
             "පසුපස",
             "පැත්ත"
           ]
+        },
+        {
+          "title": "Lenovo ThinkPad X12 Detachable",
+          "desc": "එළිමහන් ආපනශාලා, food trucks සහ pop-up සඳහා සංයුක්ත 2-in-1 business tablet එකකි. පෑන සහාය සහිත 12.3\" touchscreen මඟින් මේසය අසල නිවැරදි ආදානය කළ හැකිය.",
+          "features": [
+            "2-in-1 detachable",
+            "පෑන සහ ස්පර්ශය",
+            "Windows 11 Pro",
+            "Intel Core i5"
+          ],
+          "labels": [
+            "පෑන සමඟ",
+            "කෝණික",
+            "පසුපස",
+            "Ports",
+            "දාර"
+          ]
         }
       ]
     },
@@ -324,5 +341,14 @@
       }
     ]
   },
-  "inquiryCta": "ඉල්ලීම මත"
+  "inquiryCta": "ඉල්ලීම මත",
+  "view": {
+    "label": "දසුන තෝරන්න",
+    "threeCol": "තීරු 3",
+    "twoCol": "තීරු 2",
+    "list": "ලැයිස්තුව",
+    "oneCol": "තීරු 1",
+    "more": "තව කියවන්න",
+    "less": "අඩුවෙන් පෙන්වන්න"
+  }
 }

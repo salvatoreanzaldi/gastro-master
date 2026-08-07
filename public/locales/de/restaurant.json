@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Gastro Master | Kassensystem Restaurant 2026 — TSE-konform & Tischverwaltung",
-    "description": "Das richtige Kassensystem für dein Restaurant: TSE-konform, mit Tischverwaltung, Küchenmonitor und Online-Bestellsystem. Ab 49 €/Monat. Jetzt kostenlos beraten lassen.",
+    "description": "Das richtige Kassensystem für dein Restaurant: TSE-konform, mit Tischverwaltung, Küchenmonitor und Online-Bestellung. Ab 49 €/Monat. Jetzt beraten lassen.",
     "canonical": "https://gastro-master.de/loesungen/restaurant"
   },
   "hero": {
@@ -12,7 +12,12 @@
     "subtitle2": "Einfach einrichten. Sofort loslegen.",
     "cta": "Kostenlose Beratung",
     "anchor": "Was du bekommst ↓",
-    "trustPills": ["800+ Betriebe", "TSE-konform", "Ab 69 €/Monat", "Persönlicher Support"],
+    "trustPills": [
+      "800+ Betriebe",
+      "TSE-konform",
+      "Ab 69 €/Monat",
+      "Persönlicher Support"
+    ],
     "geo": {
       "label": "Was ist Gastro Master für Restaurants?",
       "text": "Gastro Master bietet Restaurantbesitzern ein vollständiges Digitalsystem: TSE-konformes Kassensystem mit Tischverwaltung und Küchenmonitor, ein Online-Bestellsystem ohne Provision sowie Webseite und Bestell-App — alles aus einer Hand, ab 69 € pro Monat. Seit 2023 ist eine TSE-zertifizierte Kasse in Deutschland gesetzlich vorgeschrieben (Kassensicherungsverordnung)."
@@ -78,15 +83,36 @@
       "iconLabel": "Kassensystem",
       "title": "TSE-konforme Kasse. Alles dabei.",
       "text": "Unsere Kasse ist vom Finanzamt zugelassen — das nennt man TSE-konform. Das ist seit 2023 Pflicht. Tischverwaltung ist dabei. Küchenmonitor und Fahrer-App buchst du dazu, wenn du sie brauchst. Du kannst sogar Self-Checkout-Terminals anschließen — deine Gäste bestellen und bezahlen dann selbst.",
-      "tags": ["TSE-konform", "Tischverwaltung", "Küchenmonitor", "Fahrer-App", "Ab 69 €/Monat"],
+      "tags": [
+        "TSE-konform",
+        "Tischverwaltung",
+        "Küchenmonitor",
+        "Fahrer-App",
+        "Ab 69 €/Monat"
+      ],
       "linkLabel": "Kassensystem ansehen"
     },
     "items": [
-      { "title": "Kassensystem", "tagline": "TSE-konform. Mit Tischverwaltung, Küchenmonitor und Fahrer-App." },
-      { "title": "Online Shop", "tagline": "Gäste bestellen direkt bei dir — 0 % Provision." },
-      { "title": "Webseite", "tagline": "Damit dein Restaurant bei Google gefunden wird." },
-      { "title": "App System", "tagline": "Deine eigene Bestell-App für treue Stammkunden." },
-      { "title": "Zahlungsgebühren", "tagline": "Zahlungsgebühren? Können deine Gäste übernehmen." }
+      {
+        "title": "Kassensystem",
+        "tagline": "TSE-konform. Mit Tischverwaltung, Küchenmonitor und Fahrer-App."
+      },
+      {
+        "title": "Online Shop",
+        "tagline": "Gäste bestellen direkt bei dir — 0 % Provision."
+      },
+      {
+        "title": "Webseite",
+        "tagline": "Damit dein Restaurant bei Google gefunden wird."
+      },
+      {
+        "title": "App System",
+        "tagline": "Deine eigene Bestell-App für treue Stammkunden."
+      },
+      {
+        "title": "Zahlungsgebühren",
+        "tagline": "Zahlungsgebühren? Können deine Gäste übernehmen."
+      }
     ],
     "moreLabel": "Mehr erfahren",
     "cta": "Jetzt Beratung holen — kostenlos"
@@ -96,9 +122,21 @@
     "title": "In 3 Schritten startklar",
     "subtitle": "Du musst kein Technik-Experte sein. Wir machen das für dich.",
     "steps": [
-      { "num": "01", "title": "Kostenloses Gespräch", "text": "Wir schauen uns zusammen an, was du brauchst. Kein Druck. Keine Kosten." },
-      { "num": "02", "title": "Wir richten alles ein", "text": "Kasse, Webseite, Shop — alles fertig. Du musst nichts selbst einrichten." },
-      { "num": "03", "title": "Du startest", "text": "Dein Restaurant ist startklar. Wir sind weiter für dich da, wenn du uns brauchst." }
+      {
+        "num": "01",
+        "title": "Kostenloses Gespräch",
+        "text": "Wir schauen uns zusammen an, was du brauchst. Kein Druck. Keine Kosten."
+      },
+      {
+        "num": "02",
+        "title": "Wir richten alles ein",
+        "text": "Kasse, Webseite, Shop — alles fertig. Du musst nichts selbst einrichten."
+      },
+      {
+        "num": "03",
+        "title": "Du startest",
+        "text": "Dein Restaurant ist startklar. Wir sind weiter für dich da, wenn du uns brauchst."
+      }
     ]
   },
   "compare": {
@@ -110,23 +148,63 @@
     "thGmBadge": "Empfohlen",
     "thOther": "Andere Kassensysteme",
     "rows": [
-      { "label": "TSE-konform", "gm": "✓ Immer dabei", "other": "Oft extra kosten" },
-      { "label": "Tischverwaltung", "gm": "✓ Inklusive", "other": "Meist teurer Zusatz" },
-      { "label": "Online-Bestellungen", "gm": "✓ Direkt integriert", "other": "Meistens nicht dabei" },
-      { "label": "Küchenmonitor", "gm": "✓ Verfügbar", "other": "Extra buchbar" },
-      { "label": "Fahrer-App", "gm": "✓ Verfügbar", "other": "Nicht dabei" },
-      { "label": "Support", "gm": "✓ Persönlich", "other": "Nur per Hotline" },
-      { "label": "Monatliche Kosten", "gm": "Ab 69 €/Monat", "other": "Oft deutlich mehr" }
+      {
+        "label": "TSE-konform",
+        "gm": "✓ Immer dabei",
+        "other": "Oft extra kosten"
+      },
+      {
+        "label": "Tischverwaltung",
+        "gm": "✓ Inklusive",
+        "other": "Meist teurer Zusatz"
+      },
+      {
+        "label": "Online-Bestellungen",
+        "gm": "✓ Direkt integriert",
+        "other": "Meistens nicht dabei"
+      },
+      {
+        "label": "Küchenmonitor",
+        "gm": "✓ Verfügbar",
+        "other": "Extra buchbar"
+      },
+      {
+        "label": "Fahrer-App",
+        "gm": "✓ Verfügbar",
+        "other": "Nicht dabei"
+      },
+      {
+        "label": "Support",
+        "gm": "✓ Persönlich",
+        "other": "Nur per Hotline"
+      },
+      {
+        "label": "Monatliche Kosten",
+        "gm": "Ab 69 €/Monat",
+        "other": "Oft deutlich mehr"
+      }
     ],
     "cta": "Kostenlose Beratung anfragen"
   },
   "trust": {
     "headline": "800+ Restaurants und Gastro-Betriebe nutzen Gastro Master",
     "items": [
-      { "value": "800+", "label": "Betriebe in Deutschland und Österreich" },
-      { "value": "5,0 ★", "label": "Google Bewertung" },
-      { "value": "TSE-konform", "label": "Gesetzlich zertifiziert — kein Bußgeld-Risiko" },
-      { "value": "ab 69 €", "label": "pro Monat — Kassensystem startklar" }
+      {
+        "value": "800+",
+        "label": "Betriebe in Deutschland und Österreich"
+      },
+      {
+        "value": "5,0 ★",
+        "label": "Google Bewertung"
+      },
+      {
+        "value": "TSE-konform",
+        "label": "Gesetzlich zertifiziert — kein Bußgeld-Risiko"
+      },
+      {
+        "value": "ab 69 €",
+        "label": "pro Monat — Kassensystem startklar"
+      }
     ]
   },
   "epitPay": {
@@ -166,10 +244,15 @@
     "subtitle1": "Kasse, Webseite, Shop — wir richten alles für dich ein.",
     "subtitle2": "Du brauchst keine Technik-Erfahrung.",
     "button": "Kostenloses Gespräch buchen",
-    "trustItems": ["TSE-konform", "800+ Betriebe", "5,0 ★ Google", "Persönlicher Support"]
+    "trustItems": [
+      "TSE-konform",
+      "800+ Betriebe",
+      "5,0 ★ Google",
+      "Persönlicher Support"
+    ]
   },
   "schema": {
-    "articleHeadline": "Gastro Master | Kassensystem Restaurant 2026 — TSE-konform, Tischverwaltung & Online-Shop",
-    "articleDescription": "Das richtige Kassensystem für dein Restaurant: TSE-konform, mit Tischverwaltung, Küchenmonitor und Online-Bestellsystem. Ab 49 €/Monat. Jetzt kostenlos beraten lassen."
+    "articleHeadline": "Gastro Master | Kassensystem Restaurant 2026 — TSE-konform",
+    "articleDescription": "Das richtige Kassensystem für dein Restaurant: TSE-konform, mit Tischverwaltung, Küchenmonitor und Online-Bestellung. Ab 49 €/Monat. Jetzt beraten lassen."
   }
 }

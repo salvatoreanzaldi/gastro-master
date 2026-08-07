@@ -23,9 +23,21 @@
     "title2": "uns weiter — spare jeden Monat.",
     "desc": "Für jede erfolgreiche Empfehlung bekommst du einen kompletten Monat gratis.",
     "steps": [
-      { "num": "1", "title": "Empfehlen", "text": "Du empfiehlst Gastro Master an einen anderen Gastronomen." },
-      { "num": "2", "title": "Vertrag", "text": "Deine Empfehlung schließt einen Vertrag ab und nennt deinen Namen." },
-      { "num": "3", "title": "Gratis-Monat", "text": "Du bekommst einen kompletten Monat gratis. Automatisch." }
+      {
+        "num": "1",
+        "title": "Empfehlen",
+        "text": "Du empfiehlst Gastro Master an einen anderen Gastronomen."
+      },
+      {
+        "num": "2",
+        "title": "Vertrag",
+        "text": "Deine Empfehlung schließt einen Vertrag ab und nennt deinen Namen."
+      },
+      {
+        "num": "3",
+        "title": "Gratis-Monat",
+        "text": "Du bekommst einen kompletten Monat gratis. Automatisch."
+      }
     ],
     "stepLabel": "Schritt",
     "notice": "Wichtig: ",
@@ -65,7 +77,7 @@
     "badge": "Kassensystem",
     "title": "Die Gastro Master Cloud-Kasse",
     "desc": "TSE-konform, GoBD-zertifiziert — für Restaurant, Lieferdienst und Abholung.",
-    "legalNote": "TSE-Pflicht seit 01.01.2020 (§146a AO, KassenSichV) — Bußgelder bis 25.000 € bei fehlendem Nachweis.",
+    "legalNote": "TSE-Pflicht für alle Betriebe mit elektronischem Kassensystem (§ 146a AO, KassenSichV) — Bußgelder bis 25.000 € bei fehlendem Nachweis.",
     "cardBadge": "Cloud-Kassensoftware",
     "price": "ab 69 €",
     "priceDetail": "/ Monat (netto)",
@@ -132,10 +144,22 @@
     "desc": "Alle Produkte sind nativ miteinander verknüpft — kein manuelles Übertragen, kein Chaos.",
     "hubLabel": "Zentral",
     "items": [
-      { "title": "Webseite", "text": "Deine digitale Visitenkarte – Google-optimiert, professionell." },
-      { "title": "Bestellsystem", "text": "Online-Shop mit 0 % Provision auf deiner eigenen Domain." },
-      { "title": "App", "text": "Deine eigene App unter deinem Namen im App Store." },
-      { "title": "Kassensystem", "text": "TSE-konforme Cloud-Kasse für Tisch, Abholung & Lieferung." }
+      {
+        "title": "Webseite",
+        "text": "Deine digitale Visitenkarte – Google-optimiert, professionell."
+      },
+      {
+        "title": "Bestellsystem",
+        "text": "Online-Shop mit 0 % Provision auf deiner eigenen Domain."
+      },
+      {
+        "title": "App",
+        "text": "Deine eigene App unter deinem Namen im App Store."
+      },
+      {
+        "title": "Kassensystem",
+        "text": "TSE-konforme Cloud-Kasse für Tisch, Abholung & Lieferung."
+      }
     ],
     "connTitle": "Alles in einem System — zentral gesteuert",
     "connDesc": "Bestellungen aus dem Webshop, der App und der Kasse laufen in einem zentralen Dashboard zusammen. Alle Statistiken, alle Standorte, ein Login."

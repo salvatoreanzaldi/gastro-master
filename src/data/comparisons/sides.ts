@@ -281,7 +281,7 @@ const DE: ComparisonData = {
     title:
       "Gastro Master vs. SIDES — Faktencheck mit Quellen | Gastro Master",
     description:
-      "Sachlicher Vergleich von Gastro Master und SIDES: Skala (800 vs. 6.400 Kunden), Pricing-Transparenz, Spezialisierung (Familienmittelstand vs. QSR/Franchise), Eigentums-Struktur. Mit Quellen-URLs.",
+      "Sachlicher Vergleich von Gastro Master und SIDES: Skala (800 vs. 6.400 Kunden), Pricing-Transparenz und Spezialisierung — mit Quellen.",
     dateModified: SOURCE_DATE,
   },
 };

@@ -1,7 +1,7 @@
 {
   "seo": {
-    "title": "Gastro Master | Transaktionsumlage Gastronomie — 0 € Gebühren",
-    "description": "Zahlungsgebühren (PayPal, Kreditkarte, Klarna) transparent an Kunden weitergeben — rechtssicher und automatisch. Top-Seller Add-On für Gastronomen. Jetzt informieren."
+    "title": "Gastro Master | Transaktionsumlage — 0 € Gebühren",
+    "description": "Zahlungsgebühren (PayPal, Kreditkarte, Klarna) transparent an Kunden weitergeben — rechtssicher und automatisch. Jetzt für deinen Betrieb informieren."
   },
   "hero": {
     "badge": "Add-On #1 · Transaktions-Umlage",
@@ -11,9 +11,18 @@
     "cta": "Kostenlose Beratung"
   },
   "trustBar": [
-    { "value": "Top-Seller", "label": "Beliebtestes Add-On" },
-    { "value": "7", "label": "Unterstützte Zahlungsarten" },
-    { "value": "800+", "label": "Gastronomen nutzen Gastro Master" }
+    {
+      "value": "Top-Seller",
+      "label": "Beliebtestes Add-On"
+    },
+    {
+      "value": "7",
+      "label": "Unterstützte Zahlungsarten"
+    },
+    {
+      "value": "800+",
+      "label": "Gastronomen nutzen Gastro Master"
+    }
   ],
   "howItWorks": {
     "badge": "So funktioniert's",
@@ -70,13 +79,34 @@
     "title": "Deine Marge. Vollständig geschützt.",
     "desc": "Mit der Transaktions-Umlage zahlst du keine Gebühren mehr – deine Kunden schon.",
     "items": [
-      { "title": "Eigenes PayPal Business", "text": "Zahlungen landen direkt auf deinem eigenen PayPal Business-Konto – kein Umweg, kein Zwischenhändler. Du behältst die volle Kontrolle und hast sofortigen Zugriff auf dein Geld." },
-      { "title": "Eigenes Stripe-Konto", "text": "Kreditkarte, Apple Pay, Google Pay – direkt auf dein Konto." },
-      { "title": "Transparente Umlage", "text": "Kunden zahlen die Gebühren – klar und professionell kommuniziert." },
-      { "title": "Alle Zahlungsarten", "text": "PayPal, Visa, Mastercard, Klarna, Apple Pay, Google Pay." },
-      { "title": "Marge vollständig erhalten", "text": "Statt Gebühren aus dem Gewinn zu bezahlen, werden sie transparent als separater Posten ausgewiesen. Deine Kalkulation bleibt sauber – 100 % deines Nettoumsatzes verbleiben bei dir." },
-      { "title": "Rechtlich einwandfrei", "text": "Die Umlage ist gesetzlich zulässig und klar kommuniziert." },
-      { "title": "Schnelle Einrichtung", "text": "In wenigen Schritten aktiviert – wir begleiten dich dabei." }
+      {
+        "title": "Eigenes PayPal Business",
+        "text": "Zahlungen landen direkt auf deinem eigenen PayPal Business-Konto – kein Umweg, kein Zwischenhändler. Du behältst die volle Kontrolle und hast sofortigen Zugriff auf dein Geld."
+      },
+      {
+        "title": "Eigenes Stripe-Konto",
+        "text": "Kreditkarte, Apple Pay, Google Pay – direkt auf dein Konto."
+      },
+      {
+        "title": "Transparente Umlage",
+        "text": "Kunden zahlen die Gebühren – klar und professionell kommuniziert."
+      },
+      {
+        "title": "Alle Zahlungsarten",
+        "text": "PayPal, Visa, Mastercard, Klarna, Apple Pay, Google Pay."
+      },
+      {
+        "title": "Marge vollständig erhalten",
+        "text": "Statt Gebühren aus dem Gewinn zu bezahlen, werden sie transparent als separater Posten ausgewiesen. Deine Kalkulation bleibt sauber – 100 % deines Nettoumsatzes verbleiben bei dir."
+      },
+      {
+        "title": "Rechtlich einwandfrei",
+        "text": "Die Umlage ist gesetzlich zulässig und klar kommuniziert."
+      },
+      {
+        "title": "Schnelle Einrichtung",
+        "text": "In wenigen Schritten aktiviert – wir begleiten dich dabei."
+      }
     ]
   },
   "requirements": {
@@ -88,7 +118,12 @@
       "name": "Webshop",
       "price": "79 €",
       "priceSuffix": "/ Monat (netto)",
-      "features": ["Online-Bestellsystem", "Eigenes Branding", "Alle Zahlungsarten", "Support inklusive"],
+      "features": [
+        "Online-Bestellsystem",
+        "Eigenes Branding",
+        "Alle Zahlungsarten",
+        "Support inklusive"
+      ],
       "link": "Mehr erfahren"
     },
     "appWebshop": {
@@ -96,7 +131,13 @@
       "name": "App + Webshop",
       "price": "149 €",
       "priceSuffix": "/ Monat (netto)",
-      "features": ["iOS & Android App", "Webshop", "Push Notifications", "Multi-Standort", "Support inklusive"],
+      "features": [
+        "iOS & Android App",
+        "Webshop",
+        "Push Notifications",
+        "Multi-Standort",
+        "Support inklusive"
+      ],
       "link": "Mehr erfahren"
     },
     "addon": {
@@ -110,16 +151,48 @@
     "badge": "Social Proof",
     "title": "800+ Gastronomen, die bereits mit Gastro Master arbeiten.",
     "quotes": [
-      { "initials": "HL", "quote": "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein.", "name": "Ha Lim Lee", "restaurant": "Kojo Sushi" },
-      { "initials": "MG", "quote": "Also der Support ist einfach 1a und den würdest du nirgend wo anders so bekommen!", "name": "Marco Greco", "restaurant": "Pizzeria Il Sorriso" },
-      { "initials": "SH", "quote": "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren.", "name": "Sven Heinrich", "restaurant": "61 Burger & More" },
-      { "initials": "GM", "quote": "Wir haben durch die App viel mehr Kunden und Reichweite gewonnen.", "name": "Georgios Madatsidis", "restaurant": "Artemis Grill" }
+      {
+        "initials": "HL",
+        "quote": "In der Zukunft wird immer mehr online bestellt und wir wollen auch dabei sein.",
+        "name": "Ha Lim Lee",
+        "restaurant": "Kojo Sushi"
+      },
+      {
+        "initials": "MG",
+        "quote": "Also der Support ist einfach 1a und den würdest du nirgend wo anders so bekommen!",
+        "name": "Marco Greco",
+        "restaurant": "Pizzeria Il Sorriso"
+      },
+      {
+        "initials": "SH",
+        "quote": "Man hat hier einen schnellen und guten WhatsApp Support und die Möglichkeit seinen Betrieb zu strukturieren.",
+        "name": "Sven Heinrich",
+        "restaurant": "61 Burger & More"
+      },
+      {
+        "initials": "GM",
+        "quote": "Wir haben durch die App viel mehr Kunden und Reichweite gewonnen.",
+        "name": "Georgios Madatsidis",
+        "restaurant": "Artemis Grill"
+      }
     ],
     "stats": [
-      { "value": "800+", "label": "aktive Gastro Master Kunden" },
-      { "value": "0 %", "label": "Provision auf Direktbestellungen" },
-      { "value": "Top-Seller", "label": "meistgebuchtes Add-On" },
-      { "value": "7", "label": "unterstützte Zahlungsarten" }
+      {
+        "value": "800+",
+        "label": "aktive Gastro Master Kunden"
+      },
+      {
+        "value": "0 %",
+        "label": "Provision auf Direktbestellungen"
+      },
+      {
+        "value": "Top-Seller",
+        "label": "meistgebuchtes Add-On"
+      },
+      {
+        "value": "7",
+        "label": "unterstützte Zahlungsarten"
+      }
     ]
   },
   "faq": {
@@ -164,8 +237,20 @@
     "expectLabel": "Das erwartet dich:",
     "expectText": "In einem kostenlosen Erstgespräch analysieren wir gemeinsam deine Zahlungsstruktur – Zahlungsmethoden, Standorte und Konten – und erstellen ein individuelles Angebot, das genau zu deinem Betrieb passt.",
     "setupText": "Die Einrichtung dauert in der Regel nur wenige Tage. Danach zahlst du keine Zahlungsgebühren mehr aus eigener Tasche.",
-    "langs": ["Deutsch", "Englisch", "Italienisch", "Persisch", "Russisch", "Singhalesisch"],
+    "langs": [
+      "Deutsch",
+      "Englisch",
+      "Italienisch",
+      "Persisch",
+      "Russisch",
+      "Singhalesisch"
+    ],
     "cta": "Kostenlose Beratung",
-    "teamRoles": ["Gründer & Geschäftsführer", "Gründer & Geschäftsführer", "Head of Sales", "Head of Operations"]
+    "teamRoles": [
+      "Gründer & Geschäftsführer",
+      "Gründer & Geschäftsführer",
+      "Head of Sales",
+      "Head of Operations"
+    ]
   }
 }

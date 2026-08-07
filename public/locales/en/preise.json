@@ -23,9 +23,21 @@
     "title2": "us — save every month.",
     "desc": "For every successful referral you get a full month for free.",
     "steps": [
-      { "num": "1", "title": "Refer", "text": "Recommend Gastro Master to another restaurant owner." },
-      { "num": "2", "title": "Contract", "text": "Your referral signs a contract and mentions your name." },
-      { "num": "3", "title": "Free month", "text": "You get a full month for free. Automatically." }
+      {
+        "num": "1",
+        "title": "Refer",
+        "text": "Recommend Gastro Master to another restaurant owner."
+      },
+      {
+        "num": "2",
+        "title": "Contract",
+        "text": "Your referral signs a contract and mentions your name."
+      },
+      {
+        "num": "3",
+        "title": "Free month",
+        "text": "You get a full month for free. Automatically."
+      }
     ],
     "stepLabel": "Step",
     "notice": "Important: ",
@@ -65,7 +77,7 @@
     "badge": "POS system",
     "title": "The Gastro Master Cloud POS",
     "desc": "TSE-compliant, GoBD-certified — for restaurants, delivery and pickup.",
-    "legalNote": "TSE mandatory since 01/01/2020 (§146a AO, KassenSichV) — fines up to €25,000 for non-compliance.",
+    "legalNote": "TSE mandatory for all businesses using an electronic POS system (§ 146a AO, KassenSichV) — fines up to €25,000 for non-compliance.",
     "cardBadge": "Cloud POS software",
     "price": "from €69",
     "priceDetail": "/ month (net)",
@@ -132,10 +144,22 @@
     "desc": "All products are natively connected — no manual transfers, no chaos.",
     "hubLabel": "Central",
     "items": [
-      { "title": "Website", "text": "Your digital business card — Google-optimized, professional." },
-      { "title": "Ordering system", "text": "Online shop with 0% commission on your own domain." },
-      { "title": "App", "text": "Your own app under your name in the App Store." },
-      { "title": "POS system", "text": "TSE-compliant cloud POS for dine-in, pickup & delivery." }
+      {
+        "title": "Website",
+        "text": "Your digital business card — Google-optimized, professional."
+      },
+      {
+        "title": "Ordering system",
+        "text": "Online shop with 0% commission on your own domain."
+      },
+      {
+        "title": "App",
+        "text": "Your own app under your name in the App Store."
+      },
+      {
+        "title": "POS system",
+        "text": "TSE-compliant cloud POS for dine-in, pickup & delivery."
+      }
     ],
     "connTitle": "Everything in one system — centrally managed",
     "connDesc": "Orders from the online shop, app and POS come together in one central dashboard. All analytics, all locations, one login."

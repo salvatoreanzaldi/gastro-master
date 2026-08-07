@@ -307,7 +307,7 @@ const DE: ComparisonData = {
     title:
       "Gastro Master vs. Foodamigos — Faktencheck mit Quellen | Gastro Master",
     description:
-      "Sachlicher Vergleich von Gastro Master und Foodamigos: Pricing-Modell (Festpreis vs. erfolgsbasierte 5-Tier-Staffel), modulare Add-Ons, Service-Sprachen, Eigentums-Struktur. Mit Quellen-URLs.",
+      "Sachlicher Vergleich von Gastro Master und Foodamigos: Festpreis vs. erfolgsbasierte Staffel, modulare Add-Ons und Eigentums-Struktur — mit Quellen-URLs.",
     dateModified: SOURCE_DATE,
   },
 };
