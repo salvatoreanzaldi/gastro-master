@@ -46,7 +46,11 @@ i18n
     },
 
     backend: {
-      loadPath: "/locales/{{lng}}/{{ns}}.json",
+      // ?v=<BUILD_ID> bricht den Browser-/CDN-Cache der Locale-JSONs bei jedem
+      // Deploy. Ohne das serviert der Browser wiederkehrender Nutzer die alte
+      // JSON aus dem Heuristik-Cache (kein Cache-Control vom Server) — dann
+      // fehlen frisch hinzugefügte Einträge wie der GM-Installer-Download.
+      loadPath: `/locales/{{lng}}/{{ns}}.json?v=${__BUILD_ID__}`,
     },
 
     interpolation: {

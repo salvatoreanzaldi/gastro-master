@@ -54,6 +54,14 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Build-Zeitstempel als Cache-Buster für die i18next-Locale-JSONs. Diese
+  // liegen unter /locales/ NICHT content-gehasht und werden vom All-Inkl-Server
+  // ohne Cache-Control ausgeliefert → wiederkehrende Besucher bekommen sonst die
+  // alte JSON aus dem Heuristik-Cache (z.B. Downloads-Kategorien ohne neuen
+  // Eintrag). Der Suffix ?v=<BUILD_ID> ändert sich pro Build → frischer Fetch.
+  define: {
+    __BUILD_ID__: JSON.stringify(Date.now().toString(36)),
+  },
   build: {
     // CSS-code-splitting (Vite-Default ist true seit v3, explizit zur Sicherheit).
     cssCodeSplit: true,
