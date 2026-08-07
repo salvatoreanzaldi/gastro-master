@@ -65,7 +65,7 @@ const CalculatorSection = () => {
                 <span className="text-lg font-black text-white md:hidden">{orders}</span>
               </div>
               <input
-                type="range" min={50} max={3000} step={50} value={orders}
+                type="range" aria-label={t("calculator.labelOrders")} min={50} max={3000} step={50} value={orders}
                 onChange={(e) => setOrders(Number(e.target.value))}
                 className="w-full accent-cyan-brand md:mb-2"
               />
@@ -79,7 +79,7 @@ const CalculatorSection = () => {
                 <span className="text-lg font-black text-white md:hidden">{avgCart} €</span>
               </div>
               <input
-                type="range" min={10} max={80} step={1} value={avgCart}
+                type="range" aria-label={t("calculator.labelCart")} min={10} max={80} step={1} value={avgCart}
                 onChange={(e) => setAvgCart(Number(e.target.value))}
                 className="w-full accent-cyan-brand md:mb-2"
               />
@@ -93,7 +93,7 @@ const CalculatorSection = () => {
                 <span className="text-lg font-black text-white md:hidden">{commission} %</span>
               </div>
               <input
-                type="range" min={10} max={35} step={1} value={commission}
+                type="range" aria-label={t("calculator.labelCommission")} min={10} max={35} step={1} value={commission}
                 onChange={(e) => setCommission(Number(e.target.value))}
                 className="w-full accent-cyan-brand md:mb-2"
               />

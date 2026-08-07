@@ -12,6 +12,53 @@ export const ORG_ID = `${SITE_URL}/#organization` as const;
 export const WEBSITE_ID = `${SITE_URL}/#website` as const;
 
 /**
+ * Site-weite Google-Bewertung (5,0 Sterne bei 131 Bewertungen). Single Source
+ * für client-seitige Product-Schemas, damit sie NICHT vom Prerenderer-Wert
+ * (REVIEW_META aus google-reviews.json) abweichen — abweichende aggregateRating
+ * mit gleicher @id löst in GSC „mehrere zusammengefasste Bewertungen" aus.
+ * Bei Wertänderung: hier UND public/data/google-reviews.json (meta) anpassen.
+ */
+export const SITE_AGGREGATE_RATING = {
+  "@type": "AggregateRating",
+  ratingValue: "5",
+  reviewCount: "131",
+  bestRating: "5",
+  worstRating: "1",
+} as const;
+
+/**
+ * Merchant-Listing-Felder für digitale SaaS-Produkte (GSC Batch 2, orange).
+ * Software wird nicht physisch geliefert und nicht klassisch zurückgegeben —
+ * `MerchantReturnNotPermitted` + kostenlose 0-Tage-„Lieferung" (0 €) nach
+ * DE/AT/CH ist der Google-empfohlene, valide Weg. `doesNotShip` NICHT setzen:
+ * es widerspricht shippingRate/deliveryTime und löste in GSC Batch 5 „ungültiger
+ * Wert in shippingRate/deliveryTime" aus. `shippingDestination` ist Pflichtfeld.
+ * In jeden preisbehafteten Product-Offer spreizen.
+ * Muss mit DIGITAL_MERCHANT_OFFER_FIELDS im Prerenderer identisch bleiben.
+ */
+export const DIGITAL_MERCHANT_OFFER_FIELDS = {
+  hasMerchantReturnPolicy: {
+    "@type": "MerchantReturnPolicy",
+    applicableCountry: ["DE", "AT", "CH"],
+    returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+  },
+  shippingDetails: {
+    "@type": "OfferShippingDetails",
+    shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "EUR" },
+    shippingDestination: [
+      { "@type": "DefinedRegion", addressCountry: "DE" },
+      { "@type": "DefinedRegion", addressCountry: "AT" },
+      { "@type": "DefinedRegion", addressCountry: "CH" },
+    ],
+    deliveryTime: {
+      "@type": "ShippingDeliveryTime",
+      handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+      transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+    },
+  },
+} as const;
+
+/**
  * LinkedIn profiles sourced from public/locales/de/ueber-uns.json (team.founders[]).
  * Echte Mitgründer: René Ebert + Sanjaya Pattiyage.
  * Salvatore Anzaldi ist Mitarbeiter (Marketing/SEO), nicht Founder — siehe STAFF.
@@ -57,7 +104,9 @@ export const ORG_NODE = {
   "@type": "Organization",
   "@id": ORG_ID,
   name: "Gastro Master",
-  legalName: "Gastro Master GmbH",
+  // Rechtsträger laut Impressum: "Gastro Master" ist die Marke, die
+  // Epit Global GmbH die juristische Person (GEO-Audit-Fix 2026-07-16).
+  legalName: "Epit Global GmbH",
   url: SITE_URL,
   logo: `${SITE_URL}/logo-gastro-master.png`,
   foundingDate: "2021",

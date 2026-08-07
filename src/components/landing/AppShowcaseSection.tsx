@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import screenshotStartbild from "@/assets/screenshots/Take - Startbild 2.png";
+import screenshotStartbild from "@/assets/screenshots/Take - Startbild 2.png?w=512&format=webp";
 import screenshotBestellart from "@/assets/screenshots/Take - Bestellart 2.png";
 import screenshotFilialen from "@/assets/screenshots/Take - Filialen 2.png";
 import screenshotMenu from "@/assets/screenshots/Take - Menu 2.png";

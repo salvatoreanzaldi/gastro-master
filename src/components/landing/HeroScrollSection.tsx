@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import dashboardImg from "@/assets/kassensystem/cashier-dashboard.png";
-import dashboardMobileImg from "@/assets/kassensystem/Main Hero Tablet Animation - Mobile Version.png";
+// Mobile-Hero = LCP-Element auf Handys. WebP + auf 780px (≈390px @2x Retina)
+// herunterskaliert via imagetools, damit der Download klein bleibt. Der
+// Prerenderer preloaded exakt diese Datei per <link rel=preload> im <head>,
+// weil das <img> erst nach der JS-Hydration ins DOM kommt.
+import dashboardMobileImg from "@/assets/kassensystem/Main Hero Tablet Animation - Mobile Version.png?format=webp&width=780";
 import { useTranslation } from "react-i18next";
 import { useLangPath } from "@/components/LanguageLayout";
 
@@ -30,6 +35,17 @@ const HeroScrollSection = () => {
       <ContainerScroll
         titleComponent={
           <>
+            {/* Welle-I Fix 2: Primärer CTA als erstes Hero-Element (alle Viewports),
+                Design identisch zum Navbar-Button */}
+            <div className="flex justify-center mt-4 mb-2">
+              <Link
+                to={lp("/kontakt")}
+                className="bg-gradient-amber text-white dark:text-[#0A264A] font-bold rounded-xl hover:scale-[1.02] transition-all duration-700 inline-flex items-center gap-1.5 px-5 py-2.5 text-sm whitespace-nowrap"
+              >
+                {t("nav.cta")}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
             <p className="text-sm md:text-base font-semibold text-amber-400 uppercase tracking-widest mb-4">
               {t("heroScroll.badge")}
             </p>
@@ -73,6 +89,10 @@ const HeroScrollSection = () => {
         <img
           src={dashboardMobileImg}
           alt="Gastro Master Dashboard"
+          width={780}
+          height={1012}
+          loading="eager"
+          fetchPriority="high"
           className="md:hidden mx-auto rounded-2xl object-contain h-full w-full"
           draggable={false}
         />

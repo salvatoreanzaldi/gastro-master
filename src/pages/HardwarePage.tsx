@@ -3,7 +3,7 @@ import { useSeoMeta } from "@/hooks/useSeoMeta";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight, Plus, Minus, Check, X } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Plus, Minus, Check, X, LayoutGrid, Grid2x2, List, Square, type LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLangPath } from "@/components/LanguageLayout";
@@ -28,6 +28,11 @@ import hwSurfaceFront      from "@/assets/hardware/Hardware - Microsoft Surface 
 import hwSurfaceSchraeg    from "@/assets/hardware/Hardware - Microsoft Surface Tablet Schräg.png";
 import hwSurfaceHinten     from "@/assets/hardware/Hardware - Microsoft Surface Tablet Hinten.png";
 import hwSurfaceSeite      from "@/assets/hardware/Hardware - Microsoft Surface Tablet Seite.png";
+import hwThinkpad1         from "@/assets/hardware/Lenovo ThinkPad X12 Detachable - 1.png";
+import hwThinkpad2         from "@/assets/hardware/Lenovo ThinkPad X12 Detachable - 2.png";
+import hwThinkpad3         from "@/assets/hardware/Lenovo ThinkPad X12 Detachable - 3.png";
+import hwThinkpad4         from "@/assets/hardware/Lenovo ThinkPad X12 Detachable - 4.png";
+import hwThinkpad5         from "@/assets/hardware/Lenovo ThinkPad X12 Detachable - 5.png";
 
 // ─── Assets: Terminals ────────────────────────────────────────────────────────
 import adyenS1F2L          from "@/assets/hardware/Adyen POS-Terminal - S1F2L.png";
@@ -69,6 +74,7 @@ const KASSE_IMAGES = [
   [hwEloFront, hwEloSchraeg, hwEloHinten, hwEloPorts, hwEloSeite],
   [hwEloDblFront, hwEloDblSchraeg, hwEloDblHinten, hwEloDblPorts],
   [hwSurfaceFront, hwSurfaceSchraeg, hwSurfaceHinten, hwSurfaceSeite],
+  [hwThinkpad1, hwThinkpad2, hwThinkpad3, hwThinkpad4, hwThinkpad5],
 ];
 
 const TERMINAL_IMAGES = [
@@ -94,19 +100,214 @@ const ACCESSORY_IMAGES = [
 type Product = { title: string; desc: string; features: string[]; labels: string[] };
 type FaqItem = { q: string; a: string };
 
+// ─── Layout Switcher ──────────────────────────────────────────────────────────
+// Zwei unabhängige Achsen:
+//   • layout (Desktop, ab sm): 3 Spalten / 2 Spalten / Liste — LayoutToggle.
+//   • mobileLayout (< sm): 1 Spalte / 2 Spalten — MobileLayoutToggle.
+// Beide getrennt in localStorage persistiert. getGridClass() kombiniert die
+// Mobile-Basis mit dem Desktop-Override (sm:), sodass beide Achsen koexistieren.
+type LayoutMode = "3col" | "2col" | "list";
+type MobileLayoutMode = "1col" | "2col";
+
+const LAYOUT_STORAGE_KEY = "hardware-layout";
+const MOBILE_LAYOUT_STORAGE_KEY = "hardware-mobile-layout";
+
+// Kombiniert Mobile-Basis (grid-cols-1/2) + Desktop-Override (sm:/lg:). In
+// 2-col-Mobile bewusst gap-1 → maximale Bildbreite pro Karte auf schmalen Screens.
+const getGridClass = (layout: LayoutMode, mobileLayout: MobileLayoutMode): string => {
+  const mobileBase = mobileLayout === "2col" ? "grid-cols-2 gap-1" : "grid-cols-1 gap-4";
+  if (layout === "list") {
+    // Mobile bleibt Raster (1/2 Spalten), Desktop wird zur Liste.
+    return `grid ${mobileBase} sm:flex sm:flex-col sm:gap-4`;
+  }
+  const desktopCols =
+    layout === "3col" ? "sm:grid-cols-2 sm:gap-6 lg:grid-cols-3" : "sm:grid-cols-2 sm:gap-6";
+  return `grid ${mobileBase} ${desktopCols}`;
+};
+
+const readStoredLayout = (): LayoutMode => {
+  if (typeof window === "undefined") return "3col";
+  const v = window.localStorage.getItem(LAYOUT_STORAGE_KEY);
+  return v === "2col" || v === "list" || v === "3col" ? v : "3col";
+};
+
+const readStoredMobileLayout = (): MobileLayoutMode => {
+  if (typeof window === "undefined") return "1col";
+  const v = window.localStorage.getItem(MOBILE_LAYOUT_STORAGE_KEY);
+  return v === "2col" || v === "1col" ? v : "1col";
+};
+
+const LayoutToggle = ({ layout, onLayout }: { layout: LayoutMode; onLayout: (m: LayoutMode) => void }) => {
+  const { t } = useTranslation("hardware");
+  const options: { mode: LayoutMode; Icon: LucideIcon; label: string }[] = [
+    { mode: "3col", Icon: LayoutGrid, label: t("view.threeCol", "3 Spalten") },
+    { mode: "2col", Icon: Grid2x2, label: t("view.twoCol", "2 Spalten") },
+    { mode: "list", Icon: List, label: t("view.list", "Liste") },
+  ];
+  return (
+    // Nur ab sm sichtbar — auf Mobile ist die Ansicht ohnehin 1-spaltig.
+    <div className="hidden sm:flex items-center gap-1 shrink-0 mt-1" role="group" aria-label={t("view.label", "Ansicht wählen")}>
+      {options.map(({ mode, Icon, label }) => {
+        const active = layout === mode;
+        return (
+          <button
+            key={mode}
+            type="button"
+            onClick={() => onLayout(mode)}
+            aria-label={label}
+            aria-pressed={active}
+            title={label}
+            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+              active
+                ? "bg-cyan-brand text-white"
+                : "border border-[#0A264A]/15 dark:border-white/15 text-[#0A264A]/50 dark:text-white/50 hover:border-cyan-brand/40 hover:text-cyan-brand"
+            }`}
+          >
+            <Icon className="w-4 h-4" />
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+// Mobile-only Toggle (1 / 2 Spalten). Nur < sm sichtbar (flex sm:hidden) — auf
+// Desktop übernimmt LayoutToggle. Beide teilen sich denselben Header-Platz rechts,
+// ohne Überlappung, weil sich ihre Sichtbarkeits-Breakpoints gegenseitig ausschließen.
+const MobileLayoutToggle = ({ mobileLayout, onMobileLayout }: { mobileLayout: MobileLayoutMode; onMobileLayout: (m: MobileLayoutMode) => void }) => {
+  const { t } = useTranslation("hardware");
+  const options: { mode: MobileLayoutMode; Icon: LucideIcon; label: string }[] = [
+    { mode: "1col", Icon: Square, label: t("view.oneCol", "1 Spalte") },
+    { mode: "2col", Icon: Grid2x2, label: t("view.twoCol", "2 Spalten") },
+  ];
+  return (
+    <div className="flex sm:hidden items-center gap-1 shrink-0 mt-1" role="group" aria-label={t("view.label", "Ansicht wählen")}>
+      {options.map(({ mode, Icon, label }) => {
+        const active = mobileLayout === mode;
+        return (
+          <button
+            key={mode}
+            type="button"
+            onClick={() => onMobileLayout(mode)}
+            aria-label={label}
+            aria-pressed={active}
+            title={label}
+            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+              active
+                ? "bg-cyan-brand text-white"
+                : "border border-[#0A264A]/15 dark:border-white/15 text-[#0A264A]/50 dark:text-white/50 hover:border-cyan-brand/40 hover:text-cyan-brand"
+            }`}
+          >
+            <Icon className="w-4 h-4" />
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
 // ─── HwCard ──────────────────────────────────────────────────────────────────
-const HwCard = ({ product, images, index, lp, inquiryCta }: {
+const HwCard = ({ product, images, index, lp, inquiryCta, layout, mobileLayout }: {
   product: Product;
   images: string[];
   index: number;
   lp: (p: string) => string;
   inquiryCta: string;
+  layout: LayoutMode;
+  mobileLayout: MobileLayoutMode;
 }) => {
+  const { t } = useTranslation("hardware");
   const [current, setCurrent] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+  // Ausklappbare Beschreibung — nur relevant im 2-col-Mobile-Kompaktmodus.
+  const [expanded, setExpanded] = useState(false);
+  const isList = layout === "list";
+  // Kompakt-Modus NUR auf Mobile in 2-col: quadratisches Bild mit wenig Padding
+  // (max. Bildfläche), Titel + gekürzte Beschreibung (line-clamp-2, text-xs),
+  // Feature-Tags ausgeblendet (zu breit für ~190px). Alle Kompakt-Klassen sind
+  // mit `sm:`-Overrides gepaart → auf Desktop bleibt alles unverändert.
+  const compact = mobileLayout === "2col";
 
   const prev = () => setCurrent((c) => (c - 1 + images.length) % images.length);
   const next = () => setCurrent((c) => (c + 1) % images.length);
+
+  // Bildcontainer: aspect-[4/3] + object-contain skaliert Querformat-Geräte
+  // (z. B. ThinkPad X12) und Hochkant-Monitore (Elo) einheitlich — flache
+  // Tablets wirken im 4:3-Rahmen nicht mehr verloren wie zuvor im 1:1-Rahmen.
+  const imageBlock = (
+    <div
+      className={`relative bg-white dark:bg-white/[0.02] flex items-center justify-center ${
+        isList
+          ? `w-full sm:w-1/3 shrink-0 rounded-xl ${compact ? "aspect-square sm:aspect-[4/3] p-1 sm:p-4" : "aspect-[4/3] p-4"}`
+          : `${compact ? "aspect-square sm:aspect-[4/3] p-1 sm:p-6" : "aspect-[4/3] p-6"}`
+      }`}
+    >
+      <img
+        src={images[current]}
+        alt={`${product.title} — ${product.labels[current]}`}
+        className="max-h-full max-w-full object-contain cursor-zoom-in transition-transform duration-300 hover:scale-[1.03]"
+        onClick={() => setLightbox(true)}
+      />
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); prev(); }}
+            className="hw-carousel-btn absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0A264A]/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0A264A]"
+            aria-label="Vorheriges Bild"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); next(); }}
+            className="hw-carousel-btn absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0A264A]/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0A264A]"
+            aria-label="Nächstes Bild"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </>
+      )}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+            aria-label={`${product.title} — Bild ${i + 1}`}
+            className={`hw-carousel-btn h-2 rounded-full transition-all duration-200 ${i === current ? "bg-cyan-brand w-5" : "w-2 bg-[#0A264A]/20 dark:bg-white/20 hover:bg-[#0A264A]/40"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+
+  const contentBlock = (
+    <div className={isList ? "flex-1 flex flex-col justify-center px-2 sm:px-4 py-2" : compact ? "p-2 sm:p-6" : "p-6"}>
+      <h3 className={`font-bold text-[#0A264A] dark:text-white ${compact ? "text-sm sm:text-lg line-clamp-2 mb-1 sm:mb-2" : "text-lg mb-2"}`}>{product.title}</h3>
+      <p className={`text-[#0A264A]/60 dark:text-white/50 leading-relaxed ${compact ? `text-xs sm:text-sm sm:line-clamp-none mb-1 sm:mb-4 ${expanded ? "" : "line-clamp-3"}` : "text-sm mb-4"}`}>{product.desc}</p>
+      {/* „Mehr lesen"-Toggle: nur 2-col-Mobile (sm:hidden) und nur wenn der Text
+          lang genug ist, dass line-clamp-3 ihn vermutlich kürzt. stopPropagation
+          verhindert, dass ein späterer Karten-Klick etwas anderes auslöst. */}
+      {compact && product.desc.length > 80 && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
+          aria-expanded={expanded}
+          className="mb-3 flex w-fit items-center gap-0.5 text-xs font-medium text-cyan-brand sm:hidden"
+        >
+          {expanded
+            ? <>{t("view.less", "Weniger")} <ChevronUp className="w-3 h-3" /></>
+            : <>{t("view.more", "Mehr lesen")} <ChevronDown className="w-3 h-3" /></>}
+        </button>
+      )}
+      <div className={`flex-wrap gap-2 mb-4 ${compact ? "hidden sm:flex" : "flex"}`}>
+        {product.features.map(f => (
+          <span key={f} className="text-xs font-medium text-cyan-brand bg-cyan-brand/10 px-2.5 py-1 rounded-full">{f}</span>
+        ))}
+      </div>
+      <Link to={lp("/kontakt")} className={`inline-flex items-center gap-1.5 text-cyan-brand font-semibold hover:gap-2.5 transition-all duration-200 w-fit ${compact ? "text-xs sm:text-sm" : "text-sm"}`}>
+        {inquiryCta} <ArrowRight className="w-3.5 h-3.5" />
+      </Link>
+    </div>
+  );
 
   return (
     <>
@@ -115,55 +316,12 @@ const HwCard = ({ product, images, index, lp, inquiryCta }: {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: index * 0.1, duration: 0.5 }}
-        className="group rounded-2xl border border-[#0A264A]/[0.08] dark:border-white/[0.08] bg-[#f8fafc] dark:bg-white/[0.04] overflow-hidden hover:border-cyan-brand/30 hover:shadow-xl transition-all duration-300"
+        className={`group border border-[#0A264A]/[0.08] dark:border-white/[0.08] bg-[#f8fafc] dark:bg-white/[0.04] hover:border-cyan-brand/30 hover:shadow-xl transition-all duration-300 ${
+          isList ? "flex flex-col sm:flex-row gap-4 sm:gap-6 p-4 rounded-2xl" : "rounded-2xl overflow-hidden"
+        }`}
       >
-        <div className="relative aspect-square bg-white dark:bg-white/[0.02] p-6 flex items-center justify-center">
-          <img
-            src={images[current]}
-            alt={`${product.title} — ${product.labels[current]}`}
-            className="w-full h-full object-contain cursor-zoom-in transition-transform duration-300 hover:scale-[1.03]"
-            onClick={() => setLightbox(true)}
-          />
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={(e) => { e.stopPropagation(); prev(); }}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0A264A]/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0A264A]"
-                aria-label="Vorheriges Bild"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); next(); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0A264A]/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0A264A]"
-                aria-label="Nächstes Bild"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </>
-          )}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-            {images.map((_, i) => (
-              <button
-                key={i}
-                onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
-                className={`w-2 h-2 rounded-full transition-all duration-200 ${i === current ? "bg-cyan-brand w-5" : "bg-[#0A264A]/20 dark:bg-white/20 hover:bg-[#0A264A]/40"}`}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="p-6">
-          <h3 className="text-lg font-bold text-[#0A264A] dark:text-white mb-2">{product.title}</h3>
-          <p className="text-[#0A264A]/60 dark:text-white/50 text-sm leading-relaxed mb-4">{product.desc}</p>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {product.features.map(f => (
-              <span key={f} className="text-xs font-medium text-cyan-brand bg-cyan-brand/10 px-2.5 py-1 rounded-full">{f}</span>
-            ))}
-          </div>
-          <Link to={lp("/kontakt")} className="inline-flex items-center gap-1.5 text-cyan-brand text-sm font-semibold hover:gap-2.5 transition-all duration-200">
-            {inquiryCta} <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
+        {imageBlock}
+        {contentBlock}
       </motion.div>
 
       <AnimatePresence>
@@ -206,10 +364,10 @@ const HwCard = ({ product, images, index, lp, inquiryCta }: {
               <button onClick={() => setLightbox(false)} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/30 transition-colors text-lg leading-none">
                 ×
               </button>
-              <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex gap-2">
+              <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex gap-1.5">
                 {images.map((_, i) => (
-                  <button key={i} onClick={() => setCurrent(i)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${i === current ? "bg-cyan-brand w-6" : "bg-white/30 hover:bg-white/50"}`} />
+                  <button key={i} onClick={() => setCurrent(i)} aria-label={`Bild ${i + 1}`}
+                    className={`hw-carousel-btn h-2 rounded-full transition-all duration-200 ${i === current ? "bg-cyan-brand w-5" : "w-2 bg-white/30 hover:bg-white/50"}`} />
                 ))}
               </div>
             </motion.div>
@@ -222,26 +380,33 @@ const HwCard = ({ product, images, index, lp, inquiryCta }: {
 
 // ─── CategorySection ──────────────────────────────────────────────────────────
 const CategorySection = ({
-  badge, headline, sub, products, imageSet, lp, inquiryCta, cols, bg,
+  badge, headline, sub, products, imageSet, lp, inquiryCta, layout, onLayout, mobileLayout, onMobileLayout, bg,
 }: {
   badge: string; headline: string; sub: string;
   products: Product[]; imageSet: string[][];
   lp: (p: string) => string; inquiryCta: string;
-  cols: string; bg: string;
+  layout: LayoutMode; onLayout: (m: LayoutMode) => void;
+  mobileLayout: MobileLayoutMode; onMobileLayout: (m: MobileLayoutMode) => void;
+  bg: string;
 }) => (
   <section className={`${bg} px-5 md:px-8 lg:px-16 py-12 md:py-16 border-t border-[#0A264A]/[0.06] dark:border-white/[0.04]`}>
     <div className="max-w-6xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-10 md:mb-12"
-      >
-        <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4 block">{badge}</span>
-        <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-[#0A264A] dark:text-white">{headline}</h2>
-        <p className="text-[#0A264A]/55 dark:text-white/45 text-lg mt-3 max-w-2xl">{sub}</p>
-      </motion.div>
-      <div className={`grid grid-cols-1 ${cols} gap-6`}>
+      <div className="mb-10 md:mb-12 flex items-start justify-between gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <span className="text-cyan-brand text-xs font-bold uppercase tracking-widest mb-4 block">{badge}</span>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-[#0A264A] dark:text-white">{headline}</h2>
+          <p className="text-[#0A264A]/55 dark:text-white/45 text-lg mt-3 max-w-2xl">{sub}</p>
+        </motion.div>
+        {/* Desktop-Toggle (hidden sm:flex) + Mobile-Toggle (flex sm:hidden) — nur
+            einer ist je Breakpoint sichtbar, daher keine Überlappung. */}
+        <LayoutToggle layout={layout} onLayout={onLayout} />
+        <MobileLayoutToggle mobileLayout={mobileLayout} onMobileLayout={onMobileLayout} />
+      </div>
+      <div className={getGridClass(layout, mobileLayout)}>
         {products.map((p, i) => (
           <HwCard
             key={p.title}
@@ -250,6 +415,8 @@ const CategorySection = ({
             index={i}
             lp={lp}
             inquiryCta={inquiryCta}
+            layout={layout}
+            mobileLayout={mobileLayout}
           />
         ))}
       </div>
@@ -262,6 +429,22 @@ const HardwarePage = () => {
   const { t, ready } = useTranslation("hardware");
   const lp = useLangPath();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Layout-Präferenz des Besuchers (Grid 3/2 Spalten oder Liste), persistiert
+  // in localStorage. Init aus dem Speicher, damit die Wahl den Reload überlebt.
+  const [layout, setLayout] = useState<LayoutMode>(readStoredLayout);
+  const handleLayout = (mode: LayoutMode) => {
+    setLayout(mode);
+    if (typeof window !== "undefined") window.localStorage.setItem(LAYOUT_STORAGE_KEY, mode);
+  };
+
+  // Eigener Mobile-State (1/2 Spalten), unabhängig vom Desktop-Layout und mit
+  // separatem localStorage-Key.
+  const [mobileLayout, setMobileLayout] = useState<MobileLayoutMode>(readStoredMobileLayout);
+  const handleMobileLayout = (mode: MobileLayoutMode) => {
+    setMobileLayout(mode);
+    if (typeof window !== "undefined") window.localStorage.setItem(MOBILE_LAYOUT_STORAGE_KEY, mode);
+  };
 
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
 
@@ -388,7 +571,10 @@ const HardwarePage = () => {
           imageSet={KASSE_IMAGES}
           lp={lp}
           inquiryCta={t("inquiryCta")}
-          cols="sm:grid-cols-3"
+          layout={layout}
+          onLayout={handleLayout}
+          mobileLayout={mobileLayout}
+          onMobileLayout={handleMobileLayout}
           bg="bg-white dark:bg-[#111111]"
         />
 
@@ -400,7 +586,10 @@ const HardwarePage = () => {
           imageSet={TERMINAL_IMAGES}
           lp={lp}
           inquiryCta={t("inquiryCta")}
-          cols="sm:grid-cols-2 lg:grid-cols-3"
+          layout={layout}
+          onLayout={handleLayout}
+          mobileLayout={mobileLayout}
+          onMobileLayout={handleMobileLayout}
           bg="bg-[#F5F7FA] dark:bg-[#0A264A]/25"
         />
 
@@ -412,7 +601,10 @@ const HardwarePage = () => {
           imageSet={PRINTER_IMAGES}
           lp={lp}
           inquiryCta={t("inquiryCta")}
-          cols="sm:grid-cols-2 lg:grid-cols-3"
+          layout={layout}
+          onLayout={handleLayout}
+          mobileLayout={mobileLayout}
+          onMobileLayout={handleMobileLayout}
           bg="bg-white dark:bg-[#111111]"
         />
 
@@ -424,7 +616,10 @@ const HardwarePage = () => {
           imageSet={ACCESSORY_IMAGES}
           lp={lp}
           inquiryCta={t("inquiryCta")}
-          cols="sm:grid-cols-2 lg:grid-cols-3"
+          layout={layout}
+          onLayout={handleLayout}
+          mobileLayout={mobileLayout}
+          onMobileLayout={handleMobileLayout}
           bg="bg-[#F5F7FA] dark:bg-[#0A264A]/25"
         />
       </div>

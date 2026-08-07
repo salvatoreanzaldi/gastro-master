@@ -9,7 +9,9 @@ import {
   Truck, Store, Coffee, UtensilsCrossed, Building2, Ghost,
   Package, Puzzle, Server, Printer, QrCode, Hand,
 } from "lucide-react";
-import logo from "@/assets/logos/logo-gastro-master-round.png";
+// Anzeigegröße ist 36×36 (w-9 h-9); Quelle war 1024×1024/352 KB. 72px = 2× für
+// Retina, als WebP via vite-imagetools (gleiches Muster wie die Team-Bilder).
+import logo from "@/assets/logos/logo-gastro-master-round.png?w=72&format=webp";
 import { useTranslation } from "react-i18next";
 import { SUPPORTED_LANGS, type SupportedLang, RTL_LANGS } from "@/i18n";
 import DeutschIcon from "@/assets/icons/Deutsch.svg";
@@ -88,6 +90,9 @@ const Navbar = () => {
   const alwaysVisible =
     ["/impressum", "/datenschutz", "/agb", "/kontakt", "/preise", "/integrations"].includes(deSlug) ||
     deSlug.startsWith("/downloads") ||
+    // Präfixlose Standalone-Seite: raw pathname prüfen — die deSlug-Ableitung
+    // oben strippt bei Pfaden ohne Sprach-Präfix fälschlich die ersten 2 Buchstaben.
+    pathname === "/request-data-delete" ||
     isComparisonPath;
   const [scrolled, setScrolled]             = useState(false);
   const active = scrolled || alwaysVisible; // steuert schmal/weit — auf hellen Pages ohne Hero ab Page-Load aktiv
@@ -199,7 +204,14 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed z-50 rounded-2xl border border-primary-foreground/10 py-3 transition-[top,left,right,background-color,box-shadow,backdrop-filter] duration-700 ease-out will-change-[transform,opacity] ${active
-        ? "top-2 left-[10%] right-[10%] md:left-[15%] md:right-[15%] lg:left-[20%] lg:right-[20%]"
+        // Scrolled-Pill-Breiten: Desktop-Nav braucht ~790px Content (gemessen).
+        // xl (1280–1535): 15%-Inset → 70% Breite (896–1075px) passt sicher.
+        // 2xl (≥1536): Original-Design 20%-Inset → 60% (≥921px) passt.
+        // lg bleibt 20% — dort läuft ab jetzt der Burger (schmal = ok).
+        // Mobil (<sm/640px) bewusst KEIN Inset: die Bar bleibt beim Scrollen
+        // konstant (top-3 left-3 right-3 wie im Ruhezustand) und „schrumpft"
+        // nicht. Der Pill-Shrink startet erst ab sm: aufwärts.
+        ? "top-3 left-3 right-3 sm:top-2 sm:left-[10%] sm:right-[10%] md:left-[15%] md:right-[15%] lg:left-[20%] lg:right-[20%] xl:left-[15%] xl:right-[15%] 2xl:left-[20%] 2xl:right-[20%]"
         : "top-3 left-3 right-3 md:top-4 md:left-6 md:right-6"
       } ${visibleBg
         ? "bg-surface-navy/85 backdrop-blur-2xl shadow-2xl shadow-black/25"
@@ -210,13 +222,24 @@ const Navbar = () => {
         {/* Logo */}
         <Link to={lp("/")} className="flex items-center gap-2.5 flex-shrink-0">
           <div className="w-9 h-9 flex-shrink-0 rounded-full overflow-hidden bg-white/10 ring-1 ring-primary-foreground/15">
-            <img src={logo} alt="Gastro Master" className="w-full h-full object-contain" />
+            <img
+              src={logo}
+              alt="Gastro Master"
+              width={36}
+              height={36}
+              loading="eager"
+              {...{ fetchpriority: "high" }}
+              className="w-full h-full object-contain"
+            />
           </div>
           <span className="text-primary-foreground font-bold text-lg">Gastro Master</span>
         </Link>
 
         {/* ── Desktop links ── */}
-        <div className={`hidden lg:flex items-center transition-all duration-700 ${active ? "gap-4" : "gap-6"}`}>
+        {/* Welle-I Navbar-Fix: Desktop-Nav erst ab xl (1280px) — bei lg (1024–1279)
+            passt der Scrolled-Pill-Container (60% Breite = 614–768px) nicht für
+            die ~790px Nav-Content → Overflow. Unter xl: Burger. */}
+        <div className={`hidden xl:flex items-center transition-all duration-700 ${active ? "gap-4" : "gap-6"}`}>
 
           {/* Produkte dropdown */}
           <div
@@ -382,7 +405,7 @@ const Navbar = () => {
         </div>
 
         {/* ── Mobile toggle ── */}
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <button onClick={() => setDark(!dark)}
             className="w-8 h-8 rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 flex items-center justify-center text-primary-foreground/60"
             aria-label="Dark Mode">
@@ -409,7 +432,12 @@ const Navbar = () => {
               </div>
             )}
           </div>
-          <button onClick={() => setMobileOpen(!mobileOpen)} className="text-primary-foreground">
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
+            aria-expanded={mobileOpen}
+            className="w-11 h-11 flex items-center justify-center -mr-2 text-primary-foreground"
+          >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
@@ -417,7 +445,7 @@ const Navbar = () => {
 
       {/* ── Mobile menu ── */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-primary-foreground/10 px-5 py-5 mt-2 space-y-1">
+        <div className="xl:hidden border-t border-primary-foreground/10 px-5 py-5 mt-2 space-y-1">
 
           {/* Produkte accordion */}
           <div>

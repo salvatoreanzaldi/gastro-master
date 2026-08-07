@@ -605,7 +605,12 @@ const AddOnPageTemplate = ({ config, hardwareSections }: AddOnPageTemplateProps)
   // Provides isAccessoryOrSparePartFor links to host packages so LLMs can
   // resolve the cross-sell relationship.
   const addOnNode = ADD_ONS.find((a) => a.slug === config.meta.breadcrumb.path);
-  const productSchema = addOnNode ? buildAddOnProductNode(addOnNode) : null;
+  // Echtes Hero-Bild (absolut) ins Product-Schema durchreichen (GSC „image fehlt");
+  // ohne Hero-Bild greift der Logo-Fallback in buildAddOnProductNode.
+  const productImage = config.hero?.heroImage
+    ? new URL(config.hero.heroImage, "https://gastro-master.de").href
+    : undefined;
+  const productSchema = addOnNode ? buildAddOnProductNode(addOnNode, productImage) : null;
 
   return (
     <div className="min-h-screen bg-background">

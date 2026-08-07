@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import productWebseite from "@/assets/products/Webseite - Produkt.png";
-import productWebshop from "@/assets/products/Webshop - Produkt.png";
-import productApp from "@/assets/products/App - Produkt.png";
-import productKasse from "@/assets/products/Kasse - Produkt.png";
-import productKiosk from "@/assets/products/Kiosk 2 - Produkt.png";
+import productWebseite from "@/assets/products/Webseite - Produkt.png?w=800&format=webp";
+import productWebshop from "@/assets/products/Webshop - Produkt.png?w=800&format=webp";
+import productApp from "@/assets/products/App - Produkt.png?w=800&format=webp";
+import productKasse from "@/assets/products/Kasse - Produkt.png?w=800&format=webp";
+import productKiosk from "@/assets/products/Kiosk 2 - Produkt.png?w=800&format=webp";
 
 const ProductShowcaseAccordionSection = () => {
   const { t } = useTranslation("common");

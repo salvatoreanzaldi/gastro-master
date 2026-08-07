@@ -19,16 +19,29 @@ import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { buildOrgGraph } from "@/data/schemaOrg";
 import { ADD_ONS, buildAddOnProductNode, buildAddOnsCatalogNode } from "@/data/addOns";
 
-const ADDON_HUB_GRAPH = buildOrgGraph([
-  ...ADD_ONS.map(buildAddOnProductNode),
-  buildAddOnsCatalogNode(),
-]);
-
 import imgQrFlyer       from "@/assets/mockups/Mock Up - Flyer.png";
 import imgFahrerApp     from "@/assets/addons/addon-frankfurt-gps.png";
 import imgQrTisch       from "@/assets/addons/addon-qr-tischsystem.png";
 import imgBildschirm    from "@/assets/addons/pickup-screen.jpeg";
 import imgKiosk         from "@/assets/addons/selfordering-terminals.png";
+
+// Slug → echtes Produktbild (GSC „image fehlt"). Absolute URL für JSON-LD.
+// WICHTIG: map-Callback NICHT direkt an buildAddOnProductNode geben — map
+// würde den Index als image-Argument übergeben.
+const ADDON_HUB_IMAGES: Record<string, string> = {
+  "/produkte/add-ons/qr-code-flyer": imgQrFlyer,
+  "/produkte/add-ons/fahrer-app-gps": imgFahrerApp,
+  "/produkte/add-ons/qr-code-tischsystem": imgQrTisch,
+  "/produkte/add-ons/bildschirmfunktion": imgBildschirm,
+  "/produkte/add-ons/kiosk": imgKiosk,
+};
+const ADDON_HUB_GRAPH = buildOrgGraph([
+  ...ADD_ONS.map((a) => {
+    const img = ADDON_HUB_IMAGES[a.slug];
+    return buildAddOnProductNode(a, img ? new URL(img, "https://gastro-master.de").href : undefined);
+  }),
+  buildAddOnsCatalogNode(),
+]);
 
 // Static fields that don't need translation
 const ADDON_STATIC = [

@@ -467,7 +467,7 @@ const PreisePage = () => {
                       <span className="font-bold text-[#0A264A] dark:text-white">{calcOrders}</span>
                     </div>
                     <input
-                      type="range" min={50} max={2000} step={50} value={calcOrders}
+                      type="range" aria-label={t("addonsOrder.calcOrdersLabel")} min={50} max={2000} step={50} value={calcOrders}
                       onChange={(e) => setCalcOrders(Number(e.target.value))}
                       className="w-full accent-cyan-brand"
                     />
@@ -478,7 +478,7 @@ const PreisePage = () => {
                       <span className="font-bold text-[#0A264A] dark:text-white">{calcCart} €</span>
                     </div>
                     <input
-                      type="range" min={10} max={80} step={1} value={calcCart}
+                      type="range" aria-label={t("addonsOrder.calcCartLabel")} min={10} max={80} step={1} value={calcCart}
                       onChange={(e) => setCalcCart(Number(e.target.value))}
                       className="w-full accent-cyan-brand"
                     />

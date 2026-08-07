@@ -104,7 +104,7 @@ const TransaktionsUmlageSection = () => {
                   <span className="font-bold text-foreground">{orders}</span>
                 </div>
                 <input
-                  type="range" min={50} max={2000} step={50} value={orders}
+                  type="range" aria-label={t("transaktion.calcOrders")} min={50} max={2000} step={50} value={orders}
                   onChange={(e) => setOrders(Number(e.target.value))}
                   className="w-full accent-cyan-brand"
                 />
@@ -115,7 +115,7 @@ const TransaktionsUmlageSection = () => {
                   <span className="font-bold text-foreground">{avgCart} €</span>
                 </div>
                 <input
-                  type="range" min={10} max={80} step={1} value={avgCart}
+                  type="range" aria-label={t("transaktion.calcCart")} min={10} max={80} step={1} value={avgCart}
                   onChange={(e) => setAvgCart(Number(e.target.value))}
                   className="w-full accent-cyan-brand"
                 />

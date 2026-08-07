@@ -7,7 +7,7 @@
  * isAccessoryOrSparePartFor → the @id of the host package(s).
  */
 
-import { SITE_URL, ORG_ID } from "./schemaOrg";
+import { SITE_URL, ORG_ID, SITE_AGGREGATE_RATING } from "./schemaOrg";
 import { PACKAGES } from "./packages";
 
 const PACKAGE_BY_NAME = Object.fromEntries(PACKAGES.map((p) => [p.name, p]));
@@ -83,14 +83,26 @@ export const ADD_ONS: readonly AddOnNode[] = [
 ];
 
 /** Build a Schema.org Product node for one add-on. */
-export function buildAddOnProductNode(addOn: AddOnNode) {
+export function buildAddOnProductNode(addOn: AddOnNode, image?: string) {
   return {
     "@type": "Product",
     "@id": addOn.id,
     name: `Gastro Master ${addOn.name}`,
     description: addOn.description,
     url: `${SITE_URL}${addOn.slug}`,
-    brand: { "@id": ORG_ID },
+    // GSC-Fix (Product-Snippets / Händlereinträge): image + Brand-Objekt.
+    // Bild wird — wo vorhanden — vom Seiten-Template als absolute URL
+    // durchgereicht; sonst Logo-Platzhalter.
+    image: image ?? `${SITE_URL}/logo-gastro-master.png`,
+    brand: { "@type": "Brand", name: "Gastro Master" },
+    // GSC-Fix 2026-07-21: KEIN offers-Block. Add-ons haben hier keinen Fixpreis,
+    // ein Offer mit priceCurrency aber ohne price ist laut Google ungültig
+    // („Feld price fehlt").
+    // GSC-Fix 2026-07-22: Ein Product braucht mind. EINES von offers/review/
+    // aggregateRating, sonst „Entweder 'offers', 'review' oder 'aggregateRating'
+    // müssen angegeben werden". Ohne Fixpreis qualifizieren wir über die
+    // site-weite aggregateRating (gleiche 5,0/131 wie das Prerender-Schema).
+    aggregateRating: { ...SITE_AGGREGATE_RATING },
     isAccessoryOrSparePartFor: [...addOn.isAccessoryOrSparePartFor],
   };
 }
