@@ -17,12 +17,14 @@ const SITE_URL = 'https://gastro-master.de';
 const FEED_URL = `${SITE_URL}/feed.xml`;
 const BLOG_URL = `${SITE_URL}/de/blog`;
 
-const { generatedBlogPosts } = await import(
-  new URL('../src/data/blog-posts-generated.ts', import.meta.url).href
+// blog-posts.ts statt blog-posts-generated.ts: schließt die handgeschriebenen
+// lbp-Posts ein (gleiche Liste, die BlogPage + Pre-Renderer verwenden).
+const { blogPosts } = await import(
+  new URL('../src/data/blog-posts.ts', import.meta.url).href
 );
 
 // Sort newest first.
-const posts = [...generatedBlogPosts].sort(
+const posts = [...blogPosts].sort(
   (a, b) => new Date(b.publishedDate) - new Date(a.publishedDate),
 );
 

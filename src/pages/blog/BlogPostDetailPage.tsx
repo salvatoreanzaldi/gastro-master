@@ -38,20 +38,42 @@ interface TocItem {
   text: string;
 }
 
-function extractTocFromHtml(html: string): TocItem[] {
-  const matches = [...html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi)];
+/**
+ * Berechnet für alle h2s in Dokument-Reihenfolge die ID, die auch wirklich im
+ * DOM landet. Vorhandene id-Attribute (WordPress-Export) haben Vorrang, sonst
+ * slugifyHeading(text). Duplikate (z.B. zweimal „Fazit") bekommen -2, -3, …
+ *
+ * WICHTIG: TOC-Links UND injectHeadingIds nutzen exakt diese eine Funktion —
+ * vorher nutzte der TOC immer slugifyHeading, während injectHeadingIds
+ * vorhandene WP-IDs unangetastet ließ → ID-Mismatch → „Klick tut nichts".
+ */
+function computeHeadingIds(html: string): TocItem[] {
+  const seen = new Map<string, number>();
+  const matches = [...html.matchAll(/<h2([^>]*)>([\s\S]*?)<\/h2>/gi)];
   return matches.map((m) => {
-    const text = m[1].replace(/<[^>]+>/g, "").trim();
-    return { id: slugifyHeading(text), text };
+    const attrs = m[1];
+    const text = m[2].replace(/<[^>]+>/g, "").trim();
+    const existing = attrs.match(/\bid=["']([^"']+)["']/)?.[1];
+    let id = existing ?? slugifyHeading(text);
+    const n = (seen.get(id) ?? 0) + 1;
+    seen.set(id, n);
+    if (n > 1) id = `${id}-${n}`;
+    return { id, text };
   });
 }
 
+const extractTocFromHtml = computeHeadingIds;
+
 function injectHeadingIds(html: string): string {
+  const ids = computeHeadingIds(html);
+  let i = 0;
   return html.replace(/<h2([^>]*)>([\s\S]*?)<\/h2>/gi, (_match, attrs, inner) => {
-    const text = inner.replace(/<[^>]+>/g, "").trim();
-    const id = slugifyHeading(text);
-    if (attrs.includes("id=")) return `<h2${attrs}>${inner}</h2>`;
-    return `<h2${attrs} id="${id}">${inner}</h2>`;
+    const id = ids[i++]?.id;
+    if (!id) return `<h2${attrs}>${inner}</h2>`;
+    // Vorhandenes id-Attribut entfernen und deterministisch neu setzen —
+    // garantiert 1:1-Match mit den TOC-hrefs (inkl. Duplikat-Suffixen).
+    const cleaned = attrs.replace(/\s*\bid=["'][^"']*["']/, "");
+    return `<h2${cleaned} id="${id}">${inner}</h2>`;
   });
 }
 
@@ -89,8 +111,11 @@ const TocSidebar = ({ items }: { items: TocItem[] }) => {
   if (items.length === 0) return null;
 
   return (
-    <aside className="hidden xl:block absolute top-0 right-4 w-[240px]">
-      <div className="sticky top-24">
+    /* inset-y-0 statt top-0: das Aside muss die volle Höhe des relativen
+       Artikel-Containers aufspannen, sonst hat das innere sticky-Element
+       keinen Laufweg und „klebt" nie (Bug: TOC scrollte nicht mit). */
+    <aside className="hidden xl:block absolute inset-y-0 right-4 w-[240px]">
+      <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
         <p className="text-[11px] font-bold uppercase tracking-widest text-white/30 mb-4">Inhalt</p>
         <nav className="space-y-1">
           {items.map((item) => (
@@ -98,8 +123,13 @@ const TocSidebar = ({ items }: { items: TocItem[] }) => {
               key={item.id}
               href={`#${item.id}`}
               onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                const el = document.getElementById(item.id);
+                if (el) {
+                  e.preventDefault();
+                  el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+                // Element nicht gefunden → kein preventDefault, Browser-Default
+                // (#-Sprung) bleibt als Fallback statt stummem No-Op.
               }}
               className={`block text-[13px] leading-snug py-1 pl-3 border-l-2 transition-all duration-200 ${
                 activeId === item.id
@@ -235,6 +265,22 @@ const RelatedPosts = ({ currentSlug, category }: { currentSlug: string; category
             to={`/de/blog/${p.slug}`}
             className="group bg-white/[0.04] rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all"
           >
+            {/* Welle F — kleines Cover-Thumbnail (lazy, ~400×210 gerendert) */}
+            {p.coverImage && (
+              <figure className="mb-3 rounded-md overflow-hidden border border-white/10">
+                <picture>
+                  <source srcSet={p.coverImage} type="image/webp" />
+                  <img
+                    src={p.coverImageFallback ?? p.coverImage}
+                    alt={p.coverImageAlt ?? stripMarkdown(p.title)}
+                    width={p.coverImageWidth ?? 1200}
+                    height={p.coverImageHeight ?? 630}
+                    loading="lazy"
+                    className="w-full aspect-[1200/630] object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  />
+                </picture>
+              </figure>
+            )}
             <p className="text-sm font-semibold text-white group-hover:text-cyan-brand transition-colors line-clamp-2 leading-snug mb-2">
               {stripMarkdown(p.title)}
             </p>
@@ -334,10 +380,17 @@ const BlogPostDetailPage = () => {
   }, [post?.slug, post?.jsonLd]);
 
   useSeoMeta({
-    title: post ? `${stripMarkdown(post.title)} | Gastro Master Blog` : "Blog | Gastro Master",
+    title: post ? `${stripMarkdown(post.title).replace(/\s*\|\s*Gastro Master\s*$/i, "")} | Gastro Master` : "Blog | Gastro Master",
     description: stripMarkdown(post?.metaDescription || post?.description || ""),
     canonical: `https://gastro-master.de/de/blog/${slug}`,
-    ogImage: "https://gastro-master.de/logo-gastro-master.png",
+    // Welle F — page-spezifisches Cover (JPG für Social-Kompatibilität), Logo-Fallback
+    ogImage: post?.coverImageFallback
+      ? `https://gastro-master.de${post.coverImageFallback}`
+      : "https://gastro-master.de/logo-gastro-master.png",
+    ogImageAlt: post?.coverImageAlt,
+    ogImageWidth: post?.coverImageFallback ? (post.coverImageWidth ?? 1200) : undefined,
+    ogImageHeight: post?.coverImageFallback ? (post.coverImageHeight ?? 630) : undefined,
+    ogImageType: post?.coverImageFallback ? "image/jpeg" : undefined,
     type: post ? "article" : "website",
     publishedTime: post?.publishedDate,
     modifiedTime: post?.publishedDate,
@@ -438,6 +491,25 @@ const BlogPostDetailPage = () => {
 
           {/* Article: truly centered in viewport via mx-auto (TOC doesn't push it) */}
           <div className="max-w-[720px] mx-auto">
+              {/* Welle F — Hero-Cover zwischen Meta-Block und Content (Medium-Style).
+                  Kein Cover-Feld → gar nichts rendern (lbp-Posts). */}
+              {post.coverImage && (
+                <figure className="blog-post-hero-image mb-10">
+                  <picture>
+                    <source srcSet={post.coverImage} type="image/webp" />
+                    <img
+                      src={post.coverImageFallback ?? post.coverImage}
+                      alt={post.coverImageAlt ?? stripMarkdown(post.title)}
+                      width={post.coverImageWidth ?? 1200}
+                      height={post.coverImageHeight ?? 630}
+                      loading="eager"
+                      {...{ fetchpriority: "high" }}
+                      className="w-full aspect-[1200/630] object-cover rounded-xl border border-white/10"
+                    />
+                  </picture>
+                </figure>
+              )}
+
               <AuthorBox date={formattedDate} slug={post.slug} />
 
               {post.bodyHtml ? (

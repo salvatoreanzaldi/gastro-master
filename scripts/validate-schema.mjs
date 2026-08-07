@@ -6,12 +6,128 @@
  * Exit code != 0 on validation failure.
  */
 
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
+
+// ─── Merchant-Listing-Validation (--merchant) ───────────────────────────────
+// Scannt das gebaute dist/-HTML (Prerenderer-Layer) auf Product-/Offer-Regeln,
+// die GSC im Merchant-Report prüft. Deckt bewusst NUR die Prerenderer-Ebene ab —
+// client-injiziertes Schema (WebseitePage etc.) ist durch direkte Code-Fixes
+// abgesichert; ein post-JS-Render-Check (Playwright) ist als Phase 2 geplant.
+//
+// Kritisch (Exit 1): fehlendes aggregateRating am Product, fehlendes
+//   shippingDestination, doesNotShip-Widerspruch, UnitPriceSpecification ohne price.
+// Warnung (Exit 0): Product ohne review (empfohlen, kein Rich-Result-Blocker).
+// Bewusst NICHT geflaggt: generische PriceSpecification ohne price — das ist der
+//   valide Custom-Quote-Tier („Preis nach Projektumfang").
+function walkDistHtml(dir, out = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = resolve(dir, entry.name);
+    if (entry.isDirectory()) walkDistHtml(full, out);
+    else if (entry.name === "index.html") out.push(full);
+  }
+  return out;
+}
+
+function extractJsonLd(html) {
+  const blocks = [];
+  const re = /<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    try {
+      blocks.push(JSON.parse(m[1]));
+    } catch {
+      /* malformed JSON-LD is caught by validate-jsonld.mjs — ignore here */
+    }
+  }
+  return blocks;
+}
+
+function runMerchantValidation() {
+  const distDir = resolve(ROOT, "dist");
+  let files;
+  try {
+    files = walkDistHtml(distDir);
+  } catch {
+    console.error("❌ dist/ nicht gefunden — erst `vite build` + generate-prerendered-html.mjs laufen lassen.");
+    process.exit(1);
+  }
+
+  const critical = [];
+  const warnings = [];
+
+  const visit = (node, slug) => {
+    if (Array.isArray(node)) {
+      for (const n of node) visit(n, slug);
+      return;
+    }
+    if (!node || typeof node !== "object") return;
+    const t = node["@type"];
+
+    if (t === "Product") {
+      const label = node.name || node["@id"] || "(unbenannt)";
+      if (!node.aggregateRating) {
+        critical.push(`[${slug}] Product "${label}" ohne aggregateRating`);
+      }
+      const rev = node.review;
+      const hasReview = Array.isArray(rev) ? rev.length > 0 : !!rev;
+      if (!hasReview) warnings.push(`Product "${label}" ohne review`);
+    }
+
+    if (t === "OfferShippingDetails") {
+      if (!node.shippingDestination) {
+        critical.push(`[${slug}] OfferShippingDetails ohne shippingDestination`);
+      }
+      if ("doesNotShip" in node) {
+        critical.push(`[${slug}] OfferShippingDetails mit doesNotShip (Widerspruch zu shippingRate/deliveryTime)`);
+      }
+    }
+
+    // Nur UnitPriceSpecification braucht einen konkreten price. Generische
+    // PriceSpecification ohne price ist der valide Custom-Quote-Tier.
+    if (t === "UnitPriceSpecification") {
+      if (node.price === undefined || node.price === null || node.price === "") {
+        critical.push(`[${slug}] UnitPriceSpecification ohne price`);
+      }
+    }
+
+    for (const v of Object.values(node)) {
+      if (v && typeof v === "object") visit(v, slug);
+    }
+  };
+
+  for (const file of files) {
+    const slug = file.replace(distDir + "/", "").replace(/\/index\.html$/, "") || "/";
+    for (const block of extractJsonLd(readFileSync(file, "utf-8"))) visit(block, slug);
+  }
+
+  // Sitewide-Nodes wiederholen sich über hunderte Seiten → deduplizieren.
+  const uniqCrit = [...new Set(critical)];
+  const uniqWarn = [...new Set(warnings)];
+
+  console.log(`🔎 Merchant-Validation über ${files.length} dist-Seiten (Prerenderer-Layer).`);
+  if (uniqWarn.length) {
+    console.warn(`⚠️  ${uniqWarn.length} nicht-kritische Warnung(en) (review empfohlen):`);
+    for (const w of uniqWarn.slice(0, 20)) console.warn(`   - ${w}`);
+    if (uniqWarn.length > 20) console.warn(`   ... und ${uniqWarn.length - 20} weitere`);
+  }
+  if (uniqCrit.length === 0) {
+    console.log("✅ Keine kritischen Merchant-Verstöße (aggregateRating · shippingDestination · doesNotShip · UnitPriceSpecification.price).");
+    process.exit(0);
+  }
+  console.error(`❌ ${uniqCrit.length} kritische(r) Merchant-Verstoß/Verstöße:`);
+  for (const e of uniqCrit.slice(0, 50)) console.error(`   - ${e}`);
+  if (uniqCrit.length > 50) console.error(`   ... und ${uniqCrit.length - 50} weitere`);
+  process.exit(1);
+}
+
+if (process.argv.includes("--merchant")) {
+  runMerchantValidation();
+}
 
 const SAMPLE_SLUGS = [
   "lieferando-bestellung-stornieren",
