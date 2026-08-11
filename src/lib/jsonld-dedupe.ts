@@ -32,6 +32,23 @@ type JsonLdNode = Record<string, unknown>;
 
 const INITIAL_PATH = typeof window !== "undefined" ? window.location.pathname : "";
 
+/**
+ * Die Root-Shell (/) wird für jede nicht prerenderte Adresse ausgeliefert und
+ * leitet client-seitig auf die Sprach-Startseite um (/de). Dabei ändert sich der
+ * Pfad, ohne dass ein neues Dokument geladen wird — der prerenderte <head>
+ * beschreibt weiterhin genau diese Seite (Canonical zeigt auf /de). Ohne diese
+ * Ausnahme liefe die Regel dort nie und die Startseite trüge Organization,
+ * WebSite und BreadcrumbList doppelt (Batch 7, gemessen auf /).
+ */
+const SHELL_START = INITIAL_PATH === "/" || INITIAL_PATH === "";
+const LANG_ROOT = /^\/(de|en|it|fa|si|ru)\/?$/;
+
+const onReferencePath = (): boolean => {
+  if (typeof window === "undefined") return true;
+  const p = window.location.pathname;
+  return p === INITIAL_PATH || (SHELL_START && LANG_ROOT.test(p));
+};
+
 const nodesOf = (parsed: unknown): JsonLdNode[] => {
   if (Array.isArray(parsed)) return parsed as JsonLdNode[];
   if (!parsed || typeof parsed !== "object") return [];
@@ -95,7 +112,7 @@ export const filterJsonLdPayload = (raw: string, claimed: Set<string>): string |
  * oder null. Außerhalb des Initialpfads unverändert (siehe Modul-Kopf).
  */
 export const filterClientJsonLd = (raw: string, doc: Document = document): string | null => {
-  if (typeof window !== "undefined" && window.location.pathname !== INITIAL_PATH) return raw;
+  if (!onReferencePath()) return raw;
   return filterJsonLdPayload(raw, prerenderedFamilies(doc));
 };
 
@@ -144,7 +161,7 @@ export const installJsonLdDedupe = (doc: Document = document): void => {
   let queued = false;
   const run = () => {
     queued = false;
-    if (window.location.pathname !== INITIAL_PATH) return;
+    if (!onReferencePath()) return;
     dedupeClientJsonLd(doc);
   };
   const schedule = () => {
