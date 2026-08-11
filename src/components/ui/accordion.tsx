@@ -34,13 +34,27 @@ const AccordionTrigger = React.forwardRef<
 ));
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
+/**
+ * Batch 8: `forceMount` — der Antworttext bleibt IMMER im DOM.
+ *
+ * Ohne forceMount hängt Radix den Inhalt beim Zuklappen aus. Zugeklappt stand
+ * die Antwort dann nur im prerenderten HTML und im FAQPage-Schema, nicht im
+ * gerenderten DOM (gemessen: 0 von 6 Antworten je Vergleichsseite).
+ *
+ * forceMount allein reicht NICHT: Radix setzt dann kein `hidden` mehr, der
+ * Inhalt stünde offen da. Deshalb übernimmt CSS das Einklappen —
+ * `data-[state=closed]:h-0` hält die Höhe stabil bei 0 (auch nachdem die
+ * Keyframe-Animation durchgelaufen ist) und `invisible` nimmt den Text aus
+ * dem Screenreader-Fluss, ohne ihn aus dem DOM zu entfernen.
+ */
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
     ref={ref}
-    className="overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+    forceMount
+    className="overflow-hidden text-sm transition-all data-[state=closed]:h-0 data-[state=closed]:invisible data-[state=open]:animate-accordion-down"
     {...props}
   >
     <div className={cn("pb-4 pt-0", className)}>{children}</div>
