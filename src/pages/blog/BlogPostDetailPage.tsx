@@ -2,6 +2,7 @@ import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { useLocation, useNavigate } from "react-router-dom";
 import { hubPathForCategory } from "@/data/blog-hub-content";
 import { filterClientJsonLd } from "@/lib/jsonld-dedupe";
+import { relatedPostsFor, RELATED_POSTS_HEADLINE } from "@/data/related-posts";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { motion } from "framer-motion";
@@ -245,12 +246,11 @@ const AuthorBox = ({ date, slug }: { date: string; slug: string }) => {
 // ─── Related Posts ────────────────────────────────────────────────────────────
 
 const RelatedPosts = ({ currentSlug, category }: { currentSlug: string; category: string }) => {
+  // Batch 8: Auswahl kommt aus src/data/related-posts.ts — dieselbe Quelle,
+  // aus der der Prerenderer den statischen Block baut. Vorher wählten beide
+  // Ebenen unterschiedliche Artikel (und unterschiedlich viele).
   const related = useMemo(
-    () =>
-      blogPosts
-        .filter((p) => p.slug !== currentSlug && p.category === category)
-        .sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime())
-        .slice(0, 3),
+    () => relatedPostsFor({ slug: currentSlug, category }, blogPosts, 6),
     [currentSlug, category]
   );
 
@@ -259,7 +259,7 @@ const RelatedPosts = ({ currentSlug, category }: { currentSlug: string; category
 
   return (
     <div className="mt-16 pt-12 border-t border-white/10">
-      <h2 className="text-xl font-bold text-white mb-6">Weitere Artikel in „{cat.label}"</h2>
+      <h2 className="text-xl font-bold text-white mb-6">{RELATED_POSTS_HEADLINE}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {related.map((p) => (
           <Link

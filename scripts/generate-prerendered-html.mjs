@@ -4003,22 +4003,12 @@ const injectHeadingIdsPre = (html) => {
 //    UND k eingehende Links → garantiert 6 eingehende interne Links pro Post
 //    (die kategorie-basierte "immer die neuesten 6"-Auswahl ließ 100+ Posts mit 0
 //    eingehenden zurück). Die Kategorie-Sortierung hält die 6 Related topisch nah.
-const blogRing = [...sortedBlogPosts].sort((a, b) => {
-  if (a.category !== b.category) return a.category < b.category ? -1 : 1;
-  return new Date(b.publishedDate) - new Date(a.publishedDate);
-});
-const ringIndexBySlug = new Map(blogRing.map((p, i) => [p.slug, i]));
-const relatedPostsFor = (post, n = 6) => {
-  const N = blogRing.length;
-  const i = ringIndexBySlug.get(post.slug);
-  if (i == null || N <= 1) return [];
-  const picks = [];
-  for (let k = 1; k <= N && picks.length < n; k++) {
-    const cand = blogRing[(i + k) % N];
-    if (cand.slug !== post.slug) picks.push(cand);
-  }
-  return picks;
-};
+// Batch 8: Auswahl kommt aus src/data/related-posts.ts (eine Quelle mit der
+// React-Seite): Kategorie zuerst, aufgefüllt aus dem deterministischen Ring.
+const { relatedPostsFor: relatedPostsImpl, RELATED_POSTS_HEADLINE } = await import(
+  new URL('../src/data/related-posts.ts', import.meta.url).href
+);
+const relatedPostsFor = (post, n = 6) => relatedPostsImpl(post, sortedBlogPosts, n);
 
 // ── B3: Selbstheilende Absicherung gegen tote interne Blog-Links.
 //    Ein <a href="/de/blog/X"> (oder "/blog/X") auf einen Slug, den es in der
@@ -4146,7 +4136,7 @@ for (const post of allBlogPosts) {
   const related = relatedPostsFor(post, 6);
   const relatedBlock =
     related.length > 0
-      ? '<nav class="related-posts" aria-label="Weitere Artikel"><h2>Weitere Artikel</h2><ul>' +
+      ? `<nav class="related-posts" aria-label="Weitere Artikel"><h2>${RELATED_POSTS_HEADLINE}</h2><ul>` +
         related
           .map(
             (p) =>
