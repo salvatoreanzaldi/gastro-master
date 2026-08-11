@@ -1380,6 +1380,12 @@ const MONEY_ITEM_SKIP_KEYS = new Set([
   'icon', 'imgAlt', 'alt', 'href', 'num', 'initials', 'iconLabel', 'badgeLabel',
   'linkLabel', 'img', 'image', 'color', 'id', 'badge', 'cta', 'ctaLabel',
   'popular', 'per', 'price', 'priceSuffix', 'mainPriceSuffix',
+  // Batch 9: `labels` sind die Namen der Bild-Ansichten einer Produktgalerie
+  // („Front, Schräg, Hinten, Ports, Seite") — eine Bedien-Beschriftung, kein
+  // Seitentext. Sie standen als Fließtext im rohen HTML und tauchten im
+  // gerenderten DOM nie auf: rund 40 Wörter Rauschen je Hardware-Seite, die
+  // die Deckungsmessung gedrückt haben.
+  'labels',
 ]);
 
 const moneyLi = (inner) => (inner ? `<li style="padding:0.35rem 0;">${inner}</li>` : '');
