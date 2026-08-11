@@ -60,8 +60,14 @@ const SELFTEST = process.argv.includes('--selftest');
 const THRESHOLD = Number(arg('threshold', '93'));
 const PORT = Number(arg('port', '4187'));
 
-/** Stichprobe: je ein Vertreter pro Seitentyp (Prerenderer-Zweig). */
+/**
+ * Stichprobe: je ein Vertreter pro Seitentyp (Prerenderer-Zweig) PLUS jede
+ * Seite, die ein Batch repariert hat — sonst reparieren wir Seiten und merken
+ * nicht, wenn sie wieder driften (Batch 9).
+ * Laufzeit: ein Browser-Kontext je Seite, rund 4 s pro Seite.
+ */
 const DEFAULT_PAGES = [
+  // Seitentypen
   '/de',
   '/de/produkte',
   '/de/produkte/pakete/kassensystem',
@@ -73,6 +79,12 @@ const DEFAULT_PAGES = [
   '/de/blog/was-kostet-bestellsystem',
   '/de/blog/thema/arbeitsrecht',
   '/de/vergleiche/resmio',
+  // In Batch 8/9 repariert — ab jetzt überwacht
+  '/de/faq',
+  '/de/preise',
+  '/de/loesungen',
+  '/de/uber-uns',
+  '/de/produkte/add-ons/kiosk',
 ];
 const PAGES = arg('pages', '') ? arg('pages', '').split(',').filter(Boolean) : DEFAULT_PAGES;
 
