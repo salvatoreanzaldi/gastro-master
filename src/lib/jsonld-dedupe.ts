@@ -102,7 +102,19 @@ export const filterClientJsonLd = (raw: string, doc: Document = document): strin
 const isClientScript = (s: Element): boolean =>
   (s as HTMLScriptElement).dataset?.clientJsonld === "1" || !!s.closest("#root");
 
-/** Wendet die Regel auf alle client-seitigen JSON-LD-Skripte im Dokument an. */
+/**
+ * Wendet die Regel auf alle client-seitigen JSON-LD-Skripte im Dokument an.
+ *
+ * WICHTIG: Von React gerenderte <script>-Knoten werden NIE aus dem DOM
+ * entfernt, nur entwertet (type-Attribut). React nutzt Geschwister-Knoten als
+ * Einfüge-Anker; ein entfernter Knoten lässt den nächsten Commit mit
+ * „NotFoundError: insertBefore" abbrechen — der gesamte Baum stirbt und die
+ * Seite wird weiß (beim Scrollen reproduziert, Batch 6 Runde 3). Ein
+ * geändertes Attribut fasst React dagegen nicht wieder an, solange die Props
+ * gleich bleiben, und kein Parser erkennt den Knoten noch als JSON-LD.
+ */
+const NEUTRALIZED_TYPE = "text/x-duplicate-jsonld";
+
 export const dedupeClientJsonLd = (doc: Document = document): number => {
   const claimed = prerenderedFamilies(doc);
   let changed = 0;
@@ -111,7 +123,8 @@ export const dedupeClientJsonLd = (doc: Document = document): number => {
     const raw = s.textContent || "";
     const next = filterJsonLdPayload(raw, claimed);
     if (next === null) {
-      s.remove();
+      if (s.dataset.clientJsonld === "1") s.remove(); // selbst erzeugt → sicher
+      else s.setAttribute("type", NEUTRALIZED_TYPE);
       changed += 1;
     } else if (next !== raw) {
       s.textContent = next;
