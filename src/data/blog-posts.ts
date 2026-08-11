@@ -876,11 +876,25 @@ function applyBlogOverride(post: BlogPost): BlogPost {
   if (!ov) return next;
 
   // 1. H2-Blöcke an bodyHtml anhängen (nur wo die Quelle sie nicht liefert; idempotent).
-  if (ov.appendH2sToBody && ov.faq?.length && next.bodyHtml && !next.bodyHtml.includes(ov.faq[0].question)) {
+  if ((ov.appendH2sToBody || ov.insertBeforeHeading) && ov.faq?.length && next.bodyHtml && !next.bodyHtml.includes(ov.faq[0].question)) {
     const blocks = ov.faq
       .map((f) => `<h2 id="${slugifyHeading(f.question)}">${f.question}</h2>\n<p>${f.answer}</p>`)
       .join('\n');
-    next = { ...next, bodyHtml: `${next.bodyHtml}\n${blocks}\n` };
+    // Batch 7: Position steuerbar — navigational gesuchte Abschnitte gehören
+    // nach oben, nicht ans Ende (siehe insertBeforeHeading in der Override-Datei).
+    let body = next.bodyHtml;
+    if (ov.insertBeforeHeading) {
+      const idx = body.search(new RegExp(`<h2[^>]*>[^<]*${ov.insertBeforeHeading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i'));
+      body = idx >= 0 ? `${body.slice(0, idx)}\n${blocks}\n${body.slice(idx)}` : `${body}\n${blocks}\n`;
+    } else {
+      body = `${body}\n${blocks}\n`;
+    }
+    next = { ...next, bodyHtml: body };
+  }
+  // 1b. Ohne eigene FAQ-Items bekommt der Post die Override-Fragen als faqItems —
+  //     daraus baut der Prerenderer die FAQPage (Batch 7).
+  if (ov.faq?.length && (!next.faqItems || next.faqItems.length === 0)) {
+    next = { ...next, faqItems: ov.faq.map((f) => ({ question: f.question, answer: f.answer })) };
   }
   // 2. FAQ in die FAQPage der jsonLd mergen (idempotent via Frage-Name).
   if (ov.faq?.length && next.jsonLd) {

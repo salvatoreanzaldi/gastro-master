@@ -23,6 +23,14 @@ import type { FAQItem } from "./blog-posts-types";
 export interface BlogPostOverride {
   faq?: FAQItem[];
   appendH2sToBody?: boolean;
+  /**
+   * Batch 7 Phase 2: Wie appendH2sToBody, aber die Blöcke werden VOR der
+   * Überschrift eingesetzt, die diesen Text enthält. Navigational gesuchte
+   * Inhalte (z. B. „Partner Hub Login") müssen oben stehen — wer sucht, um
+   * sich einzuloggen, scrollt nicht bis ans Artikelende. Findet sich die
+   * Überschrift nicht, wird angehängt (sicherer Rückfall).
+   */
+  insertBeforeHeading?: string;
   /** Überschreibt die (generierte) metaDescription des Posts — für Posts deren
    *  metaDescription im generierten File zu kurz/= Titel ist (Kategorie A). */
   metaDescription?: string;
@@ -365,12 +373,50 @@ export const BLOG_POST_OVERRIDES: Record<string, BlogPostOverride> = {
     title: "Fleischpreis-Kalkulation im Restaurant 2026",
     metaDescription: "Fleischkalkulation im Restaurant 2026: Preisentwicklung, Cut-Strategie, Schlachtverluste und Portionsgrößen — mit Speisekarten-Rotation und Reporting.",
   },
+  // ── Batch 7 Phase 2: Login-/Partner-Hub-Cluster ───────────────────────────
+  // Ahrefs (DE, 11.08.2026): Diese Seite rankt bereits für den GESAMTEN Cluster
+  // — "lieferando partner hub" (2.500) Pos 20, "lieferando partner login"
+  // (2.200) Pos 11, "partner hub lieferando" (900) Pos 19, "provision
+  // lieferando" Pos 10. Eine zweite Seite für dieselben Begriffe wäre ein
+  // Konkurrent im eigenen Haus; deshalb wird die bestehende Seite ergänzt.
+  // Die Suchintention ist NAVIGATIONAL: Wer "partner login" sucht, will sich
+  // einloggen. Der Abschnitt steht deshalb weit oben (insertBeforeHeading),
+  // beantwortet zuerst die Zugangsfrage und verkauft erst danach.
+  // Alle Angaben stammen aus den bestehenden Artikeln dieser Site
+  // (Partner-Hub-Funktionen und Zugang: dieser Artikel; Provisionsspanne
+  // 13–30 %: lieferando-portal-richtig-nutzen). Keine neuen Fakten.
   "lieferando-partner-werden-vor-und-nachteile": {
     title: "Lieferando-Partner werden: Vor- und Nachteile 2026",
     metaDescription: "Lieferando-Partner werden: Was es kostet, was es bringt — Vor- und Nachteile aus Restaurant-Sicht, die Zahlen-Realität und die Hybrid-Alternative für 2026.",
+    insertBeforeHeading: "1. Wie funktioniert",
     // Provisions-Frage steht als H3 in der Quelle, wird aber vom Generator nicht ins
     // FAQPage-Schema gezogen (quotable-Blockquote statt Plain-Absatz) → hier generate-safe ergänzt.
     faq: [
+      {
+        question: "Wo finde ich den Login zum Lieferando Partner Hub?",
+        answer:
+          "Der Partner Hub ist das Restaurant-Backend der Plattform — nicht zu verwechseln mit dem Kundenkonto, mit dem Gäste bestellen. Der Zugang läuft über den Browser und über die Partner-Hub-App für iOS und Android. Die Zugangsdaten bekommst du nach der Vertragsunterzeichnung automatisch zugeschickt; ein eigenes Konto anlegen kannst du ohne aktiven Restaurantvertrag nicht. Wichtig für die Einordnung: Gastro Master ist ein unabhängiger Anbieter eines eigenen Bestellsystems und steht in keiner geschäftlichen Verbindung zu Lieferando oder Just Eat Takeaway. Login-Seite, App und Zugangsdaten gehören ausschließlich der Plattform — wir erklären hier nur, wie das Portal aus Sicht eines Gastronomiebetriebs funktioniert und was es kostet.",
+      },
+      {
+        question: "Der Login in den Partner Hub funktioniert nicht — was tun?",
+        answer:
+          "Drei Ursachen decken die meisten Fälle ab. Erstens die Kontoverwechslung: Restaurantzugang (Partner Hub) und Gastkonto der Bestell-App sind getrennte Systeme, dieselbe E-Mail funktioniert nicht automatisch in beiden. Zweitens der Kanal: Wenn der Browser-Login klemmt, führt die Partner-Hub-App oft weiter — und umgekehrt. Drittens fehlende Zugangsdaten: Sie werden nach Vertragsschluss zugeschickt; ohne aktiven Vertrag gibt es keinen Zugang. Passwörter setzt ausschließlich die Plattform selbst zurück, über ihre eigene Funktion beziehungsweise ihren Restaurant-Support. Wir haben darauf keinen Zugriff und können auch keine Daten einsehen.",
+      },
+      {
+        question: "Was kann ich im Lieferando Partner Hub verwalten?",
+        answer:
+          "Sechs Bereiche: eingehende Bestellungen in Echtzeit, Speisekarte und Preise, Öffnungszeiten und Liefergebiet, Statistiken und Umsatzberichte, Rechnungen und Auszahlungen sowie Bewertungen samt Antworten darauf. Auch die Mehrwertsteuersätze stellst du dort ein. Was du dort NICHT bekommst, ist der Kundenkontakt: Die Bestelldaten deiner Gäste gehören der Plattform, nicht deinem Betrieb. Für Stammkundenpflege, eigene Aktionen oder Newsletter brauchst du deshalb einen zweiten Kanal — das ist der eigentliche strukturelle Unterschied zwischen Plattformgeschäft und eigenem Bestellsystem.",
+      },
+      {
+        question: "Was kostet die Partnerschaft — was bleibt vom Umsatz übrig?",
+        answer:
+          "Die Provision liegt je nach Modell zwischen 13 Prozent (Plattform-Vermittlung, du lieferst selbst) und 25 bis 30 Prozent (Lieferung durch Plattform-Fahrer). Gerechnet auf 10.000 Euro Plattformumsatz im Monat sind das 1.300 Euro im günstigsten und 2.500 bis 3.000 Euro im teuersten Fall — jeden Monat, unabhängig davon, ob der Gast neu ist oder zum zwanzigsten Mal bei dir bestellt. Genau diese Wiederholbestellungen sind der Hebel: Ein Stammgast, der über einen eigenen Kanal bestellt, kostet keine Provision.",
+      },
+      {
+        question: "Welche Alternative gibt es zur Provision?",
+        answer:
+          "Die Rechnung geht selten auf ein Entweder-oder hinaus. In der Praxis funktioniert die Kombination am besten: Die Plattform bleibt als Reichweitenkanal für Neukunden, für Stammgäste kommt ein eigener Bestellweg dazu — eigener Shop oder eigene App, mit Festpreis statt Umsatzbeteiligung. Wer den Anteil der Direktbestellungen Schritt für Schritt erhöht, senkt die Provisionslast, ohne die Reichweite über Nacht aufzugeben. Wie dieser Übergang konkret abläuft, steht weiter unten im Abschnitt zur Hybrid-Alternative.",
+      },
       {
         question: "Wie hoch ist die Provision bei Lieferando wirklich?",
         answer: "13–30 % vom Bestellwert je nach Modell: Marketplace (eigene Fahrer) ca. 13 %, Logistics (Lieferando-Fahrer) ca. 25–30 %. Verhandlungsspielraum bei kleinen Restaurants kaum vorhanden.",
