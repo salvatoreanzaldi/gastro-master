@@ -26,7 +26,10 @@
     "sync-reviews": "node scripts/sync-reviews.js",
     "import-reviews": "node scripts/import-reviews-to-sheet.js",
     "download-avatars": "node scripts/download-review-avatars.js",
-    "validate:internal-links": "node scripts/validate-internal-links.mjs"
+    "validate:internal-links": "node scripts/validate-internal-links.mjs",
+    "validate:dom-coverage": "node scripts/validate-dom-coverage.mjs",
+    "validate:dom-coverage:selftest": "node scripts/validate-dom-coverage.mjs --selftest",
+    "predeploy": "npm run build && npm run validate:dom-coverage:selftest && npm run validate:dom-coverage"
   },
   "dependencies": {
     "@fontsource-variable/outfit": "^5.2.8",

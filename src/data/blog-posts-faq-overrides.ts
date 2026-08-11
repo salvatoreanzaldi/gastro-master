@@ -395,7 +395,7 @@ export const BLOG_POST_OVERRIDES: Record<string, BlogPostOverride> = {
       {
         question: "Wo finde ich den Login zum Lieferando Partner Hub?",
         answer:
-          "Der Partner Hub ist das Restaurant-Backend der Plattform — nicht zu verwechseln mit dem Kundenkonto, mit dem Gäste bestellen. Der Zugang läuft über den Browser und über die Partner-Hub-App für iOS und Android. Die Zugangsdaten bekommst du nach der Vertragsunterzeichnung automatisch zugeschickt; ein eigenes Konto anlegen kannst du ohne aktiven Restaurantvertrag nicht. Wichtig für die Einordnung: Gastro Master ist ein unabhängiger Anbieter eines eigenen Bestellsystems und steht in keiner geschäftlichen Verbindung zu Lieferando oder Just Eat Takeaway. Login-Seite, App und Zugangsdaten gehören ausschließlich der Plattform — wir erklären hier nur, wie das Portal aus Sicht eines Gastronomiebetriebs funktioniert und was es kostet.",
+          "Der Partner Hub ist das Restaurant-Backend der Plattform — nicht zu verwechseln mit dem Kundenkonto, mit dem Gäste bestellen. Der Zugang läuft über den Browser und über die Partner-Hub-App für iOS und Android. Die Zugangsdaten bekommst du nach der Vertragsunterzeichnung automatisch zugeschickt; ein eigenes Konto anzulegen ist nach unserem Kenntnisstand ohne aktiven Restaurantvertrag nicht möglich.\n\nWichtig für die Einordnung: Gastro Master ist ein unabhängiger Anbieter eines eigenen Bestellsystems und steht in keiner geschäftlichen Verbindung zu Lieferando oder Just Eat Takeaway. Login-Seite, App und Zugangsdaten gehören ausschließlich der Plattform — wir erklären hier nur, wie das Portal aus Sicht eines Gastronomiebetriebs funktioniert und was es kostet.",
       },
       {
         question: "Der Login in den Partner Hub funktioniert nicht — was tun?",
@@ -410,7 +410,7 @@ export const BLOG_POST_OVERRIDES: Record<string, BlogPostOverride> = {
       {
         question: "Was kostet die Partnerschaft — was bleibt vom Umsatz übrig?",
         answer:
-          "Die Provision liegt je nach Modell zwischen 13 Prozent (Plattform-Vermittlung, du lieferst selbst) und 25 bis 30 Prozent (Lieferung durch Plattform-Fahrer). Gerechnet auf 10.000 Euro Plattformumsatz im Monat sind das 1.300 Euro im günstigsten und 2.500 bis 3.000 Euro im teuersten Fall — jeden Monat, unabhängig davon, ob der Gast neu ist oder zum zwanzigsten Mal bei dir bestellt. Genau diese Wiederholbestellungen sind der Hebel: Ein Stammgast, der über einen eigenen Kanal bestellt, kostet keine Provision.",
+          "Nach öffentlich verfügbaren Angaben und Erfahrungswerten aus der Praxis liegt die Provision je nach Modell zwischen rund 13 Prozent (Plattform-Vermittlung, du lieferst selbst) und 25 bis 30 Prozent (Lieferung durch Plattform-Fahrer); Stand: August 2026. Gerechnet auf 10.000 Euro Plattformumsatz im Monat sind das 1.300 Euro im günstigsten und 2.500 bis 3.000 Euro im teuersten Fall — jeden Monat, unabhängig davon, ob der Gast neu ist oder zum zwanzigsten Mal bei dir bestellt. Genau diese Wiederholbestellungen sind der Hebel: Ein Stammgast, der über einen eigenen Kanal bestellt, kostet keine Provision.",
       },
       {
         question: "Welche Alternative gibt es zur Provision?",
@@ -419,7 +419,7 @@ export const BLOG_POST_OVERRIDES: Record<string, BlogPostOverride> = {
       },
       {
         question: "Wie hoch ist die Provision bei Lieferando wirklich?",
-        answer: "13–30 % vom Bestellwert je nach Modell: Marketplace (eigene Fahrer) ca. 13 %, Logistics (Lieferando-Fahrer) ca. 25–30 %. Verhandlungsspielraum bei kleinen Restaurants kaum vorhanden.",
+        answer: "Nach öffentlich verfügbaren Angaben und Erfahrungswerten aus der Praxis 13–30 % vom Bestellwert je nach Modell: Marketplace (eigene Fahrer) ca. 13 %, Logistics (Lieferando-Fahrer) ca. 25–30 %; Stand: August 2026. Verhandlungsspielraum bei kleinen Restaurants kaum vorhanden.",
       },
     ],
   },

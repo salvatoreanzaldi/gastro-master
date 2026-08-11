@@ -866,6 +866,9 @@ function mergeFaqIntoJsonLd(jsonLd: string, faq: FAQItem[], slug: string): strin
   return JSON.stringify(obj);
 }
 
+/** Absatz-Umbrüche gehören ins sichtbare HTML, nicht ins Schema. */
+const normalizeAnswer = (a: string): string => a.replace(/\s*\n{2,}\s*/g, ' ').trim();
+
 function applyBlogOverride(post: BlogPost): BlogPost {
   // 0. Kategorie-Override (Batch 6 Phase 2) — generierungssicher, da NICHT in
   //    blog-posts-generated.ts editiert (die überschreibt der Generator).
@@ -877,8 +880,19 @@ function applyBlogOverride(post: BlogPost): BlogPost {
 
   // 1. H2-Blöcke an bodyHtml anhängen (nur wo die Quelle sie nicht liefert; idempotent).
   if ((ov.appendH2sToBody || ov.insertBeforeHeading) && ov.faq?.length && next.bodyHtml && !next.bodyHtml.includes(ov.faq[0].question)) {
+    // Batch 7: Eine Leerzeile im Antworttext trennt Absätze. Nur so kann ein
+    // Block mehr als einen <p> tragen (z. B. die markenrechtliche Klarstellung
+    // als eigener, sichtbarer Absatz) — ohne zweite Textquelle: FAQPage-Schema
+    // und faqItems bekommen denselben Text mit normalisierten Umbrüchen.
     const blocks = ov.faq
-      .map((f) => `<h2 id="${slugifyHeading(f.question)}">${f.question}</h2>\n<p>${f.answer}</p>`)
+      .map(
+        (f) =>
+          `<h2 id="${slugifyHeading(f.question)}">${f.question}</h2>\n` +
+          f.answer
+            .split(/\n{2,}/)
+            .map((para) => `<p>${para.trim()}</p>`)
+            .join('\n'),
+      )
       .join('\n');
     // Batch 7: Position steuerbar — navigational gesuchte Abschnitte gehören
     // nach oben, nicht ans Ende (siehe insertBeforeHeading in der Override-Datei).
@@ -894,11 +908,14 @@ function applyBlogOverride(post: BlogPost): BlogPost {
   // 1b. Ohne eigene FAQ-Items bekommt der Post die Override-Fragen als faqItems —
   //     daraus baut der Prerenderer die FAQPage (Batch 7).
   if (ov.faq?.length && (!next.faqItems || next.faqItems.length === 0)) {
-    next = { ...next, faqItems: ov.faq.map((f) => ({ question: f.question, answer: f.answer })) };
+    next = {
+      ...next,
+      faqItems: ov.faq.map((f) => ({ question: f.question, answer: normalizeAnswer(f.answer) })),
+    };
   }
   // 2. FAQ in die FAQPage der jsonLd mergen (idempotent via Frage-Name).
   if (ov.faq?.length && next.jsonLd) {
-    next = { ...next, jsonLd: mergeFaqIntoJsonLd(next.jsonLd, ov.faq, post.slug) };
+    next = { ...next, jsonLd: mergeFaqIntoJsonLd(next.jsonLd, ov.faq.map((f) => ({ ...f, answer: normalizeAnswer(f.answer) })), post.slug) };
   }
   // 3. metaDescription überschreiben (Kategorie-A-Fix für zu kurze Descriptions).
   if (ov.metaDescription) {
