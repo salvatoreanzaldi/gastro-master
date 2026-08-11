@@ -68,6 +68,7 @@ import schutzhuelle1       from "@/assets/hardware/Microsoft Surface Pro - Schut
 import schutzhuelle2       from "@/assets/hardware/Microsoft Surface Pro - Schutzhülle 2.png";
 import schutzhuelle3       from "@/assets/hardware/Microsoft Surface Pro - Schutzhülle 3.png";
 import lanKabel            from "@/assets/hardware/Lan Kabel.png";
+import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 
 // ─── Static image sets ────────────────────────────────────────────────────────
 const KASSE_IMAGES = [
@@ -706,6 +707,10 @@ const HardwarePage = () => {
       <div className="md:hidden">
         <CTASection {...getCTAConfig("/produkte/pakete/kassensystem")} />
       </div>
+
+      {/* Batch 6 Runde 3 — 11. Money-Page: dieselben 6 Blog-Backlinks wie im
+          Prerenderer, aus derselben Quelle (money-page-links.ts). */}
+      <MoneyPageBacklinks routeKey="hardware" hub="produkte" />
 
       <Footer />
     </div>

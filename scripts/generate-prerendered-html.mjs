@@ -1539,6 +1539,11 @@ const buildHardwarePageStatic = (lang) => {
     `<h1 style="font-size:2rem;font-weight:900;margin:0 0 1rem;">${escapeHtmlMin(headline)}</h1>`,
     `<p style="font-size:1.125rem;line-height:1.5;margin:0 0 1.5rem;">${escapeHtmlMin(intro)}</p>`,
     sectionsHtml,
+    // Batch 6 Runde 3: /produkte/hardware ist eine indexierbare Money-Page mit
+    // 6 eingehenden Blog-Links, hatte aber selbst 0 ausgehende. Der Route-Key
+    // "hardware" stand längst in MONEY_BLOG_CATEGORIES — es fehlte nur der
+    // Konsument. Gleiche Quelle wie die anderen 10 (money-page-links.ts).
+    relatedBlogLinksForMoney('hardware', lang, 'produkte'),
     `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>`,
     '</article>',
   ].join('');

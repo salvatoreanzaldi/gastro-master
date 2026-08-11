@@ -23,6 +23,13 @@ interface SeoMetaProps {
   publishedTime?: string;
   modifiedTime?: string;
   twitterCard?: "summary" | "summary_large_image";
+  /**
+   * Seite ausdrücklich aus dem Index halten — unabhängig von der Sprache.
+   * Batch 6 Runde 3: Unbekannte URLs liefern über den SPA-Fallback HTTP 200
+   * (Apache kennt die React-Routen nicht). Die 404-Seite muss deshalb selbst
+   * signalisieren, dass sie nicht indexiert werden soll.
+   */
+  noindex?: boolean;
 }
 
 function upsertMeta(selector: string, attr: string, value: string) {
@@ -64,6 +71,7 @@ export function useSeoMeta({
   publishedTime,
   modifiedTime,
   twitterCard = "summary_large_image",
+  noindex = false,
 }: SeoMetaProps) {
   useEffect(() => {
     const prevTitle = document.title;
@@ -91,7 +99,10 @@ export function useSeoMeta({
     const SUPPORTED_LANGS = ["de", "en", "it", "fa", "si", "ru"];
     const langSeg =
       typeof window !== "undefined" ? window.location.pathname.split("/")[1] : "de";
-    if (SUPPORTED_LANGS.includes(langSeg)) {
+    if (noindex) {
+      // Explizites noindex schlägt die Sprachregel (404-Seite, s. Prop-Doku).
+      upsertMeta('meta[name="robots"]', "content", "noindex, follow");
+    } else if (SUPPORTED_LANGS.includes(langSeg)) {
       if (langSeg !== "de") {
         upsertMeta('meta[name="robots"]', "content", "noindex, follow");
       } else {

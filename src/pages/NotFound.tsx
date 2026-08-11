@@ -24,6 +24,10 @@ const NotFound = () => {
   useSeoMeta({
     title: t("notFound.metaTitle"),
     description: t("notFound.text"),
+    // Unbekannte URLs kommen über den SPA-Fallback mit HTTP 200 hier an
+    // (Batch 6 Runde 3, Phase 1.4) — ohne dieses Signal wäre jede Tipp-URL
+    // eine indexierbare Seite mit self-referenzieller Canonical.
+    noindex: true,
   });
 
   return (
