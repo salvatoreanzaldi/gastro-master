@@ -4310,11 +4310,17 @@ const COMPARISON_SEGMENT = {
   ru: 'vs',
 };
 
+// Batch 6 Runde 3: Vergleichsseiten und der Vergleichs-Hub klonen die
+// Root-Shell (wegen canonical/hreflang-Platzhaltern), setzen aber ihr EIGENES
+// BreadcrumbList. Das 1-Ebenen-Breadcrumb der Shell (Batch 6 C2) blieb dabei
+// stehen — 36 Dateien trugen zwei BreadcrumbLists. Deshalb hier entfernen.
+const comparisonBaseHtml = rootHtmlPatched.replace(rootBreadcrumb, '');
+
 let comparisonCount = 0;
 for (const [slug, byLang] of Object.entries(comparisons)) {
   for (const lang of COMPARISON_LANGS) {
     const data = byLang[lang] ?? byLang.de;
-    const html = renderComparisonPage(rootHtmlPatched, data, {
+    const html = renderComparisonPage(comparisonBaseHtml, data, {
       h1Approved: COMPARISON_H1_APPROVED,
       lang,
       allLangs: COMPARISON_LANGS,
@@ -4342,7 +4348,7 @@ const { renderHubPage } = await import(
 let hubCount = 0;
 for (const lang of COMPARISON_LANGS) {
   const data = hubModule.hubByLang[lang] ?? hubModule.hubByLang.de;
-  const html = renderHubPage(rootHtmlPatched, data, {
+  const html = renderHubPage(comparisonBaseHtml, data, {
     lang,
     allLangs: COMPARISON_LANGS,
   });
