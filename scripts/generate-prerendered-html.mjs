@@ -816,6 +816,9 @@ const navLabel = (lang, key) => {
 const { renderStaticNavHtml, renderStaticFooterHtml } = await import(
   new URL('../src/data/site-navigation.ts', import.meta.url).href
 );
+const { PRODUKTE_CONTENT } = await import(
+  new URL('../src/data/produkte-page-content.ts', import.meta.url).href
+);
 // Slug-ÜBERSETZUNG, nicht nur Präfix: buildHref würde /en/produkte/hardware
 // erzeugen (tot) statt /en/products/hardware — dieselbe Falle wie bei den
 // Breadcrumbs in Batch 3, gelöst über dieselbe Routen-Tabelle.
@@ -904,7 +907,14 @@ const i18nSectionHtml = (sec, { level = 2 } = {}) => {
 // Startseiten-Prosa: dieselben Sektionen, die Index.tsx rendert, in derselben
 // Reihenfolge. Reine Deko-/Interaktions-Sektionen (Rechner, Slider, Mockups)
 // bleiben draußen — sie tragen keinen eigenständigen Text.
-const HOME_PROSE_SECTIONS = ['problem', 'positioning', 'solution', 'process', 'pos', 'risk', 'references', 'faq'];
+// Welche Sektionen die Startseite WIRKLICH rendert, wurde gemessen (4-Gramm-
+// Abgleich der gerenderten Fassung gegen jede Bundle-Sektion): problem,
+// positioning, solution, risk, references, faq, target, founder, contact u. a.
+// stammen aus früheren Startseiten-Fassungen und stehen heute NICHT mehr auf
+// der Seite. Sie hier auszugeben hieße, im rohen HTML Text zu behaupten, den
+// die gerenderte Seite nicht zeigt — genau das Gegenteil von „statisch ist
+// Teilmenge des DOM". Aufgenommen sind nur Sektionen mit ≥ 84 % Deckung.
+const HOME_PROSE_SECTIONS = ['diff', 'process', 'pos', 'trust', 'trustedBrands', 'calculator', 'pricing', 'integrationSlider', 'homeCTA'];
 const buildHomeProse = (lang) => {
   const bundle = i18nAll[lang] ?? i18nAll.de;
   return HOME_PROSE_SECTIONS.map((key) => i18nSectionHtml(bundle?.[key])).join('');
@@ -1537,52 +1547,46 @@ const buildPackagePageStatic = (pkg, lang, bundle = null, routeKey = null) => {
 // Static fallback for the /produkte hub. Lists all 4 main packages with
 // price + short description so a JS-less crawler sees the full catalogue.
 const buildHubPageStatic = (lang) => {
-  const heading = navLabel(lang, 'produkte');
-  const bundle = i18nAll[lang] ?? i18nAll.de;
-  // Batch 7 Phase 1: /produkte hatte 84 Inhaltswörter roh (4 Paketnamen), während
-  // die React-Seite den kompletten Katalog rendert. Ergänzt werden ausschließlich
-  // vorhandene Quellen: productShowcase aus common.json, die Add-on-Bundles
-  // (dieselben, aus denen die Add-on-Seiten gebaut werden) und die
-  // Hardware-Kategorien. Kein neuer Text, keine zweite Datenhaltung.
-  const intro = bundle?.productShowcase
-    ? `<p style="margin:0 0 1.25rem;line-height:1.6;">${escapeHtmlMin(bundle.productShowcase.title ?? '')}</p>`
-    : '';
-  const addonItems = Object.entries(ADDON_REGISTRY)
-    .map(([key, reg]) => {
-      const b = loadBundle(lang, reg.bundle) ?? loadBundle('de', reg.bundle);
-      const norm = b ? normalizeHeroFromBundle(b) : null;
-      const name = b?.meta?.breadcrumbName ?? norm?.headline ?? b?.seo?.title ?? key;
-      const desc = norm?.subline ?? b?.seo?.description ?? '';
-      const href = localePath(ADDON_DE_SLUG[key] ?? '/produkte/add-ons', lang);
-      return `<li style="margin:0 0 0.6rem;"><a href="${href}" style="color:#0A264A;font-weight:700;">${escapeHtmlMin(plainText(name))}</a> — ${escapeHtmlMin(plainText(desc))}</li>`;
-    })
+  // Batch 7 Phase 1 (Weg A): Quelle ist src/data/produkte-page-content.ts —
+  // dieselbe Datei, aus der ProduktePage.tsx rendert. Vorher baute dieser Zweig
+  // eine eigene Kurzfassung aus PACKAGES: 90 Wörter, davon 1 % im gerenderten
+  // DOM wiederzufinden. Jetzt sind roher und gerenderter Text derselbe Text.
+  const tx = PRODUKTE_CONTENT[lang] ?? PRODUKTE_CONTENT.en ?? PRODUKTE_CONTENT.de;
+  const card = (p) =>
+    `<li style="margin:0 0 0.9rem;"><strong>${escapeHtmlMin(p.title)}</strong>${p.price ? ` — ${escapeHtmlMin(p.price)}` : ''}<br>${escapeHtmlMin(p.desc ?? '')}` +
+    (Array.isArray(p.benefits) && p.benefits.length
+      ? `<br><span style="color:#475569;">${p.benefits.map((b) => escapeHtmlMin(b)).join(' · ')}</span>`
+      : '') +
+    `</li>`;
+  const faq = (tx.faqItems ?? [])
+    .map((f) => `<li style="margin:0 0 0.6rem;"><strong>${escapeHtmlMin(f.q)}</strong> ${escapeHtmlMin(plainText(String(f.a).replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')))}</li>`)
     .join('');
-  const hardwareItems = HARDWARE_CATEGORIES.map(
-    (c) => `<li style="margin:0 0 0.4rem;"><strong>${escapeHtmlMin(c.name)}</strong> — ${escapeHtmlMin(c.description)}</li>`,
-  ).join('');
   return (
     `<section style="max-width:880px;margin:2rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">` +
-    `<h1 style="font-size:2rem;font-weight:900;text-align:center;margin:0 0 1.5rem;">${escapeHtmlMin(heading)}</h1>` +
-    intro +
-    buildStaticPackages(lang).replace(/<h2[^>]*>[^<]*<\/h2>/, '') +
-    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.5rem;"><a href="${localePath('/produkte/add-ons', lang)}" style="color:#0A264A;">${escapeHtmlMin(navLabel(lang, 'add-ons'))}</a></h2>` +
-    `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${addonItems}</ul>` +
-    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.5rem;"><a href="${localePath('/produkte/hardware', lang)}" style="color:#0A264A;">${escapeHtmlMin(navLabel(lang, 'hardware'))}</a></h2>` +
-    `<p style="margin:0 0 0.75rem;line-height:1.6;">${escapeHtmlMin(HARDWARE_INTRO[lang] ?? HARDWARE_INTRO.de)}</p>` +
-    `<ul style="margin:0 0 1rem;padding-left:1.1rem;">${hardwareItems}</ul>` +
+    `<p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.5rem;">${escapeHtmlMin(tx.heroBadge)}</p>` +
+    `<h1 style="font-size:2rem;font-weight:900;margin:0 0 1rem;">${escapeHtmlMin(`${tx.heroH1a} ${tx.heroH1b}`)}</h1>` +
+    `<p style="line-height:1.6;margin:0 0 0.75rem;">${escapeHtmlMin(tx.heroP1Text)}</p>` +
+    `<p style="line-height:1.6;margin:0 0 1.5rem;">${escapeHtmlMin(tx.heroP2)}</p>` +
+    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.25rem;">${escapeHtmlMin(tx.prodH2)}</h2>` +
+    `<p style="margin:0 0 0.75rem;">${escapeHtmlMin(tx.prodSub)}</p>` +
+    `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${(tx.mainProducts ?? []).map(card).join('')}</ul>` +
+    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.25rem;">${escapeHtmlMin(tx.addonH2)}</h2>` +
+    `<p style="margin:0 0 0.75rem;">${escapeHtmlMin(tx.addonSub)}</p>` +
+    `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${(tx.addOns ?? []).map(card).join('')}</ul>` +
+    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.25rem;">${escapeHtmlMin(tx.kassenH2)}</h2>` +
+    `<p style="margin:0 0 0.75rem;">${escapeHtmlMin(tx.kassenSub)}</p>` +
+    `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${(tx.kassenAddOns ?? []).map(card).join('')}</ul>` +
+    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.25rem;">${escapeHtmlMin(tx.synH2)}</h2>` +
+    `<p style="margin:0 0 0.75rem;">${escapeHtmlMin(tx.synSub)}</p>` +
+    `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${(tx.synergy ?? []).map((sy) => `<li style="margin:0 0 0.6rem;"><strong>${escapeHtmlMin(sy.title)}</strong> ${escapeHtmlMin(sy.desc ?? '')}</li>`).join('')}</ul>` +
+    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.25rem;">${escapeHtmlMin(tx.faqH2)}</h2>` +
+    `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${faq}</ul>` +
+    `<p style="margin:0 0 1rem;">${escapeHtmlMin(tx.ctaSub)}</p>` +
+    `<p style="margin:0;"><a href="${localePath('/produkte/add-ons', lang)}">${escapeHtmlMin(navLabel(lang, 'add-ons'))}</a> · <a href="${localePath('/produkte/hardware', lang)}">${escapeHtmlMin(navLabel(lang, 'hardware'))}</a></p>` +
     `</section>`
   );
 };
 
-// Add-on-Schlüssel → DE-Slug (die Registry-Keys weichen von den Slugs ab).
-const ADDON_DE_SLUG = {
-  'qr-flyer': '/produkte/add-ons/qr-code-flyer',
-  'driver-app-gps': '/produkte/add-ons/fahrer-app-gps',
-  'qr-table-system': '/produkte/add-ons/qr-code-tischsystem',
-  'kitchen-display': '/produkte/add-ons/bildschirmfunktion',
-  'kiosk': '/produkte/add-ons/kiosk',
-  'transaction-fee-sharing': '/produkte/add-ons/transaktionsumlage',
-};
 
 // Hardware page is a category landing. We list the actual hardware categories
 // Gastro Master sells/integrates so AI engines have something concrete to cite
