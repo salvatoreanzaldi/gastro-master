@@ -370,10 +370,29 @@ const BlogPostDetailPage = () => {
 
   useEffect(() => {
     if (!post?.jsonLd) return;
+    // Batch 6 Runde 2: BreadcrumbList kommt AUSSCHLIESSLICH vom Prerenderer
+    // (bedingte 3/4-Ebenen-Tiefe aus der Hub-Registry). 54 generierte Posts
+    // tragen im jsonLd-Feld eine Alt-BreadcrumbList mit prä-/de-URLs
+    // (gastro-master.de/blog/…) — die würde nach der Hydration als Dublette
+    // im DOM landen. Hier herausfiltern statt die generierte Datei anzufassen.
+    let payload = post.jsonLd;
+    try {
+      const parsed = JSON.parse(post.jsonLd);
+      if (Array.isArray(parsed["@graph"])) {
+        parsed["@graph"] = parsed["@graph"].filter(
+          (n: { "@type"?: string }) => n["@type"] !== "BreadcrumbList",
+        );
+        payload = JSON.stringify(parsed);
+      } else if (parsed["@type"] === "BreadcrumbList") {
+        return;
+      }
+    } catch {
+      // Nicht parsebar → unverändert injizieren (Status quo).
+    }
     const script = document.createElement("script");
     script.type = "application/ld+json";
     script.id = `blog-jsonld-${post.slug}`;
-    script.textContent = post.jsonLd;
+    script.textContent = payload;
     document.head.appendChild(script);
     return () => {
       document.getElementById(`blog-jsonld-${post.slug}`)?.remove();
