@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import {
   ArrowRight,
   ChevronDown,
@@ -595,6 +596,7 @@ const RestaurantPage = () => {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  aria-expanded={openFaq === i}
                   className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-foreground/[0.02] transition-colors"
                 >
                   <span className="font-semibold text-foreground text-base leading-snug">{item.q}</span>
@@ -606,22 +608,13 @@ const RestaurantPage = () => {
                     <ChevronDown className="w-5 h-5" />
                   </motion.div>
                 </button>
-                <AnimatePresence initial={false}>
-                  {openFaq === i && (
-                    <motion.div
-                      key="content"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-6 pb-6 text-foreground/65 text-sm leading-relaxed border-t border-border pt-4">
-                        {renderWithLinks(item.a, lp)}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
+                    vorher nicht im DOM. */}
+                <FaqPanel open={openFaq === i}>
+                  <div className="px-6 pb-6 text-foreground/65 text-sm leading-relaxed border-t border-border pt-4">
+                    {renderWithLinks(item.a, lp)}
+                  </div>
+                </FaqPanel>
               </motion.div>
             ))}
           </div>

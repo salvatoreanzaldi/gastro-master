@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import {
   ArrowRight, ChevronDown, Star,
   UtensilsCrossed, Coffee, Truck, Store, Building2,
@@ -403,21 +404,13 @@ const LoesungenPage = () => {
                     }`}
                   />
                 </button>
-                <AnimatePresence initial={false}>
-                  {openFaq === i && (
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height: "auto" }}
-                      exit={{ height: 0 }}
-                      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                      style={{ overflow: "hidden" }}
-                    >
-                      <p className="px-6 pb-5 text-[#0A264A]/60 dark:text-white/60 text-sm leading-relaxed">
-                        {renderWithLinks(item.a, lp)}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
+                    vorher nicht im DOM. */}
+                <FaqPanel open={openFaq === i}>
+                  <p className="px-6 pb-5 text-[#0A264A]/60 dark:text-white/60 text-sm leading-relaxed">
+                    {renderWithLinks(item.a, lp)}
+                  </p>
+                </FaqPanel>
               </div>
             ))}
           </div>

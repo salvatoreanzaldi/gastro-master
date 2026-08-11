@@ -2,7 +2,8 @@ import React, { useState, useMemo } from "react";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import {
   ArrowRight, ChevronDown, ExternalLink, Monitor, ShoppingCart,
   Smartphone, Globe, Percent, Flame, Eye, Layers,
@@ -390,16 +391,15 @@ const GhostKitchenPage = () => {
               <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
                 className="rounded-2xl border border-border bg-background overflow-hidden">
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full text-left px-6 py-5 flex items-center justify-between gap-4">
+                  aria-expanded={openFaq === i}
                   <span className="font-semibold text-foreground text-[15px] pr-4 leading-snug">{item.q}</span>
                   <ChevronDown className={`w-4 h-4 text-cyan-brand flex-shrink-0 transition-transform duration-200 ${openFaq === i ? "rotate-180" : ""}`} />
                 </button>
-                <AnimatePresence initial={false}>
-                  {openFaq === i && (
-                    <motion.div key="content" initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} transition={{ duration: 0.25, ease: "easeInOut" }} className="overflow-hidden">
-                      <p className="px-6 pb-6 text-sm text-foreground/65 leading-7 border-t border-border pt-4">{renderWithLinks(item.a, lp)}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
+                    vorher nicht im DOM. */}
+                <FaqPanel open={openFaq === i}>
+                  <p className="px-6 pb-6 text-sm text-foreground/65 leading-7 border-t border-border pt-4">{renderWithLinks(item.a, lp)}</p>
+                </FaqPanel>
               </motion.div>
             ))}
           </div>

@@ -4,6 +4,7 @@ import { useSeoMeta } from "@/hooks/useSeoMeta";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import {
   ArrowRight, Plus, Minus, CheckCircle2,
   Star, CreditCard, Globe, FileText, MapPin, Users, RefreshCw, Search, type LucideIcon,
@@ -167,6 +168,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
     <div className="border-b border-white/[0.08]">
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         className="w-full flex items-start justify-between gap-6 py-7 text-left group"
       >
         <span className="text-white font-semibold text-base md:text-lg leading-snug group-hover:text-cyan-brand transition-colors duration-200">{q}</span>
@@ -174,19 +176,11 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
           {open ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
         </span>
       </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
-            className="overflow-hidden"
-          >
-            <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a)}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
+          vorher nicht im DOM. */}
+      <FaqPanel open={open}>
+        <p className="text-white/55 leading-relaxed pb-7 text-base max-w-2xl">{renderFaqLinks(a)}</p>
+      </FaqPanel>
     </div>
   );
 };

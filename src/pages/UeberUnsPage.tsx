@@ -4,7 +4,8 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useLangPath } from "@/components/LanguageLayout";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import {
   ArrowRight, Rocket, Users, Building2, CreditCard, Monitor,
   Sparkles, Globe, Linkedin, UtensilsCrossed, MapPin, UserCheck,
@@ -206,20 +207,19 @@ const FaqItem = ({ q, a, open, onToggle, lp }: { q: string; a: string; open: boo
     className="rounded-2xl border border-border bg-background overflow-hidden"
   >
     <button onClick={onToggle} className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-foreground/[0.02] transition-colors">
+      aria-expanded={open}
       <span className="font-semibold text-foreground text-base leading-snug">{q}</span>
       <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className="shrink-0 text-foreground/40">
         <ChevronDown className="w-5 h-5" />
       </motion.div>
     </button>
-    <AnimatePresence initial={false}>
-      {open && (
-        <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25, ease: "easeInOut" }} className="overflow-hidden">
-          <div className="px-6 pb-6 text-foreground/65 text-sm leading-relaxed border-t border-border pt-4">
-            {renderWithLinks(a, lp)}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
+        vorher nicht im DOM. */}
+    <FaqPanel open={open}>
+      <div className="px-6 pb-6 text-foreground/65 text-sm leading-relaxed border-t border-border pt-4">
+        {renderWithLinks(a, lp)}
+      </div>
+    </FaqPanel>
   </motion.div>
 );
 

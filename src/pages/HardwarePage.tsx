@@ -3,6 +3,7 @@ import { useSeoMeta } from "@/hooks/useSeoMeta";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import { ArrowRight, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Plus, Minus, Check, X, LayoutGrid, Grid2x2, List, Square, type LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -672,6 +673,7 @@ const HardwarePage = () => {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  aria-expanded={openFaq === i}
                   className="w-full flex items-center justify-between px-5 py-4 text-left bg-[#f8fafc] dark:bg-white/[0.04] hover:bg-[#f0f4f8] dark:hover:bg-white/[0.06] transition-colors"
                 >
                   <span className="font-semibold text-[#0A264A] dark:text-white text-sm pr-4">{item.q}</span>
@@ -679,21 +681,13 @@ const HardwarePage = () => {
                     ? <Minus className="w-4 h-4 text-cyan-brand flex-shrink-0" />
                     : <Plus className="w-4 h-4 text-[#0A264A]/40 dark:text-white/40 flex-shrink-0" />}
                 </button>
-                <AnimatePresence initial={false}>
-                  {openFaq === i && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <p className="px-5 py-4 text-[#0A264A]/65 dark:text-white/50 text-sm leading-relaxed bg-white dark:bg-white/[0.02]">
-                        {item.a}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
+                    vorher nicht im DOM. */}
+                <FaqPanel open={openFaq === i}>
+                  <p className="px-5 py-4 text-[#0A264A]/65 dark:text-white/50 text-sm leading-relaxed bg-white dark:bg-white/[0.02]">
+                    {item.a}
+                  </p>
+                </FaqPanel>
               </motion.div>
             ))}
           </div>

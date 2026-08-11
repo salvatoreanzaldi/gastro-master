@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useTranslation } from "react-i18next";
@@ -340,19 +341,18 @@ const AddOnsPage = () => {
                 <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.04 }} className="rounded-2xl border border-border bg-card overflow-hidden">
                   <h3 className="text-base">
                     <button className="w-full flex items-center justify-between px-6 py-5 text-left gap-4" onClick={() => setOpenIdx(openIdx === i ? null : i)} aria-expanded={openIdx === i}>
+                      aria-expanded={openIdx === i}
                       <span className="font-bold text-foreground text-base leading-snug">{item.q}</span>
                       <ChevronDown className={`w-5 h-5 text-muted-foreground shrink-0 transition-transform duration-300 ${openIdx === i ? "rotate-180" : ""}`} />
                     </button>
                   </h3>
-                  <AnimatePresence initial={false}>
-                    {openIdx === i && (
-                      <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }} style={{ overflow: "hidden" }}>
-                        <div className="px-6 pb-5">
-                          <p className="text-muted-foreground text-sm leading-relaxed">{renderFaqLinks(item.a)}</p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
+                      vorher nicht im DOM. */}
+                  <FaqPanel open={openIdx === i}>
+                    <div className="px-6 pb-5">
+                      <p className="text-muted-foreground text-sm leading-relaxed">{renderFaqLinks(item.a)}</p>
+                    </div>
+                  </FaqPanel>
                 </motion.div>
               ))}
             </div>

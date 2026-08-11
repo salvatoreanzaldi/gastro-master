@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import {
   ArrowRight, Building2, ClipboardList, Target, Monitor,
   ChevronDown, ExternalLink,
@@ -614,22 +615,13 @@ const LieferserviceGruendenPage = () => {
                   />
                 </button>
 
-                <AnimatePresence initial={false}>
-                  {openFaq === i && (
-                    <motion.div
-                      key="content"
-                      initial={{ height: 0 }}
-                      animate={{ height: "auto" }}
-                      exit={{ height: 0 }}
-                      transition={{ duration: 0.25, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <p className="px-6 pb-6 text-sm text-[#0A264A]/65 dark:text-white/55 leading-7 border-t border-[#0A264A]/[0.05] dark:border-white/[0.05] pt-4">
-                        {renderWithLinks(item.a, lp)}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
+                    vorher nicht im DOM. */}
+                <FaqPanel open={openFaq === i}>
+                  <p className="px-6 pb-6 text-sm text-[#0A264A]/65 dark:text-white/55 leading-7 border-t border-[#0A264A]/[0.05] dark:border-white/[0.05] pt-4">
+                    {renderWithLinks(item.a, lp)}
+                  </p>
+                </FaqPanel>
               </div>
             ))}
           </div>
