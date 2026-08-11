@@ -4047,10 +4047,13 @@ for (const post of allBlogPosts) {
           .join('') +
         '</ul></nav>'
       : '';
+  // Hub-Registry entscheidet: Kategorie-Ebene verlinkt (und im Schema mit
+  // item), sobald ein Hub existiert — vor staticArticle deklarieren (TDZ).
+  const categoryHubPath = post.category ? hubPathForCategory(post.category) : null;
   const staticArticle = [
     '<article itemscope itemtype="https://schema.org/BlogPosting" style="max-width:760px;margin:2rem auto;padding:1rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-    // Sichtbarer Breadcrumb inkl. Kategorie-Ebene (Batch 6) — Kategorie und
-    // Titel als Text (Hub-URLs folgen später); voller Titel steht im H1.
+    // Sichtbarer Breadcrumb inkl. Kategorie-Ebene (Batch 6) — Kategorie mit
+    // Hub-Link, sonst Text; voller Titel steht im H1.
     `<nav class="post-breadcrumb" aria-label="Brotkrümel"><a href="/de">Home</a> › <a href="/de/blog">Blog</a>${post.category ? ` › ${categoryHubPath ? `<a href="${categoryHubPath}">${escapeHtml(post.category)}</a>` : `<span>${escapeHtml(post.category)}</span>`}` : ''} › <span>${escapeHtml(stripMarkdown(post.title).slice(0, 60))}${stripMarkdown(post.title).length > 60 ? '…' : ''}</span></nav>`,
     `<h1 itemprop="headline">${escapeHtml(stripMarkdown(post.title))}</h1>`,
     `<p><small>Von <span itemprop="author">${escapeHtml(post.author)}</span> · `,
@@ -4135,7 +4138,7 @@ for (const post of allBlogPosts) {
   // Kategorie-Ebene das Schema nur, wenn die Hub-Registry (blog-hub-content.ts)
   // eine URL liefert — sonst bleibt das Schema 3-stufig (Home › Blog › Post).
   // Der SICHTBARE Crumb ist immer 4-stufig (Kategorie ggf. als reiner Text).
-  const categoryHubPath = post.category ? hubPathForCategory(post.category) : null;
+  // (categoryHubPath oben vor staticArticle deklariert.)
   const breadcrumbSchema = buildBreadcrumbList(url, [
     { name: 'Home', url: `${SITE_URL}/de` },
     { name: 'Blog', url: `${SITE_URL}/de/blog` },
