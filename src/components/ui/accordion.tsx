@@ -42,10 +42,13 @@ AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
  * gerenderten DOM (gemessen: 0 von 6 Antworten je Vergleichsseite).
  *
  * forceMount allein reicht NICHT: Radix setzt dann kein `hidden` mehr, der
- * Inhalt stünde offen da. Deshalb übernimmt CSS das Einklappen —
- * `data-[state=closed]:h-0` hält die Höhe stabil bei 0 (auch nachdem die
- * Keyframe-Animation durchgelaufen ist) und `invisible` nimmt den Text aus
- * dem Screenreader-Fluss, ohne ihn aus dem DOM zu entfernen.
+ * Inhalt stünde offen da. Das Einklappen übernimmt deshalb CSS.
+ *
+ * Bewusst `display:none` (Tailwind `hidden`) statt Höhe 0: Radix misst die
+ * Inhaltshöhe für seine Animation und rendert das Panel dabei für einen Frame
+ * in voller Höhe — auf der Vergleichsseite hat das den CLS von 0,08 auf 0,31
+ * getrieben. Mit display:none entfällt der Mess-Frame. Der Text bleibt im DOM
+ * und damit indexierbar; ausgeklappt animiert Radix wie bisher.
  */
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Content>,
@@ -54,7 +57,7 @@ const AccordionContent = React.forwardRef<
   <AccordionPrimitive.Content
     ref={ref}
     forceMount
-    className="overflow-hidden text-sm transition-all data-[state=closed]:h-0 data-[state=closed]:invisible data-[state=open]:animate-accordion-down"
+    className="overflow-hidden text-sm data-[state=closed]:hidden data-[state=open]:animate-accordion-down"
     {...props}
   >
     <div className={cn("pb-4 pt-0", className)}>{children}</div>
