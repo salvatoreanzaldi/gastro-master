@@ -986,26 +986,12 @@ const buildStaticPackages = (lang) => {
 // extrahieren können. React-Hydration ersetzt den Block, User sehen ihn
 // nicht doppelt. Übersetzungen-DE-only — andere Sprachen kriegen den
 // Block nicht (faktisch DACH-Markt-Ziel).
-const HOMEPAGE_QUOTABLES_DE = [
-  'Gastro Master ist die deutsche All-in-One-Lösung für Restaurant-Bestellsysteme — Webshop, eigene App, Webseite und Kassensystem aus einer Hand, mit 0 % Provision.',
-  'Mit 3 Monaten Kündigungsfrist und 0 % Provision bietet Gastro Master flexible Vertragsbedingungen für den Restaurant-Mittelstand.',
-  'Gastro Master wurde 2021 in Usingen (Hessen) gegründet und betreut 800+ Restaurants in Deutschland, Österreich und der Schweiz.',
-  'Gastro Master bietet persönlichen Service in sechs Sprachen — Deutsch, Englisch, Italienisch, Russisch, Persisch und Singhalesisch.',
-  'Das Gastro Master Kassensystem ist TSE-zertifiziert nach §146a AO und GoBD-konform für Finanzamt-Audits.',
-];
-
-const buildStaticQuotables = (lang) => {
-  if (lang !== 'de') return ''; // nur DE-Variante (kein deutsches AI-Citation-Risiko)
-  const items = HOMEPAGE_QUOTABLES_DE.map(
-    (q) => `<li style="margin:0 0 0.75rem;padding:0;">${escapeHtmlMin(q)}</li>`,
-  ).join('');
-  return [
-    '<section style="max-width:880px;margin:2rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-    '<h2 style="font-size:1.5rem;font-weight:800;margin:0 0 1rem;">Was Gastro Master auszeichnet</h2>',
-    `<ul style="list-style:disc;padding-left:1.25rem;margin:0;line-height:1.6;">${items}</ul>`,
-    '</section>',
-  ].join('');
-};
+// Batch 8: Wortlaut und Reihenfolge kommen aus src/data/site-facts.ts —
+// dieselbe Quelle, aus der jetzt auch die sichtbare React-Sektion rendert.
+const { renderSiteFactsHtml } = await import(
+  new URL('../src/data/site-facts.ts', import.meta.url).href
+);
+const buildStaticQuotables = (lang) => renderSiteFactsHtml(lang);
 
 // YouTube-IDs der 5 Kunden-Testimonials (Quelle: VideoTestimonialSection.tsx).
 // Bewusst hier oben definiert: sowohl der statische Player-Block als auch die
@@ -3075,33 +3061,11 @@ for (const route of routes) {
         });
       }
 
-      // 4. FAQPage mit Top-6 FAQs aus faq.json (Kategorie "allgemein") —
-      // perfekt für AI-Citation auf "Was ist Gastro Master?" / "Was kostet
-      // ein Bestellsystem?" / "Wie unterscheidet sich Gastro Master von
-      // Lieferando?". Nur DE hat aktuell strukturierte FAQs — Fallback
-      // für andere Sprachen: skip (kein Schaden, kein invalider Schema).
-      const faqBundle = loadBundle(lang, 'faq');
-      const allgemein = faqBundle?.categories?.[0]?.items;
-      if (Array.isArray(allgemein) && allgemein.length >= 2) {
-        const top6 = allgemein.slice(0, 6).filter((it) => it && (it.q || it.question) && (it.a || it.answer));
-        if (top6.length >= 2) {
-          homeSchemas.push({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "@id": `${canonicalUrl}#faq-home`,
-            inLanguage: localeOf(lang),
-            mainEntity: top6.map((it) => ({
-              "@type": "Question",
-              name: it.q ?? it.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                // Strip markdown-link syntax für sauberes Schema-Text-Format
-                text: String(it.a ?? it.answer).replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'),
-              },
-            })),
-          });
-        }
-      }
+      // 4. FAQPage der Startseite ENTFERNT (Batch 8). Das Schema versprach
+      // sechs Fragen, die auf der Startseite nirgends stehen: Index.tsx bindet
+      // keine FAQ-Sektion ein, und im statischen Block steht sie ebenfalls
+      // nicht. Markup ohne zugehörigen Seiteninhalt widerspricht Googles
+      // Vorgabe — die sechs Fragen stehen mit eigenem FAQPage auf /de/faq.
 
       const schemaTags = homeSchemas
         .map((s) => `  <script type="application/ld+json">${JSON.stringify(s)}</script>`)

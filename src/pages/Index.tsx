@@ -40,6 +40,7 @@ const POSSection = lazy(() => import("@/components/landing/POSSection"));
 const DifferentiationSection = lazy(() => import("@/components/landing/DifferentiationSection"));
 const ProcessSection = lazy(() => import("@/components/landing/ProcessSection"));
 const IntegrationSliderSection = lazy(() => import("@/components/landing/IntegrationSliderSection"));
+const SiteFactsSection = lazy(() => import("@/components/landing/SiteFactsSection"));
 const HomeTeamCTA = lazy(() => import("@/components/HomeTeamCTA"));
 const CTASection = lazy(() =>
   import("@/components/CTASection").then((m) => ({ default: m.CTASection }))
@@ -62,6 +63,7 @@ const prefetchBelowFold = () => {
   void import("@/components/landing/DifferentiationSection");
   void import("@/components/landing/ProcessSection");
   void import("@/components/landing/IntegrationSliderSection");
+  void import("@/components/landing/SiteFactsSection");
   void import("@/components/HomeTeamCTA");
   void import("@/components/CTASection");
   void import("@/components/landing/Footer");
@@ -117,6 +119,9 @@ const Index = () => {
         <DifferentiationSection />
         <ProcessSection />
         <IntegrationSliderSection />
+        {/* Batch 8: Unternehmensfakten sichtbar (site-facts.ts, eine Quelle mit
+            dem Prerenderer) — standen vorher nur im rohen HTML. */}
+        <SiteFactsSection />
 
         {/* Desktop Team CTA Section */}
         <div className="hidden md:block">
