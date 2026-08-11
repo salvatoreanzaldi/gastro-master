@@ -1,6 +1,7 @@
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { useLocation, useNavigate } from "react-router-dom";
 import { hubPathForCategory } from "@/data/blog-hub-content";
+import { filterClientJsonLd } from "@/lib/jsonld-dedupe";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { motion } from "framer-motion";
@@ -370,28 +371,17 @@ const BlogPostDetailPage = () => {
 
   useEffect(() => {
     if (!post?.jsonLd) return;
-    // Batch 6 Runde 2: BreadcrumbList kommt AUSSCHLIESSLICH vom Prerenderer
-    // (bedingte 3/4-Ebenen-Tiefe aus der Hub-Registry). 54 generierte Posts
-    // tragen im jsonLd-Feld eine Alt-BreadcrumbList mit prä-/de-URLs
-    // (gastro-master.de/blog/…) — die würde nach der Hydration als Dublette
-    // im DOM landen. Hier herausfiltern statt die generierte Datei anzufassen.
-    let payload = post.jsonLd;
-    try {
-      const parsed = JSON.parse(post.jsonLd);
-      if (Array.isArray(parsed["@graph"])) {
-        parsed["@graph"] = parsed["@graph"].filter(
-          (n: { "@type"?: string }) => n["@type"] !== "BreadcrumbList",
-        );
-        payload = JSON.stringify(parsed);
-      } else if (parsed["@type"] === "BreadcrumbList") {
-        return;
-      }
-    } catch {
-      // Nicht parsebar → unverändert injizieren (Status quo).
-    }
+    // Batch 6 Runde 3: generische Regel statt Typ-Liste — ergänzt wird nur,
+    // was im prerenderten <head> fehlt (src/lib/jsonld-dedupe.ts). Die 54
+    // generierten Posts mit Alt-jsonLd bringen sonst Article neben
+    // BlogPosting, eine zweite FAQPage und eine BreadcrumbList mit alten
+    // prä-/de-URLs mit. HowTo und andere fehlende Typen bleiben erhalten.
+    const payload = filterClientJsonLd(post.jsonLd);
+    if (!payload) return;
     const script = document.createElement("script");
     script.type = "application/ld+json";
     script.id = `blog-jsonld-${post.slug}`;
+    script.dataset.clientJsonld = "1";
     script.textContent = payload;
     document.head.appendChild(script);
     return () => {

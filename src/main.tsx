@@ -8,5 +8,10 @@ import App from "./App.tsx";
 // Non-Latin-Subsets, Verhalten für nicht-latinische Sprachen ändert sich nicht).
 import "@fontsource-variable/outfit/wght.css";
 import "./index.css";
+import { installJsonLdDedupe } from "./lib/jsonld-dedupe";
+
+// Batch 6 Runde 3: Schnappschuss des prerenderten <head>-Schemas VOR dem Mount
+// — danach ergänzt der Client nur noch Typen, die dort fehlen.
+installJsonLdDedupe();
 
 createRoot(document.getElementById("root")!).render(<App />);
