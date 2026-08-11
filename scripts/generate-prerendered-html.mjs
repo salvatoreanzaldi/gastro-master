@@ -1053,7 +1053,19 @@ const buildStaticVideos = (lang) => {
 };
 
 const buildStaticHero = (lang) => {
-  const h = i18nHero[lang];
+  // Batch 7: Die Startseite rendert HeroScrollSection (Bundle-Sektion
+  // `heroScroll`), nicht `hero` — letzteres stammt aus einer früheren Fassung
+  // und stand als H1 im rohen HTML, ohne dass die Seite den Satz zeigt
+  // (gemessen: 0 % Wiederfindung im DOM). Deshalb heroScroll zuerst.
+  const hs = (i18nAll[lang] ?? i18nAll.de)?.heroScroll;
+  const h = hs?.title1
+    ? {
+        headline: [hs.title1, hs.title2].filter(Boolean).join(' '),
+        sub: [hs.subPrefix, hs.linkWebshop, hs.linkKasse, hs.subSuffix].filter(Boolean).join(' '),
+        cta: i18nHero[lang]?.cta,
+        trust1: hs.badge,
+      }
+    : i18nHero[lang];
   if (!h?.headline) return '';
   const trusts = [h.trust1, h.trust2, h.trust3].filter(Boolean);
   return [
