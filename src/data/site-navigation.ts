@@ -114,6 +114,9 @@ export const FOOTER_GROUPS: SiteNavGroup[] = [
       { deSlug: "/kontakt", label: "Kontakt", i18nKey: "footer.kontakt" },
       { deSlug: "/uber-uns", label: "Über uns", i18nKey: "footer.ueberUns" },
       { deSlug: "/faq", label: "FAQ" },
+      // Stand vor Batch 7 genau EINMAL im gerenderten DOM (Slider-Sektion der
+      // Startseite, IntegrationSliderSection.tsx) und in keiner rohen Seite.
+      { deSlug: "/integrations", label: "Integrationen" },
       { deSlug: "/blog", label: "Blog" },
       {
         deSlug: "/downloads",

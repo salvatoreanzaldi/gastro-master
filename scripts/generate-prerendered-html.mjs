@@ -869,6 +869,48 @@ const escapeHtmlMin = (s) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+// ─── Batch 7 Phase 1: i18n-Sektionen als statisches HTML ────────────────────
+// Die Startseite rendert client-seitig ~3.000 Wörter aus public/locales/<lang>/
+// common.json — im rohen HTML standen davon nur Hero + Pakete (334 Inhalts-
+// wörter). Dieser Renderer gibt dieselben Bundle-Sektionen aus, die React
+// rendert: gleiche Quelle, gleicher Text, alle 6 Sprachen, nichts erfunden.
+// Er kennt die im Bundle vorkommenden Formen (items/features/steps als String,
+// {title,text}, {q,a}, {name,type,quote}) und ignoriert alles Übrige.
+const i18nSectionHtml = (sec, { level = 2 } = {}) => {
+  if (!sec || typeof sec !== 'object') return '';
+  const head = sec.headline ?? [sec.headline1, sec.headline2].filter(Boolean).join(' ') ?? sec.title;
+  const sub = sec.sub ?? sec.subtitle ?? sec.desc;
+  const parts = [];
+  if (head) parts.push(`<h${level} style="font-size:1.35rem;font-weight:800;margin:1.75rem 0 0.5rem;">${escapeHtmlMin(head)}</h${level}>`);
+  if (sub) parts.push(`<p style="margin:0 0 0.75rem;line-height:1.6;">${escapeHtmlMin(sub)}</p>`);
+  for (const list of [sec.items, sec.features, sec.steps, sec.posFeatures]) {
+    if (!Array.isArray(list) || list.length === 0) continue;
+    const lis = list
+      .map((it) => {
+        if (typeof it === 'string') return `<li style="margin:0 0 0.4rem;">${escapeHtmlMin(it)}</li>`;
+        if (!it || typeof it !== 'object') return '';
+        if (it.q) return `<li style="margin:0 0 0.5rem;"><strong>${escapeHtmlMin(it.q)}</strong> ${escapeHtmlMin(it.a ?? '')}</li>`;
+        if (it.quote) return `<li style="margin:0 0 0.5rem;"><strong>${escapeHtmlMin(it.name ?? '')}</strong>${it.type ? ` (${escapeHtmlMin(it.type)})` : ''}: ${escapeHtmlMin(it.quote)}</li>`;
+        if (it.title) return `<li style="margin:0 0 0.5rem;"><strong>${escapeHtmlMin(it.title)}</strong> ${escapeHtmlMin(it.text ?? it.desc ?? '')}</li>`;
+        return '';
+      })
+      .filter(Boolean)
+      .join('');
+    if (lis) parts.push(`<ul style="margin:0 0 1rem;padding-left:1.1rem;">${lis}</ul>`);
+  }
+  return parts.length ? `<section style="max-width:880px;margin:0 auto;padding:0 1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">${parts.join('')}</section>` : '';
+};
+
+// Startseiten-Prosa: dieselben Sektionen, die Index.tsx rendert, in derselben
+// Reihenfolge. Reine Deko-/Interaktions-Sektionen (Rechner, Slider, Mockups)
+// bleiben draußen — sie tragen keinen eigenständigen Text.
+const HOME_PROSE_SECTIONS = ['problem', 'positioning', 'solution', 'process', 'pos', 'risk', 'references', 'faq'];
+const buildHomeProse = (lang) => {
+  const bundle = i18nAll[lang] ?? i18nAll.de;
+  return HOME_PROSE_SECTIONS.map((key) => i18nSectionHtml(bundle?.[key])).join('');
+};
+
+
 // Bundle-Prosa mischt Markdown-Links (`[Text](/pfad)`) und Inline-HTML
 // (`<strong>`). Für Static-Fallback-Text + Schema-Answers beides zu
 // Klartext reduzieren — immer VOR escapeHtmlMin anwenden.
@@ -1496,9 +1538,50 @@ const buildPackagePageStatic = (pkg, lang, bundle = null, routeKey = null) => {
 // price + short description so a JS-less crawler sees the full catalogue.
 const buildHubPageStatic = (lang) => {
   const heading = navLabel(lang, 'produkte');
-  // Reuse the same packages section we render under the hero on the home —
-  // but here it's the page's main content, not a secondary block.
-  return `<section style="max-width:880px;margin:2rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;"><h1 style="font-size:2rem;font-weight:900;text-align:center;margin:0 0 1.5rem;">${escapeHtmlMin(heading)}</h1>${buildStaticPackages(lang).replace(/<h2[^>]*>[^<]*<\/h2>/, '')}</section>`;
+  const bundle = i18nAll[lang] ?? i18nAll.de;
+  // Batch 7 Phase 1: /produkte hatte 84 Inhaltswörter roh (4 Paketnamen), während
+  // die React-Seite den kompletten Katalog rendert. Ergänzt werden ausschließlich
+  // vorhandene Quellen: productShowcase aus common.json, die Add-on-Bundles
+  // (dieselben, aus denen die Add-on-Seiten gebaut werden) und die
+  // Hardware-Kategorien. Kein neuer Text, keine zweite Datenhaltung.
+  const intro = bundle?.productShowcase
+    ? `<p style="margin:0 0 1.25rem;line-height:1.6;">${escapeHtmlMin(bundle.productShowcase.title ?? '')}</p>`
+    : '';
+  const addonItems = Object.entries(ADDON_REGISTRY)
+    .map(([key, reg]) => {
+      const b = loadBundle(lang, reg.bundle) ?? loadBundle('de', reg.bundle);
+      const norm = b ? normalizeHeroFromBundle(b) : null;
+      const name = b?.meta?.breadcrumbName ?? norm?.headline ?? b?.seo?.title ?? key;
+      const desc = norm?.subline ?? b?.seo?.description ?? '';
+      const href = localePath(ADDON_DE_SLUG[key] ?? '/produkte/add-ons', lang);
+      return `<li style="margin:0 0 0.6rem;"><a href="${href}" style="color:#0A264A;font-weight:700;">${escapeHtmlMin(plainText(name))}</a> — ${escapeHtmlMin(plainText(desc))}</li>`;
+    })
+    .join('');
+  const hardwareItems = HARDWARE_CATEGORIES.map(
+    (c) => `<li style="margin:0 0 0.4rem;"><strong>${escapeHtmlMin(c.name)}</strong> — ${escapeHtmlMin(c.description)}</li>`,
+  ).join('');
+  return (
+    `<section style="max-width:880px;margin:2rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">` +
+    `<h1 style="font-size:2rem;font-weight:900;text-align:center;margin:0 0 1.5rem;">${escapeHtmlMin(heading)}</h1>` +
+    intro +
+    buildStaticPackages(lang).replace(/<h2[^>]*>[^<]*<\/h2>/, '') +
+    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.5rem;"><a href="${localePath('/produkte/add-ons', lang)}" style="color:#0A264A;">${escapeHtmlMin(navLabel(lang, 'add-ons'))}</a></h2>` +
+    `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${addonItems}</ul>` +
+    `<h2 style="font-size:1.35rem;font-weight:800;margin:2rem 0 0.5rem;"><a href="${localePath('/produkte/hardware', lang)}" style="color:#0A264A;">${escapeHtmlMin(navLabel(lang, 'hardware'))}</a></h2>` +
+    `<p style="margin:0 0 0.75rem;line-height:1.6;">${escapeHtmlMin(HARDWARE_INTRO[lang] ?? HARDWARE_INTRO.de)}</p>` +
+    `<ul style="margin:0 0 1rem;padding-left:1.1rem;">${hardwareItems}</ul>` +
+    `</section>`
+  );
+};
+
+// Add-on-Schlüssel → DE-Slug (die Registry-Keys weichen von den Slugs ab).
+const ADDON_DE_SLUG = {
+  'qr-flyer': '/produkte/add-ons/qr-code-flyer',
+  'driver-app-gps': '/produkte/add-ons/fahrer-app-gps',
+  'qr-table-system': '/produkte/add-ons/qr-code-tischsystem',
+  'kitchen-display': '/produkte/add-ons/bildschirmfunktion',
+  'kiosk': '/produkte/add-ons/kiosk',
+  'transaction-fee-sharing': '/produkte/add-ons/transaktionsumlage',
 };
 
 // Hardware page is a category landing. We list the actual hardware categories
@@ -2843,7 +2926,7 @@ for (const route of routes) {
       // jedes beschriebene Video ein echtes Player-Embed; React ersetzt den
       // Block bei createRoot(), für Nutzer ändert sich nichts.
       const videosHtml = lang === 'de' ? buildStaticVideos(lang) : '';
-      const homeStatic = `${heroHtml}${packagesHtml}${quotablesHtml}${videosHtml}`;
+      const homeStatic = `${heroHtml}${packagesHtml}${buildHomeProse(lang)}${quotablesHtml}${videosHtml}`;
       if (homeStatic) {
         html = html.replace(/<div id="root"><\/div>/, `<div id="root">${withChrome(lang, homeStatic)}</div>`);
       }
