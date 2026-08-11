@@ -4,7 +4,8 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useLangPath } from "@/components/LanguageLayout";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import {
   HelpCircle, Truck, Store, UtensilsCrossed, Coffee, Building2,
   Monitor, ShoppingCart, Printer, ChevronDown, ArrowRight, Search, X, Phone, Mail, TrendingUp,
@@ -351,7 +352,14 @@ interface FAQItemCardProps {
   renderWithLinks: (text: string) => React.ReactNode;
 }
 
-const FAQItemCard = ({ item, isOpen, onToggle, categoryLabel, renderWithLinks }: FAQItemCardProps) => (
+const FAQItemCard = ({ item, isOpen, onToggle, categoryLabel, renderWithLinks }: FAQItemCardProps) => {
+  // Batch 8: eigenes t(). Vorher griff der Quellen-Zweig auf ein `t` zu, das in
+  // dieser modulweiten Komponente gar nicht existiert — ein Klick auf eine der
+  // 12 FAQ mit Quellenangabe riss den kompletten React-Baum ab
+  // („TypeError: t is not a function", live reproduziert). Mit dauerhaft
+  // gemounteter Antwort wäre daraus ein Absturz beim Laden geworden.
+  const { t } = useTranslation();
+  return (
   <div className="rounded-2xl border border-[#0A264A]/[0.08] dark:border-white/[0.08] bg-white dark:bg-white/[0.04] overflow-hidden">
     {categoryLabel && (
       <div className="px-6 pt-4 pb-0">
@@ -370,41 +378,36 @@ const FAQItemCard = ({ item, isOpen, onToggle, categoryLabel, renderWithLinks }:
         <ChevronDown className={`w-5 h-5 text-[#0A264A]/35 dark:text-white/35 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
       </button>
     </h3>
-    <AnimatePresence initial={false}>
-      {isOpen && (
-        <motion.div
-          initial={{ height: 0 }}
-          animate={{ height: "auto" }}
-          exit={{ height: 0 }}
-          transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
-          style={{ overflow: "hidden" }}
-        >
-          <div className="px-6 pb-5">
-            <p className="text-[#0A264A]/60 dark:text-white/55 text-sm leading-relaxed">
-              {renderWithLinks(item.a)}
-            </p>
-            {item.source && (
-              <p className="mt-2 text-[#94A3B8] text-[11px] italic">
-                {t("common:sourceLabel")}:{" "}
-                {item.sourceHref ? (
-                  <a
-                    href={item.sourceHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-2 hover:text-cyan-brand transition-colors"
-                  >
-                    {item.source}
-                  </a>
-                ) : (
-                  item.source
-                )}
-              </p>
+    {/* Batch 8: immer gemountet (FaqPanel). Die Suche filtert auf
+        Item-Ebene (filteredResults) — nicht gefundene Fragen werden gar
+        nicht gerendert. Das dauerhafte Mounten der ANTWORT ändert daran
+        nichts, macht sie aber für Googles zweite Welle sichtbar. */}
+    <FaqPanel open={isOpen}>
+      <div className="px-6 pb-5">
+        <p className="text-[#0A264A]/60 dark:text-white/55 text-sm leading-relaxed">
+          {renderWithLinks(item.a)}
+        </p>
+        {item.source && (
+          <p className="mt-2 text-[#94A3B8] text-[11px] italic">
+            {t("common:sourceLabel")}:{" "}
+            {item.sourceHref ? (
+              <a
+                href={item.sourceHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-cyan-brand transition-colors"
+              >
+                {item.source}
+              </a>
+            ) : (
+              item.source
             )}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          </p>
+        )}
+      </div>
+    </FaqPanel>
   </div>
-);
+  );
+};
 
 export default FAQPage;

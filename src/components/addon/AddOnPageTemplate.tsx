@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { FaqPanel } from "@/components/ui/faq-panel";
 import { ArrowRight, CheckCircle2, XCircle, Quote, Plus, Minus, type LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLangPath } from "@/components/LanguageLayout";
@@ -386,6 +387,7 @@ const FaqItem = ({ q, a }: AddOnFaq) => {
     <div className="border-b border-border">
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         className="w-full flex items-start justify-between gap-6 py-6 text-left group"
       >
         <span className="text-foreground font-semibold text-base md:text-lg leading-snug group-hover:text-cyan-brand transition-colors duration-200">
@@ -395,19 +397,11 @@ const FaqItem = ({ q, a }: AddOnFaq) => {
           {open ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
         </span>
       </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
-            className="overflow-hidden"
-          >
-            <p className="text-muted-foreground leading-relaxed pb-6 text-base max-w-3xl">{a}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
+          vorher nicht im DOM und zählte in Googles zweiter Welle nicht. */}
+      <FaqPanel open={open}>
+        <p className="text-muted-foreground leading-relaxed pb-6 text-base max-w-3xl">{a}</p>
+      </FaqPanel>
     </div>
   );
 };
