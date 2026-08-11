@@ -18,24 +18,18 @@ import DeutschIcon from "@/assets/icons/Deutsch.svg";
 import EnglischIcon from "@/assets/icons/Englisch.svg";
 import ItalienischIcon from "@/assets/icons/Italienisch.svg";
 import PersischIcon from "@/assets/icons/Persisch.svg";
+import { PAKETE_LINKS, ADDON_LINKS, LOESUNGEN_LINKS } from "@/data/site-navigation";
 import RussischIcon from "@/assets/icons/Russisch.svg";
 import SinghalesischIcon from "@/assets/icons/Singhalesisch.svg";
 
-const paketeRoutes = [
-  { to: "/produkte/pakete/online-bestellshop", icon: ShoppingCart },
-  { to: "/produkte/pakete/bestell-app",        icon: Smartphone   },
-  { to: "/produkte/pakete/webseite",           icon: Globe        },
-  { to: "/produkte/pakete/kassensystem",       icon: Monitor      },
-];
+// Batch 7: Ziele + Reihenfolge kommen aus src/data/site-navigation.ts (dieselbe
+// Quelle wie Footer und statisches Prerender-HTML). Hier bleiben nur die Icons
+// — reine Darstellung, index-parallel zu den i18n-Label-Arrays.
+const PAKETE_ICONS = [ShoppingCart, Smartphone, Globe, Monitor];
+const paketeRoutes = PAKETE_LINKS.map((l, i) => ({ to: l.deSlug, icon: PAKETE_ICONS[i] }));
 
-const addonsRoutes = [
-  { to: "/produkte/add-ons/transaktionsumlage",    icon: Percent },
-  { to: "/produkte/add-ons/qr-code-flyer",         icon: Printer },
-  { to: "/produkte/add-ons/fahrer-app-gps",        icon: Truck   },
-  { to: "/produkte/add-ons/qr-code-tischsystem",   icon: QrCode  },
-  { to: "/produkte/add-ons/bildschirmfunktion",    icon: Monitor },
-  { to: "/produkte/add-ons/kiosk",                 icon: Hand    },
-];
+const ADDON_ICONS = [Percent, Printer, Truck, QrCode, Monitor, Hand];
+const addonsRoutes = ADDON_LINKS.map((l, i) => ({ to: l.deSlug, icon: ADDON_ICONS[i] }));
 
 type ProdCategoryKey = "pakete" | "addons" | "hardware";
 const prodCategories: { key: ProdCategoryKey; to: string; icon: typeof Package; hasChildren: boolean }[] = [
@@ -44,14 +38,8 @@ const prodCategories: { key: ProdCategoryKey; to: string; icon: typeof Package; 
   { key: "hardware", to: "/produkte/hardware",  icon: Server,   hasChildren: false },
 ];
 
-const loesRoutes = [
-  { to: "/loesungen/lieferservice-gruenden", icon: Truck          },
-  { to: "/loesungen/franchise",              icon: Building2      },
-  { to: "/loesungen/restaurant",             icon: UtensilsCrossed},
-  { to: "/loesungen/lieferdienst",           icon: Store          },
-  { to: "/loesungen/cafe-baeckerei",         icon: Coffee         },
-  { to: "/loesungen/ghost-kitchen",          icon: Ghost          },
-];
+const LOES_ICONS = [Truck, Building2, UtensilsCrossed, Store, Coffee, Ghost];
+const loesRoutes = LOESUNGEN_LINKS.map((l, i) => ({ to: l.deSlug, icon: LOES_ICONS[i] }));
 
 const languages: { code: SupportedLang; label: string; icon: string }[] = [
   { code: "de", label: "Deutsch", icon: DeutschIcon },

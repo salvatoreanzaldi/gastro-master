@@ -4,34 +4,26 @@ import logoWide from "@/assets/logos/logo-gastro-master-wide.png";
 import { useTranslation } from "react-i18next";
 import { useLangPath } from "@/components/LanguageLayout";
 import { ChevronDown, ArrowRight } from "lucide-react";
+import {
+  FOOTER_GROUPS,
+  LOESUNGEN_LINKS,
+  PAKETE_LINKS,
+  ADDON_LINKS,
+  navLabelOf,
+  type SiteNavLink,
+} from "@/data/site-navigation";
 
-// Product data structure for mobile accordion + desktop
+// Batch 7: Link-Struktur kommt aus src/data/site-navigation.ts — dieselbe
+// Quelle, aus der der Prerenderer das statische <footer> baut. Hier steht nur
+// noch die Darstellung.
 const productData = {
-  pakete: [
-    { label: "Online Shop", route: "/produkte/pakete/online-bestellshop" },
-    { label: "App System", route: "/produkte/pakete/bestell-app" },
-    { label: "Webseite", route: "/produkte/pakete/webseite" },
-    { label: "Kassensystem", route: "/produkte/pakete/kassensystem" },
-  ],
-  addons: [
-    { label: "Transaktions-Umlage", route: "/produkte/add-ons/transaktionsumlage" },
-    { label: "QR-Code-Flyer", route: "/produkte/add-ons/qr-code-flyer" },
-    { label: "Fahrer-App mit GPS", route: "/produkte/add-ons/fahrer-app-gps" },
-    { label: "QR-Code-Tischsystem", route: "/produkte/add-ons/qr-code-tischsystem" },
-    { label: "Kitchen Display", route: "/produkte/add-ons/bildschirmfunktion" },
-    { label: "Self-Service-Kiosk", route: "/produkte/add-ons/kiosk" },
-  ],
-  hardware: { label: "Hardware", route: "/produkte/hardware" },
+  pakete: PAKETE_LINKS,
+  addons: ADDON_LINKS,
+  addonsHub: { deSlug: "/produkte/add-ons", label: "Add-Ons" } as SiteNavLink,
+  hardware: { deSlug: "/produkte/hardware", label: "Hardware" } as SiteNavLink,
 };
 
-const loesRoutes = [
-  "/loesungen/lieferservice-gruenden",
-  "/loesungen/franchise",
-  "/loesungen/restaurant",
-  "/loesungen/lieferdienst",
-  "/loesungen/cafe-baeckerei",
-  "/loesungen/ghost-kitchen",
-];
+const weiteresLinks = FOOTER_GROUPS.find((g) => g.id === "weiteres")!.links;
 
 const socialLinks = [
   {
@@ -102,6 +94,14 @@ const MobileSubAccordionItem = ({ title, children }: { title: string; children: 
 const Footer = () => {
   const { t } = useTranslation("common");
   const lp = useLangPath();
+  // Sprachneutrale Ziele (z. B. /request-data-delete) dürfen KEIN /<lang>-Präfix
+  // bekommen — sie stehen nicht in routes.ts und wären sonst tot.
+  const hrefOf = (l: SiteNavLink) => (l.absolute ? l.deSlug : lp(l.deSlug));
+  const labelOf = (l: { label: string; i18nKey?: string }) =>
+    navLabelOf(l, (key, fallback) => {
+      const v = t(key);
+      return typeof v === "string" && v !== key ? v : fallback;
+    });
 
   return (
     <footer className="bg-gradient-navy border-t border-primary-foreground/10 px-5 md:px-8 lg:px-16 py-12">
@@ -138,77 +138,71 @@ const Footer = () => {
               <MobileSubAccordionItem title="Pakete">
                 {productData.pakete.map(pkg => (
                   <Link
-                    key={pkg.route}
-                    to={lp(pkg.route)}
+                    key={pkg.deSlug}
+                    to={hrefOf(pkg)}
                     className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors"
                   >
-                    {pkg.label}
+                    {labelOf(pkg)}
                   </Link>
                 ))}
               </MobileSubAccordionItem>
 
-              {/* Add-Ons Sub-Accordion */}
+              {/* Add-Ons Sub-Accordion — Übersicht zuerst (war Orphan Page) */}
               <MobileSubAccordionItem title="Add-Ons">
+                <Link
+                  to={hrefOf(productData.addonsHub)}
+                  className="block text-primary-foreground/70 hover:text-primary-foreground text-sm py-2 font-medium transition-colors"
+                >
+                  {labelOf(productData.addonsHub)}
+                </Link>
                 {productData.addons.map(addon => (
                   <Link
-                    key={addon.route}
-                    to={lp(addon.route)}
+                    key={addon.deSlug}
+                    to={hrefOf(addon)}
                     className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors"
                   >
-                    {addon.label}
+                    {labelOf(addon)}
                   </Link>
                 ))}
               </MobileSubAccordionItem>
 
               {/* Hardware Direct Link */}
               <Link
-                to={lp(productData.hardware.route)}
+                to={hrefOf(productData.hardware)}
                 className="flex items-center justify-between py-2 text-primary-foreground/70 hover:text-primary-foreground text-sm transition-colors"
               >
-                <span>{productData.hardware.label}</span>
+                <span>{labelOf(productData.hardware)}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </MobileAccordionItem>
 
             {/* LÖSUNGEN */}
             <MobileAccordionItem title={t('footer.loesungen').toUpperCase()}>
-              {loesRoutes.map((to, i) => (
+              {LOESUNGEN_LINKS.map((l) => (
                 <Link
-                  key={to}
-                  to={lp(to)}
+                  key={l.deSlug}
+                  to={hrefOf(l)}
                   className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors"
                 >
-                  {t(`nav.loesItems.${i}.label`)}
+                  {labelOf(l)}
                 </Link>
               ))}
             </MobileAccordionItem>
 
             {/* WEITERES */}
             <MobileAccordionItem title={t('footer.weiteres').toUpperCase()}>
-              <Link to={lp("/impressum")} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
-                {t('footer.impressum')}
-              </Link>
-              <Link to={lp("/datenschutz")} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
-                {t('footer.datenschutz')}
-              </Link>
-              <Link to={lp("/agb")} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
-                {t('footer.agb')}
-              </Link>
-              <Link to={lp("/kontakt")} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
-                {t('footer.kontakt')}
-              </Link>
-              <Link to={lp("/uber-uns")} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
-                {t('footer.ueberUns')}
-              </Link>
-              <Link to={lp("/faq")} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
-                FAQ
-              </Link>
-              <Link to={lp("/blog")} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
-                Blog
-              </Link>
-              <Link to={lp("/downloads")} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
-                {t('footer.downloads')}
-              </Link>
+              {weiteresLinks.map((l) => (
+                <div key={l.deSlug}>
+                  <Link to={hrefOf(l)} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
+                    {labelOf(l)}
+                  </Link>
+                  {(l.children ?? []).map((c) => (
+                    <Link key={c.deSlug} to={hrefOf(c)} className="block pl-4 text-primary-foreground/50 hover:text-primary-foreground text-sm py-1.5 transition-colors">
+                      {labelOf(c)}
+                    </Link>
+                  ))}
+                </div>
+              ))}
             </MobileAccordionItem>
           </div>
 
@@ -244,24 +238,30 @@ const Footer = () => {
 
           {/* Produkte - All items with sub-grouping */}
           <div>
-            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">{t('footer.produkte')}</h4>
+            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">
+              <Link to={lp("/produkte")} className="hover:text-primary-foreground transition-colors duration-200">{t('footer.produkte')}</Link>
+            </h4>
             <ul className="space-y-2.5">
               {/* Pakete Group Header */}
               <li className="text-primary-foreground/30 text-xs font-bold uppercase tracking-wider mt-4">Pakete</li>
               {productData.pakete.map(pkg => (
-                <li key={pkg.route}>
-                  <Link to={lp(pkg.route)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                    {pkg.label}
+                <li key={pkg.deSlug}>
+                  <Link to={hrefOf(pkg)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                    {labelOf(pkg)}
                   </Link>
                 </li>
               ))}
 
-              {/* Add-Ons Group Header */}
-              <li className="text-primary-foreground/30 text-xs font-bold uppercase tracking-wider mt-4">Add-Ons</li>
+              {/* Add-Ons Group Header — verlinkt auf die Übersicht (Batch 7) */}
+              <li className="mt-4">
+                <Link to={hrefOf(productData.addonsHub)} className="text-primary-foreground/30 hover:text-primary-foreground/60 text-xs font-bold uppercase tracking-wider transition-colors duration-200">
+                  Add-Ons
+                </Link>
+              </li>
               {productData.addons.map(addon => (
-                <li key={addon.route}>
-                  <Link to={lp(addon.route)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                    {addon.label}
+                <li key={addon.deSlug}>
+                  <Link to={hrefOf(addon)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                    {labelOf(addon)}
                   </Link>
                 </li>
               ))}
@@ -269,8 +269,8 @@ const Footer = () => {
               {/* Hardware */}
               <li className="text-primary-foreground/30 text-xs font-bold uppercase tracking-wider mt-4">Hardware</li>
               <li>
-                <Link to={lp(productData.hardware.route)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {productData.hardware.label}
+                <Link to={hrefOf(productData.hardware)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  {labelOf(productData.hardware)}
                 </Link>
               </li>
             </ul>
@@ -278,12 +278,14 @@ const Footer = () => {
 
           {/* Lösungen */}
           <div>
-            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">{t('footer.loesungen')}</h4>
+            <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">
+              <Link to={lp("/loesungen")} className="hover:text-primary-foreground transition-colors duration-200">{t('footer.loesungen')}</Link>
+            </h4>
             <ul className="space-y-2.5">
-              {loesRoutes.map((to, i) => (
-                <li key={to}>
-                  <Link to={lp(to)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                    {t(`nav.loesItems.${i}.label`)}
+              {LOESUNGEN_LINKS.map((l) => (
+                <li key={l.deSlug}>
+                  <Link to={hrefOf(l)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                    {labelOf(l)}
                   </Link>
                 </li>
               ))}
@@ -294,46 +296,24 @@ const Footer = () => {
           <div>
             <h4 className="text-primary-foreground/50 text-xs font-bold uppercase tracking-widest mb-4">{t('footer.weiteres')}</h4>
             <ul className="space-y-2.5">
-              <li>
-                <Link to={lp("/impressum")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t('footer.impressum')}
-                </Link>
-              </li>
-              <li>
-                <Link to={lp("/datenschutz")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t('footer.datenschutz')}
-                </Link>
-              </li>
-              <li>
-                <Link to={lp("/agb")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t('footer.agb')}
-                </Link>
-              </li>
-              <li>
-                <Link to={lp("/kontakt")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t('footer.kontakt')}
-                </Link>
-              </li>
-              <li>
-                <Link to={lp("/uber-uns")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t('footer.ueberUns')}
-                </Link>
-              </li>
-              <li>
-                <Link to={lp("/faq")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link to={lp("/blog")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link to={lp("/downloads")} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
-                  {t('footer.downloads')}
-                </Link>
-              </li>
+              {weiteresLinks.map((l) => (
+                <li key={l.deSlug}>
+                  <Link to={hrefOf(l)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                    {labelOf(l)}
+                  </Link>
+                  {(l.children ?? []).length > 0 && (
+                    <ul className="mt-2 ml-3 space-y-2">
+                      {l.children!.map((c) => (
+                        <li key={c.deSlug}>
+                          <Link to={hrefOf(c)} className="text-primary-foreground/40 hover:text-primary-foreground text-sm transition-colors duration-200">
+                            {labelOf(c)}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
         </div>

@@ -244,7 +244,7 @@ export function buildHubStaticHtml(data, { lang = "de" } = {}) {
 /**
  * Render full HTML page — head injection + JSON-LD + static body.
  */
-export function renderHubPage(baseHtml, data, { lang = "de", allLangs = ["de"] } = {}) {
+export function renderHubPage(baseHtml, data, { lang = "de", allLangs = ["de"], chrome = null } = {}) {
   const url = `${SITE_URL}/${lang}/${segFor(lang)}`;
   const schemas = buildHubSchemas(data, { lang });
   const staticHtml = buildHubStaticHtml(data, { lang });
@@ -292,6 +292,9 @@ export function renderHubPage(baseHtml, data, { lang = "de", allLangs = ["de"] }
   if (lang === "fa") {
     html = html.replace(/<html([^>]*)>/, `<html$1 dir="rtl">`);
   }
-  html = html.replace(/<div id="root"><\/div>/, `<div id="root">${staticHtml}</div>`);
+  // Batch 7: statisches Chrome (Navigation + Footer) aus
+  // src/data/site-navigation.ts — vom Aufrufer übergeben, damit dieser
+  // Renderer keine zweite Link-Quelle bekommt.
+  html = html.replace(/<div id="root"><\/div>/, `<div id="root">${chrome?.nav ?? ""}${staticHtml}${chrome?.footer ?? ""}</div>`);
   return html;
 }

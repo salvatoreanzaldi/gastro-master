@@ -394,7 +394,7 @@ export function buildComparisonStaticHtml(data, { h1Approved = false, lang = "de
  * @param opts.allLangs   alle Sprachen, die diese Page hat (für hreflang-Tags)
  * @param opts.h1Approved Wechselangebot-Flag
  */
-export function renderComparisonPage(baseHtml, data, { h1Approved = false, lang = "de", allLangs = ["de"] } = {}) {
+export function renderComparisonPage(baseHtml, data, { h1Approved = false, lang = "de", allLangs = ["de"], chrome = null } = {}) {
   const url = `${SITE_URL}/${lang}/${segFor(lang)}/${data.slug}`;
   const schemas = buildComparisonSchemas(data, { h1Approved, lang });
   const staticHtml = buildComparisonStaticHtml(data, { h1Approved, lang });
@@ -448,6 +448,9 @@ export function renderComparisonPage(baseHtml, data, { h1Approved = false, lang 
   if (lang === "fa") {
     html = html.replace(/<html([^>]*)>/, `<html$1 dir="rtl">`);
   }
-  html = html.replace(/<div id="root"><\/div>/, `<div id="root">${staticHtml}</div>`);
+  // Batch 7: statisches Chrome (Navigation + Footer) aus
+  // src/data/site-navigation.ts — vom Aufrufer übergeben, damit dieser
+  // Renderer keine zweite Link-Quelle bekommt.
+  html = html.replace(/<div id="root"><\/div>/, `<div id="root">${chrome?.nav ?? ""}${staticHtml}${chrome?.footer ?? ""}</div>`);
   return html;
 }

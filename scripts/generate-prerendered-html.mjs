@@ -677,21 +677,6 @@ const heroPreloadTag = (() => {
   return '';
 })();
 
-// ─── Crawler-Nav-Fallback (Ahrefs „Page has no outgoing links") ──────────────
-// Client-gerenderte Seiten (Blog-Posts + Produkt-/Add-on-Hubs) haben im statischen
-// Prerender-HTML 0 ausgehende Links — die echte Navigation rendert React erst zur
-// Laufzeit in #root. JS-lose Crawler (Ahrefs Raw-Crawl) sehen dann „keine Links".
-// Dieser Off-Screen-<nav> steht AUSSERHALB von #root → wird von createRoot() NICHT
-// überschrieben und überlebt die Hydration. Spiegelt 3 Kern-Ziele; sichtbare Nav
-// kommt weiterhin aus React. Ziele self-canonical-konform (ohne Trailing-Slash),
-// alle drei sind echte, indexierbare Seiten.
-const CRAWLER_NAV =
-  `<nav aria-label="Seiten-Navigation" style="position:absolute;left:-9999px">` +
-  `<a href="${SITE_URL}/de">Startseite</a>` +
-  `<a href="${SITE_URL}/de/blog">Alle Blogartikel</a>` +
-  `<a href="${SITE_URL}/de/preise">Pakete &amp; Preise</a>` +
-  `</nav>`;
-
 // Inject hreflang + canonical into the root index.html (the SPA fallback served
 // for any not-yet-prerendered route). The root represents the language-neutral
 // entry point — alternates point to the localised /<lang>/ home variants.
@@ -716,7 +701,8 @@ const rootHtmlPatched = baseHtml.replace(
   '</head>',
   `${rootCanonical}\n${rootHreflangTags}\n  ${rootBreadcrumb}\n${heroPreloadTag ? '  ' + heroPreloadTag + '\n' : ''}  </head>`,
 );
-writeFileSync(join(distDir, 'index.html'), rootHtmlPatched.replace('</body>', `  ${CRAWLER_NAV}\n</body>`));
+// (Root-Shell wird weiter unten geschrieben — withChrome braucht die
+// i18n-Bundles, die erst danach geladen werden. Siehe Batch 7, 0.5.)
 console.log('✅ Hreflang + canonical injected: dist/index.html');
 
 for (const page of pages) {
@@ -783,11 +769,13 @@ const ROOT_DESC = baseDescMatch ? baseDescMatch[1] : '';
 const i18nMeta = {};
 const i18nHero = {};
 const i18nNav = {};
+const i18nAll = {};
 for (const lang of LANGUAGES) {
   try {
     const bundle = JSON.parse(
       readFileSync(resolve(ROOT, `public/locales/${lang}/common.json`), 'utf-8'),
     );
+    i18nAll[lang] = bundle;
     i18nMeta[lang] = {
       title: bundle?.seo?.indexTitle ?? ROOT_TITLE,
       description: bundle?.seo?.indexDescription ?? ROOT_DESC,
@@ -818,6 +806,57 @@ const navLabel = (lang, key) => {
   if (key === 'hardware') return nav?.prodCategories?.[2]?.label ?? 'Hardware';
   return key;
 };
+
+// ─── Batch 7: statisches Chrome (Navigation + Footer) ───────────────────────
+// Bis Batch 6 trug KEINE prerenderte Seite ein <footer> — die Startseite gab in
+// der ersten Indexierungswelle genau einen internen Link weiter (DOM: 146), und
+// Ahrefs meldete 9 Orphan Pages. Die Link-Struktur kommt aus EINER Quelle
+// (src/data/site-navigation.ts), die auch React-Navbar und -Footer lesen; die
+// statische HTML-Fassung entsteht dort, nicht hier (kein zweiter String).
+const { renderStaticNavHtml, renderStaticFooterHtml } = await import(
+  new URL('../src/data/site-navigation.ts', import.meta.url).href
+);
+// Slug-ÜBERSETZUNG, nicht nur Präfix: buildHref würde /en/produkte/hardware
+// erzeugen (tot) statt /en/products/hardware — dieselbe Falle wie bei den
+// Breadcrumbs in Batch 3, gelöst über dieselbe Routen-Tabelle.
+const localePath = (deSlug, lang) => {
+  const route = routeByDeSlug.get(deSlug);
+  const slug = route ? route.slugs[lang] ?? route.slugs.de : deSlug;
+  return slug === '/' ? `/${lang}` : `/${lang}${slug}`;
+};
+const labelResolver = (lang) => (key, fallback) => {
+  let cur = i18nAll[lang] ?? i18nAll.de;
+  for (const part of String(key).split('.')) {
+    if (cur == null) break;
+    cur = Array.isArray(cur) ? cur[Number(part)] : cur[part];
+  }
+  return typeof cur === 'string' && cur ? cur : fallback;
+};
+const BUILD_YEAR = new Date().getFullYear();
+const chromeCache = new Map();
+const staticChrome = (lang) => {
+  if (!chromeCache.has(lang)) {
+    const o = { lang, href: (deSlug) => localePath(deSlug, lang), t: labelResolver(lang), year: BUILD_YEAR };
+    chromeCache.set(lang, { nav: renderStaticNavHtml(o), footer: renderStaticFooterHtml(o) });
+  }
+  return chromeCache.get(lang);
+};
+/** Umschließt statischen Seiteninhalt mit Navigation + Footer (immer INNERHALB
+ *  von #root — React ersetzt beides beim Mount, deshalb keine Dublette). */
+const withChrome = (lang, inner) => {
+  const c = staticChrome(lang);
+  return `${c.nav}${inner}${c.footer}`;
+};
+
+// Batch 7 (0.5): Die ROOT-SHELL bekommt Navigation + Footer erst BEIM SCHREIBEN.
+// Die Variable rootHtmlPatched behält ihr leeres <div id="root"></div>, weil die
+// 36 Vergleichsseiten sie klonen und über genau dieses Muster ihren eigenen
+// Inhalt einsetzen — mit gefülltem #root würde ihr Replace ins Leere laufen und
+// sie bekämen den Shell-Inhalt statt ihres eigenen (die Landmine aus 0.5a).
+writeFileSync(
+  join(distDir, 'index.html'),
+  rootHtmlPatched.replace(/<div id="root"><\/div>/, `<div id="root">${withChrome(DEFAULT_LANG, '')}</div>`),
+);
 
 // Build the per-language static hero block (lives inside #root, replaced by
 // createRoot() on mount). JS-less AI crawlers see headline + subtitle + the
@@ -2806,7 +2845,7 @@ for (const route of routes) {
       const videosHtml = lang === 'de' ? buildStaticVideos(lang) : '';
       const homeStatic = `${heroHtml}${packagesHtml}${quotablesHtml}${videosHtml}`;
       if (homeStatic) {
-        html = html.replace(/<div id="root"><\/div>/, `<div id="root">${homeStatic}</div>`);
+        html = html.replace(/<div id="root"><\/div>/, `<div id="root">${withChrome(lang, homeStatic)}</div>`);
       }
 
       // ─── GEO-Schema-Stack für Homepage (Berater-Council 2026-05-07) ────
@@ -3421,7 +3460,7 @@ for (const route of routes) {
       }
 
       if (staticContent) {
-        html = html.replace(/<div id="root"><\/div>/, `<div id="root">${staticContent}</div>`);
+        html = html.replace(/<div id="root"><\/div>/, `<div id="root">${withChrome(lang, staticContent)}</div>`);
       }
       if (extraSchemas.length) {
         const blocks = extraSchemas
@@ -3492,7 +3531,7 @@ for (const route of routes) {
         backlinksHtml +
         `<p style="margin:2rem 0 0;"><a href="/de/kontakt" style="display:inline-block;background:#ED8400;color:#0A264A;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">Kostenloses Erstgespräch</a></p>` +
         `</div></div>`;
-      html = html.replace(/<div id="root"><\/div>/, `<div id="root">${landingStatic}</div>`);
+      html = html.replace(/<div id="root"><\/div>/, `<div id="root">${withChrome('de', landingStatic)}</div>`);
 
       // Schema: BlogPosting + BreadcrumbList — genau EINMAL, hier im <head>.
       // Die frühere client-seitige Schema-Injektion in BlogPostLayout wurde
@@ -3592,7 +3631,7 @@ for (const route of routes) {
       ]
         .filter(Boolean)
         .join('');
-      html = html.replace(/<div id="root"><\/div>/, `<div id="root">${fallbackStatic}</div>`);
+      html = html.replace(/<div id="root"><\/div>/, `<div id="root">${withChrome(lang, fallbackStatic)}</div>`);
 
       const fallbackSchemas = [];
       if (route.key === 'contact') {
@@ -3633,9 +3672,10 @@ for (const route of routes) {
       html = html.replace('</head>', `  ${heroPreloadTag}\n  </head>`);
     }
 
-    // Crawler-Nav vor </body> (außerhalb #root → überlebt Hydration) — behebt
-    // Ahrefs „Page has no outgoing links" auf den client-gerenderten Route-/Hub-Seiten.
-    html = html.replace('</body>', `  ${CRAWLER_NAV}\n</body>`);
+    // Batch 7: Die Off-Screen-Crawler-Nav ist entfallen — die Seiten tragen jetzt
+    // eine echte, sichtbare Navigation samt <footer> INNERHALB von #root
+    // (site-navigation.ts). Damit verschwindet auch dauerhaft verstecktes
+    // Link-Markup aus dem DOM, das nach der Hydration bestehen blieb.
 
     // Build output path: dist/<lang>/<slug>/index.html.
     // For the home route (slug === '/') write dist/<lang>/index.html.
@@ -4099,7 +4139,7 @@ for (const post of allBlogPosts) {
     .replace(/<html\s+lang="[^"]*"/, `<html lang="de"`)
     // Funktions-Replacement statt String: der volle bodyHtml könnte `$`-Sequenzen
     // ($1, $&, $$) enthalten, die String.replace sonst als Rückreferenz deutet.
-    .replace(/<div id="root"><\/div>/, () => `<div id="root">${staticArticle}</div>`);
+    .replace(/<div id="root"><\/div>/, () => `<div id="root">${withChrome('de', staticArticle)}</div>`);
 
   // Welle F — page-spezifisches og:image/twitter:image (JPG für Social-Kompatibilität;
   // WebP bleibt Primärformat für Website-Rendering + Schema). Ersetzt den
@@ -4166,9 +4206,8 @@ for (const post of allBlogPosts) {
 
   html = html.replace('</head>', `  ${headExtras}\n  </head>`);
 
-  // Crawler-Nav vor </body> (außerhalb #root → überlebt Hydration) — behebt
-  // Ahrefs „Page has no outgoing links" auf den client-gerenderten Blog-Posts.
-  html = html.replace('</body>', `  ${CRAWLER_NAV}\n</body>`);
+  // Batch 7: Off-Screen-Crawler-Nav entfallen (s. o.) — statisches Chrome
+  // liefert die Links jetzt sichtbar innerhalb von #root.
 
   const outDir = join(distDir, 'de', 'blog', post.slug);
   mkdirSync(outDir, { recursive: true });
@@ -4213,7 +4252,7 @@ for (const hub of Object.values(blogHubs)) {
     .replace(/<meta name="twitter:description" content="[^"]*"/, `<meta name="twitter:description" content="${escapeHtml(hub.description)}"`)
     .replace(/\n?\s*<meta property="og:locale:alternate" content="[^"]*"\s*\/?>/g, '')
     .replace(/<html\s+lang="[^"]*"/, `<html lang="de"`)
-    .replace(/<div id="root"><\/div>/, `<div id="root">${staticHub}</div>`);
+    .replace(/<div id="root"><\/div>/, `<div id="root">${withChrome('de', staticHub)}</div>`);
 
   const hubSchemas = [
     {
@@ -4324,6 +4363,7 @@ for (const [slug, byLang] of Object.entries(comparisons)) {
       h1Approved: COMPARISON_H1_APPROVED,
       lang,
       allLangs: COMPARISON_LANGS,
+      chrome: staticChrome(lang),
     });
     const outDir = join(distDir, lang, COMPARISON_SEGMENT[lang], slug);
     mkdirSync(outDir, { recursive: true });
@@ -4351,6 +4391,7 @@ for (const lang of COMPARISON_LANGS) {
   const html = renderHubPage(comparisonBaseHtml, data, {
     lang,
     allLangs: COMPARISON_LANGS,
+    chrome: staticChrome(lang),
   });
   const outDir = join(distDir, lang, COMPARISON_SEGMENT[lang]);
   mkdirSync(outDir, { recursive: true });
@@ -4400,7 +4441,7 @@ console.log(
     .replace(/<meta name="twitter:description" content="[^"]*"/, `<meta name="twitter:description" content="${escapeHtml(description)}"`)
     // Einsprachige Seite: Sprachvarianten-Ankündigungen entfernen
     .replace(/\n?\s*<meta property="og:locale:alternate" content="[^"]*"\s*\/?>/g, '')
-    .replace(/<div id="root"><\/div>/, `<div id="root">${staticContent}</div>`);
+    .replace(/<div id="root"><\/div>/, `<div id="root">${withChrome('de', staticContent)}</div>`);
 
   const headExtras = [
     `<link rel="canonical" href="${url}">`,
