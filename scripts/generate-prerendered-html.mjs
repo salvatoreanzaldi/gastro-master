@@ -1989,45 +1989,67 @@ const buildSolutionPageStatic = ({ lang, bundle, routeKey }) => {
 // Static fallback for the /loesungen hub. Lists all 6 solutions with names
 // + tagline pulled from each bundle's hero.
 const buildSolutionsHubStatic = (lang) => {
+  // Batch 9: Der statische Block zeigte die sechs Lösungs-UNTERSEITEN mit deren
+  // Hero-Texten — die React-Seite rendert aber ihren eigenen Hub-Inhalt aus
+  // public/locales/<lang>/loesungen.json. Ergebnis: 70 % Wort-Deckung, zehn
+  // Passagen im rohen HTML, die im DOM nirgends vorkommen. Jetzt liest der
+  // Block dieselben Bundle-Felder wie die Komponente; die sechs internen Links
+  // bleiben erhalten (sie sind der Zweck eines Hubs).
   const hub = loadBundle(lang, 'loesungen') ?? loadBundle('de', 'loesungen');
-  const norm = hub ? normalizeHeroFromBundle(hub) : null;
-  const heading = norm?.headline || 'Lösungen';
-  const sub = norm?.subline || '';
-  const cta = norm?.cta || i18nHero[lang]?.cta || 'Kostenlose Beratung';
-
-  const items = Object.entries(SOLUTION_BUNDLE_MAP)
-    .map(([key, bundleName]) => {
-      const b = loadBundle(lang, bundleName) ?? loadBundle('de', bundleName);
-      const n = b ? normalizeHeroFromBundle(b) : null;
+  const heading = [hub?.hero?.h1Before, hub?.hero?.h1Highlight].filter(Boolean).join(' ') || 'Lösungen';
+  const cta = hub?.hero?.cta || i18nHero[lang]?.cta || 'Kostenlose Beratung';
+  const sect = (title, sub, items) =>
+    title || sub || items
+      ? `<h2 style="font-size:1.35rem;font-weight:800;margin:1.75rem 0 0.5rem;">${escapeHtmlMin(title ?? '')}</h2>` +
+        (sub ? `<p style="margin:0 0 0.75rem;line-height:1.6;">${escapeHtmlMin(plainText(sub))}</p>` : '') +
+        (items ?? '')
+      : '';
+  // Die Lösungs-Kacheln der Seite (solutions.items) — Label, Problem, Tagline.
+  const solutionItems = Array.isArray(hub?.solutions?.items)
+    ? `<ul style="margin:0 0 1rem;padding-left:1.1rem;line-height:1.6;">${hub.solutions.items
+        .map((it) => `<li style="margin:0 0 0.5rem;"><strong>${escapeHtmlMin(it.label ?? '')}</strong> — ${escapeHtmlMin(it.problem ?? '')} ${escapeHtmlMin(it.tagline ?? '')}</li>`)
+        .join('')}</ul>`
+    : '';
+  const productItems = Array.isArray(hub?.products?.items)
+    ? `<ul style="margin:0 0 1rem;padding-left:1.1rem;line-height:1.6;">${hub.products.items
+        .map((it) => `<li style="margin:0 0 0.4rem;"><strong>${escapeHtmlMin(it.name ?? '')}</strong> — ${escapeHtmlMin(it.tagline ?? '')}</li>`)
+        .join('')}</ul>`
+    : '';
+  const trustItems = Array.isArray(hub?.trust?.items)
+    ? `<ul style="margin:0 0 1rem;padding-left:1.1rem;line-height:1.6;">${hub.trust.items
+        .map((it) => `<li style="margin:0 0 0.3rem;"><strong>${escapeHtmlMin(it.value ?? '')}</strong> — ${escapeHtmlMin(it.label ?? '')}</li>`)
+        .join('')}</ul>`
+    : '';
+  const faqItems = Array.isArray(hub?.faq?.items)
+    ? `<ul style="list-style:none;padding:0;margin:0 0 1rem;">${hub.faq.items
+        .map((f) => `<li style="margin:0 0 0.6rem;"><strong>${escapeHtmlMin(f.q ?? '')}</strong> ${escapeHtmlMin(plainText(String(f.a ?? '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')))}</li>`)
+        .join('')}</ul>`
+    : '';
+  // Interne Links auf die sechs Lösungs-Seiten — als reine Navigationsliste,
+  // ohne Fremdtext aus deren Bundles (der stand vorher hier und nirgends sonst).
+  const navLinks = Object.entries(SOLUTION_BUNDLE_MAP)
+    .map(([key]) => {
       const r = routes.find((rt) => rt.key === key);
       const slug = r?.slugs?.[lang] ?? r?.slugs?.de ?? '';
-      const url = `${SITE_URL}/${lang}${slug}`;
-      return [
-        '<li style="margin:0 0 1rem;padding:1rem;border:1px solid #e5e7eb;border-radius:0.5rem;">',
-        n?.badge
-          ? `<p style="font-size:0.7rem;font-weight:700;color:#0A264A;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.5rem;">${escapeHtmlMin(n.badge)}</p>`
-          : '',
-        `<a href="${escapeHtmlMin(url)}" style="font-size:1.125rem;font-weight:700;color:#0A264A;text-decoration:none;">${escapeHtmlMin(n?.headline ?? bundleName)}</a>`,
-        n?.subline
-          ? `<p style="color:#475569;font-size:0.95rem;margin:0.5rem 0 0;">${escapeHtmlMin(n.subline)}</p>`
-          : '',
-        '</li>',
-      ]
-        .filter(Boolean)
-        .join('');
+      const label = (hub?.solutions?.items ?? []).find((it) => String(it.label ?? '').toLowerCase().includes(key.split('-')[0]))?.label;
+      return `<li style="margin:0 0 0.4rem;"><a href="${SITE_URL}/${lang}${slug}" style="color:#0A264A;">${escapeHtmlMin(label ?? key)}</a></li>`;
     })
     .join('');
-
-  return [
-    '<section style="max-width:880px;margin:2rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">',
-    `<h1 style="font-size:2rem;font-weight:900;text-align:center;margin:0 0 1rem;">${escapeHtmlMin(heading)}</h1>`,
-    sub
-      ? `<p style="font-size:1rem;line-height:1.5;text-align:center;margin:0 0 1.5rem;color:#475569;">${escapeHtmlMin(sub)}</p>`
-      : '',
-    `<ul style="list-style:none;padding:0;margin:0 0 1.5rem;">${items}</ul>`,
-    `<p style="text-align:center;margin:0;"><a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a></p>`,
-    '</section>',
-  ].join('');
+  return (
+    `<section style="max-width:880px;margin:2rem auto;padding:1.5rem;font-family:system-ui,sans-serif;color:#0A264A;">` +
+    (hub?.hero?.badge ? `<p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.5rem;">${escapeHtmlMin(hub.hero.badge)}</p>` : '') +
+    `<h1 style="font-size:2rem;font-weight:900;margin:0 0 1rem;">${escapeHtmlMin(heading)}</h1>` +
+    (hub?.hero?.subtitle ? `<p style="line-height:1.6;margin:0 0 0.75rem;">${escapeHtmlMin(plainText(hub.hero.subtitle))}</p>` : '') +
+    (hub?.hero?.geoBlock ? `<p style="line-height:1.6;margin:0 0 1.25rem;">${escapeHtmlMin(plainText(hub.hero.geoBlock))}</p>` : '') +
+    sect(hub?.solutions?.title, hub?.solutions?.subtitle, solutionItems) +
+    (hub?.solutions?.geoBlock ? `<p style="line-height:1.6;margin:0 0 1rem;">${escapeHtmlMin(plainText(hub.solutions.geoBlock))}</p>` : '') +
+    sect(hub?.products?.title, hub?.products?.subtitle, productItems) +
+    sect(hub?.trust?.title, hub?.trust?.subtitle, trustItems) +
+    sect(hub?.faq?.title ?? hub?.faq?.heading, hub?.faq?.subtitle, faqItems) +
+    `<ul style="list-style:none;padding:0;margin:1.5rem 0 1rem;">${navLinks}</ul>` +
+    `<a href="/${lang}${contactSlug(lang)}" style="display:inline-block;background:#ED8400;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">${escapeHtmlMin(cta)}</a>` +
+    `</section>`
+  );
 };
 
 // ─── Misc-page enrichment (Über uns / FAQ / Downloads / Druckertreiber / Legal) ──

@@ -387,7 +387,11 @@ const UeberUnsPage = () => {
         <div className="absolute inset-0 bg-black/40" />
 
         <div className="max-w-4xl mx-auto relative z-10 text-center py-24 md:py-32">
-          <motion.h2
+          {/* Batch 9: h1 statt h2 — die sichtbare Hauptüberschrift der Seite war
+              als h2 ausgezeichnet, die Seite hatte im gerenderten DOM gar kein
+              h1. Wortlaut und Aussehen unverändert; korrigiert wird nur die
+              Auszeichnung. */}
+          <motion.h1
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -396,7 +400,7 @@ const UeberUnsPage = () => {
           >
             {t("hero.headingPre")}{" "}
               <span className="text-transparent bg-clip-text bg-[length:300%_auto] animate-gradient-shift bg-gradient-to-r from-[#009ACC] via-[#008BCC] via-[#007DCF] via-[#055FB6] via-[#007DCF] via-[#008BCC] to-[#009ACC]">{t("hero.headingHighlight")}</span>{t("hero.headingPost")}
-          </motion.h2>
+          </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}

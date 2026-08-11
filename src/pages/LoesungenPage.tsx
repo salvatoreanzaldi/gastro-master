@@ -407,7 +407,7 @@ const LoesungenPage = () => {
                 {/* Batch 8: immer gemountet (FaqPanel) — zugeklappt stand die Antwort
                     vorher nicht im DOM. */}
                 <FaqPanel open={openFaq === i}>
-                  <p className="px-6 pb-5 text-[#0A264A]/60 dark:text-white/60 text-sm leading-relaxed">
+                  <p className="px-6 pb-5 text-[#0A264A]/70 dark:text-white/65 text-sm leading-relaxed">
                     {renderWithLinks(item.a, lp)}
                   </p>
                 </FaqPanel>

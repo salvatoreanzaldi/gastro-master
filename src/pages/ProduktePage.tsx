@@ -379,7 +379,7 @@ const FaqSection = ({ tx }: { tx: typeof i18n.de }) => {
                 aria-hidden={openIdx !== i}
               >
                 <div className="px-6 pb-5">
-                  <p className="text-[#0A264A]/60 dark:text-white/55 text-sm leading-relaxed">
+                  <p className="text-[#0A264A]/70 dark:text-white/60 text-sm leading-relaxed">
                     {renderFaqLinks(item.a)}
                   </p>
                 </div>

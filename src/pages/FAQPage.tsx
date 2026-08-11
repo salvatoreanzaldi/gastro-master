@@ -384,7 +384,7 @@ const FAQItemCard = ({ item, isOpen, onToggle, categoryLabel, renderWithLinks }:
         nichts, macht sie aber für Googles zweite Welle sichtbar. */}
     <FaqPanel open={isOpen}>
       <div className="px-6 pb-5">
-        <p className="text-[#0A264A]/60 dark:text-white/55 text-sm leading-relaxed">
+        <p className="text-[#0A264A]/70 dark:text-white/60 text-sm leading-relaxed">
           {renderWithLinks(item.a)}
         </p>
         {item.source && (
