@@ -153,7 +153,7 @@ const Footer = () => {
                   to={hrefOf(productData.addonsHub)}
                   className="block text-primary-foreground/70 hover:text-primary-foreground text-sm py-2 font-medium transition-colors"
                 >
-                  {labelOf(productData.addonsHub)}
+                  Alle Add-Ons
                 </Link>
                 {productData.addons.map(addon => (
                   <Link
@@ -252,10 +252,13 @@ const Footer = () => {
                 </li>
               ))}
 
-              {/* Add-Ons Group Header — verlinkt auf die Übersicht (Batch 7) */}
-              <li className="mt-4">
-                <Link to={hrefOf(productData.addonsHub)} className="text-primary-foreground/30 hover:text-primary-foreground/60 text-xs font-bold uppercase tracking-wider transition-colors duration-200">
-                  Add-Ons
+              {/* Add-Ons Group Header bleibt reiner Text (weiß/30 = 2,6:1 — als Link
+                  zu kontrastarm). Die Übersichtsseite steht darunter als normaler
+                  Listen-Link, damit der Add-On-Teilbaum nicht mehr in der Luft hängt. */}
+              <li className="text-primary-foreground/30 text-xs font-bold uppercase tracking-wider mt-4">Add-Ons</li>
+              <li>
+                <Link to={hrefOf(productData.addonsHub)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
+                  Alle Add-Ons
                 </Link>
               </li>
               {productData.addons.map(addon => (
@@ -305,7 +308,7 @@ const Footer = () => {
                     <ul className="mt-2 ml-3 space-y-2">
                       {l.children!.map((c) => (
                         <li key={c.deSlug}>
-                          <Link to={hrefOf(c)} className="text-primary-foreground/40 hover:text-primary-foreground text-sm transition-colors duration-200">
+                          <Link to={hrefOf(c)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
                             {labelOf(c)}
                           </Link>
                         </li>
