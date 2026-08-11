@@ -5,7 +5,7 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useTranslation } from "react-i18next";
 import { PRODUKTE_CONTENT } from "@/data/produkte-page-content";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight, ShoppingCart, Smartphone, Globe,
   Monitor, Percent, CheckCircle2, Star,
