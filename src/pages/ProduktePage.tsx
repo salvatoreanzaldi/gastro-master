@@ -366,23 +366,24 @@ const FaqSection = ({ tx }: { tx: typeof i18n.de }) => {
                   <ChevronDown className={`w-5 h-5 text-[#0A264A]/35 dark:text-white/35 shrink-0 transition-transform duration-300 ${openIdx === i ? "rotate-180" : ""}`} />
                 </button>
               </h3>
-              <AnimatePresence initial={false}>
-                {openIdx === i && (
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: "auto" }}
-                    exit={{ height: 0 }}
-                    transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
-                    style={{ overflow: "hidden" }}
-                  >
-                    <div className="px-6 pb-5">
-                      <p className="text-[#0A264A]/60 dark:text-white/55 text-sm leading-relaxed">
-                        {renderFaqLinks(item.a)}
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {/* Batch 7 Klärung: Die Antwort wird IMMER gemountet und nur per Höhe
+                  ein-/ausgeblendet. Vorher hing sie an {openIdx === i && …} — dann
+                  steht sie zugeklappt NICHT im DOM, und Googles zweite Welle sieht
+                  weder den Text noch eine Deckung zum FAQPage-Markup. Genau der
+                  Fall aus Batch 3 (Money-Backlinks nur statisch). */}
+              <motion.div
+                initial={false}
+                animate={{ height: openIdx === i ? "auto" : 0 }}
+                transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
+                style={{ overflow: "hidden" }}
+                aria-hidden={openIdx !== i}
+              >
+                <div className="px-6 pb-5">
+                  <p className="text-[#0A264A]/60 dark:text-white/55 text-sm leading-relaxed">
+                    {renderFaqLinks(item.a)}
+                  </p>
+                </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>
