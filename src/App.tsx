@@ -50,6 +50,7 @@ const LAZY_COMPONENTS: Record<string, ComponentType> = {
   // Blog
   "@/pages/BlogPage":                            lazy(() => import("@/pages/BlogPage")),
   "@/pages/blog/BlogPostDetailPage":             lazy(() => import("@/pages/blog/BlogPostDetailPage")),
+  "@/pages/blog/BlogHubPage":                    lazy(() => import("@/pages/blog/BlogHubPage")),
   "@/pages/blog/BlogPostLieferandoPage":         lazy(() => import("@/pages/blog/BlogPostLieferandoPage")),
   "@/pages/blog/BlogPostFehlerPage":             lazy(() => import("@/pages/blog/BlogPostFehlerPage")),
   "@/pages/blog/BlogPostKostenPage":             lazy(() => import("@/pages/blog/BlogPostKostenPage")),
@@ -172,6 +173,15 @@ const App = () => (
                 <Route key={lang} path={`/${lang}`} element={<LanguageLayout lang={lang} />}>
                   {buildLangRoutes(lang)}
                   {buildLegacyAliasRoutes(lang)}
+                  {/* Batch 6: Kategorie-Hub /blog/thema/:hubSlug (Registry: blog-hub-content.ts) */}
+                  <Route
+                    path="blog/thema/:hubSlug"
+                    element={
+                      lang === "de"
+                        ? <Suspense fallback={null}>{createElement(LAZY_COMPONENTS["@/pages/blog/BlogHubPage"]!)}</Suspense>
+                        : <HubLocaleRedirect />
+                    }
+                  />
                   {/* Dynamic blog post route — DE serves content, other locales redirect to /de/blog/:slug */}
                   <Route
                     path="blog/:slug"
@@ -218,6 +228,12 @@ const LegacyNoLangRedirect = () => {
 const BlogLocaleRedirect = () => {
   const { slug } = useParams<{ slug: string }>();
   return <Navigate to={`/de/blog/${slug}`} replace />;
+};
+
+/** Batch 6: Nicht-DE-Varianten der Kategorie-Hubs → DE (Hubs sind DE-only). */
+const HubLocaleRedirect = () => {
+  const { hubSlug } = useParams<{ hubSlug: string }>();
+  return <Navigate to={`/de/blog/thema/${hubSlug}`} replace />;
 };
 
 /** Redirects /add-ons/:slug → /{currentLang}/produkte/add-ons/:slug (lang-aware). */

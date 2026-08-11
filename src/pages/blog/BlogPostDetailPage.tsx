@@ -1,5 +1,6 @@
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { useLocation, useNavigate } from "react-router-dom";
+import { hubPathForCategory } from "@/data/blog-hub-content";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { motion } from "framer-motion";
@@ -454,7 +455,15 @@ const BlogPostDetailPage = () => {
               Blog
             </button>
             <ChevronRight className="w-3 h-3 flex-shrink-0" />
-            <span className={`${cat.text} font-semibold`}>{cat.label}</span>
+            {/* Kategorie verlinkt auf ihren Hub, sobald einer registriert ist
+                (blog-hub-content.ts) — sonst reiner Text (Batch 6 Runde 2). */}
+            {hubPathForCategory(post.category) ? (
+              <Link to={hubPathForCategory(post.category)!} className={`${cat.text} font-semibold hover:underline`}>
+                {cat.label}
+              </Link>
+            ) : (
+              <span className={`${cat.text} font-semibold`}>{cat.label}</span>
+            )}
             <ChevronRight className="w-3 h-3 flex-shrink-0" />
             <span className="text-white/60 truncate max-w-[180px] sm:max-w-[320px]">
               {stripMarkdown(post.title)}

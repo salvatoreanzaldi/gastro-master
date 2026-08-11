@@ -2603,6 +2603,11 @@ const {
   LANDING_BLOG_CATEGORIES: landingBlogCategories,
   renderLandingArticleHtml,
 } = await import(new URL('../src/data/blog-landing-content.ts', import.meta.url).href);
+// Batch 6: Hub-Registry — steuert bedingte Breadcrumb-Tiefe (Kategorie-Ebene
+// NUR mit item-URL, wenn ein Hub existiert) und den Hub-Prerender selbst.
+const { BLOG_HUBS: blogHubs, hubPathForCategory, renderHubStaticHtml } = await import(
+  new URL('../src/data/blog-hub-content.ts', import.meta.url).href
+);
 const sortedBlogPosts = [...allBlogPosts].sort(
   (a, b) => new Date(b.publishedDate) - new Date(a.publishedDate),
 );
@@ -3505,10 +3510,14 @@ for (const route of routes) {
           wordCount: landingWordCount,
           inLanguage: 'de-DE',
         },
+        // Bedingte Tiefe wie bei den 172 Posts (Batch 6 Runde 2): Kategorie-
+        // Ebene nur mit Hub-URL — sonst 3 Ebenen (item-los nur am Ende erlaubt).
         buildBreadcrumbList(canonicalUrl, [
           { name: 'Startseite', url: `${SITE_URL}/de` },
           { name: 'Blog', url: `${SITE_URL}/de/blog` },
-          { name: post.meta.category },
+          ...(hubPathForCategory(post.meta.category)
+            ? [{ name: post.meta.category, url: `${SITE_URL}${hubPathForCategory(post.meta.category)}` }]
+            : []),
           { name: post.meta.title, url: canonicalUrl },
         ]),
       ];
@@ -4042,7 +4051,7 @@ for (const post of allBlogPosts) {
     '<article itemscope itemtype="https://schema.org/BlogPosting" style="max-width:760px;margin:2rem auto;padding:1rem;font-family:system-ui,sans-serif;color:#0A264A;">',
     // Sichtbarer Breadcrumb inkl. Kategorie-Ebene (Batch 6) — Kategorie und
     // Titel als Text (Hub-URLs folgen später); voller Titel steht im H1.
-    `<nav class="post-breadcrumb" aria-label="Brotkrümel"><a href="/de">Home</a> › <a href="/de/blog">Blog</a>${post.category ? ` › <span>${escapeHtml(post.category)}</span>` : ''} › <span>${escapeHtml(stripMarkdown(post.title).slice(0, 60))}${stripMarkdown(post.title).length > 60 ? '…' : ''}</span></nav>`,
+    `<nav class="post-breadcrumb" aria-label="Brotkrümel"><a href="/de">Home</a> › <a href="/de/blog">Blog</a>${post.category ? ` › ${categoryHubPath ? `<a href="${categoryHubPath}">${escapeHtml(post.category)}</a>` : `<span>${escapeHtml(post.category)}</span>`}` : ''} › <span>${escapeHtml(stripMarkdown(post.title).slice(0, 60))}${stripMarkdown(post.title).length > 60 ? '…' : ''}</span></nav>`,
     `<h1 itemprop="headline">${escapeHtml(stripMarkdown(post.title))}</h1>`,
     `<p><small>Von <span itemprop="author">${escapeHtml(post.author)}</span> · `,
     `<time itemprop="datePublished" datetime="${escapeHtml(post.publishedDate)}">${escapeHtml(post.publishedDate)}</time>`,
@@ -4121,14 +4130,16 @@ for (const post of allBlogPosts) {
     `  <link rel="alternate" hreflang="de" href="${url}" />\n` +
     `  <link rel="alternate" hreflang="x-default" href="${url}" />`;
 
-  // BreadcrumbList Home → Blog → Kategorie → Post (Batch 6). Die Kategorie-
-  // Ebene hat bewusst noch KEINE item-URL (Hubs sind noch nicht gebaut) —
-  // buildBreadcrumbList lässt `item` bei fehlender url automatisch weg.
-  // Sobald Kategorie-Hubs existieren, wird hier die Hub-URL eingesetzt.
+  // BreadcrumbList (Batch 6, Runde 2 — BEDINGTE Tiefe): Googles Spezifikation
+  // erlaubt ListItems ohne `item` nur an LETZTER Position. Deshalb bekommt die
+  // Kategorie-Ebene das Schema nur, wenn die Hub-Registry (blog-hub-content.ts)
+  // eine URL liefert — sonst bleibt das Schema 3-stufig (Home › Blog › Post).
+  // Der SICHTBARE Crumb ist immer 4-stufig (Kategorie ggf. als reiner Text).
+  const categoryHubPath = post.category ? hubPathForCategory(post.category) : null;
   const breadcrumbSchema = buildBreadcrumbList(url, [
     { name: 'Home', url: `${SITE_URL}/de` },
     { name: 'Blog', url: `${SITE_URL}/de/blog` },
-    ...(post.category ? [{ name: post.category }] : []),
+    ...(categoryHubPath ? [{ name: post.category, url: `${SITE_URL}${categoryHubPath}` }] : []),
     { name: stripMarkdown(post.title), url },
   ]);
 
@@ -4158,6 +4169,90 @@ for (const post of allBlogPosts) {
 }
 
 console.log(`✅ Blog pre-render: ${blogCount} DE posts (BlogPosting schema + static article fallback) — ${faqPostsCount} with FAQPage schema — ${defusedLinkCount} tote Blog-Links entschärft`);
+
+// ─── Batch 6 Phase 3: Kategorie-Hubs (/de/blog/thema/<slug>) ─────────────────
+// Registry-getrieben (blog-hub-content.ts): jeder Eintrag in BLOG_HUBS wird
+// hier prerendert — dieselbe Quelle liefert Content, Breadcrumb-URLs und
+// Sitemap-Einträge. DE-only, indexierbar.
+let hubPageCount = 0;
+for (const hub of Object.values(blogHubs)) {
+  const hubUrl = `${SITE_URL}/de/blog/thema/${hub.slug}`;
+  const categoryPosts = allBlogPosts
+    .filter((p) => p.category === hub.category)
+    .map((p) => ({
+      slug: p.slug,
+      title: stripMarkdown(p.title).replace(/\s*\|\s*Gastro Master\s*$/i, '').trim(),
+    }))
+    .sort((a, b) => (a.slug < b.slug ? -1 : 1));
+  const articleInner = renderHubStaticHtml(hub, categoryPosts);
+
+  const staticHub = [
+    '<article style="max-width:820px;margin:2rem auto;padding:1rem;font-family:system-ui,sans-serif;color:#0A264A;">',
+    `<nav class="post-breadcrumb" aria-label="Brotkrümel"><a href="/de">Home</a> › <a href="/de/blog">Blog</a> › <span>${escapeHtml(hub.category)}</span></nav>`,
+    `<h1>${escapeHtml(hub.title)}</h1>`,
+    articleInner,
+    `<p><a href="/de/kontakt" style="display:inline-block;background:#ED8400;color:#0A264A;font-weight:700;padding:0.75rem 2rem;border-radius:0.75rem;text-decoration:none;">Kostenloses Erstgespräch</a></p>`,
+    '</article>',
+  ].join('\n');
+
+  let hubHtml = baseHtml
+    .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(hub.metaTitle)}</title>`)
+    .replace(/<meta name="description" content="[^"]*"/, `<meta name="description" content="${escapeHtml(hub.description)}"`)
+    .replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${escapeHtml(hub.metaTitle)}"`)
+    .replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${escapeHtml(hub.description)}"`)
+    .replace(/<meta property="og:url" content="[^"]*"/, `<meta property="og:url" content="${hubUrl}"`)
+    .replace(/<meta name="twitter:title" content="[^"]*"/, `<meta name="twitter:title" content="${escapeHtml(hub.metaTitle)}"`)
+    .replace(/<meta name="twitter:description" content="[^"]*"/, `<meta name="twitter:description" content="${escapeHtml(hub.description)}"`)
+    .replace(/\n?\s*<meta property="og:locale:alternate" content="[^"]*"\s*\/?>/g, '')
+    .replace(/<html\s+lang="[^"]*"/, `<html lang="de"`)
+    .replace(/<div id="root"><\/div>/, `<div id="root">${staticHub}</div>`);
+
+  const hubSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "@id": `${hubUrl}#collection`,
+      url: hubUrl,
+      name: hub.metaTitle,
+      description: hub.description,
+      inLanguage: 'de-DE',
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      about: { "@id": `${SITE_URL}/#organization` },
+      datePublished: BUILD_DATE,
+      dateModified: BUILD_DATE,
+      mainEntity: {
+        "@type": "ItemList",
+        name: hub.title,
+        numberOfItems: categoryPosts.length,
+        itemListElement: categoryPosts.map((p, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: `${SITE_URL}/de/blog/${p.slug}`,
+          name: p.title,
+        })),
+      },
+      speakable: { "@type": "SpeakableSpecification", cssSelector: ['h1', 'article p:first-of-type'] },
+    },
+    buildBreadcrumbList(hubUrl, [
+      { name: 'Home', url: `${SITE_URL}/de` },
+      { name: 'Blog', url: `${SITE_URL}/de/blog` },
+      { name: hub.category, url: hubUrl },
+    ]),
+  ];
+  const hubHead = [
+    `<link rel="canonical" href="${hubUrl}">`,
+    `  <link rel="alternate" hreflang="de" href="${hubUrl}" />`,
+    `  <link rel="alternate" hreflang="x-default" href="${hubUrl}" />`,
+    ...hubSchemas.map((s) => `  <script type="application/ld+json">${JSON.stringify(s)}</script>`),
+  ].join('\n');
+  hubHtml = hubHtml.replace('</head>', `${hubHead}\n  </head>`);
+
+  const hubDir = join(distDir, 'de', 'blog', 'thema', hub.slug);
+  mkdirSync(hubDir, { recursive: true });
+  writeFileSync(join(hubDir, 'index.html'), hubHtml);
+  hubPageCount += 1;
+}
+console.log(`✅ Hub pre-render: ${hubPageCount} Kategorie-Hub(s) unter /de/blog/thema/ (CollectionPage + ItemList + BreadcrumbList)`);
 
 // ─── Phase 4: /vergleiche/<slug>-Pages (multilingual, alle 6 Sprachen) ────────
 // Each file in src/data/comparisons/<slug>.ts exports `<slug>ByLang: ComparisonByLang`

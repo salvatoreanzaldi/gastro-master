@@ -1,6 +1,7 @@
 export type { SectionType, ContentSection, FAQItem, InternalLink, BlogPost } from './blog-posts-types';
 import type { BlogPost, FAQItem } from './blog-posts-types';
 import { BLOG_POST_OVERRIDES } from './blog-posts-faq-overrides.ts';
+import { CATEGORY_OVERRIDES } from './blog-category-overrides.ts';
 // Explizite .ts-Endung: die Build-Skripte importieren diese Datei nativ mit
 // Node 24, das extensionslose Specifier nicht auflöst; Vite + tsc
 // (allowImportingTsExtensions) akzeptieren die Endung ebenfalls.
@@ -866,9 +867,13 @@ function mergeFaqIntoJsonLd(jsonLd: string, faq: FAQItem[], slug: string): strin
 }
 
 function applyBlogOverride(post: BlogPost): BlogPost {
+  // 0. Kategorie-Override (Batch 6 Phase 2) — generierungssicher, da NICHT in
+  //    blog-posts-generated.ts editiert (die überschreibt der Generator).
+  const newCategory = CATEGORY_OVERRIDES[post.slug];
   const ov = BLOG_POST_OVERRIDES[post.slug];
-  if (!ov) return post;
-  let next: BlogPost = post;
+  if (!ov && !newCategory) return post;
+  let next: BlogPost = newCategory ? { ...post, category: newCategory } : post;
+  if (!ov) return next;
 
   // 1. H2-Blöcke an bodyHtml anhängen (nur wo die Quelle sie nicht liefert; idempotent).
   if (ov.appendH2sToBody && ov.faq?.length && next.bodyHtml && !next.bodyHtml.includes(ov.faq[0].question)) {

@@ -12,6 +12,7 @@ export interface MoneyBlogPost {
   slug: string;
   title: string;
   category?: string;
+  featured?: boolean;
 }
 
 // route.key → relevante Blog-Kategorien (Reihenfolge = Priorität).
@@ -29,7 +30,12 @@ export const MONEY_BLOG_CATEGORIES: Record<string, string[]> = {
   "ghost-kitchen": ["Lieferservice", "Trends & Zukunft"],
 };
 
-// Index category → Posts, stabil nach slug sortiert (deterministische Auswahl).
+// Index category → Posts, deterministisch sortiert: featured zuerst, dann
+// slug-alphabetisch. Batch 6 Phase 1.4: Rein alphabetische Auswahl verdrängte
+// nach der Kategorie-Bereinigung ausgerechnet die featured Kernartikel
+// (kassensystem-gastronomie fiel bei 7 Kassen-Posts auf Platz 6) — die vier
+// featured-Posts sind exakt die handgeschriebenen Produkt-Kernartikel und
+// gehören auf die Money-Pages an Position 1.
 function byCategory(posts: MoneyBlogPost[]): Map<string, MoneyBlogPost[]> {
   const map = new Map<string, MoneyBlogPost[]>();
   for (const p of posts) {
@@ -37,7 +43,12 @@ function byCategory(posts: MoneyBlogPost[]): Map<string, MoneyBlogPost[]> {
     if (!map.has(c)) map.set(c, []);
     map.get(c)!.push(p);
   }
-  for (const arr of map.values()) arr.sort((a, b) => (a.slug < b.slug ? -1 : 1));
+  for (const arr of map.values()) {
+    arr.sort(
+      (a, b) =>
+        (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (a.slug < b.slug ? -1 : 1),
+    );
+  }
   return map;
 }
 

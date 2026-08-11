@@ -123,6 +123,21 @@ for (const { slug, publishedDate } of blogPosts) {
   );
 }
 
+// ─── Batch 6: Kategorie-Hubs aus der Registry (blog-hub-content.ts) ──────────
+// Registry-getrieben: neuer Hub = neuer Eintrag in BLOG_HUBS → erscheint hier
+// automatisch. Keine handgepflegte URL-Liste.
+const { BLOG_HUBS } = await import(
+  new URL("../src/data/blog-hub-content.ts", import.meta.url).href
+);
+let blogHubCount = 0;
+for (const hub of Object.values(BLOG_HUBS)) {
+  const loc = `${BASE_URL}/de/blog/thema/${hub.slug}`;
+  urlEntries.push(
+    `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
+  );
+  blogHubCount += 1;
+}
+
 // ─── Standalone: /request-data-delete (präfixlos, DE-only, keine Alternates) ──
 // Stabile URL für App-Store-Datenlöschungsangaben; pre-rendered via
 // generate-prerendered-html.mjs (gleicher Pfad, eigenes statisches HTML).

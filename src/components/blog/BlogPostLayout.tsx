@@ -6,6 +6,7 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { ChevronRight, Clock, ArrowLeft, ArrowRight } from "lucide-react";
 import { blogLinksForCategories } from "@/data/money-page-links";
+import { hubPathForCategory } from "@/data/blog-hub-content";
 import { LANDING_BLOG_CATEGORIES } from "@/data/blog-landing-content";
 import { blogPosts } from "@/data/blog-posts";
 
@@ -72,8 +73,13 @@ export const BlogPostLayout = ({
             <ChevronRight className="w-3 h-3 flex-shrink-0" />
             <Link to={lp("/blog")} className="hover:text-white/70 transition-colors">Blog</Link>
             <ChevronRight className="w-3 h-3 flex-shrink-0" />
-            {/* Kategorie-Ebene (Batch 6): noch ohne Link — Hub-URLs folgen. */}
-            <span className="text-white/50">{category}</span>
+            {/* Kategorie-Ebene: Link, sobald ein Hub registriert ist (Registry
+                blog-hub-content.ts) — sonst Text (Batch 6 Runde 2). */}
+            {hubPathForCategory(category) ? (
+              <Link to={hubPathForCategory(category)!} className="text-white/50 hover:text-white/80 transition-colors">{category}</Link>
+            ) : (
+              <span className="text-white/50">{category}</span>
+            )}
             <ChevronRight className="w-3 h-3 flex-shrink-0" />
             <span className="text-white/60 truncate max-w-[180px] sm:max-w-none">{title}</span>
           </nav>
