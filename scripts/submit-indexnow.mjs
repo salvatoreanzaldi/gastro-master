@@ -22,6 +22,10 @@ const ROOT = path.resolve(__dirname, "..");
 const HOST = "gastro-master.de";
 const SITE_URL = `https://${HOST}`;
 const SITEMAP_PATH = path.join(ROOT, "dist", "sitemap.xml");
+// Der Key MUSS derjenige sein, unter dem der Host bei IndexNow zuerst
+// akzeptiert wurde. Beide Key-Dateien liegen live im Root und liefern 200,
+// aber nur 3phgc5… wird angenommen (HTTP 202); 5e1219b3… quittiert IndexNow
+// mit „UserForbiddedToAccessSite" (403), obwohl die Datei erreichbar ist.
 const KEY_PATH = path.join(ROOT, "scripts", "indexnow.key");
 
 // ── 1. IndexNow-Key laden ────────────────────────────────────────────────────
