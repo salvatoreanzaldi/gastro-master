@@ -13,6 +13,41 @@
          YouTube-Embeds (youtube-nocookie). Nach Deploy live prüfen, dass diese
          weiterhin erst nach Consent laden; falls nicht, `async` wieder entfernen. -->
     <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="d088aaa8-b12e-479b-be95-953307a61e7d" data-blockingmode="auto" type="text/javascript" async></script>
+
+    <!-- Google Consent Mode v2 — INLINE (synchron), läuft garantiert vor GTM.
+         Default = alles verweigert ("denied"), bis Cookiebot bei Zustimmung ein
+         gtag('consent','update') sendet (Statistik → analytics_storage,
+         Marketing → ad_*). Dafür muss im Cookiebot-Dashboard "Google Consent
+         Mode" aktiviert sein — KEINE zweite Consent-Logik im Code.
+         data-cookieconsent="ignore": Cookiebots Auto-Blocking darf dieses
+         Init-Script und den GTM-Loader NICHT blockieren, sonst kann Consent
+         Mode die GTM-Tags nicht gaten. -->
+    <script data-cookieconsent="ignore">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'denied',
+        personalization_storage: 'denied',
+        security_storage: 'granted',
+        wait_for_update: 500
+      });
+      gtag('set', 'ads_data_redaction', true);
+    </script>
+
+    <!-- Google Tag Manager — Container GTM-MMZSBT84. Lädt den dataLayer;
+         GA4 (G-M0XYNBP2HR) wird ausschließlich als Tag im GTM-Interface
+         verwaltet, NICHT hier hartkodiert. -->
+    <script data-cookieconsent="ignore">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MMZSBT84');</script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -67,6 +102,9 @@
     <script src="https://analytics.ahrefs.com/analytics.js" data-key="6GbtIa1x0pIjSvvyNZ07BA" async></script>
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMZSBT84" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <!-- Superchat Widget -->

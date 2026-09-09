@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { lazy, Suspense, type ComponentType, createElement } from "react";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { GtmRouteTracker } from "@/components/analytics/GtmRouteTracker";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import LanguageLayout, { extractLangFromPath } from "@/components/LanguageLayout";
 import {
@@ -133,6 +134,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <GtmRouteTracker />
           <ScrollToTopButton />
           <Suspense fallback={null}>
             <Routes>
