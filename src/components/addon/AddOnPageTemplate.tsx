@@ -117,6 +117,7 @@ const HeroSection = ({ badge, headline, subline, heroImage, heroImageRounded, he
             {subline}
           </p>
           <Link
+            data-gtm-event="beratung_cta_klick"
             to={lp("/kontakt")}
             className="bg-gradient-amber text-white font-bold px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
           >

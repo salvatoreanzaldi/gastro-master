@@ -76,6 +76,12 @@ const Kontakt = () => {
         website: "",
       });
       setSubmitMessage("success");
+      // GA4/GTM Key-Event: erfolgreiches Absenden des Kontaktformulars. Nur hier
+      // im Success-Zweig (nach response.ok) — kein Feuern bei Validierungs-/
+      // Netzwerkfehlern. GA4-Zuordnung passiert als GTM-Tag auf dieses Event.
+      const w = window as typeof window & { dataLayer?: Record<string, unknown>[] };
+      w.dataLayer = w.dataLayer || [];
+      w.dataLayer.push({ event: "kontaktformular_absenden" });
       setTimeout(() => setSubmitMessage(""), 5000);
     } catch (error) {
       console.error("Form error:", error);

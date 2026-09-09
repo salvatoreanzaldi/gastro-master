@@ -79,6 +79,7 @@ const TransaktionsUmlageSection = () => {
             </div>
 
             <button
+              data-gtm-event="beratung_cta_klick"
               onClick={scrollToForm}
               className="bg-gradient-amber text-primary font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2"
             >

@@ -172,6 +172,7 @@ const PricingSection = () => {
                 </p>
 
                 <button
+                  data-gtm-event="beratung_cta_klick"
                   onClick={scrollToForm}
                   className={`w-full py-3 rounded-xl text-sm font-bold transition-all ${
                     isHighlight

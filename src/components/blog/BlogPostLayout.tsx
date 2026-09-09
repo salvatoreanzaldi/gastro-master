@@ -165,6 +165,7 @@ export const BlogPostLayout = ({
               Kein Lieferando-Anteil. Keine Überraschungskosten. Nur deine Kunden, deine Einnahmen.
             </p>
             <Link
+              data-gtm-event="beratung_cta_klick"
               to={lp("/kontakt")}
               className="bg-gradient-amber text-[#0A264A] font-bold px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/20"
             >

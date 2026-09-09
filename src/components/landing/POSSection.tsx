@@ -166,7 +166,7 @@ const POSSection = () => {
                 ))}
               </ul>
               <div className="text-center md:text-left">
-                <button onClick={scrollToForm}
+                <button data-gtm-event="beratung_cta_klick" onClick={scrollToForm}
                   className="bg-gradient-amber text-white font-bold px-7 py-3.5 rounded-xl text-sm hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
                   <span className="md:hidden">Kostenlose Beratung</span>
                   <span className="hidden md:inline">{t("pos.posCta")}</span>

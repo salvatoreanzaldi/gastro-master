@@ -87,6 +87,7 @@ const HomeTeamCTA = () => {
               ))}
             </div>
             <motion.button
+              data-gtm-event="beratung_cta_klick"
               onClick={() => { navigate(lp("/kontakt")); }}
               whileHover={{ scale: 1.04, boxShadow: "0 0 32px 8px rgba(237,132,0,0.55), 0 0 64px 16px rgba(237,132,0,0.25)" }}
               whileTap={{ scale: 0.97 }}

@@ -12,6 +12,10 @@ interface RippleButtonProps {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   disabled?: boolean;
+  // GA4/GTM: optionales Tracking-Attribut an das DOM-<button> durchreichen,
+  // damit GTM-Klick-Trigger es sehen (die feste Props-Schnittstelle würde es
+  // sonst verschlucken). Nur dieses Attribut, kein generischer Prop-Spread.
+  "data-gtm-event"?: string;
 }
 
 const JS_RIPPLE_KEYFRAMES = `
@@ -29,6 +33,7 @@ const RippleButton: React.FC<RippleButtonProps> = ({
   onClick,
   className = '',
   disabled = false,
+  "data-gtm-event": dataGtmEvent,
 }) => {
   const [ripples, setRipples] = useState<RippleState[]>([]);
 
@@ -48,6 +53,7 @@ const RippleButton: React.FC<RippleButtonProps> = ({
     <>
       <style dangerouslySetInnerHTML={{ __html: JS_RIPPLE_KEYFRAMES }} />
       <button
+        data-gtm-event={dataGtmEvent}
         className={`relative overflow-hidden ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
         onClick={handleClick}
         disabled={disabled}

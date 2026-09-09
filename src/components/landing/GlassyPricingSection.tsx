@@ -218,6 +218,7 @@ const GlassyCard = ({
       <p className={`text-[11px] mb-4 ${textMuted}`}>{durationLabel}: {duration}</p>
 
       <RippleButton
+        data-gtm-event="beratung_cta_klick"
         onClick={onCta}
         className={`w-full py-3 rounded-xl text-sm font-bold transition-all ${
           popular

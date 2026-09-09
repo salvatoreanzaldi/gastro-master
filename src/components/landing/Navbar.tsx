@@ -385,7 +385,7 @@ const Navbar = () => {
             )}
           </div>
 
-          <button onClick={scrollToForm}
+          <button data-gtm-event="beratung_cta_klick" onClick={scrollToForm}
             className="bg-gradient-amber text-white dark:text-[#0A264A] font-bold rounded-xl hover:scale-[1.02] transition-all duration-700 inline-flex items-center gap-1.5 px-5 py-2.5 text-sm whitespace-nowrap flex-shrink-0">
             {t('nav.cta')}
             <ArrowRight className="w-4 h-4 flex-shrink-0" />
@@ -554,7 +554,7 @@ const Navbar = () => {
             className="block text-primary-foreground/70 hover:text-primary-foreground font-medium py-2">
             {t('nav.ueberUns')}
           </Link>
-          <button onClick={scrollToForm}
+          <button data-gtm-event="beratung_cta_klick" onClick={scrollToForm}
             className="w-full bg-gradient-amber text-white dark:text-[#0A264A] font-bold px-5 py-3 rounded-xl text-base mt-2">
             {t('nav.cta')}
           </button>

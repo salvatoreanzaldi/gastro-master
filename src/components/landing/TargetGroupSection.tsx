@@ -285,7 +285,7 @@ const TargetGroupSection = ({ getSolutionHref, ctaLabel }: TargetGroupSectionPro
                             <ArrowRight className="w-4 h-4" />
                           </Link>
                         ) : (
-                          <button onClick={scrollToForm} className={cls}>
+                          <button data-gtm-event="beratung_cta_klick" onClick={scrollToForm} className={cls}>
                             {label}
                             <ArrowRight className="w-4 h-4" />
                           </button>

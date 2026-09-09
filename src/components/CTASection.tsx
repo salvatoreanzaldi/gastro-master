@@ -153,6 +153,7 @@ export const CTASection = ({ productPath, text }: CTASectionProps) => {
 
           {/* CTA Button - Statisch */}
           <button
+            data-gtm-event="beratung_cta_klick"
             onClick={() => { navigate(lp("/kontakt")); }}
             className="w-full max-w-xs bg-gradient-amber text-white font-bold px-8 py-4 rounded-xl inline-flex items-center justify-center gap-2 shadow-lg shadow-[#ED8400]/20 hover:shadow-[#ED8400]/40 transition-shadow"
           >

@@ -52,7 +52,7 @@ const RiskReversalSection = () => {
         </div>
 
         <div className="text-center">
-          <button onClick={scrollToForm}
+          <button data-gtm-event="beratung_cta_klick" onClick={scrollToForm}
             className="bg-gradient-amber text-primary font-bold px-8 py-4 rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-lg inline-flex items-center gap-2">
             {t("risk.cta")}
             <ArrowRight className="w-5 h-5" />

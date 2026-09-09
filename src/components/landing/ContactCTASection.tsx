@@ -28,6 +28,7 @@ const ContactCTASection = () => {
           </p>
 
           <Link
+            data-gtm-event="beratung_cta_klick"
             to={lp("/kontakt")}
             className="inline-flex items-center gap-2 bg-[#ED8400] text-white font-bold px-9 py-4 rounded-xl text-base shadow-lg shadow-[#ED8400]/30 hover:scale-[1.02] transition-transform mb-8"
           >

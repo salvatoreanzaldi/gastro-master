@@ -39,6 +39,7 @@ const HeroScrollSection = () => {
                 Design identisch zum Navbar-Button */}
             <div className="flex justify-center mt-4 mb-2">
               <Link
+                data-gtm-event="beratung_cta_klick"
                 to={lp("/kontakt")}
                 className="bg-gradient-amber text-white dark:text-[#0A264A] font-bold rounded-xl hover:scale-[1.02] transition-all duration-700 inline-flex items-center gap-1.5 px-5 py-2.5 text-sm whitespace-nowrap"
               >

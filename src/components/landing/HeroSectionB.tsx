@@ -92,7 +92,7 @@ const HeroSectionB = () => {
             </p>
 
             <div className="flex justify-center">
-              <Link to={lp("/kontakt")}>
+              <Link data-gtm-event="beratung_cta_klick" to={lp("/kontakt")}>
                 <Button
                   className="bg-gradient-to-r from-amber-400 to-orange-400 text-white dark:text-black hover:from-amber-500 hover:to-orange-500 font-bold text-base px-8 py-6 rounded-lg"
                 >
