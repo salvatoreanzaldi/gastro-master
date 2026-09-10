@@ -11,9 +11,18 @@ import rene     from "@/assets/kontakt/Rene Ebert - Kontakt.png";
 import salva    from "@/assets/kontakt/Salvatore Anzaldi - Kontakt.png";
 import andrej   from "@/assets/kontakt/Andrej Krutsch - Kontakt.png";
 import mohammad from "@/assets/kontakt/Mohammad Motakalemi - Kontakt.png";
+import yawar    from "@/assets/kontakt/Yawar Sultan - Kontakt.png";
 import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
 import ConfettiBurst from "@/components/ui/confetti-burst";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
+
+// 3 zusaetzliche Sprach-Pillen NUR fuer diese Seite (9 statt 6) — bewusst
+// lokal statt in flag-icons.ts ergaenzt, da jene Liste auch von den CTA-
+// Sektionen (FounderTrustSection etc.) geteilt wird und dort unveraendert
+// bleiben soll.
+import IndischIcon from "@/assets/icons/Indisch.svg";
+import PakistanischIcon from "@/assets/icons/Pakistanisch.svg";
+import PunjabiIcon from "@/assets/icons/Punjabi.svg";
 
 // Kundenlogos fuer den Logo-Carousel im linken Desktop-Block — gleiche
 // Quelle wie TrustedBrandsSection, damit Optik/Verhalten konsistent bleiben.
@@ -41,9 +50,11 @@ const customerLogos = [
   { id: "taj-mahal-masala", src: logoTajMahalMasala, alt: "Taj Mahal Masala" },
 ];
 
-const teamImages = [rene, salva, andrej, mohammad];
-const teamNames = ["René Ebert", "Salvatore Anzaldi", "Andrej Krutsch", "Mohammad Motakalemi"];
-const languageFlags = FLAG_ICONS_ORDERED;
+const teamImages = [rene, salva, andrej, mohammad, yawar];
+const teamNames = ["René Ebert", "Salvatore Anzaldi", "Andrej Krutsch", "Mohammad Motakalemi", "Yawar Sultan"];
+// Sprach-Pillen der Kontaktseite: die geteilten 6 Flaggen aus flag-icons.ts
+// plus 3 seiten-eigene (Indisch/Pakistanisch/Punjabi) — ergibt das 3x3-Grid.
+const languageFlags = [...FLAG_ICONS_ORDERED, IndischIcon, PakistanischIcon, PunjabiIcon];
 const promiseIcons = [Clock, Lightbulb, Lock];
 
 // Floating-Label: Wenn das Feld leer & unfokussiert ist, sitzt das Label mittig

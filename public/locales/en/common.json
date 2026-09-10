@@ -635,7 +635,8 @@
       "CEO & Founder",
       "Sales & Onboarding",
       "Tech & Support",
-      "Customer Success"
+      "Customer Success",
+      "Tech & Support"
     ],
     "languageLabels": [
       "German",
@@ -643,7 +644,10 @@
       "Italian",
       "Persian",
       "Russian",
-      "Sinhalese"
+      "Sinhalese",
+      "Indian",
+      "Pakistani",
+      "Punjabi"
     ],
     "promises": [
       "You'll receive a response within 12 hours.",

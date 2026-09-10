@@ -628,7 +628,8 @@
       "CEO & Fondatore",
       "Sales & Onboarding",
       "Tecnica & Supporto",
-      "Assistenza clienti"
+      "Assistenza clienti",
+      "Tecnica & Supporto"
     ],
     "languageLabels": [
       "Tedesco",
@@ -636,7 +637,10 @@
       "Italiano",
       "Persiano",
       "Russo",
-      "Singalese"
+      "Singalese",
+      "Indiano",
+      "Pakistano",
+      "Punjabi"
     ],
     "promises": [
       "Riceverà una risposta entro 12 ore.",
