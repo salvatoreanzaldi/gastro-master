@@ -19,6 +19,18 @@ const teamNames = ["René Ebert", "Salvatore Anzaldi", "Andrej Krutsch", "Mohamm
 const languageFlags = FLAG_ICONS_ORDERED;
 const promiseIcons = [Clock, Lightbulb, Lock];
 
+// Floating-Label: Wenn das Feld leer & unfokussiert ist, sitzt das Label mittig
+// im Feld (wie ein Placeholder). Bei Fokus ODER Inhalt schwebt es nach oben und
+// wird klein. Voraussetzung: das <input>/<textarea> traegt placeholder=" " (ein
+// Leerzeichen), damit :placeholder-shown korrekt umschaltet, und pt-5/pt-6, damit
+// der schwebende Label-Text nicht ueber dem Eingabetext liegt.
+const INPUT_CLS =
+  "peer w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 pt-5 pb-2 text-[#0A264A] focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition";
+const FLOAT_LABEL_CLS =
+  "pointer-events-none absolute left-4 top-2 text-xs font-medium text-[#0A264A]/60 transition-all " +
+  "peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-placeholder-shown:text-gray-400 " +
+  "peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-[#007DCF]";
+
 const Kontakt = () => {
   const { t } = useTranslation("common");
   const arr = (key: string) => { const v = t(key, { returnObjects: true }); return Array.isArray(v) ? v : []; };
@@ -151,6 +163,26 @@ const Kontakt = () => {
     }
   };
 
+  // Sprach-Pillen — auf Desktop im weissen Block links (helles Design), auf
+  // Mobile in der navy Sidebar (dunkles Design). Eine Quelle, zwei Stylings.
+  const languagePills = (variant: "light" | "navy") => (
+    <div className="flex flex-wrap gap-2.5">
+      {arr("contact.languageLabels").map((label: string, i: number) => (
+        <span
+          key={label}
+          className={
+            variant === "light"
+              ? "flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-200 text-[#0A264A]/70 text-sm font-medium"
+              : "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/8 border border-white/10 text-white/65 text-sm font-medium"
+          }
+        >
+          <img src={languageFlags[i]} alt="" className="w-4 h-4 rounded-full object-cover" loading="lazy" />
+          {label}
+        </span>
+      ))}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d1117]">
       <ScrollProgressBar />
@@ -161,215 +193,222 @@ const Kontakt = () => {
 
           <div className="grid lg:grid-cols-2 gap-6 items-stretch">
 
-            {/* ── Left card: Form (white) ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="bg-white border border-gray-100 rounded-3xl shadow-xl shadow-black/[0.06] p-6 md:p-8 h-full"
-            >
-              <h1 className="text-2xl md:text-3xl font-black text-[#0A264A] mb-2">
-                {t("contact.heroTitle")}
-              </h1>
-              <p className="text-[#0A264A]/55 text-sm leading-relaxed mb-5">
-                {t("contact.heroSub")}
-              </p>
-              <form onSubmit={handleSubmit}>
-                {/* Honeypot — hidden from real users, bots fill it. Must stay empty. */}
-                <input
-                  type="text"
-                  name="website"
-                  value={form.website}
-                  onChange={e => setForm(f => ({ ...f, website: e.target.value }))}
-                  tabIndex={-1}
-                  autoComplete="off"
-                  aria-hidden="true"
-                  style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
-                />
-                <div className="space-y-3.5">
-                  {/* Name */}
-                  <div {...stepProps(1)}>
-                    <label htmlFor="contact-name" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelName")}</label>
-                    <input id="contact-name"
-                      required={req(1)} autoComplete="name" type="text" value={form.name}
-                      onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
-                      placeholder={t("contact.placeholderName")}
-                    />
-                  </div>
-
-                  {/* Restaurant */}
-                  <div {...stepProps(2)}>
-                    <label htmlFor="contact-business" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelBusiness")}</label>
-                    <input id="contact-business"
-                      required={req(2)} autoComplete="organization" type="text" value={form.restaurant}
-                      onChange={e => setForm(f => ({ ...f, restaurant: e.target.value }))}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
-                      placeholder={t("contact.placeholderBusiness")}
-                    />
-                  </div>
-
-                  {/* PLZ + Phone */}
-                  <div className="grid grid-cols-2 gap-4" {...stepProps(2)}>
-                    <div>
-                      <label htmlFor="contact-zip" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelZip")}</label>
-                      <input id="contact-zip"
-                        type="text" autoComplete="postal-code" inputMode="numeric" value={form.plz}
-                        onChange={e => setForm(f => ({ ...f, plz: e.target.value }))}
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
-                        placeholder={t("contact.placeholderZip")}
+            {/* ── Left column: Form + (Desktop) language block ── */}
+            <div className="flex flex-col gap-6 h-full">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+                className="bg-white border border-gray-100 rounded-3xl shadow-xl shadow-black/[0.06] p-6 md:p-8"
+              >
+                <h1 className="text-2xl md:text-3xl font-black text-[#0A264A] mb-2">
+                  {t("contact.heroTitle")}
+                </h1>
+                <p className="text-[#0A264A]/55 text-sm leading-relaxed mb-4">
+                  {t("contact.heroSub")}
+                </p>
+                <form onSubmit={handleSubmit}>
+                  {/* Honeypot — hidden from real users, bots fill it. Must stay empty. */}
+                  <input
+                    type="text"
+                    name="website"
+                    value={form.website}
+                    onChange={e => setForm(f => ({ ...f, website: e.target.value }))}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                  />
+                  <div className="space-y-2.5">
+                    {/* Name */}
+                    <div className="relative" {...stepProps(1)}>
+                      <input id="contact-name"
+                        required={req(1)} autoComplete="name" type="text" value={form.name}
+                        onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                        placeholder=" " className={INPUT_CLS}
                       />
+                      <label htmlFor="contact-name" className={FLOAT_LABEL_CLS}>{t("contact.labelName")}</label>
                     </div>
-                    <div>
-                      <label htmlFor="contact-phone" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelPhone")}</label>
-                      <input id="contact-phone"
-                        required={req(2)} autoComplete="tel" inputMode="tel" type="tel" value={form.phone}
-                        onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
-                        placeholder={t("contact.placeholderPhone")}
+
+                    {/* E-Mail */}
+                    <div className="relative" {...stepProps(1)}>
+                      <input id="contact-email"
+                        required={req(1)} autoComplete="email" inputMode="email" type="email" value={form.email}
+                        onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                        placeholder=" " className={INPUT_CLS}
                       />
+                      <label htmlFor="contact-email" className={FLOAT_LABEL_CLS}>E-Mail *</label>
                     </div>
-                  </div>
 
-                  {/* E-Mail */}
-                  <div {...stepProps(1)}>
-                    <label htmlFor="contact-email" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">E-Mail *</label>
-                    <input id="contact-email"
-                      required={req(1)} autoComplete="email" inputMode="email" type="email" value={form.email}
-                      onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
-                      placeholder={t("contact.placeholderEmail")}
-                    />
-                  </div>
-
-                  {/* Message */}
-                  <div {...stepProps(3)}>
-                    <label htmlFor="contact-message" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelMessage")}</label>
-                    <textarea id="contact-message"
-                      value={form.message} rows={3} maxLength={5000}
-                      onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition resize-none"
-                      placeholder={t("contact.placeholderMessage")}
-                    />
-                  </div>
-
-                  {/* Product interest */}
-                  <div {...stepProps(2)}>
-                    <label className="block text-[#0A264A]/70 dark:text-white/60 text-sm font-medium mb-3">{t("contact.labelInterest")}</label>
-                    <div className="flex flex-wrap gap-2">
-                      {arr("contact.interests").map((p: string) => (
-                        <button
-                          key={p} type="button"
-                          onClick={() => toggleProduct(p)}
-                          className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-                            form.products.includes(p)
-                              ? "bg-[#007DCF] text-white border-[#007DCF]"
-                              : "bg-gray-50 text-[#0A264A]/60 border-gray-200 hover:border-[#007DCF]/40"
-                          }`}
-                        >
-                          {p}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Datenschutz checkbox */}
-                  <label className="flex items-start gap-3 cursor-pointer group" {...stepProps(3)}>
-                    <div className="relative flex-shrink-0 mt-0.5">
-                      <input
-                        type="checkbox" required={req(3)}
-                        checked={form.datenschutz}
-                        onChange={e => setForm(f => ({ ...f, datenschutz: e.target.checked }))}
-                        className="sr-only"
+                    {/* Restaurant */}
+                    <div className="relative" {...stepProps(2)}>
+                      <input id="contact-business"
+                        required={req(2)} autoComplete="organization" type="text" value={form.restaurant}
+                        onChange={e => setForm(f => ({ ...f, restaurant: e.target.value }))}
+                        placeholder=" " className={INPUT_CLS}
                       />
-                      <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
-                        form.datenschutz
-                          ? "bg-[#007DCF] border-[#007DCF]"
-                          : "border-gray-300 bg-gray-50 group-hover:border-[#007DCF]/60"
-                      }`}>
-                        {form.datenschutz && (
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
+                      <label htmlFor="contact-business" className={FLOAT_LABEL_CLS}>{t("contact.labelBusiness")}</label>
+                    </div>
+
+                    {/* PLZ + Phone */}
+                    <div className="grid grid-cols-2 gap-4" {...stepProps(2)}>
+                      <div className="relative">
+                        <input id="contact-zip"
+                          type="text" autoComplete="postal-code" inputMode="numeric" value={form.plz}
+                          onChange={e => setForm(f => ({ ...f, plz: e.target.value }))}
+                          placeholder=" " className={INPUT_CLS}
+                        />
+                        <label htmlFor="contact-zip" className={FLOAT_LABEL_CLS}>{t("contact.labelZip")}</label>
+                      </div>
+                      <div className="relative">
+                        <input id="contact-phone"
+                          required={req(2)} autoComplete="tel" inputMode="tel" type="tel" value={form.phone}
+                          onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                          placeholder=" " className={INPUT_CLS}
+                        />
+                        <label htmlFor="contact-phone" className={FLOAT_LABEL_CLS}>{t("contact.labelPhone")}</label>
                       </div>
                     </div>
-                    <span className="text-[#0A264A]/55 text-sm leading-snug">
-                      {t("contact.privacyPrefix")}{" "}
-                      <a href="/datenschutz" target="_blank" rel="noopener noreferrer" className="text-[#007DCF] underline underline-offset-2 hover:opacity-80">
-                        {t("contact.privacyLink")}
-                      </a>{" "}
-                      {t("contact.privacySuffix")}
-                    </span>
-                  </label>
 
-                  {/* reCAPTCHA checkbox */}
-                  <label className="flex items-start gap-3 cursor-pointer group" {...stepProps(3)}>
-                    <div className="relative flex-shrink-0 mt-0.5">
-                      <input
-                        type="checkbox" required={req(3)}
-                        checked={form.recaptcha}
-                        onChange={e => setForm(f => ({ ...f, recaptcha: e.target.checked }))}
-                        className="sr-only"
+                    {/* Message */}
+                    <div className="relative" {...stepProps(3)}>
+                      <textarea id="contact-message"
+                        value={form.message} rows={3} maxLength={5000}
+                        onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                        placeholder=" "
+                        className="peer w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 pt-6 pb-2 text-[#0A264A] focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition resize-none"
                       />
-                      <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
-                        form.recaptcha
-                          ? "bg-[#007DCF] border-[#007DCF]"
-                          : "border-gray-300 bg-gray-50 group-hover:border-[#007DCF]/60"
-                      }`}>
-                        {form.recaptcha && (
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
+                      <label htmlFor="contact-message"
+                        className="pointer-events-none absolute left-4 top-2 text-xs font-medium text-[#0A264A]/60 transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:font-medium peer-focus:text-[#007DCF]">
+                        {t("contact.labelMessage")}
+                      </label>
+                    </div>
+
+                    {/* Product interest */}
+                    <div {...stepProps(2)}>
+                      <label className="block text-[#0A264A]/70 dark:text-white/60 text-sm font-medium mb-3">{t("contact.labelInterest")}</label>
+                      <div className="flex flex-wrap gap-2">
+                        {arr("contact.interests").map((p: string) => (
+                          <button
+                            key={p} type="button"
+                            onClick={() => toggleProduct(p)}
+                            className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                              form.products.includes(p)
+                                ? "bg-[#007DCF] text-white border-[#007DCF]"
+                                : "bg-gray-50 text-[#0A264A]/60 border-gray-200 hover:border-[#007DCF]/40"
+                            }`}
+                          >
+                            {p}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                    <span className="text-[#0A264A]/55 text-sm leading-snug">
-                      {t("contact.recaptchaLabel")}
-                    </span>
-                  </label>
-                </div>
 
-                {/* Navigation — bewusst OHNE Fortschrittsanzeige (keine Punkte,
-                    kein Balken, kein „Schritt x von y"). Auf Desktop rendert
-                    ausschliesslich der Absenden-Button wie bisher. */}
-                <div className="flex gap-3 mt-5">
-                  {step > 1 && (
-                    <button type="button" onClick={() => setStep(s => s - 1)}
-                      className="px-6 py-3.5 rounded-xl text-base font-bold text-[#0A264A]/70 bg-gray-100 hover:bg-gray-200 transition-colors flex-shrink-0">
-                      {t("contact.back", { defaultValue: "Zurück" })}
-                    </button>
+                    {/* Datenschutz checkbox */}
+                    <label className="flex items-start gap-3 cursor-pointer group" {...stepProps(3)}>
+                      <div className="relative flex-shrink-0 mt-0.5">
+                        <input
+                          type="checkbox" required={req(3)}
+                          checked={form.datenschutz}
+                          onChange={e => setForm(f => ({ ...f, datenschutz: e.target.checked }))}
+                          className="sr-only"
+                        />
+                        <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
+                          form.datenschutz
+                            ? "bg-[#007DCF] border-[#007DCF]"
+                            : "border-gray-300 bg-gray-50 group-hover:border-[#007DCF]/60"
+                        }`}>
+                          {form.datenschutz && (
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-[#0A264A]/55 text-sm leading-snug">
+                        {t("contact.privacyPrefix")}{" "}
+                        <a href="/datenschutz" target="_blank" rel="noopener noreferrer" className="text-[#007DCF] underline underline-offset-2 hover:opacity-80">
+                          {t("contact.privacyLink")}
+                        </a>{" "}
+                        {t("contact.privacySuffix")}
+                      </span>
+                    </label>
+
+                    {/* reCAPTCHA checkbox */}
+                    <label className="flex items-start gap-3 cursor-pointer group" {...stepProps(3)}>
+                      <div className="relative flex-shrink-0 mt-0.5">
+                        <input
+                          type="checkbox" required={req(3)}
+                          checked={form.recaptcha}
+                          onChange={e => setForm(f => ({ ...f, recaptcha: e.target.checked }))}
+                          className="sr-only"
+                        />
+                        <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
+                          form.recaptcha
+                            ? "bg-[#007DCF] border-[#007DCF]"
+                            : "border-gray-300 bg-gray-50 group-hover:border-[#007DCF]/60"
+                        }`}>
+                          {form.recaptcha && (
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-[#0A264A]/55 text-sm leading-snug">
+                        {t("contact.recaptchaLabel")}
+                      </span>
+                    </label>
+                  </div>
+
+                  {/* Navigation — bewusst OHNE Fortschrittsanzeige. Zurueck/Weiter/
+                      Absenden identisch auf Mobile und Desktop. */}
+                  <div className="flex gap-3 mt-4">
+                    {step > 1 && (
+                      <button type="button" onClick={() => setStep(s => s - 1)}
+                        className="px-6 py-3.5 rounded-2xl text-base font-bold text-[#0A264A]/70 bg-gray-100 hover:bg-gray-200 transition-colors flex-shrink-0">
+                        {t("contact.back", { defaultValue: "Zurück" })}
+                      </button>
+                    )}
+                    {step < 3 ? (
+                      <button type="button"
+                        onClick={() => stepValid(step) && setStep(s => s + 1)}
+                        disabled={!stepValid(step)}
+                        className="flex-1 bg-gradient-amber text-white font-bold px-8 py-3.5 rounded-2xl text-base hover:scale-[1.01] transition-transform shadow-lg shadow-[#ED8400]/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                        {t("contact.next", { defaultValue: "Weiter" })}
+                      </button>
+                    ) : (
+                      <button type="submit" disabled={isSubmitting}
+                        className="flex-1 bg-gradient-amber text-white font-bold px-8 py-3.5 rounded-2xl text-base hover:scale-[1.01] transition-transform shadow-lg shadow-[#ED8400]/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                        {isSubmitting ? t("contact.submitting") : t("contact.submitBtn")}
+                      </button>
+                    )}
+                  </div>
+                  {submitMessage === "success" && (
+                    <p className="text-green-600 text-sm text-center mt-3 font-medium">✓ {t("contact.success")}</p>
                   )}
-                  {step < 3 ? (
-                    <button type="button"
-                      onClick={() => stepValid(step) && setStep(s => s + 1)}
-                      disabled={!stepValid(step)}
-                      className="flex-1 bg-gradient-amber text-white font-bold px-8 py-3.5 rounded-xl text-base hover:scale-[1.01] transition-transform shadow-lg shadow-[#ED8400]/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
-                      {t("contact.next", { defaultValue: "Weiter" })}
-                    </button>
-                  ) : (
-                    <button type="submit" disabled={isSubmitting}
-                      className="flex-1 bg-gradient-amber text-white font-bold px-8 py-3.5 rounded-xl text-base hover:scale-[1.01] transition-transform shadow-lg shadow-[#ED8400]/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
-                      {isSubmitting ? t("contact.submitting") : t("contact.submitBtn")}
-                    </button>
+                  {submitMessage === "error" && (
+                    <p className="text-red-600 text-sm text-center mt-3 font-medium">✗ {t("contact.error")}</p>
                   )}
-                </div>
-                {submitMessage === "success" && (
-                  <p className="text-green-600 text-sm text-center mt-3 font-medium">✓ {t("contact.success")}</p>
-                )}
-                {submitMessage === "error" && (
-                  <p className="text-red-600 text-sm text-center mt-3 font-medium">✗ {t("contact.error")}</p>
-                )}
-                <p className="text-gray-400 text-xs text-center mt-3">{t("contact.required")}</p>
-              </form>
-            </motion.div>
+                  <p className="text-gray-400 text-xs text-center mt-3">{t("contact.required")}</p>
+                </form>
+              </motion.div>
+
+              {/* Sprach-Block — NUR Desktop, unter dem Formular (weisses Card). */}
+              <div className="hidden lg:flex flex-col flex-1 bg-white border border-gray-100 rounded-3xl shadow-xl shadow-black/[0.06] p-6 md:p-8">
+                <p className="text-[#0A264A]/40 text-xs font-bold uppercase tracking-widest mb-4">
+                  {t("contact.languageTitle")}
+                </p>
+                {languagePills("light")}
+              </div>
+            </div>
 
             {/* ── Right card: Blue (navy) ── */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="bg-[#0A264A] rounded-3xl shadow-xl shadow-[#0A264A]/30 flex flex-col overflow-hidden"
+              className="bg-[#0A264A] rounded-3xl shadow-xl shadow-[#0A264A]/30 flex flex-col overflow-hidden h-full"
             >
               {/* Slideshow — edge-to-edge, no border, card clips corners */}
               <div className="relative aspect-square w-full flex-shrink-0 overflow-hidden">
@@ -402,24 +441,14 @@ const Kontakt = () => {
               </div>
 
               {/* Rest of content with padding */}
-              <div className="flex flex-col gap-5 p-6 md:p-8 flex-1">
+              <div className="flex flex-col gap-6 p-6 md:p-8 flex-1">
 
-                {/* Language pills */}
-                <div>
+                {/* Language pills — NUR Mobile (auf Desktop links unter dem Formular) */}
+                <div className="lg:hidden">
                   <p className="text-white/35 text-xs font-bold uppercase tracking-widest mb-3">
                     {t("contact.languageTitle")}
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {arr("contact.languageLabels").map((label: string, i: number) => (
-                      <span
-                        key={label}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/8 border border-white/10 text-white/65 text-sm font-medium"
-                      >
-                        <img src={languageFlags[i]} alt="" className="w-4 h-4 rounded-full object-cover" loading="lazy" />
-                        {label}
-                      </span>
-                    ))}
-                  </div>
+                  {languagePills("navy")}
                 </div>
 
                 {/* Unser Versprechen */}
@@ -427,12 +456,12 @@ const Kontakt = () => {
                   <p className="text-white/35 text-xs font-bold uppercase tracking-widest mb-4">
                     {t("contact.promiseTitle")}
                   </p>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {arr("contact.promises").map((text: string, i: number) => {
                       const Icon = promiseIcons[i];
                       return (
                         <div key={i} className="flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-xl bg-[#007DCF]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <div className="w-9 h-9 rounded-xl bg-[#007DCF]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                             <Icon className="w-4 h-4 text-[#007DCF]" strokeWidth={1.75} />
                           </div>
                           <p className="text-white/60 text-sm leading-relaxed">{text}</p>
@@ -446,10 +475,10 @@ const Kontakt = () => {
                     Formular. Der E-Mail-Button (info@) wurde bewusst entfernt:
                     verpasste Anrufe bleiben im Protokoll/als Voicemail sichtbar,
                     E-Mails an info@ kommen nicht zuverlässig an. */}
-                <div className="flex flex-col gap-3 mt-auto">
+                <div className="flex flex-col gap-3 mt-auto pt-2">
                   <a
                     href="tel:+4960819128913"
-                    className="flex items-center justify-center gap-2.5 bg-gradient-amber text-white font-bold px-6 py-3.5 rounded-xl hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/25 text-sm"
+                    className="flex items-center justify-center gap-2.5 bg-gradient-amber text-white font-bold px-6 py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/25 text-sm"
                   >
                     <Phone className="w-4 h-4 flex-shrink-0" />
                     +49 (0) 6081 9128913
