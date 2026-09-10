@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
-import { Clock, Lightbulb, Lock, Mail, Phone } from "lucide-react";
+import { Clock, Lightbulb, Lock, Phone } from "lucide-react";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { useTranslation } from "react-i18next";
@@ -12,6 +12,7 @@ import salva    from "@/assets/kontakt/Salvatore Anzaldi - Kontakt.png";
 import andrej   from "@/assets/kontakt/Andrej Krutsch - Kontakt.png";
 import mohammad from "@/assets/kontakt/Mohammad Motakalemi - Kontakt.png";
 import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
+import ConfettiBurst from "@/components/ui/confetti-burst";
 
 const teamImages = [rene, salva, andrej, mohammad];
 const teamNames = ["René Ebert", "Salvatore Anzaldi", "Andrej Krutsch", "Mohammad Motakalemi"];
@@ -37,6 +38,43 @@ const Kontakt = () => {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  // ── 3-Schritt-Modus (identisch auf Mobile UND Desktop) ─────────────────────
+  // Phase-1-Umbau: der mehrschrittige Ablauf ist jetzt auf ALLEN Breakpoints
+  // aktiv (vorher nur unter md). Schritt 1 = Name/E-Mail, Schritt 2 = Betrieb/
+  // PLZ/Telefon/Interesse, Schritt 3 = Nachricht/Zustimmung. Die Feld-Reihen-
+  // folge im DOM bleibt unveraendert — sie ergibt gruppiert die Schrittfolge.
+  const [step, setStep] = useState(1);
+
+  /** Sichtbar nur auf dem aktuellen Schritt — auf allen Breakpoints gleich. */
+  const visible = (n: number) => step === n;
+
+  /**
+   * Props zum Ausblenden einer Feldgruppe.
+   *
+   * Das hidden-ATTRIBUT allein reicht nicht: Tailwind setzt `[hidden]{display:none}`
+   * in der Preflight, die Utilities `.grid` und `.flex` haben dieselbe Spezifitaet
+   * und stehen spaeter im Stylesheet — die PLZ/Telefon-Zeile (grid) und die beiden
+   * Checkbox-Labels (flex) blieben dadurch sichtbar. Die Inline-Regel kann keine
+   * Klasse ueberstimmen; das Attribut bleibt zusaetzlich stehen, weil es die
+   * Gruppe auch fuer Screenreader und die Tab-Reihenfolge sauber herausnimmt.
+   */
+  const stepProps = (n: number) =>
+    visible(n) ? {} : { hidden: true, style: { display: "none" } as const };
+
+  /**
+   * required NUR fuer das, was gerade sichtbar ist. Ein `required` auf einem
+   * ausgeblendeten Feld blockiert das native Absenden mit „not focusable" —
+   * deshalb haengt es am Schritt statt fest im Markup.
+   */
+  const req = (n: number) => step === n;
+
+  const stepValid = (n: number) => {
+    if (n === 1) return form.name.trim() !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
+    if (n === 2) return form.restaurant.trim() !== "" && form.phone.trim() !== "";
+    return true;
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -60,10 +98,24 @@ const Kontakt = () => {
     setSubmitMessage("");
 
     try {
+      // Die Nachricht bleibt fuer den Nutzer optional — kein Stern, keine
+      // Validierung, kein blockierter Button. validate.php verlangt sie aber
+      // seit jeher als nicht-leer (name, phone, email UND message), weshalb ein
+      // leeres Feld bisher in einem 400er endete. Statt das Backend anzufassen
+      // setzt das Frontend hier einen sprachabhaengigen Platzhalter ein. Nur
+      // fuer den Request — `form` bleibt unberuehrt, im Feld erscheint nichts.
+      const payload = {
+        ...form,
+        message:
+          form.message.trim() === ""
+            ? t("contact.messageFallback", { defaultValue: "Kein zusätzlicher Kommentar." })
+            : form.message,
+      };
+
       const response = await fetch("https://sandbox.gastro-master.de/contact.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) throw new Error("Failed to send email");
@@ -75,14 +127,21 @@ const Kontakt = () => {
         recaptcha: false,
         website: "",
       });
+      setStep(1);
+      setShowConfetti(true);
       setSubmitMessage("success");
       // GA4/GTM Key-Event: erfolgreiches Absenden des Kontaktformulars. Nur hier
-      // im Success-Zweig (nach response.ok) — kein Feuern bei Validierungs-/
-      // Netzwerkfehlern. GA4-Zuordnung passiert als GTM-Tag auf dieses Event.
+      // im Success-Zweig (nach response.ok) — kein Feuern bei Fehlern. GA4-
+      // Zuordnung als GTM-Tag. (Phase 2: hier später /danke-Redirect statt Inline.)
       const w = window as typeof window & { dataLayer?: Record<string, unknown>[] };
       w.dataLayer = w.dataLayer || [];
       w.dataLayer.push({ event: "kontaktformular_absenden" });
-      setTimeout(() => setSubmitMessage(""), 5000);
+      // Die Erfolgsmeldung bleibt bewusst stehen, bis der Nutzer die Seite
+      // verlaesst oder neu laedt — frueher blendete ein 5-Sekunden-Timeout sie
+      // aus und liess ein leeres Formular ohne jede Rueckmeldung zurueck.
+      // Die Fehlermeldung darunter behaelt ihr Timeout: sie soll verschwinden,
+      // damit ein neuer Versuch nicht dauerhaft von einer alten Warnung
+      // begleitet wird.
     } catch (error) {
       console.error("Form error:", error);
       setSubmitMessage("error");
@@ -129,10 +188,10 @@ const Kontakt = () => {
                 />
                 <div className="space-y-3.5">
                   {/* Name */}
-                  <div>
+                  <div {...stepProps(1)}>
                     <label htmlFor="contact-name" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelName")}</label>
                     <input id="contact-name"
-                      required type="text" value={form.name}
+                      required={req(1)} autoComplete="name" type="text" value={form.name}
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
                       placeholder={t("contact.placeholderName")}
@@ -140,10 +199,10 @@ const Kontakt = () => {
                   </div>
 
                   {/* Restaurant */}
-                  <div>
+                  <div {...stepProps(2)}>
                     <label htmlFor="contact-business" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelBusiness")}</label>
                     <input id="contact-business"
-                      required type="text" value={form.restaurant}
+                      required={req(2)} autoComplete="organization" type="text" value={form.restaurant}
                       onChange={e => setForm(f => ({ ...f, restaurant: e.target.value }))}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
                       placeholder={t("contact.placeholderBusiness")}
@@ -151,11 +210,11 @@ const Kontakt = () => {
                   </div>
 
                   {/* PLZ + Phone */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4" {...stepProps(2)}>
                     <div>
                       <label htmlFor="contact-zip" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelZip")}</label>
                       <input id="contact-zip"
-                        type="text" value={form.plz}
+                        type="text" autoComplete="postal-code" inputMode="numeric" value={form.plz}
                         onChange={e => setForm(f => ({ ...f, plz: e.target.value }))}
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
                         placeholder={t("contact.placeholderZip")}
@@ -164,7 +223,7 @@ const Kontakt = () => {
                     <div>
                       <label htmlFor="contact-phone" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelPhone")}</label>
                       <input id="contact-phone"
-                        required type="tel" value={form.phone}
+                        required={req(2)} autoComplete="tel" inputMode="tel" type="tel" value={form.phone}
                         onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
                         placeholder={t("contact.placeholderPhone")}
@@ -173,10 +232,10 @@ const Kontakt = () => {
                   </div>
 
                   {/* E-Mail */}
-                  <div>
-                    <label htmlFor="contact-email" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">E-Mail</label>
+                  <div {...stepProps(1)}>
+                    <label htmlFor="contact-email" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">E-Mail *</label>
                     <input id="contact-email"
-                      type="email" value={form.email}
+                      required={req(1)} autoComplete="email" inputMode="email" type="email" value={form.email}
                       onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[#0A264A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#007DCF]/40 transition"
                       placeholder={t("contact.placeholderEmail")}
@@ -184,7 +243,7 @@ const Kontakt = () => {
                   </div>
 
                   {/* Message */}
-                  <div>
+                  <div {...stepProps(3)}>
                     <label htmlFor="contact-message" className="block text-[#0A264A]/70 text-sm font-medium mb-1.5">{t("contact.labelMessage")}</label>
                     <textarea id="contact-message"
                       value={form.message} rows={3} maxLength={5000}
@@ -195,7 +254,7 @@ const Kontakt = () => {
                   </div>
 
                   {/* Product interest */}
-                  <div>
+                  <div {...stepProps(2)}>
                     <label className="block text-[#0A264A]/70 dark:text-white/60 text-sm font-medium mb-3">{t("contact.labelInterest")}</label>
                     <div className="flex flex-wrap gap-2">
                       {arr("contact.interests").map((p: string) => (
@@ -215,10 +274,10 @@ const Kontakt = () => {
                   </div>
 
                   {/* Datenschutz checkbox */}
-                  <label className="flex items-start gap-3 cursor-pointer group">
+                  <label className="flex items-start gap-3 cursor-pointer group" {...stepProps(3)}>
                     <div className="relative flex-shrink-0 mt-0.5">
                       <input
-                        type="checkbox" required
+                        type="checkbox" required={req(3)}
                         checked={form.datenschutz}
                         onChange={e => setForm(f => ({ ...f, datenschutz: e.target.checked }))}
                         className="sr-only"
@@ -245,10 +304,10 @@ const Kontakt = () => {
                   </label>
 
                   {/* reCAPTCHA checkbox */}
-                  <label className="flex items-start gap-3 cursor-pointer group">
+                  <label className="flex items-start gap-3 cursor-pointer group" {...stepProps(3)}>
                     <div className="relative flex-shrink-0 mt-0.5">
                       <input
-                        type="checkbox" required
+                        type="checkbox" required={req(3)}
                         checked={form.recaptcha}
                         onChange={e => setForm(f => ({ ...f, recaptcha: e.target.checked }))}
                         className="sr-only"
@@ -271,10 +330,30 @@ const Kontakt = () => {
                   </label>
                 </div>
 
-                <button type="submit" disabled={isSubmitting}
-                  className="w-full mt-5 bg-gradient-amber text-white font-bold px-8 py-3.5 rounded-xl text-base hover:scale-[1.01] transition-transform shadow-lg shadow-[#ED8400]/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
-                  {isSubmitting ? t("contact.submitting") : t("contact.submitBtn")}
-                </button>
+                {/* Navigation — bewusst OHNE Fortschrittsanzeige (keine Punkte,
+                    kein Balken, kein „Schritt x von y"). Auf Desktop rendert
+                    ausschliesslich der Absenden-Button wie bisher. */}
+                <div className="flex gap-3 mt-5">
+                  {step > 1 && (
+                    <button type="button" onClick={() => setStep(s => s - 1)}
+                      className="px-6 py-3.5 rounded-xl text-base font-bold text-[#0A264A]/70 bg-gray-100 hover:bg-gray-200 transition-colors flex-shrink-0">
+                      {t("contact.back", { defaultValue: "Zurück" })}
+                    </button>
+                  )}
+                  {step < 3 ? (
+                    <button type="button"
+                      onClick={() => stepValid(step) && setStep(s => s + 1)}
+                      disabled={!stepValid(step)}
+                      className="flex-1 bg-gradient-amber text-white font-bold px-8 py-3.5 rounded-xl text-base hover:scale-[1.01] transition-transform shadow-lg shadow-[#ED8400]/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                      {t("contact.next", { defaultValue: "Weiter" })}
+                    </button>
+                  ) : (
+                    <button type="submit" disabled={isSubmitting}
+                      className="flex-1 bg-gradient-amber text-white font-bold px-8 py-3.5 rounded-xl text-base hover:scale-[1.01] transition-transform shadow-lg shadow-[#ED8400]/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                      {isSubmitting ? t("contact.submitting") : t("contact.submitBtn")}
+                    </button>
+                  )}
+                </div>
                 {submitMessage === "success" && (
                   <p className="text-green-600 text-sm text-center mt-3 font-medium">✓ {t("contact.success")}</p>
                 )}
@@ -363,15 +442,11 @@ const Kontakt = () => {
                   </div>
                 </div>
 
-                {/* Contact buttons */}
+                {/* Contact button — Telefon als einziger Direktkanal neben dem
+                    Formular. Der E-Mail-Button (info@) wurde bewusst entfernt:
+                    verpasste Anrufe bleiben im Protokoll/als Voicemail sichtbar,
+                    E-Mails an info@ kommen nicht zuverlässig an. */}
                 <div className="flex flex-col gap-3 mt-auto">
-                  <a
-                    href="mailto:info@gastro-master.de"
-                    className="flex items-center justify-center gap-2.5 bg-gradient-amber text-white font-bold px-6 py-3.5 rounded-xl hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/25 text-sm"
-                  >
-                    <Mail className="w-4 h-4 flex-shrink-0" />
-                    info@gastro-master.de
-                  </a>
                   <a
                     href="tel:+4960819128913"
                     className="flex items-center justify-center gap-2.5 bg-gradient-amber text-white font-bold px-6 py-3.5 rounded-xl hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/25 text-sm"
@@ -387,6 +462,7 @@ const Kontakt = () => {
           </div>
         </div>
       </main>
+      {showConfetti && <ConfettiBurst onDone={() => setShowConfetti(false)} />}
       <Footer />
     </div>
   );

@@ -635,6 +635,9 @@
     ]
   },
   "contact": {
+    "back": "Zurück",
+    "next": "Weiter",
+    "messageFallback": "Kein zusätzlicher Kommentar.",
     "headline": "Bereit für mehr Gewinn?",
     "sub": "Lass uns in einem kostenlosen Erstgespräch zeigen, wie du mit Gastro Master mehr Direktbestellungen und mehr Gewinn erzielst.",
     "trust1": "5,0 Sterne bei Google – 130 Bewertungen",

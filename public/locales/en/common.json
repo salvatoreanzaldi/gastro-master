@@ -603,6 +603,9 @@
     ]
   },
   "contact": {
+    "back": "Back",
+    "next": "Continue",
+    "messageFallback": "No additional comment.",
     "headline": "Ready to Unlock More Profit?",
     "sub": "Let us show you in a free strategy call how Gastro Master drives more direct orders and puts more money back in your pocket.",
     "trust1": "5.0 Stars on Google — 130 Reviews",

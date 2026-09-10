@@ -596,6 +596,9 @@
     ]
   },
   "contact": {
+    "back": "Indietro",
+    "next": "Avanti",
+    "messageFallback": "Nessun commento aggiuntivo.",
     "headline": "Pronto per più profitto?",
     "sub": "Le mostreremo in una consulenza strategica gratuita come Gastro Master genera più ordini diretti e più guadagno per Lei.",
     "trust1": "5,0 stelle su Google — 130 recensioni",
