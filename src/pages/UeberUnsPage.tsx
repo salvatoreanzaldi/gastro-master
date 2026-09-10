@@ -29,6 +29,7 @@ import imgSanjaya   from "@/assets/team/team-sanjaya-pattiyage.png";
 import imgSalvatore from "@/assets/team/team-salvatore-anzaldi.png";
 import imgAndrej    from "@/assets/team/team-andrej-krutsch.png";
 import imgMohammad  from "@/assets/team/team-mohammad-motakalemi.png";
+import imgYawar     from "@/assets/team/team-yawar-sultan.png";
 import { FLAG_ICONS } from "@/config/flag-icons";
 
 // ─── Icon Maps ──────────────────────────────────────────────────────────────
@@ -46,7 +47,7 @@ const PROCESS_ICON_MAP: Record<string, React.ElementType> = {
 };
 
 const TEAM_IMG_MAP: Record<string, string> = {
-  rene: imgRene, sanjaya: imgSanjaya, salvatore: imgSalvatore, andrej: imgAndrej, mohammad: imgMohammad,
+  rene: imgRene, sanjaya: imgSanjaya, salvatore: imgSalvatore, andrej: imgAndrej, mohammad: imgMohammad, yawar: imgYawar,
 };
 
 const FLAG_MAP: Record<string, string> = FLAG_ICONS;

@@ -142,6 +142,14 @@
         "focus": "Restaurant Expertise",
         "bio": "A former restaurateur who found his way to the team through his own positive experience as a customer. He knows the challenges of the industry firsthand.",
         "linkedin": null
+      },
+      {
+        "key": "yawar",
+        "name": "Yawar Sultan",
+        "role": "Tech & Support",
+        "focus": "POS Software",
+        "bio": "After his Bachelor's in Medical Management, he gained experience in customer support and sales at Apple. His focus with us is on technology – especially our POS software – and support.",
+        "linkedin": null
       }
     ]
   },

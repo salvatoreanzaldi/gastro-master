@@ -142,6 +142,14 @@
         "focus": "Gastronomie-Expertise",
         "bio": "Ehemaliger Gastronom, der durch seine eigene positive Erfahrung als Kunde den Weg ins Team fand. Er kennt die Herausforderungen der Branche aus erster Hand.",
         "linkedin": null
+      },
+      {
+        "key": "yawar",
+        "name": "Yawar Sultan",
+        "role": "Technik & Support",
+        "focus": "Kassensoftware",
+        "bio": "Nach seinem Bachelor in Medical Management sammelte er bei Apple Erfahrung im Kundensupport und Vertrieb. Sein Fokus bei uns liegt auf Technik – vor allem unserer Kassensoftware – und Support.",
+        "linkedin": null
       }
     ]
   },
