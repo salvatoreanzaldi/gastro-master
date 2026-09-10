@@ -677,8 +677,8 @@
       "Persisch",
       "Russisch",
       "Singhalesisch",
-      "Indisch",
-      "Pakistanisch",
+      "Hindi",
+      "Urdu",
       "Punjabi"
     ],
     "promises": [
@@ -988,7 +988,8 @@
       "ceo": "Gründer & CEO",
       "salesLead": "Vertriebsleiter",
       "customerService": "Service Customer Manager",
-      "sales": "Vertrieb"
+      "sales": "Vertrieb",
+      "techSupport": "Technik & Support"
     }
   },
   "integrationsPage": {

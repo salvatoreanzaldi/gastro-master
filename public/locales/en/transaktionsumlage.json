@@ -164,8 +164,14 @@
     "expectLabel": "What to expect:",
     "expectText": "In a free initial consultation, we analyze your payment structure together — payment methods, locations, and accounts — and create a custom quote tailored to your business.",
     "setupText": "Setup typically takes just a few days. After that, you'll never pay payment fees out of your own pocket again.",
-    "langs": ["German", "English", "Italian", "Persian", "Russian", "Sinhalese"],
+    "langs": ["German", "English", "Italian", "Persian", "Russian", "Sinhalese",
+      "Hindi",
+      "Urdu",
+      "Punjabi"
+    ],
     "cta": "Request Free Consultation",
-    "teamRoles": ["Founder & CEO", "Founder & CEO", "Head of Sales", "Head of Operations"]
+    "teamRoles": ["Founder & CEO", "Founder & CEO", "Head of Sales", "Head of Operations",
+      "Tech & Support"
+    ]
   }
 }

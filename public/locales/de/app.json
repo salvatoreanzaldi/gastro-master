@@ -305,27 +305,39 @@
     "languages": [
       {
         "label": "Deutsch",
-        "flag": "🇩🇪"
+        "flag": "de"
       },
       {
         "label": "Englisch",
-        "flag": "🇬🇧"
+        "flag": "gb"
       },
       {
         "label": "Italienisch",
-        "flag": "🇮🇹"
+        "flag": "it"
       },
       {
         "label": "Persisch",
-        "flag": "🇮🇷"
+        "flag": "ir"
       },
       {
         "label": "Russisch",
-        "flag": "🇷🇺"
+        "flag": "ru"
       },
       {
         "label": "Singhalesisch",
-        "flag": "🇱🇰"
+        "flag": "lk"
+      },
+      {
+        "label": "Hindi",
+        "flag": "in"
+      },
+      {
+        "label": "Urdu",
+        "flag": "pk"
+      },
+      {
+        "label": "Punjabi",
+        "flag": "pa"
       }
     ],
     "cta": "Kostenlose Beratung",
@@ -345,6 +357,10 @@
       {
         "name": "Andrej Krutsch",
         "role": "Head of Operations"
+      },
+      {
+        "name": "Yawar Sultan",
+        "role": "Technik & Support"
       }
     ]
   }

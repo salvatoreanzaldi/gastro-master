@@ -645,8 +645,8 @@
       "Persian",
       "Russian",
       "Sinhalese",
-      "Indian",
-      "Pakistani",
+      "Hindi",
+      "Urdu",
       "Punjabi"
     ],
     "promises": [
@@ -944,7 +944,8 @@
       "ceo": "Founder & CEO",
       "salesLead": "Head of Sales",
       "customerService": "Customer Service Manager",
-      "sales": "Sales"
+      "sales": "Sales",
+      "techSupport": "Tech & Support"
     }
   },
   "integrationsPage": {

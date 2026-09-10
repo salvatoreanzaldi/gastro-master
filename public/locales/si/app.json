@@ -229,19 +229,23 @@
     "expectText": "නොමිලේ පළමු සාකච්ඡාවකදී අපගේ ඇප් විශේෂඥයින්ගෙන් කෙනෙක් ඔබේම ඇණවුම් ඇප් සඳහා තනි සංකල්පයක් සකසයි – ඔබේ සන්නාමය, ඔබේ ආහාර මෙනුව සහ 0 % කොමිස් සමගින්. බැඳීමකින් තොරව සහ සම්පූර්ණයෙන්ම නොමිලේ.",
     "expectSubtext": "ඔබේ ඇප් එක සති 2–3 කින් Apple App Store සහ Google Play Store හි සජීවී විය හැක. ක්‍රමලේඛන දැනුමක් අවශ්‍ය නැත – අපි සියල්ල භාර ගනිමු.",
     "languages": [
-      { "label": "ජර්මන්", "flag": "\ud83c\udde9\ud83c\uddea" },
-      { "label": "ඉංග්‍රීසි", "flag": "\ud83c\uddec\ud83c\udde7" },
-      { "label": "ඉතාලි", "flag": "\ud83c\uddee\ud83c\uddf9" },
-      { "label": "පර්සියානු", "flag": "\ud83c\uddee\ud83c\uddf7" },
-      { "label": "රුසියානු", "flag": "\ud83c\uddf7\ud83c\uddfa" },
-      { "label": "සිංහල", "flag": "\ud83c\uddf1\ud83c\uddf0" }
+      { "label": "ජර්මන්", "flag": "de" },
+      { "label": "ඉංග්‍රීසි", "flag": "gb" },
+      { "label": "ඉතාලි", "flag": "it" },
+      { "label": "පර්සියානු", "flag": "ir" },
+      { "label": "රුසියානු", "flag": "ru" },
+      { "label": "සිංහල", "flag": "lk" },
+      { "label": "හින්දි", "flag": "in" },
+      { "label": "උර්දු", "flag": "pk" },
+      { "label": "පන්ජාබි", "flag": "pa" }
     ],
     "cta": "නොමිලේ උපදේශනය ඉල්ලන්න",
     "teamMembers": [
       { "name": "Sanjaya Pattiyage", "role": "නිර්මාතා සහ කළමනාකාර අධ්‍යක්ෂ" },
       { "name": "René Ebert", "role": "නිර්මාතා සහ කළමනාකාර අධ්‍යක්ෂ" },
       { "name": "Salvatore Anzaldi", "role": "විකුණුම් ප්‍රධානි" },
-      { "name": "Andrej Krutsch", "role": "මෙහෙයුම් ප්‍රධානි" }
+      { "name": "Andrej Krutsch", "role": "මෙහෙයුම් ප්‍රධානි" },
+      { "name": "Yawar Sultan", "role": "තාක්ෂණය සහ සහාය" }
     ]
   }
 }

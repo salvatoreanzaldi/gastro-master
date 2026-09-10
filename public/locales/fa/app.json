@@ -229,19 +229,23 @@
     "expectText": "در یک جلسه مشاوره رایگان، یکی از متخصصان اپ ما یک مفهوم اختصاصی برای اپلیکیشن سفارش شما طراحی می‌کند – با برندینگ شما، منوی شما و 0 % کمیسیون. بدون تعهد و کاملاً رایگان.",
     "expectSubtext": "اپلیکیشن شما می‌تواند ظرف 2 تا 3 هفته در Apple App Store و Google Play Store فعال شود. بدون نیاز به دانش برنامه‌نویسی – ما همه کارها را انجام می‌دهیم.",
     "languages": [
-      { "label": "آلمانی", "flag": "\ud83c\udde9\ud83c\uddea" },
-      { "label": "انگلیسی", "flag": "\ud83c\uddec\ud83c\udde7" },
-      { "label": "ایتالیایی", "flag": "\ud83c\uddee\ud83c\uddf9" },
-      { "label": "فارسی", "flag": "\ud83c\uddee\ud83c\uddf7" },
-      { "label": "روسی", "flag": "\ud83c\uddf7\ud83c\uddfa" },
-      { "label": "سینهالی", "flag": "\ud83c\uddf1\ud83c\uddf0" }
+      { "label": "آلمانی", "flag": "de" },
+      { "label": "انگلیسی", "flag": "gb" },
+      { "label": "ایتالیایی", "flag": "it" },
+      { "label": "فارسی", "flag": "ir" },
+      { "label": "روسی", "flag": "ru" },
+      { "label": "سینهالی", "flag": "lk" },
+      { "label": "هندی", "flag": "in" },
+      { "label": "اردو", "flag": "pk" },
+      { "label": "پنجابی", "flag": "pa" }
     ],
     "cta": "درخواست مشاوره رایگان",
     "teamMembers": [
       { "name": "Sanjaya Pattiyage", "role": "بنیان‌گذار و مدیرعامل" },
       { "name": "René Ebert", "role": "بنیان‌گذار و مدیرعامل" },
       { "name": "Salvatore Anzaldi", "role": "مدیر فروش" },
-      { "name": "Andrej Krutsch", "role": "مدیر عملیات" }
+      { "name": "Andrej Krutsch", "role": "مدیر عملیات" },
+      { "name": "Yawar Sultan", "role": "فنی و پشتیبانی" }
     ]
   }
 }

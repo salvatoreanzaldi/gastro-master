@@ -638,8 +638,8 @@
       "Persiano",
       "Russo",
       "Singalese",
-      "Indiano",
-      "Pakistano",
+      "Hindi",
+      "Urdu",
       "Punjabi"
     ],
     "promises": [
@@ -937,7 +937,8 @@
       "ceo": "Fondatore & CEO",
       "salesLead": "Responsabile vendite",
       "customerService": "Responsabile Servizio Clienti",
-      "sales": "Vendite"
+      "sales": "Vendite",
+      "techSupport": "Tecnica & Supporto"
     }
   },
   "integrationsPage": {

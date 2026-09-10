@@ -13,6 +13,7 @@ import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png?w=800&for
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png?w=800&format=webp";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png?w=800&format=webp";
 import teamMohammadImg  from "@/assets/team/team-mohammad-motakalemi.png?w=800&format=webp";
+import teamYawarImg     from "@/assets/team/team-yawar-sultan.png?w=800&format=webp";
 
 // Language SVGs
 import deutschSvg    from "@/assets/icons/Deutsch.svg";
@@ -41,8 +42,14 @@ export const CTASection = ({ productPath, text }: CTASectionProps) => {
     { name: "Salvatore Anzaldi", roleKey: "salesLead", img: teamSalvatoreImg },
     { name: "Andrej Krutsch", roleKey: "customerService", img: teamAndrejImg },
     { name: "Mohammad Motakalemi", roleKey: "sales", img: teamMohammadImg },
+    { name: "Yawar Sultan", roleKey: "techSupport", img: teamYawarImg },
   ];
 
+  // Bewusst NICHT um Urdu/Hindi/Punjabi erweitert: diese Pillen sind hier ein
+  // FUNKTIONALER Sprachumschalter (onClick -> i18n.changeLanguage), keine
+  // dekorativen "wir sprechen deine Sprache"-Badges wie in den anderen CTA-
+  // Sektionen. Urdu/Hindi/Punjabi sind keine unterstuetzten Site-Sprachen
+  // (kein eigener Locale-Ordner) — ein Klick wuerde ins Leere laufen.
   const languages = [
     { code: "de", label: "DE", svg: deutschSvg },
     { code: "en", label: "EN", svg: englischSvg },

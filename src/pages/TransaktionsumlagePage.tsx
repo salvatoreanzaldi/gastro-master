@@ -35,6 +35,7 @@ import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
 import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png";
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
+import teamYawarImg     from "@/assets/team/team-yawar-sultan.png";
 import { FLAG_ICONS } from "@/config/flag-icons";
 import { SITE_AGGREGATE_RATING } from "@/data/schemaOrg";
 
@@ -157,8 +158,8 @@ const TABLE_ROWS = [
 ];
 
 // ─── Team members (names stay constant) ──────────────────────────────────────
-const TEAM_IMGS = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg];
-const TEAM_NAMES = ["Sanjaya Pattiyage", "René Ebert", "Salvatore Anzaldi", "Andrej Krutsch"];
+const TEAM_IMGS = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg, teamYawarImg];
+const TEAM_NAMES = ["Sanjaya Pattiyage", "René Ebert", "Salvatore Anzaldi", "Andrej Krutsch", "Yawar Sultan"];
 
 const LANG_META = [
   { flag: FLAG_ICONS.de, color: "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300" },
@@ -167,6 +168,9 @@ const LANG_META = [
   { flag: FLAG_ICONS.ir, color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
   { flag: FLAG_ICONS.ru, color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
   { flag: FLAG_ICONS.lk, color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+  { flag: FLAG_ICONS.in, color: "hover:border-emerald-600 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-600/10 dark:hover:text-emerald-300" },
+  { flag: FLAG_ICONS.pk, color: "hover:border-orange-500 hover:bg-orange-50 hover:text-orange-900 dark:hover:bg-orange-500/10 dark:hover:text-orange-300" },
+  { flag: FLAG_ICONS.pa, color: "hover:border-lime-500 hover:bg-lime-50 hover:text-lime-900 dark:hover:bg-lime-500/10 dark:hover:text-lime-300" },
 ];
 
 const FEATURE_ICONS = [Wallet, CreditCard, Percent, Banknote, TrendingUp, CheckCircle2, Zap];

@@ -69,12 +69,13 @@ import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
 import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png";
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
+import teamYawarImg     from "@/assets/team/team-yawar-sultan.png";
 import logoKojo         from "@/assets/logos/kunden/logo-kojo-sushi.png";
 import logoIlSorriso    from "@/assets/logos/kunden/logo-il-sorriso.png";
 import logoArtemis      from "@/assets/logos/kunden/logo-artemis.png";
 import logoTake         from "@/assets/logos/kunden/logo-take.png";
 import logoBurger       from "@/assets/logos/kunden/logo-burger-brothers.png";
-import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
+import { FLAG_ICONS_ORDERED, FLAG_ICONS } from "@/config/flag-icons";
 import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 const POSSection = lazy(() => import("@/components/landing/POSSection"));
 const PickUpScreenSection = lazy(() => import("@/components/landing/PickUpScreenSection"));
@@ -141,9 +142,13 @@ const customerLogos = [
   { src: logoBurger,    alt: "Burger Brothers" },
 ];
 
-const teamMemberImgs = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg];
+const teamMemberImgs = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg, teamYawarImg];
 
-const langFlags = FLAG_ICONS_ORDERED;
+// .slice(0, 6) + explizite Keys statt FLAG_ICONS_ORDERED direkt zu nutzen:
+// die geteilte Liste wurde um pk/in/pa erweitert (fuer andere CTA-Sektionen),
+// aber kasse.json's teamCta.languages ordnet Hindi vor Urdu — ohne den Slice
+// wuerde FLAG_ICONS_ORDERED[6]=pk (Urdu-Flagge) faelschlich auf "Hindi" fallen.
+const langFlags = [...FLAG_ICONS_ORDERED.slice(0, 6), FLAG_ICONS.in, FLAG_ICONS.pk, FLAG_ICONS.pa];
 const langColors = [
   "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300",
   "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300",
@@ -151,6 +156,9 @@ const langColors = [
   "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300",
   "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300",
   "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300",
+  "hover:border-emerald-600 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-600/10 dark:hover:text-emerald-300",
+  "hover:border-orange-500 hover:bg-orange-50 hover:text-orange-900 dark:hover:bg-orange-500/10 dark:hover:text-orange-300",
+  "hover:border-lime-500 hover:bg-lime-50 hover:text-lime-900 dark:hover:bg-lime-500/10 dark:hover:text-lime-300",
 ];
 
 // ─── Hardware images ─────────────────────────────────────────────────────────

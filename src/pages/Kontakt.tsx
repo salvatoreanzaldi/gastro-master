@@ -53,8 +53,12 @@ const customerLogos = [
 const teamImages = [rene, salva, andrej, mohammad, yawar];
 const teamNames = ["René Ebert", "Salvatore Anzaldi", "Andrej Krutsch", "Mohammad Motakalemi", "Yawar Sultan"];
 // Sprach-Pillen der Kontaktseite: die geteilten 6 Flaggen aus flag-icons.ts
-// plus 3 seiten-eigene (Indisch/Pakistanisch/Punjabi) — ergibt das 3x3-Grid.
-const languageFlags = [...FLAG_ICONS_ORDERED, IndischIcon, PakistanischIcon, PunjabiIcon];
+// plus 3 seiten-eigene (Hindi/Urdu/Punjabi) — ergibt das 3x3-Grid. Bewusst
+// .slice(0, 6) statt FLAG_ICONS_ORDERED komplett zu spreaden: die geteilte
+// Liste wurde inzwischen selbst um pk/in/pa erweitert (fuer andere CTA-
+// Sektionen) — ohne den Slice wuerden sich deren Flaggen hier verdoppeln
+// und alles ab Index 6 (Hindi/Urdu) verschieben.
+const languageFlags = [...FLAG_ICONS_ORDERED.slice(0, 6), IndischIcon, PakistanischIcon, PunjabiIcon];
 const promiseIcons = [Clock, Lightbulb, Lock];
 
 // Floating-Label: Wenn das Feld leer & unfokussiert ist, sitzt das Label mittig

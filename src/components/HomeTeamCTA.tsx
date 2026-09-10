@@ -13,9 +13,10 @@ import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png?w=800&for
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png?w=800&format=webp";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png?w=800&format=webp";
 import teamMohammadImg  from "@/assets/team/team-mohammad-motakalemi.png?w=800&format=webp";
+import teamYawarImg     from "@/assets/team/team-yawar-sultan.png?w=800&format=webp";
 import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
 
-const teamMemberImgs = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg, teamMohammadImg];
+const teamMemberImgs = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg, teamMohammadImg, teamYawarImg];
 
 const langFlags = FLAG_ICONS_ORDERED;
 const langColors = [
@@ -25,6 +26,9 @@ const langColors = [
   "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300",
   "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300",
   "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300",
+  "hover:border-emerald-600 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-600/10 dark:hover:text-emerald-300",
+  "hover:border-orange-500 hover:bg-orange-50 hover:text-orange-900 dark:hover:bg-orange-500/10 dark:hover:text-orange-300",
+  "hover:border-lime-500 hover:bg-lime-50 hover:text-lime-900 dark:hover:bg-lime-500/10 dark:hover:text-lime-300",
 ];
 
 const HomeTeamCTA = () => {
@@ -39,9 +43,10 @@ const HomeTeamCTA = () => {
     { name: "Salvatore Anzaldi", roleKey: "salesLead" },
     { name: "Andrej Krutsch", roleKey: "customerService" },
     { name: "Mohammad Motakalemi", roleKey: "sales" },
+    { name: "Yawar Sultan", roleKey: "techSupport" },
   ];
 
-  const languages = ["Deutsch", "English", "Italiano", "Farsi", "Русский", "සිංහල"];
+  const languages = ["Deutsch", "English", "Italiano", "Farsi", "Русский", "සිංහල", "اردو", "हिन्दी", "ਪੰਜਾਬੀ"];
 
   useEffect(() => {
     const ti = setInterval(() => setCurrent(c => (c + 1) % teamMembers.length), 4000);

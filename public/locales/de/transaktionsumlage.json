@@ -243,14 +243,18 @@
       "Italienisch",
       "Persisch",
       "Russisch",
-      "Singhalesisch"
+      "Singhalesisch",
+      "Hindi",
+      "Urdu",
+      "Punjabi"
     ],
     "cta": "Kostenlose Beratung",
     "teamRoles": [
       "Gründer & Geschäftsführer",
       "Gründer & Geschäftsführer",
       "Head of Sales",
-      "Head of Operations"
+      "Head of Operations",
+      "Technik & Support"
     ]
   }
 }

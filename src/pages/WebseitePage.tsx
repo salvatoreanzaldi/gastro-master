@@ -51,6 +51,7 @@ import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
 import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png";
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
+import teamYawarImg     from "@/assets/team/team-yawar-sultan.png";
 
 // ─── Webpage Zielgruppen-Mockups ─────────────────────────────────────────────
 import wpRestaurantDesktop   from "@/assets/webpage/Restaurant - Desktop.png";
@@ -93,7 +94,7 @@ const ZIELGRUPPEN = [
 
 const PORTFOLIO_IMGS = [heroGastroMaster, heroBaeckerei, heroEtManus, heroDT, heroDandT];
 const TESTIMONIAL_LOGOS = [logoKojo, logoIlSorriso, logoBurger, logoArtemis];
-const TEAM_IMGS = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg];
+const TEAM_IMGS = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg, teamYawarImg];
 
 const TRUST_BAR_URLS = [
   "https://aboutus.godaddy.net/newsroom/news-releases/press-release-details/2024/Gen-Z-and-Millennials-to-Small-Businesses-Get-Online-or-Get-Left-Behind/default.aspx",
@@ -120,6 +121,9 @@ const LANG_META = [
   { flag: FLAG_ICONS.ir, color: "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300" },
   { flag: FLAG_ICONS.ru, color: "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300" },
   { flag: FLAG_ICONS.lk, color: "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300" },
+  { flag: FLAG_ICONS.in, color: "hover:border-emerald-600 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-600/10 dark:hover:text-emerald-300" },
+  { flag: FLAG_ICONS.pk, color: "hover:border-orange-500 hover:bg-orange-50 hover:text-orange-900 dark:hover:bg-orange-500/10 dark:hover:text-orange-300" },
+  { flag: FLAG_ICONS.pa, color: "hover:border-lime-500 hover:bg-lime-50 hover:text-lime-900 dark:hover:bg-lime-500/10 dark:hover:text-lime-300" },
 ];
 
 // ─── JSON-LD Schema (bleibt statisch DE für SEO) ─────────────────────────────
@@ -249,6 +253,7 @@ const TeamCTA = () => {
     { img: TEAM_IMGS[1], name: "René Ebert",         role: roles[1] ?? "" },
     { img: TEAM_IMGS[2], name: "Salvatore Anzaldi",  role: roles[2] ?? "" },
     { img: TEAM_IMGS[3], name: "Andrej Krutsch",     role: roles[3] ?? "" },
+    { img: TEAM_IMGS[4], name: "Yawar Sultan",       role: roles[4] ?? "" },
   ];
 
   const [current, setCurrent] = useState(0);

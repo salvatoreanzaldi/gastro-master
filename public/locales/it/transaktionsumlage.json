@@ -164,8 +164,14 @@
     "expectLabel": "Cosa L'aspetta:",
     "expectText": "In una prima consulenza gratuita analizziamo insieme la Sua struttura di pagamento — metodi di pagamento, sedi e conti — e creiamo un'offerta personalizzata su misura per la Sua attività.",
     "setupText": "La configurazione richiede di norma solo pochi giorni. Dopodiché non pagherà mai più commissioni di pagamento di tasca propria.",
-    "langs": ["Tedesco", "Inglese", "Italiano", "Persiano", "Russo", "Singalese"],
+    "langs": ["Tedesco", "Inglese", "Italiano", "Persiano", "Russo", "Singalese",
+      "Hindi",
+      "Urdu",
+      "Punjabi"
+    ],
     "cta": "Richieda una consulenza gratuita",
-    "teamRoles": ["Fondatore e CEO", "Fondatore e CEO", "Head of Sales", "Head of Operations"]
+    "teamRoles": ["Fondatore e CEO", "Fondatore e CEO", "Head of Sales", "Head of Operations",
+      "Tecnica & Supporto"
+    ]
   }
 }

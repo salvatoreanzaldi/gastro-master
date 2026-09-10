@@ -327,6 +327,15 @@ const UeberUnsPage = () => {
   const milestones = arr("timeline.milestones") as { year: string; title: string; text: string }[];
   const founders = arr("team.founders") as PersonData[];
   const members = arr("team.members") as PersonData[];
+  // Anzeige-Reihenfolge fuer das Team-Grid (3+3), unabhaengig von der
+  // semantischen founders/members-Aufteilung in den JSON-Dateien — Salvatore
+  // bleibt inhaltlich "member", rueckt aber optisch neben Sanjaya/Rene in
+  // Reihe 1; Yawar fuellt seine alte Position in Reihe 2.
+  const TEAM_GRID_ORDER = ["sanjaya", "rene", "salvatore", "yawar", "andrej", "mohammad"];
+  const allTeamMembers = [...founders, ...members];
+  const orderedTeam = TEAM_GRID_ORDER
+    .map((key) => allTeamMembers.find((p) => p.key === key))
+    .filter((p): p is PersonData => Boolean(p));
   const langItems = arr("languages.items") as { label: string; flag: string }[];
   const valueItems = arr("values.items") as { icon: string; title: string; text: string }[];
   const whyItems = arr("why.items") as { title: string; text: string }[];
@@ -573,14 +582,12 @@ const UeberUnsPage = () => {
           </motion.div>
 
           {/* ── Mobile: Carousel ── */}
-          <TeamCarousel allMembers={[...founders, ...members]} linkedinLabel={t("team.linkedinLabel")} />
+          <TeamCarousel allMembers={orderedTeam} linkedinLabel={t("team.linkedinLabel")} />
 
-          {/* ── Desktop: Grids (unverändert) ── */}
-          <div className="hidden sm:grid grid-cols-2 gap-6 max-w-2xl mx-auto mb-6">
-            {founders.map((person, i) => <FlipCard key={person.key} person={person} index={i} linkedinLabel={t("team.linkedinLabel")} />)}
-          </div>
+          {/* ── Desktop: ein gemeinsames Grid statt founders/members getrennt —
+              so ergeben sich bei lg: zwei volle 3er-Reihen statt 2+3+1. ── */}
           <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-6 max-w-2xl lg:max-w-4xl mx-auto">
-            {members.map((person, i) => <FlipCard key={person.key} person={person} index={i + founders.length} linkedinLabel={t("team.linkedinLabel")} />)}
+            {orderedTeam.map((person, i) => <FlipCard key={person.key} person={person} index={i} linkedinLabel={t("team.linkedinLabel")} />)}
           </div>
         </div>
       </section>
@@ -597,14 +604,22 @@ const UeberUnsPage = () => {
             <p className="text-muted-foreground text-base md:text-lg mb-8 max-w-xl mx-auto">
               {t("languages.subtitle")}
             </p>
-            <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-3 py-3 max-w-sm mx-auto md:max-w-none">
-              {langItems.map((lang, i) => (
-                <motion.div key={lang.flag} whileHover={{ scale: 1.08, y: -3 }}
-                  className={`flex-shrink-0 flex items-center justify-center md:inline-flex gap-2 px-5 md:px-4 py-2.5 rounded-full border-2 border-border bg-surface-light text-foreground font-semibold text-sm cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${FLAG_COLOR_MAP[lang.flag] || ""}`}>
-                  {FLAG_MAP[lang.flag] && <img src={FLAG_MAP[lang.flag]} alt="" className="w-6 h-6 rounded-full object-cover" loading="lazy" />}
-                  {lang.label}
-                </motion.div>
-              ))}
+            {/* Festspaltiges Grid statt Flex-Wrap (wie auf der Kontaktseite
+                geloest): 2 Spalten bis 380px, danach 3 Spalten — 9 Pillen
+                gehen bei 3 Spalten glatt auf (3x3), bei 2 Spalten nicht (9/2).
+                Deshalb bekommt im 2-Spalten-Fall nur die letzte Pille
+                col-span-2 (zentriert, volle Breite) statt verwaist zu haengen. */}
+            <div className="grid grid-cols-2 min-[380px]:grid-cols-3 gap-3 py-3 max-w-sm min-[380px]:max-w-md mx-auto">
+              {langItems.map((lang, i) => {
+                const isLastOrphan = i === langItems.length - 1;
+                return (
+                  <motion.div key={lang.flag} whileHover={{ scale: 1.08, y: -3 }}
+                    className={`flex items-center justify-center gap-2 px-5 md:px-4 py-2.5 rounded-full border-2 border-border bg-surface-light text-foreground font-semibold text-sm cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${FLAG_COLOR_MAP[lang.flag] || ""} ${isLastOrphan ? "col-span-2 min-[380px]:col-span-1" : ""}`}>
+                    {FLAG_MAP[lang.flag] && <img src={FLAG_MAP[lang.flag]} alt="" className="w-6 h-6 rounded-full object-cover" loading="lazy" />}
+                    {lang.label}
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>

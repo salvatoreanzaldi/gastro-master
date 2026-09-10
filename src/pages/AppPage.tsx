@@ -66,6 +66,8 @@ import teamReneImg      from "@/assets/team/ceo-rene-ebert.png";
 import teamSanjayaImg   from "@/assets/team/team-sanjaya-pattiyage.png";
 import teamSalvatoreImg from "@/assets/team/team-salvatore-anzaldi.png";
 import teamAndrejImg    from "@/assets/team/team-andrej-krutsch.png";
+import teamYawarImg     from "@/assets/team/team-yawar-sultan.png";
+import { FLAG_ICONS } from "@/config/flag-icons";
 
 import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 // ─── Feature card images (order must match JSON) ─────────────────────────────
@@ -250,7 +252,7 @@ function HeroPhoneSpread() {
 }
 
 // ─── Team CTA ────────────────────────────────────────────────────────────────
-const teamImages = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg];
+const teamImages = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg, teamYawarImg];
 
 const langColors = [
   "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300",
@@ -259,6 +261,9 @@ const langColors = [
   "hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300",
   "hover:border-red-500 hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-500/10 dark:hover:text-red-300",
   "hover:border-amber-500 hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-500/10 dark:hover:text-amber-300",
+  "hover:border-emerald-600 hover:bg-emerald-50 hover:text-emerald-900 dark:hover:bg-emerald-600/10 dark:hover:text-emerald-300",
+  "hover:border-orange-500 hover:bg-orange-50 hover:text-orange-900 dark:hover:bg-orange-500/10 dark:hover:text-orange-300",
+  "hover:border-lime-500 hover:bg-lime-50 hover:text-lime-900 dark:hover:bg-lime-500/10 dark:hover:text-lime-300",
 ];
 
 const AppTeamCTA = () => {
@@ -305,7 +310,7 @@ const AppTeamCTA = () => {
                   whileHover={{ scale: 1.08, y: -2 }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-[#0A264A]/10 dark:border-white/10 bg-[#0A264A]/[0.03] dark:bg-white/[0.04] text-[#0A264A] dark:text-white font-semibold text-xs cursor-default select-none whitespace-nowrap transition-all duration-300 shadow-sm hover:shadow-md ${langColors[i] ?? ""}`}
                 >
-                  <span className="text-lg leading-none">{lang.flag}</span>
+                  {FLAG_ICONS[lang.flag] && <img src={FLAG_ICONS[lang.flag]} alt="" className="w-5 h-5 rounded-full object-cover" loading="lazy" />}
                   {lang.label}
                 </motion.div>
               ))}

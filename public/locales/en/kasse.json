@@ -288,7 +288,10 @@
       "Italian",
       "Persian",
       "Russian",
-      "Sinhalese"
+      "Sinhalese",
+      "Hindi",
+      "Urdu",
+      "Punjabi"
     ],
     "cta": "Request free consultation",
     "teamMembers": [
@@ -307,6 +310,10 @@
       {
         "name": "Andrej Krutsch",
         "role": "Head of Operations"
+      },
+      {
+        "name": "Yawar Sultan",
+        "role": "Tech & Support"
       }
     ]
   },

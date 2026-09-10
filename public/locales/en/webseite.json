@@ -279,13 +279,17 @@
       "Italian",
       "Persian",
       "Russian",
-      "Sinhalese"
+      "Sinhalese",
+      "Hindi",
+      "Urdu",
+      "Punjabi"
     ],
     "roles": [
       "Founder & CEO",
       "Founder & CEO",
       "Head of Sales",
-      "Head of Operations"
+      "Head of Operations",
+      "Tech & Support"
     ],
     "cta": "Free Consultation"
   }
