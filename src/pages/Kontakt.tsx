@@ -203,21 +203,39 @@ const Kontakt = () => {
 
   // Sprach-Pillen — auf Desktop im weissen Block links (helles Design), auf
   // Mobile in der navy Sidebar (dunkles Design). Eine Quelle, zwei Stylings.
+  // Beide Varianten sind ein festspaltiges Grid statt Flex-Wrap (verhindert
+  // ungleiche Zeilenbreiten). Navy startet bei 2 Spalten (schmale Displays
+  // wie 360px reichen sonst nicht fuer laengere Labels wie "Singhalesisch")
+  // und wechselt ab 380px auf 3 Spalten (z. B. 390px) — bei 9 Eintraegen geht
+  // 9/3 glatt auf, 9/2 nicht. Deshalb bekommt im 2-Spalten-Fall NUR die letzte
+  // Pille col-span-2 (zentriert, volle Breite) statt einzeln verwaist in der
+  // letzten Zeile zu haengen; ab 380px faellt das auf col-span-1 zurueck.
+  const languageLabels = arr("contact.languageLabels") as string[];
   const languagePills = (variant: "light" | "navy") => (
-    <div className={variant === "light" ? "grid grid-cols-3 gap-2.5" : "flex flex-wrap gap-2.5"}>
-      {arr("contact.languageLabels").map((label: string, i: number) => (
-        <span
-          key={label}
-          className={
-            variant === "light"
-              ? "flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-200 text-[#0A264A]/70 text-sm font-medium"
-              : "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/8 border border-white/10 text-white/65 text-sm font-medium"
-          }
-        >
-          <img src={languageFlags[i]} alt="" className="w-4 h-4 rounded-full object-cover" loading="lazy" />
-          {label}
-        </span>
-      ))}
+    <div
+      className={
+        variant === "light"
+          ? "grid grid-cols-3 gap-2.5"
+          : "grid grid-cols-2 min-[380px]:grid-cols-3 gap-2.5"
+      }
+    >
+      {languageLabels.map((label: string, i: number) => {
+        const isLastOrphan = variant === "navy" && i === languageLabels.length - 1;
+        return (
+          <span
+            key={label}
+            className={
+              (variant === "light"
+                ? "flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-200 text-[#0A264A]/70 text-sm font-medium"
+                : "flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-white/8 border border-white/10 text-white/65 text-sm font-medium") +
+              (isLastOrphan ? " col-span-2 min-[380px]:col-span-1" : "")
+            }
+          >
+            <img src={languageFlags[i]} alt="" className="w-4 h-4 rounded-full object-cover" loading="lazy" />
+            {label}
+          </span>
+        );
+      })}
     </div>
   );
 
@@ -485,11 +503,14 @@ const Kontakt = () => {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="bg-[#0A264A] rounded-3xl shadow-xl shadow-[#0A264A]/30 flex flex-col overflow-hidden h-full"
             >
-              {/* Slideshow — edge-to-edge, no border, card clips corners. Auf
-                  Desktop niedrigeres Seitenverhaeltnis (statt 1:1), damit die
-                  rechte Spalte nicht deutlich hoeher endet als die linke —
-                  Mobile behaelt aspect-square. */}
-              <div className="relative aspect-square lg:aspect-[4/3] w-full flex-shrink-0 overflow-hidden">
+              {/* Slideshow — edge-to-edge, no border, card clips corners.
+                  Bewusst durchgaengig aspect-square: alle Team-Fotos sind
+                  1080x1080 (1:1), object-cover auf einem 1:1-Container croppt
+                  dadurch nichts weg. Ein vorheriger lg:aspect-[4/3]-Versuch
+                  (fuer Spaltensymmetrie) schnitt bei jedem Team-Mitglied den
+                  unteren Bildbereich ab — dafuer jetzt stattdessen kompakteres
+                  Padding/Gaps im Content-Bereich darunter. */}
+              <div className="relative aspect-square w-full flex-shrink-0 overflow-hidden">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={activeSlide}
