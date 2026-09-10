@@ -23,6 +23,10 @@ import logoEtManus from "@/assets/logos/kunden/logo-et-manus.png";
 import logoIlSorriso from "@/assets/logos/kunden/logo-il-sorriso.png";
 import logoKojoSushi from "@/assets/logos/kunden/logo-kojo-sushi.png";
 import logoTake from "@/assets/logos/kunden/logo-take.png";
+import logoJoesBurger from "@/assets/logos/kunden/Logo - Joe's Burger 2.png";
+import logoRoyalIndianPalace from "@/assets/logos/kunden/Logo _ Royal India.png";
+import logoPomPom from "@/assets/logos/kunden/Logo - Pom Pom.png";
+import logoTajMahalMasala from "@/assets/logos/kunden/Logo - Taj Mahal Masala.png";
 
 const customerLogos = [
   { id: "artemis", src: logoArtemis, alt: "Artemis" },
@@ -31,6 +35,10 @@ const customerLogos = [
   { id: "il-sorriso", src: logoIlSorriso, alt: "Il Sorriso" },
   { id: "kojo-sushi", src: logoKojoSushi, alt: "Kojo Sushi" },
   { id: "take", src: logoTake, alt: "Take" },
+  { id: "joes-burger", src: logoJoesBurger, alt: "Joe's Burger" },
+  { id: "royal-indian-palace", src: logoRoyalIndianPalace, alt: "Royal Indian Palace" },
+  { id: "pom-pom", src: logoPomPom, alt: "Pom Pom" },
+  { id: "taj-mahal-masala", src: logoTajMahalMasala, alt: "Taj Mahal Masala" },
 ];
 
 const teamImages = [rene, salva, andrej, mohammad];
@@ -424,7 +432,7 @@ const Kontakt = () => {
                     wie TrustedBrandsSection (endlos, Fade-Maske links/rechts). */}
                 <div className="mt-6 pt-6 border-t border-gray-100 relative">
                   <div
-                    className="relative h-16 w-full flex items-center overflow-hidden"
+                    className="relative h-20 w-full flex items-center overflow-hidden"
                     style={{
                       maskImage: `linear-gradient(
                         to right,
@@ -444,12 +452,12 @@ const Kontakt = () => {
                   >
                     <InfiniteSlider className="flex h-full w-full items-center" duration={40} gap={48}>
                       {customerLogos.map(({ id, src, alt }) => (
-                        <div key={id} className="flex-shrink-0 h-10 flex items-center justify-center">
+                        <div key={id} className="flex-shrink-0 h-14 flex items-center justify-center">
                           <img
                             src={src}
                             alt={alt}
                             loading="lazy"
-                            className="max-h-full max-w-[110px] object-contain hover:opacity-90 transition-opacity duration-300"
+                            className="max-h-full max-w-[150px] object-contain hover:opacity-90 transition-opacity duration-300"
                           />
                         </div>
                       ))}
@@ -466,8 +474,11 @@ const Kontakt = () => {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="bg-[#0A264A] rounded-3xl shadow-xl shadow-[#0A264A]/30 flex flex-col overflow-hidden h-full"
             >
-              {/* Slideshow — edge-to-edge, no border, card clips corners */}
-              <div className="relative aspect-square w-full flex-shrink-0 overflow-hidden">
+              {/* Slideshow — edge-to-edge, no border, card clips corners. Auf
+                  Desktop niedrigeres Seitenverhaeltnis (statt 1:1), damit die
+                  rechte Spalte nicht deutlich hoeher endet als die linke —
+                  Mobile behaelt aspect-square. */}
+              <div className="relative aspect-square lg:aspect-[4/3] w-full flex-shrink-0 overflow-hidden">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={activeSlide}
@@ -480,7 +491,7 @@ const Kontakt = () => {
                     className="absolute inset-0 w-full h-full object-cover object-top scale-[1.05]"
                   />
                 </AnimatePresence>
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pt-16 pb-5 px-6">
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pt-16 pb-5 px-6 lg:pt-12 lg:pb-4">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeSlide}
@@ -496,8 +507,10 @@ const Kontakt = () => {
                 </div>
               </div>
 
-              {/* Rest of content with padding */}
-              <div className="flex flex-col gap-6 p-6 md:p-8 flex-1">
+              {/* Rest of content with padding — auf Desktop kompakter (lg:),
+                  damit die rechte Spalte moeglichst gleich hoch wie die
+                  linke endet. Mobile (p-6/gap-6) bleibt unveraendert. */}
+              <div className="flex flex-col gap-6 lg:gap-4 p-6 md:p-8 lg:p-6 flex-1">
 
                 {/* Language pills — NUR Mobile (auf Desktop links unter dem Formular) */}
                 <div className="lg:hidden">
@@ -509,10 +522,10 @@ const Kontakt = () => {
 
                 {/* Unser Versprechen */}
                 <div>
-                  <p className="text-white/35 text-xs font-bold uppercase tracking-widest mb-4">
+                  <p className="text-white/35 text-xs font-bold uppercase tracking-widest mb-4 lg:mb-3">
                     {t("contact.promiseTitle")}
                   </p>
-                  <div className="space-y-4">
+                  <div className="space-y-4 lg:space-y-3">
                     {arr("contact.promises").map((text: string, i: number) => {
                       const Icon = promiseIcons[i];
                       return (
@@ -534,7 +547,7 @@ const Kontakt = () => {
                 <div className="flex flex-col gap-3 mt-auto pt-2">
                   <a
                     href="tel:+4960819128913"
-                    className="flex items-center justify-center gap-2.5 bg-gradient-amber text-white font-bold px-6 py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/25 text-sm"
+                    className="flex items-center justify-center gap-2.5 bg-gradient-amber text-white font-bold px-6 py-4 lg:py-3.5 rounded-2xl hover:scale-[1.02] transition-transform shadow-lg shadow-[#ED8400]/25 text-sm"
                   >
                     <Phone className="w-4 h-4 flex-shrink-0" />
                     +49 (0) 6081 9128913
