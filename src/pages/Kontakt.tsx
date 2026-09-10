@@ -13,6 +13,25 @@ import andrej   from "@/assets/kontakt/Andrej Krutsch - Kontakt.png";
 import mohammad from "@/assets/kontakt/Mohammad Motakalemi - Kontakt.png";
 import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
 import ConfettiBurst from "@/components/ui/confetti-burst";
+import { InfiniteSlider } from "@/components/ui/infinite-slider";
+
+// Kundenlogos fuer den Logo-Carousel im linken Desktop-Block — gleiche
+// Quelle wie TrustedBrandsSection, damit Optik/Verhalten konsistent bleiben.
+import logoArtemis from "@/assets/logos/kunden/logo-artemis.png";
+import logoBurgerBrothers from "@/assets/logos/kunden/logo-burger-brothers.png";
+import logoEtManus from "@/assets/logos/kunden/logo-et-manus.png";
+import logoIlSorriso from "@/assets/logos/kunden/logo-il-sorriso.png";
+import logoKojoSushi from "@/assets/logos/kunden/logo-kojo-sushi.png";
+import logoTake from "@/assets/logos/kunden/logo-take.png";
+
+const customerLogos = [
+  { id: "artemis", src: logoArtemis, alt: "Artemis" },
+  { id: "burger-brothers", src: logoBurgerBrothers, alt: "Burger Brothers" },
+  { id: "et-manus", src: logoEtManus, alt: "Et Manus" },
+  { id: "il-sorriso", src: logoIlSorriso, alt: "Il Sorriso" },
+  { id: "kojo-sushi", src: logoKojoSushi, alt: "Kojo Sushi" },
+  { id: "take", src: logoTake, alt: "Take" },
+];
 
 const teamImages = [rene, salva, andrej, mohammad];
 const teamNames = ["René Ebert", "Salvatore Anzaldi", "Andrej Krutsch", "Mohammad Motakalemi"];
@@ -166,13 +185,13 @@ const Kontakt = () => {
   // Sprach-Pillen — auf Desktop im weissen Block links (helles Design), auf
   // Mobile in der navy Sidebar (dunkles Design). Eine Quelle, zwei Stylings.
   const languagePills = (variant: "light" | "navy") => (
-    <div className="flex flex-wrap gap-2.5">
+    <div className={variant === "light" ? "grid grid-cols-3 gap-2.5" : "flex flex-wrap gap-2.5"}>
       {arr("contact.languageLabels").map((label: string, i: number) => (
         <span
           key={label}
           className={
             variant === "light"
-              ? "flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-200 text-[#0A264A]/70 text-sm font-medium"
+              ? "flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-200 text-[#0A264A]/70 text-sm font-medium"
               : "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/8 border border-white/10 text-white/65 text-sm font-medium"
           }
         >
@@ -400,6 +419,43 @@ const Kontakt = () => {
                   {t("contact.languageTitle")}
                 </p>
                 {languagePills("light")}
+
+                {/* Logo-Carousel — NUR Desktop, gleiche Optik/Geschwindigkeit
+                    wie TrustedBrandsSection (endlos, Fade-Maske links/rechts). */}
+                <div className="mt-6 pt-6 border-t border-gray-100 relative">
+                  <div
+                    className="relative h-16 w-full flex items-center overflow-hidden"
+                    style={{
+                      maskImage: `linear-gradient(
+                        to right,
+                        rgba(0, 0, 0, 0) 0%,
+                        rgba(0, 0, 0, 1) 15%,
+                        rgba(0, 0, 0, 1) 85%,
+                        rgba(0, 0, 0, 0) 100%
+                      )`,
+                      WebkitMaskImage: `linear-gradient(
+                        to right,
+                        rgba(0, 0, 0, 0) 0%,
+                        rgba(0, 0, 0, 1) 15%,
+                        rgba(0, 0, 0, 1) 85%,
+                        rgba(0, 0, 0, 0) 100%
+                      )`,
+                    }}
+                  >
+                    <InfiniteSlider className="flex h-full w-full items-center" duration={40} gap={48}>
+                      {customerLogos.map(({ id, src, alt }) => (
+                        <div key={id} className="flex-shrink-0 h-10 flex items-center justify-center">
+                          <img
+                            src={src}
+                            alt={alt}
+                            loading="lazy"
+                            className="max-h-full max-w-[110px] object-contain hover:opacity-90 transition-opacity duration-300"
+                          />
+                        </div>
+                      ))}
+                    </InfiniteSlider>
+                  </div>
+                </div>
               </div>
             </div>
 
