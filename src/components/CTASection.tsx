@@ -22,6 +22,12 @@ import italienischSvg from "@/assets/icons/Italienisch.svg";
 import persischSvg   from "@/assets/icons/Persisch.svg";
 import russischSvg   from "@/assets/icons/Russisch.svg";
 import singhalesischSvg from "@/assets/icons/Singhalesisch.svg";
+// Sprache -> Flaggen-Datei: Urdu = pakistanische Flagge, Hindi = indische
+// Flagge. Variablen bewusst nach der SPRACHE benannt (nicht nach der Datei),
+// damit die Zuordnung an der Verwendungsstelle nicht erneut verwechselt wird.
+import urduSvg        from "@/assets/icons/Pakistanisch.svg";
+import hindiSvg       from "@/assets/icons/Indisch.svg";
+import punjabiSvg     from "@/assets/icons/Punjabi.svg";
 
 export interface CTASectionProps {
   productPath: string;
@@ -29,7 +35,7 @@ export interface CTASectionProps {
 }
 
 export const CTASection = ({ productPath, text }: CTASectionProps) => {
-  const { t, i18n } = useTranslation("common");
+  const { t } = useTranslation("common");
   const lp = useLangPath();
   const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
@@ -45,11 +51,10 @@ export const CTASection = ({ productPath, text }: CTASectionProps) => {
     { name: "Yawar Sultan", roleKey: "techSupport", img: teamYawarImg },
   ];
 
-  // Bewusst NICHT um Urdu/Hindi/Punjabi erweitert: diese Pillen sind hier ein
-  // FUNKTIONALER Sprachumschalter (onClick -> i18n.changeLanguage), keine
-  // dekorativen "wir sprechen deine Sprache"-Badges wie in den anderen CTA-
-  // Sektionen. Urdu/Hindi/Punjabi sind keine unterstuetzten Site-Sprachen
-  // (kein eigener Locale-Ordner) — ein Klick wuerde ins Leere laufen.
+  // Beratungssprachen — reine Anzeige-Badges ("wir sprechen deine Sprache"),
+  // KEIN Sprachumschalter: die Pillen sind <div> ohne onClick. Reihenfolge und
+  // Flaggen identisch zur Desktop-Variante (HomeTeamCTA), damit Mobile und
+  // Desktop dieselben 9 Sprachen zeigen. `code` dient nur als React-key.
   const languages = [
     { code: "de", label: "DE", svg: deutschSvg },
     { code: "en", label: "EN", svg: englischSvg },
@@ -57,6 +62,9 @@ export const CTASection = ({ productPath, text }: CTASectionProps) => {
     { code: "fa", label: "FA", svg: persischSvg },
     { code: "ru", label: "RU", svg: russischSvg },
     { code: "si", label: "SI", svg: singhalesischSvg },
+    { code: "ur", label: "UR", svg: urduSvg },
+    { code: "hi", label: "HI", svg: hindiSvg },
+    { code: "pa", label: "PA", svg: punjabiSvg },
   ];
 
   useEffect(() => {
@@ -65,10 +73,6 @@ export const CTASection = ({ productPath, text }: CTASectionProps) => {
     }, 4000);
     return () => clearInterval(timer);
   }, []);
-
-  const handleLangChange = (code: string) => {
-    i18n.changeLanguage(code);
-  };
 
   const member = teamMembers[current];
 
@@ -135,18 +139,21 @@ export const CTASection = ({ productPath, text }: CTASectionProps) => {
             {cardText}
           </motion.p>
 
-          {/* Language Pills - 3x2 Grid */}
+          {/* Language Pills — festes 3x3-Grid statt flex-wrap: bei 9 Sprachen
+              ergaebe Wrapping je nach Geraetebreite eine einzelne Pille in der
+              letzten Zeile. 9/3 geht glatt auf, die Kurzcodes (DE/EN/...)
+              passen auch auf 360px in 3 Spalten. */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="flex flex-wrap justify-center gap-2 w-full"
+            className="grid grid-cols-3 gap-2 w-full"
           >
             {languages.map(lang => (
               <div
                 key={lang.code}
-                className="flex items-center gap-1 px-4 py-2 rounded-full bg-[#0A264A]/[0.06] dark:bg-white/[0.06] text-[#0A264A]/60 dark:text-white/60"
+                className="flex items-center justify-center gap-1 px-4 py-2 rounded-full bg-[#0A264A]/[0.06] dark:bg-white/[0.06] text-[#0A264A]/60 dark:text-white/60"
               >
                 <img
                   src={lang.svg}

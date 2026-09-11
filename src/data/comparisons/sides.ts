@@ -152,7 +152,7 @@ const DE: ComparisonData = {
     {
       axis: "Service-Sprachen",
       competitorValue: "Details auf Anfrage",
-      gastroMasterValue: "6 Sprachen: DE, EN, IT, RU, FA, SI",
+      gastroMasterValue: "9 Sprachen: DE, EN, IT, FA, RU, SI, UR, HI, PA",
       meaning:
         "Mehrsprachiger Restaurant-Inhaber? Gastro Master spricht direkt deine Sprache.",
       source: GM_UEBER_UNS,
@@ -184,7 +184,7 @@ const DE: ComparisonData = {
     intro: "Gastro Master ist auf folgende Restaurants ausgerichtet:",
     avatars: [
       "Familiengeführte Pizzerien, Imbisse und Cafés mit 1–5 Standorten in DACH",
-      "Betriebe, die persönlichen Service auf 6 Sprachen schätzen (DE, EN, IT, RU, FA, SI)",
+      "Betriebe, die persönlichen Service auf 9 Sprachen schätzen (DE, EN, IT, FA, RU, SI, UR, HI, PA)",
       "Restaurants, die eine eigene App-Marke und transparente Festpreise bevorzugen",
       "Lieferdienst- und Takeaway-fokussierte Konzepte mit 0 % Provision auf Direktbestellungen",
       "Familienbetriebe, die einen eigentümergeführten Ansprechpartner statt VC-Roadmap erwarten",

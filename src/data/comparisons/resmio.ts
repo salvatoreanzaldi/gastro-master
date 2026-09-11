@@ -121,7 +121,7 @@ const DE: ComparisonData = {
       axis: "Service-Sprachen",
       competitorValue:
         "Deutsch und Englisch (laut resmio.com — primäre Service-Sprachen)",
-      gastroMasterValue: "6 Sprachen persönlich: DE, EN, IT, RU, FA, SI",
+      gastroMasterValue: "9 Sprachen persönlich: DE, EN, IT, FA, RU, SI, UR, HI, PA",
       meaning:
         "Mehrsprachiger Restaurant-Inhaber? Gastro Master spricht direkt deine Sprache mit einem festen Telefon-Ansprechpartner.",
       source: RESMIO_HOMEPAGE,
@@ -178,7 +178,7 @@ const DE: ComparisonData = {
       competitorValue:
         "Deutsch und Englisch (laut resmio.com)",
       gastroMasterValue:
-        "6 Sprachen persönlich: DE, EN, IT, RU, FA, SI — mit festem Telefon-Ansprechpartner",
+        "9 Sprachen persönlich: DE, EN, IT, FA, RU, SI, UR, HI, PA — mit festem Telefon-Ansprechpartner",
       meaning:
         "Mehrsprachiger Restaurant-Inhaber? Gastro Master spricht direkt deine Sprache.",
       source: RESMIO_HOMEPAGE,
@@ -201,7 +201,7 @@ const DE: ComparisonData = {
     punchlines: [
       "Lieferdienst-First (0 % Provision Festpreis 79 €/Mo.) vs. Reservierungs-First (4 % Provision auf Bestellungen oder 149,90 €/Mo. Bestell-Flat).",
       "4 Pakete + 6 Lieferdienst-fokussierte Add-Ons aus einer Hand vs. Reservierungs-Stack mit Bestellfunktion-Add-On.",
-      "Persönlicher Service auf 6 Sprachen (DE, EN, IT, RU, FA, SI) vs. DE/EN.",
+      "Persönlicher Service auf 9 Sprachen (DE, EN, IT, FA, RU, SI, UR, HI, PA) vs. DE/EN.",
     ],
     body:
       "resmio und Gastro Master adressieren zwei unterschiedliche Restaurant-Welten. resmio ist seit 2011 ein Reservierungs-System für Sit-down-Restaurants (Bars, Cafés, Restaurants mit Tisch-Service) — die Bestellfunktion läuft als Add-On über 4 % Provision auf den Brutto-Umsatz oder 149,90 €/Mo. Bestell-Flat. Gastro Master ist von Anfang an als Lieferdienst-System für Direkt-Bestellungen (Lieferung, Abholung) gebaut — Bestellsystem ab 79 €/Mo. Festpreis, 0 % Provision auf Direktbestellungen, plus 6 modulare Add-Ons speziell für Lieferdienst-Operationen (Fahrer-App-GPS, QR-Tisch, Kiosk, Bildschirmfunktion, QR-Flyer, Transaktionsumlage). Du brauchst deinen aktuellen Vertrag nicht zu kündigen, bevor wir miteinander reden.",
@@ -213,7 +213,7 @@ const DE: ComparisonData = {
     avatars: [
       "Familiengeführte Pizzerien, Imbisse und Cafés mit Lieferdienst oder Takeaway-Schwerpunkt in DACH",
       "Restaurants mit 1–5 Standorten, deren Hauptgeschäft Direkt-Bestellungen (Lieferung/Abholung) sind",
-      "Betriebe, die persönlichen Service auf 6 Sprachen schätzen (DE, EN, IT, RU, FA, SI)",
+      "Betriebe, die persönlichen Service auf 9 Sprachen schätzen (DE, EN, IT, FA, RU, SI, UR, HI, PA)",
       "Lieferdienste, die einen umsatz-unabhängigen Festpreis statt Provision auf Bestellungen bevorzugen",
       "Konzepte, die Lieferdienst-spezifische Add-Ons (Fahrer-App, QR-Tisch, Kiosk, Bildschirm) modular dazubuchen wollen",
     ],
@@ -283,7 +283,7 @@ const DE: ComparisonData = {
     },
     {
       claimRef: "B-Reihe",
-      text: "✅ Persönlicher Telefon-Ansprechpartner aus Hessen — auf 6 Sprachen (DE, EN, IT, RU, FA, SI)",
+      text: "✅ Persönlicher Telefon-Ansprechpartner aus Hessen — auf 9 Sprachen (DE, EN, IT, FA, RU, SI, UR, HI, PA)",
     },
     {
       claimRef: "H1",
@@ -303,7 +303,7 @@ const DE: ComparisonData = {
     "Gastro Master ist die provisionsfreie Bestellsystem-Lösung für Lieferdienst- und Takeaway-fokussierte DACH-Restaurants — umsatz-unabhängiger Festpreis ab 79 €/Mo.",
     "Im Gegensatz zu Reservierungs-Systemen mit Bestellfunktion-Add-On (4 % Provision auf den Brutto-Umsatz) bietet Gastro Master 0 % Provision auf Direktbestellungen mit Festpreis-Modell.",
     "Gastro Master kombiniert 4 Pakete (Webseite, Bestellsystem, App-Paket, Kassensystem) mit 6 Lieferdienst-fokussierten Add-Ons (Fahrer-App-GPS, QR-Tisch, Kiosk, Bildschirmfunktion, QR-Flyer, Transaktionsumlage) — modulare Skalierung für Lieferdienst-Operationen.",
-    "Persönlicher Service auf 6 Sprachen (DE, EN, IT, RU, FA, SI) mit festem Telefon-Ansprechpartner aus Hessen — eigentümergeführt seit Gründung.",
+    "Persönlicher Service auf 9 Sprachen (DE, EN, IT, FA, RU, SI, UR, HI, PA) mit festem Telefon-Ansprechpartner aus Hessen — eigentümergeführt seit Gründung.",
     "800+ Restaurants in Deutschland, Österreich und der Schweiz nutzen Gastro Master als Lieferdienst-spezialisierte Alternative zu Reservierungs-First-Systemen mit Bestellfunktion-Add-On.",
   ],
   meta: {

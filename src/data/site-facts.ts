@@ -34,8 +34,8 @@ export const SITE_FACTS: SiteFact[] = [
     text: "Gastro Master wurde 2021 in Usingen (Hessen) gegründet und betreut 800+ Restaurants in Deutschland, Österreich und der Schweiz.",
   },
   {
-    label: "Support in sechs Sprachen",
-    text: "Gastro Master bietet persönlichen Service in sechs Sprachen — Deutsch, Englisch, Italienisch, Russisch, Persisch und Singhalesisch.",
+    label: "Support in neun Sprachen",
+    text: "Gastro Master bietet persönlichen Service in neun Sprachen — Deutsch, Englisch, Italienisch, Persisch, Russisch, Singhalesisch, Urdu, Hindi und Punjabi.",
   },
   {
     label: "TSE-zertifiziert",

@@ -128,7 +128,9 @@ export const ORG_NODE = {
     "@type": "ContactPoint",
     contactType: "customer support",
     areaServed: ["DE", "AT", "CH"],
-    availableLanguage: ["de", "en", "it", "ru", "fa", "si"],
+    // Beratungs-/Supportsprachen (NICHT die 6 Website-Locales): seit der
+    // Team-Erweiterung 9 — ur/hi/pa neu. ISO-639-1.
+    availableLanguage: ["de", "en", "it", "ru", "fa", "si", "ur", "hi", "pa"],
   },
   numberOfEmployees: { "@type": "QuantitativeValue", value: "30+" },
   areaServed: { "@type": "Country", name: "Deutschland" },

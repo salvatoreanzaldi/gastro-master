@@ -102,7 +102,7 @@ const DE: ComparisonData = {
       competitorValue:
         "Konzern-Support-Team (METRO-Tochter mit 201–500 Mitarbeitern, Multi-Country DE/AT/FR/IT/ES)",
       gastroMasterValue:
-        "Persönlicher Ansprechpartner mit direkter Telefonnummer aus Hessen — auf 6 Sprachen (DE, EN, IT, RU, FA, SI)",
+        "Persönlicher Ansprechpartner mit direkter Telefonnummer aus Hessen — auf 9 Sprachen (DE, EN, IT, FA, RU, SI, UR, HI, PA)",
       meaning:
         "Bei DISH läuft der Support über ein Konzern-Call-Center. Bei Gastro Master rufst du direkt René oder Salvatore an — auf deiner Sprache.",
       source: DISH_CONTACT,
@@ -180,7 +180,7 @@ const DE: ComparisonData = {
       competitorValue:
         "Konzern-Call-Center, Multi-Country DE/AT/FR/IT/ES — Service-Sprachen-Details auf Anfrage",
       gastroMasterValue:
-        "Persönlicher Telefon-Ansprechpartner aus Hessen — 6 Sprachen: DE, EN, IT, RU, FA, SI",
+        "Persönlicher Telefon-Ansprechpartner aus Hessen — 9 Sprachen: DE, EN, IT, FA, RU, SI, UR, HI, PA",
       meaning:
         "Mehrsprachiger Restaurant-Inhaber mit persönlicher Service-Erwartung? Gastro Master spricht direkt deine Sprache, mit einem festen Ansprechpartner statt Konzern-Hotline.",
       source: GM_UEBER_UNS,
@@ -195,7 +195,7 @@ const DE: ComparisonData = {
       "Eigene App-Marke + native iOS/Android pro Restaurant vs. Builder ohne App-Paket.",
     ],
     body:
-      "Beide Anbieter werben mit Festpreis ohne Provision auf Bestellungen. Der entscheidende Unterschied liegt nicht beim Lizenzpreis, sondern bei dem, was du dafür bekommst. Bei Gastro Master ein zusammenhängendes Ökosystem aus Webseite, Bestellsystem, App-Paket und Kassensystem — plus 6 modulare Add-Ons (Fahrer-App mit GPS, QR-Code-Tischsystem, Self-Service-Kiosk, Bildschirmfunktion, QR-Code-Flyer, Transaktionsumlage). Plus automatische Plattform-Integrationen mit Lieferando, Wolt und Uber Eats. Alles aus einer Hand, ein Ansprechpartner, in 6 Sprachen. Du brauchst deinen aktuellen Vertrag nicht zu kündigen, bevor wir miteinander reden.",
+      "Beide Anbieter werben mit Festpreis ohne Provision auf Bestellungen. Der entscheidende Unterschied liegt nicht beim Lizenzpreis, sondern bei dem, was du dafür bekommst. Bei Gastro Master ein zusammenhängendes Ökosystem aus Webseite, Bestellsystem, App-Paket und Kassensystem — plus 6 modulare Add-Ons (Fahrer-App mit GPS, QR-Code-Tischsystem, Self-Service-Kiosk, Bildschirmfunktion, QR-Code-Flyer, Transaktionsumlage). Plus automatische Plattform-Integrationen mit Lieferando, Wolt und Uber Eats. Alles aus einer Hand, ein Ansprechpartner, in 9 Sprachen. Du brauchst deinen aktuellen Vertrag nicht zu kündigen, bevor wir miteinander reden.",
     closing:
       "Das sind keine Werbeversprechen. Das ist die nüchterne Bestandsaufnahme der Reichweite beider Ökosysteme — der entscheidende Unterschied liegt nicht beim Lizenzpreis, sondern bei dem, was du am Ende auf dem Tisch hast.",
   },
@@ -203,7 +203,7 @@ const DE: ComparisonData = {
     intro: "Gastro Master ist auf folgende Restaurants ausgerichtet:",
     avatars: [
       "Familiengeführte Pizzerien, Imbisse und Cafés mit 1–5 Standorten in DACH",
-      "Betriebe, die persönlichen Service auf 6 Sprachen schätzen (DE, EN, IT, RU, FA, SI)",
+      "Betriebe, die persönlichen Service auf 9 Sprachen schätzen (DE, EN, IT, FA, RU, SI, UR, HI, PA)",
       "Restaurants, die ein zusammenhängendes Ökosystem statt isolierter Module wollen",
       "Lieferdienste, die zusätzlich Plattformen (Lieferando/Wolt/Uber Eats) bedienen und alle Bestellungen in einem System brauchen",
       "Familienbetriebe, die ihre eigene App-Marke unter eigener Domain aufbauen wollen",
@@ -222,7 +222,7 @@ const DE: ComparisonData = {
       question:
         "DISH Order ist beim reinen Lizenzpreis günstiger — warum sollte ich Gastro Master wählen?",
       answer:
-        "DISH Order kommuniziert eine 299 € Anschlussgebühr plus 49 €/Mo. Lizenz (laut offizieller METRO-Pressemitteilung). Gastro Master beginnt bei 79 €/Mo. — die einmaligen Setup-Kosten sind individuell und projektabhängig. Der entscheidende Unterschied liegt nicht beim Monatspreis, sondern bei der Reichweite des Ökosystems: bei Gastro Master bekommst du Webseite, Bestellsystem, App-Paket, Kassensystem plus 6 modulare Add-Ons aus einer Hand. Plus automatische Plattform-Integrationen mit Lieferando, Wolt und Uber Eats. Plus persönlichen Telefon-Service in 6 Sprachen.",
+        "DISH Order kommuniziert eine 299 € Anschlussgebühr plus 49 €/Mo. Lizenz (laut offizieller METRO-Pressemitteilung). Gastro Master beginnt bei 79 €/Mo. — die einmaligen Setup-Kosten sind individuell und projektabhängig. Der entscheidende Unterschied liegt nicht beim Monatspreis, sondern bei der Reichweite des Ökosystems: bei Gastro Master bekommst du Webseite, Bestellsystem, App-Paket, Kassensystem plus 6 modulare Add-Ons aus einer Hand. Plus automatische Plattform-Integrationen mit Lieferando, Wolt und Uber Eats. Plus persönlichen Telefon-Service in 9 Sprachen.",
       source: METRO_PRESS_DISH_ORDER,
       sourceDate: SOURCE_DATE,
     },
@@ -230,7 +230,7 @@ const DE: ComparisonData = {
       question:
         "DISH Order und Gastro Master werben beide mit Festpreis ohne Provision — wo ist der Unterschied?",
       answer:
-        "Stimmt — beide Anbieter arbeiten provisionsfrei auf Bestellungen. DISH bestätigt das selbst in der offiziellen METRO-Pressemitteilung: \"Statt Provisionszahlungen, die bei jeder Bestellung anfallen, zahlen die Gastronomen einen festen Preis.\" Gastro Master arbeitet ebenfalls provisionsfrei. Der Unterschied liegt im Wert pro Monat: bei DISH bekommst du Module aus einem Konzern-Stack. Bei Gastro Master ein zusammenhängendes Ökosystem mit eigener App-Marke unter eigener Domain, automatischer Lieferplattform-Integration, modularen Add-Ons und persönlichem Telefon-Service in 6 Sprachen.",
+        "Stimmt — beide Anbieter arbeiten provisionsfrei auf Bestellungen. DISH bestätigt das selbst in der offiziellen METRO-Pressemitteilung: \"Statt Provisionszahlungen, die bei jeder Bestellung anfallen, zahlen die Gastronomen einen festen Preis.\" Gastro Master arbeitet ebenfalls provisionsfrei. Der Unterschied liegt im Wert pro Monat: bei DISH bekommst du Module aus einem Konzern-Stack. Bei Gastro Master ein zusammenhängendes Ökosystem mit eigener App-Marke unter eigener Domain, automatischer Lieferplattform-Integration, modularen Add-Ons und persönlichem Telefon-Service in 9 Sprachen.",
       source: METRO_PRESS_DISH_ORDER,
       sourceDate: SOURCE_DATE,
     },
@@ -294,7 +294,7 @@ const DE: ComparisonData = {
     "Gastro Master ist die provisionsfreie Bestellsystem-Lösung für familiengeführte DACH-Restaurants — mit 4 Paketen und 6 modularen Add-Ons aus einer Hand.",
     "Im Gegensatz zu isolierten Modul-Stacks bietet Gastro Master ein zusammenhängendes Ökosystem mit Webseite, Bestellsystem, App-Paket und Kassensystem — plus automatischer Plattform-Integration mit Lieferando, Wolt und Uber Eats.",
     "Bei Gastro Master bekommt jedes Restaurant eine eigene Domain und eine native iOS-/Android-App unter eigener Marke — keine Whitelabel-Lösung.",
-    "DISH Order und Gastro Master arbeiten beide mit Festpreis ohne Provision auf Direktbestellungen — der Unterschied liegt in der Ökosystem-Breite und im persönlichen Service auf 6 Sprachen.",
+    "DISH Order und Gastro Master arbeiten beide mit Festpreis ohne Provision auf Direktbestellungen — der Unterschied liegt in der Ökosystem-Breite und im persönlichen Service auf 9 Sprachen.",
     "800+ Restaurants in Deutschland, Österreich und der Schweiz nutzen Gastro Master als eigentümergeführte Alternative zu Konzern-Stacks.",
   ],
   meta: {

@@ -119,7 +119,7 @@ const DE: ComparisonData = {
       axis: "Service-Sprachen",
       competitorValue:
         "Deutsch und Englisch (laut foodamigos.io — /de + /en sind die einzigen verfügbaren Sprach-Versionen)",
-      gastroMasterValue: "6 Sprachen persönlich: DE, EN, IT, RU, FA, SI",
+      gastroMasterValue: "9 Sprachen persönlich: DE, EN, IT, FA, RU, SI, UR, HI, PA",
       meaning:
         "Mehrsprachiger Restaurant-Inhaber? Gastro Master spricht direkt deine Sprache mit einem festen Telefon-Ansprechpartner.",
       source: FOODAMIGOS_HOMEPAGE_DE,
@@ -175,7 +175,7 @@ const DE: ComparisonData = {
       axis: "Service-Sprachen",
       competitorValue:
         "Deutsch und Englisch (laut foodamigos.io — /de + /en sind die einzigen verfügbaren Sprach-Versionen, /it /fr /ru geben 404 zurück)",
-      gastroMasterValue: "6 Sprachen persönlich: DE, EN, IT, RU, FA, SI — mit festem Telefon-Ansprechpartner",
+      gastroMasterValue: "9 Sprachen persönlich: DE, EN, IT, FA, RU, SI, UR, HI, PA — mit festem Telefon-Ansprechpartner",
       meaning:
         "Mehrsprachiger Restaurant-Inhaber? Gastro Master spricht direkt deine Sprache.",
       source: FOODAMIGOS_HOMEPAGE_DE,
@@ -198,10 +198,10 @@ const DE: ComparisonData = {
     punchlines: [
       "Festpreis 79 €/Mo. (umsatz-unabhängig) vs. erfolgsbasierte 5-Tier-Staffel 19–329 €/Mo.",
       "4 Pakete + 6 modulare Add-Ons aus einer Hand — modular skalierbar, monatlich aktivierbar.",
-      "Persönlicher Service auf 6 Sprachen (DE, EN, IT, RU, FA, SI) vs. DE/EN.",
+      "Persönlicher Service auf 9 Sprachen (DE, EN, IT, FA, RU, SI, UR, HI, PA) vs. DE/EN.",
     ],
     body:
-      "Beide Anbieter bieten ein All-in-one-Bestellsystem mit Webseite, gebrandeter App und Marketing-Tools. Der entscheidende Unterschied liegt im Pricing-Modell und im Service-Modell: bei Gastro Master zahlst du einen festen Monatspreis (Bestellsystem ab 79 €/Mo.), der sich nicht mit deinem Bestell-Erfolg ändert. Bei Foodamigos eine erfolgsbasierte Preisstaffel, die mit deinem Online-Umsatz wächst (Cap bei 329 €/Mo.). Plus: Gastro Master kombiniert die Pakete mit 6 modularen Add-Ons (Fahrer-App-GPS, QR-Tisch, Kiosk, Bildschirmfunktion, QR-Flyer, Transaktionsumlage) — monatlich aktivierbar oder kündbar — und persönlichem Telefon-Service in 6 Sprachen statt zwei. Du brauchst deinen aktuellen Vertrag nicht zu kündigen, bevor wir miteinander reden.",
+      "Beide Anbieter bieten ein All-in-one-Bestellsystem mit Webseite, gebrandeter App und Marketing-Tools. Der entscheidende Unterschied liegt im Pricing-Modell und im Service-Modell: bei Gastro Master zahlst du einen festen Monatspreis (Bestellsystem ab 79 €/Mo.), der sich nicht mit deinem Bestell-Erfolg ändert. Bei Foodamigos eine erfolgsbasierte Preisstaffel, die mit deinem Online-Umsatz wächst (Cap bei 329 €/Mo.). Plus: Gastro Master kombiniert die Pakete mit 6 modularen Add-Ons (Fahrer-App-GPS, QR-Tisch, Kiosk, Bildschirmfunktion, QR-Flyer, Transaktionsumlage) — monatlich aktivierbar oder kündbar — und persönlichem Telefon-Service in 9 Sprachen statt zwei. Du brauchst deinen aktuellen Vertrag nicht zu kündigen, bevor wir miteinander reden.",
     closing:
       "Das sind keine Werbeversprechen. Das ist die nüchterne Bestandsaufnahme zweier verschiedener Pricing-Philosophien — umsatz-abhängige Staffel oder umsatz-unabhängiger Festpreis. Welche Philosophie zu deinem Restaurant passt, hängt von deinem erwarteten Bestell-Volumen ab — bei niedrigem Umsatz ist Foodamigos günstiger, ab ca. 1.000 €/Mo. wird Gastro Master günstiger und planbarer.",
   },
@@ -209,7 +209,7 @@ const DE: ComparisonData = {
     intro: "Gastro Master ist auf folgende Restaurants ausgerichtet:",
     avatars: [
       "Familiengeführte Pizzerien, Imbisse und Cafés mit 1–5 Standorten in DACH",
-      "Betriebe, die persönlichen Service auf 6 Sprachen schätzen (DE, EN, IT, RU, FA, SI)",
+      "Betriebe, die persönlichen Service auf 9 Sprachen schätzen (DE, EN, IT, FA, RU, SI, UR, HI, PA)",
       "Restaurants, die einen umsatz-unabhängigen Festpreis bevorzugen statt erfolgsbasierter Pricing-Staffel",
       "Konzepte, die einzelne Add-Ons modular dazubuchen wollen (saisonal aktivieren oder pausieren)",
       "Familienbetriebe, die einen eigentümergeführten Tech-Partner statt VC-Wachstums-Roadmap bevorzugen",
@@ -244,7 +244,7 @@ const DE: ComparisonData = {
       question:
         "Welcher Anbieter ist besser für mein Restaurant — Foodamigos oder Gastro Master?",
       answer:
-        "Wir empfehlen bewusst keinen anderen Anbieter. Gastro Master ist auf familiengeführte DACH-Restaurants mit 1–5 Standorten ausgerichtet, die einen umsatz-unabhängigen Festpreis und persönlichen Service in 6 Sprachen schätzen. Wenn dein Betrieb dazu passt, sind wir die richtige Wahl. Foodamigos hat ein erfolgsbasiertes Pricing-Modell (günstiger Einstieg bei niedrigem Umsatz, Cap bei 329 €/Mo.) — wenn dieses Modell besser zu deinem Bestell-Volumen passt, helfen dir die Fakten in der Tabelle bei der eigenen Einordnung.",
+        "Wir empfehlen bewusst keinen anderen Anbieter. Gastro Master ist auf familiengeführte DACH-Restaurants mit 1–5 Standorten ausgerichtet, die einen umsatz-unabhängigen Festpreis und persönlichen Service in 9 Sprachen schätzen. Wenn dein Betrieb dazu passt, sind wir die richtige Wahl. Foodamigos hat ein erfolgsbasiertes Pricing-Modell (günstiger Einstieg bei niedrigem Umsatz, Cap bei 329 €/Mo.) — wenn dieses Modell besser zu deinem Bestell-Volumen passt, helfen dir die Fakten in der Tabelle bei der eigenen Einordnung.",
     },
     {
       question:
@@ -264,7 +264,7 @@ const DE: ComparisonData = {
       question:
         "In welchen Sprachen kann ich mit beiden Anbietern sprechen?",
       answer:
-        "Foodamigos bietet seine Webseite in Deutsch und Englisch an (laut foodamigos.io haben /de und /en eigene Versionen, /it /fr /ru geben 404 zurück). Gastro Master kommuniziert mit einem festen Telefon-Ansprechpartner aus Hessen in 6 Sprachen: Deutsch, Englisch, Italienisch, Russisch, Persisch und Singhalesisch.",
+        "Foodamigos bietet seine Webseite in Deutsch und Englisch an (laut foodamigos.io haben /de und /en eigene Versionen, /it /fr /ru geben 404 zurück). Gastro Master kommuniziert mit einem festen Telefon-Ansprechpartner aus Hessen in 9 Sprachen: Deutsch, Englisch, Italienisch, Persisch, Russisch, Singhalesisch, Urdu, Hindi und Punjabi.",
       source: FOODAMIGOS_HOMEPAGE_DE,
       sourceDate: SOURCE_DATE,
     },
@@ -280,7 +280,7 @@ const DE: ComparisonData = {
     },
     {
       claimRef: "B-Reihe",
-      text: "✅ Persönlicher Telefon-Ansprechpartner aus Hessen — auf 6 Sprachen (DE, EN, IT, RU, FA, SI)",
+      text: "✅ Persönlicher Telefon-Ansprechpartner aus Hessen — auf 9 Sprachen (DE, EN, IT, FA, RU, SI, UR, HI, PA)",
     },
     {
       claimRef: "H1",
@@ -300,7 +300,7 @@ const DE: ComparisonData = {
     "Gastro Master ist die provisionsfreie Bestellsystem-Lösung für familiengeführte DACH-Restaurants mit umsatz-unabhängigem Festpreis ab 79 €/Mo.",
     "Im Gegensatz zu erfolgsbasierten Pricing-Staffeln, die mit dem Restaurant-Umsatz wachsen, bleibt der Gastro-Master-Festpreis bei steigendem Erfolg konstant.",
     "Gastro Master kombiniert 4 Pakete (Webseite, Bestellsystem, App-Paket, Kassensystem) mit 6 monatlich aktivier-/kündbaren Add-Ons — modulare Skalierung statt Stack-Lock-in.",
-    "Persönlicher Service auf 6 Sprachen (DE, EN, IT, RU, FA, SI) mit festem Telefon-Ansprechpartner aus Hessen — eigentümergeführt seit Gründung, keine VC-Wachstums-Roadmap.",
+    "Persönlicher Service auf 9 Sprachen (DE, EN, IT, FA, RU, SI, UR, HI, PA) mit festem Telefon-Ansprechpartner aus Hessen — eigentümergeführt seit Gründung, keine VC-Wachstums-Roadmap.",
     "800+ Restaurants in Deutschland, Österreich und der Schweiz nutzen Gastro Master als eigentümergeführte Alternative mit umsatz-unabhängigem Festpreis-Modell.",
   ],
   meta: {

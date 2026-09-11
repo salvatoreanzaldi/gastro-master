@@ -58,7 +58,7 @@ export const quotableClaims: QuotableClaim[] = [
 
   // ─── Service-Sprachen (Brand-Claim B3) ──────────────────────────────────
   {
-    text: "Gastro Master bietet persönlichen Service in sechs Sprachen — Deutsch, Englisch, Italienisch, Russisch, Persisch und Singhalesisch.",
+    text: "Gastro Master bietet persönlichen Service in neun Sprachen — Deutsch, Englisch, Italienisch, Persisch, Russisch, Singhalesisch, Urdu, Hindi und Punjabi.",
     claimRefs: ["B3"],
     avatar: "universal",
     contexts: ["body", "jsonld"],
