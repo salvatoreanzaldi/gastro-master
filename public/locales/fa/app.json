@@ -235,8 +235,8 @@
       { "label": "فارسی", "flag": "ir" },
       { "label": "روسی", "flag": "ru" },
       { "label": "سینهالی", "flag": "lk" },
-      { "label": "هندی", "flag": "in" },
       { "label": "اردو", "flag": "pk" },
+      { "label": "هندی", "flag": "in" },
       { "label": "پنجابی", "flag": "pa" }
     ],
     "cta": "درخواست مشاوره رایگان",

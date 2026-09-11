@@ -328,12 +328,12 @@
         "flag": "lk"
       },
       {
-        "label": "Hindi",
-        "flag": "in"
-      },
-      {
         "label": "Urdu",
         "flag": "pk"
+      },
+      {
+        "label": "Hindi",
+        "flag": "in"
       },
       {
         "label": "Punjabi",

@@ -75,7 +75,7 @@ import logoIlSorriso    from "@/assets/logos/kunden/logo-il-sorriso.png";
 import logoArtemis      from "@/assets/logos/kunden/logo-artemis.png";
 import logoTake         from "@/assets/logos/kunden/logo-take.png";
 import logoBurger       from "@/assets/logos/kunden/logo-burger-brothers.png";
-import { FLAG_ICONS_ORDERED, FLAG_ICONS } from "@/config/flag-icons";
+import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
 import { MoneyPageBacklinks } from "@/components/money/MoneyPageBacklinks";
 const POSSection = lazy(() => import("@/components/landing/POSSection"));
 const PickUpScreenSection = lazy(() => import("@/components/landing/PickUpScreenSection"));
@@ -144,11 +144,9 @@ const customerLogos = [
 
 const teamMemberImgs = [teamSanjayaImg, teamReneImg, teamSalvatoreImg, teamAndrejImg, teamYawarImg];
 
-// .slice(0, 6) + explizite Keys statt FLAG_ICONS_ORDERED direkt zu nutzen:
-// die geteilte Liste wurde um pk/in/pa erweitert (fuer andere CTA-Sektionen),
-// aber kasse.json's teamCta.languages ordnet Hindi vor Urdu — ohne den Slice
-// wuerde FLAG_ICONS_ORDERED[6]=pk (Urdu-Flagge) faelschlich auf "Hindi" fallen.
-const langFlags = [...FLAG_ICONS_ORDERED.slice(0, 6), FLAG_ICONS.in, FLAG_ICONS.pk, FLAG_ICONS.pa];
+// Kanonische Reihenfolge DE, EN, IT, FA, RU, SI, UR, HI, PA — identisch zu
+// kasse.json teamCta.languages (Index-Paarung).
+const langFlags = FLAG_ICONS_ORDERED;
 const langColors = [
   "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-900 dark:hover:bg-yellow-400/10 dark:hover:text-yellow-300",
   "hover:border-blue-500 hover:bg-blue-50 hover:text-blue-900 dark:hover:bg-blue-500/10 dark:hover:text-blue-300",

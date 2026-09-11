@@ -16,14 +16,6 @@ import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
 import ConfettiBurst from "@/components/ui/confetti-burst";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
-// 3 zusaetzliche Sprach-Pillen NUR fuer diese Seite (9 statt 6) — bewusst
-// lokal statt in flag-icons.ts ergaenzt, da jene Liste auch von den CTA-
-// Sektionen (FounderTrustSection etc.) geteilt wird und dort unveraendert
-// bleiben soll.
-import IndischIcon from "@/assets/icons/Indisch.svg";
-import PakistanischIcon from "@/assets/icons/Pakistanisch.svg";
-import PunjabiIcon from "@/assets/icons/Punjabi.svg";
-
 // Kundenlogos fuer den Logo-Carousel im linken Desktop-Block — gleiche
 // Quelle wie TrustedBrandsSection, damit Optik/Verhalten konsistent bleiben.
 import logoArtemis from "@/assets/logos/kunden/logo-artemis.png";
@@ -52,13 +44,11 @@ const customerLogos = [
 
 const teamImages = [rene, salva, andrej, mohammad, yawar];
 const teamNames = ["René Ebert", "Salvatore Anzaldi", "Andrej Krutsch", "Mohammad Motakalemi", "Yawar Sultan"];
-// Sprach-Pillen der Kontaktseite: die geteilten 6 Flaggen aus flag-icons.ts
-// plus 3 seiten-eigene (Hindi/Urdu/Punjabi) — ergibt das 3x3-Grid. Bewusst
-// .slice(0, 6) statt FLAG_ICONS_ORDERED komplett zu spreaden: die geteilte
-// Liste wurde inzwischen selbst um pk/in/pa erweitert (fuer andere CTA-
-// Sektionen) — ohne den Slice wuerden sich deren Flaggen hier verdoppeln
-// und alles ab Index 6 (Hindi/Urdu) verschieben.
-const languageFlags = [...FLAG_ICONS_ORDERED.slice(0, 6), IndischIcon, PakistanischIcon, PunjabiIcon];
+// Sprach-Pillen der Kontaktseite (3x3-Grid). FLAG_ICONS_ORDERED enthaelt
+// inzwischen selbst alle 9 Flaggen in der kanonischen Reihenfolge
+// DE, EN, IT, FA, RU, SI, UR, HI, PA — der frueher noetige .slice(0, 6) plus
+// lokale Anhaenge entfaellt damit. Index-Paarung mit contact.languageLabels.
+const languageFlags = FLAG_ICONS_ORDERED;
 const promiseIcons = [Clock, Lightbulb, Lock];
 
 // Floating-Label: Wenn das Feld leer & unfokussiert ist, sitzt das Label mittig
