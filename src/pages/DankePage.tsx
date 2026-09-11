@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { ClipboardCheck, PhoneCall, MessageSquareText } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,14 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import ConfettiBurst from "@/components/ui/confetti-burst";
-import TrustBar, { type TrustBarItem } from "@/components/TrustBar";
+
+// Social Proof unterhalb der Bestaetigung — dieselbe Paarung wie auf der
+// Startseite (Index.tsx): Google-Bewertungs-Karussell inkl. "Bewerte uns auf
+// Google"-Button, direkt gefolgt von "800+ Gastronomiebetriebe vertrauen uns"
+// samt Kunden-Logo-Carousel. Beide lazy, damit sie den Bestaetigungs-Teil
+// (inkl. Konfetti) nicht ausbremsen.
+const GoogleReviewsGrid = lazy(() => import("@/components/GoogleReviewsGrid"));
+const TrustedBrandsSection = lazy(() => import("@/components/landing/TrustedBrandsSection"));
 
 /**
  * Bestaetigungsseite nach erfolgreichem Kontaktformular-Absenden (Phase 2).
@@ -42,7 +49,6 @@ const DankePage = () => {
   });
 
   const steps = arr("danke.steps") as { title: string; text: string }[];
-  const trustItems = arr("danke.trustBar") as TrustBarItem[];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -135,8 +141,11 @@ const DankePage = () => {
           </div>
         </section>
 
-        {/* ── Trust-Bar (geteilte Komponente) ─────────────────────────────── */}
-        <TrustBar items={trustItems} />
+        {/* ── Social Proof: Google-Bewertungen + Kunden-Logos ─────────────── */}
+        <Suspense fallback={null}>
+          <GoogleReviewsGrid />
+          <TrustedBrandsSection />
+        </Suspense>
       </main>
 
       <Footer />

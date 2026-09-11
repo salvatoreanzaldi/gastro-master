@@ -1019,9 +1019,9 @@
   },
   "danke": {
     "seoTitle": "Grazie per la Sua richiesta | Gastro Master",
-    "seoDesc": "Abbiamo ricevuto la Sua richiesta. Riceverà una risposta entro 12 ore.",
+    "seoDesc": "Abbiamo ricevuto la Sua richiesta. Riceverà una risposta dal nostro team entro 24 ore.",
     "headline": "Grazie! Abbiamo ricevuto la Sua richiesta.",
-    "subline": "Riceverà una risposta entro 12 ore — da una persona reale del nostro team, non da un risponditore automatico.",
+    "subline": "Riceverà una risposta dal nostro team entro 24 ore. Riceverà inoltre subito una conferma via e-mail.",
     "stepsHeadline": "Cosa succede adesso?",
     "steps": [
       {
@@ -1035,24 +1035,6 @@
       {
         "title": "Parlate della Sua soluzione individuale.",
         "text": "Gratuitamente e senza impegno. Poi decide con calma se fa al caso Suo."
-      }
-    ],
-    "trustBar": [
-      {
-        "value": "800+",
-        "label": "attività si fidano di noi"
-      },
-      {
-        "value": "5,0 ★",
-        "label": "valutazione Google"
-      },
-      {
-        "value": "TSE",
-        "label": "conforme al §146a AO"
-      },
-      {
-        "value": "Personale",
-        "label": "assistenza dall'Assia"
       }
     ]
   },

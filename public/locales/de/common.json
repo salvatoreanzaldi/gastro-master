@@ -1073,9 +1073,9 @@
   },
   "danke": {
     "seoTitle": "Danke für deine Anfrage | Gastro Master",
-    "seoDesc": "Deine Anfrage ist bei uns angekommen. Du erhältst innerhalb von 12 Stunden eine Rückmeldung.",
+    "seoDesc": "Deine Anfrage ist bei uns angekommen. Du erhältst innerhalb von 24 Stunden eine Rückmeldung von unserem Team.",
     "headline": "Danke! Deine Anfrage ist bei uns angekommen.",
-    "subline": "Du erhältst innerhalb von 12 Stunden eine Rückmeldung — von einem echten Menschen aus unserem Team, nicht von einem Auto-Responder.",
+    "subline": "Du erhältst innerhalb von 24 Stunden eine Rückmeldung von unserem Team. Du bekommst außerdem gleich eine Bestätigung per E-Mail.",
     "stepsHeadline": "Was passiert jetzt?",
     "steps": [
       {
@@ -1089,24 +1089,6 @@
       {
         "title": "Ihr sprecht über deine individuelle Lösung.",
         "text": "Unverbindlich und kostenlos. Danach entscheidest du in Ruhe, ob es passt."
-      }
-    ],
-    "trustBar": [
-      {
-        "value": "800+",
-        "label": "Betriebe vertrauen uns"
-      },
-      {
-        "value": "5,0 ★",
-        "label": "Google-Bewertung"
-      },
-      {
-        "value": "TSE",
-        "label": "konform nach §146a AO"
-      },
-      {
-        "value": "Persönlich",
-        "label": "Support aus Hessen"
       }
     ]
   },
