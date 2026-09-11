@@ -1071,6 +1071,45 @@
       "description": "Gastro Master Integrationen: Verbinde dein Bestellsystem mit Kasse, Lieferando, DATEV und weiteren Tools — nahtlos und ohne technischen Aufwand."
     }
   },
+  "danke": {
+    "seoTitle": "Danke für deine Anfrage | Gastro Master",
+    "seoDesc": "Deine Anfrage ist bei uns angekommen. Du erhältst innerhalb von 12 Stunden eine Rückmeldung.",
+    "headline": "Danke! Deine Anfrage ist bei uns angekommen.",
+    "subline": "Du erhältst innerhalb von 12 Stunden eine Rückmeldung — von einem echten Menschen aus unserem Team, nicht von einem Auto-Responder.",
+    "stepsHeadline": "Was passiert jetzt?",
+    "steps": [
+      {
+        "title": "Wir prüfen deine Angaben.",
+        "text": "Wir schauen uns deinen Betrieb an und überlegen vorab, welche Lösung zu dir passen könnte."
+      },
+      {
+        "title": "Ein Experte meldet sich bei dir.",
+        "text": "Per Anruf oder E-Mail — je nachdem, was du im Formular angegeben hast."
+      },
+      {
+        "title": "Ihr sprecht über deine individuelle Lösung.",
+        "text": "Unverbindlich und kostenlos. Danach entscheidest du in Ruhe, ob es passt."
+      }
+    ],
+    "trustBar": [
+      {
+        "value": "800+",
+        "label": "Betriebe vertrauen uns"
+      },
+      {
+        "value": "5,0 ★",
+        "label": "Google-Bewertung"
+      },
+      {
+        "value": "TSE",
+        "label": "konform nach §146a AO"
+      },
+      {
+        "value": "Persönlich",
+        "label": "Support aus Hessen"
+      }
+    ]
+  },
   "notFound": {
     "metaTitle": "Gastro Master | 404 — Seite nicht gefunden",
     "headline": "Diese Seite steht nicht auf unserer Karte.",

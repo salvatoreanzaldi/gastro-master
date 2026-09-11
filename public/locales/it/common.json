@@ -1017,6 +1017,45 @@
       }
     }
   },
+  "danke": {
+    "seoTitle": "Grazie per la Sua richiesta | Gastro Master",
+    "seoDesc": "Abbiamo ricevuto la Sua richiesta. Riceverà una risposta entro 12 ore.",
+    "headline": "Grazie! Abbiamo ricevuto la Sua richiesta.",
+    "subline": "Riceverà una risposta entro 12 ore — da una persona reale del nostro team, non da un risponditore automatico.",
+    "stepsHeadline": "Cosa succede adesso?",
+    "steps": [
+      {
+        "title": "Esaminiamo i Suoi dati.",
+        "text": "Guardiamo la Sua attività e valutiamo in anticipo quale soluzione potrebbe esserLe utile."
+      },
+      {
+        "title": "Un esperto La contatta.",
+        "text": "Per telefono o e-mail — a seconda di quanto ha indicato nel modulo."
+      },
+      {
+        "title": "Parlate della Sua soluzione individuale.",
+        "text": "Gratuitamente e senza impegno. Poi decide con calma se fa al caso Suo."
+      }
+    ],
+    "trustBar": [
+      {
+        "value": "800+",
+        "label": "attività si fidano di noi"
+      },
+      {
+        "value": "5,0 ★",
+        "label": "valutazione Google"
+      },
+      {
+        "value": "TSE",
+        "label": "conforme al §146a AO"
+      },
+      {
+        "value": "Personale",
+        "label": "assistenza dall'Assia"
+      }
+    ]
+  },
   "notFound": {
     "metaTitle": "Gastro Master | 404 — Pagina non trovata",
     "headline": "Questa pagina non è nel nostro menù.",

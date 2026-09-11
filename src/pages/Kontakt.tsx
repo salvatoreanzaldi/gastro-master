@@ -13,8 +13,10 @@ import andrej   from "@/assets/kontakt/Andrej Krutsch - Kontakt.png";
 import mohammad from "@/assets/kontakt/Mohammad Motakalemi - Kontakt.png";
 import yawar    from "@/assets/kontakt/Yawar Sultan - Kontakt.png";
 import { FLAG_ICONS_ORDERED } from "@/config/flag-icons";
-import ConfettiBurst from "@/components/ui/confetti-burst";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
+import { useNavigate } from "react-router-dom";
+import { useCurrentLang } from "@/components/LanguageLayout";
+import { buildDankePath } from "@/config/routes";
 
 // Kundenlogos fuer den Logo-Carousel im linken Desktop-Block — gleiche
 // Quelle wie TrustedBrandsSection, damit Optik/Verhalten konsistent bleiben.
@@ -81,8 +83,11 @@ const Kontakt = () => {
   });
   const [activeSlide, setActiveSlide] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Phase 2: nur noch fuer den FEHLER-Fall. Der Erfolgsfall leitet auf die
+  // lokalisierte /danke-Seite weiter (Konfetti + Bestaetigung liegen dort).
   const [submitMessage, setSubmitMessage] = useState("");
-  const [showConfetti, setShowConfetti] = useState(false);
+  const navigate = useNavigate();
+  const lang = useCurrentLang();
 
   // ── 3-Schritt-Modus (identisch auf Mobile UND Desktop) ─────────────────────
   // Phase-1-Umbau: der mehrschrittige Ablauf ist jetzt auf ALLEN Breakpoints
@@ -172,20 +177,23 @@ const Kontakt = () => {
         website: "",
       });
       setStep(1);
-      setShowConfetti(true);
-      setSubmitMessage("success");
       // GA4/GTM Key-Event: erfolgreiches Absenden des Kontaktformulars. Nur hier
       // im Success-Zweig (nach response.ok) — kein Feuern bei Fehlern. GA4-
-      // Zuordnung als GTM-Tag. (Phase 2: hier später /danke-Redirect statt Inline.)
+      // Zuordnung als GTM-Tag.
+      //
+      // MUSS vor dem navigate() stehen: der Push landet synchron im dataLayer-
+      // Array, bevor React die Route wechselt. Ein Client-seitiger Wechsel
+      // verwirft das Array zwar nicht (kein Reload), aber die Reihenfolge
+      // Event-dann-Redirect ist das, worauf das GTM-Tag konfiguriert ist.
       const w = window as typeof window & { dataLayer?: Record<string, unknown>[] };
       w.dataLayer = w.dataLayer || [];
       w.dataLayer.push({ event: "kontaktformular_absenden" });
-      // Die Erfolgsmeldung bleibt bewusst stehen, bis der Nutzer die Seite
-      // verlaesst oder neu laedt — frueher blendete ein 5-Sekunden-Timeout sie
-      // aus und liess ein leeres Formular ohne jede Rueckmeldung zurueck.
-      // Die Fehlermeldung darunter behaelt ihr Timeout: sie soll verschwinden,
-      // damit ein neuer Versuch nicht dauerhaft von einer alten Warnung
-      // begleitet wird.
+
+      // Phase 2: echter Routenwechsel statt Inline-Erfolgsmeldung. Konfetti und
+      // Bestaetigungstext liegen jetzt auf der /danke-Seite. `replace: true`,
+      // damit "Zurueck" nicht in das bereits abgesendete Formular fuehrt.
+      navigate(buildDankePath(lang), { replace: true });
+      return;
     } catch (error) {
       console.error("Form error:", error);
       setSubmitMessage("error");
@@ -434,9 +442,8 @@ const Kontakt = () => {
                       </button>
                     )}
                   </div>
-                  {submitMessage === "success" && (
-                    <p className="text-green-600 text-sm text-center mt-3 font-medium">✓ {t("contact.success")}</p>
-                  )}
+                  {/* Kein Success-Zweig mehr: der Erfolgsfall verlaesst die
+                      Seite Richtung /danke (Phase 2). */}
                   {submitMessage === "error" && (
                     <p className="text-red-600 text-sm text-center mt-3 font-medium">✗ {t("contact.error")}</p>
                   )}
@@ -586,7 +593,6 @@ const Kontakt = () => {
           </div>
         </div>
       </main>
-      {showConfetti && <ConfettiBurst onDone={() => setShowConfetti(false)} />}
       <Footer />
     </div>
   );

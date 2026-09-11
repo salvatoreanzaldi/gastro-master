@@ -15,6 +15,7 @@ import {
   buildLocalizedPath,
   translateSlug,
   VERGLEICHE_SEGMENT,
+  DANKE_SEGMENT,
 } from "@/config/routes";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -63,6 +64,9 @@ const LAZY_COMPONENTS: Record<string, ComponentType> = {
   "@/pages/add-ons/QRCodeTischsystemPage": lazy(() => import("@/pages/add-ons/QRCodeTischsystemPage")),
   "@/pages/add-ons/BildschirmfunktionPage": lazy(() => import("@/pages/add-ons/BildschirmfunktionPage")),
   "@/pages/add-ons/KioskPage":          lazy(() => import("@/pages/add-ons/KioskPage")),
+
+  // Danke-Seite nach Kontaktformular-Submit (noindex, nicht in ROUTES/Sitemap)
+  "@/pages/DankePage":                  lazy(() => import("@/pages/DankePage")),
 };
 
 // Standalone-Seite ohne Sprach-Präfix (stabile URL für App-Store-Datenlöschungsangabe)
@@ -204,6 +208,14 @@ const App = () => (
                   <Route
                     path={`${VERGLEICHE_SEGMENT[lang]}/:slug`}
                     element={<Suspense fallback={null}>{createElement(LAZY_COMPONENTS["@/pages/VergleichePage"]!)}</Suspense>}
+                  />
+                  {/* Danke-Seite nach Kontaktformular-Submit — DE /danke,
+                      EN/FA/SI/RU /thank-you, IT /grazie. Bewusst hier statt in
+                      ROUTES: traegt noindex und darf nicht in die Sitemap
+                      (s. DANKE_SEGMENT in config/routes.ts). */}
+                  <Route
+                    path={DANKE_SEGMENT[lang]}
+                    element={<Suspense fallback={null}>{createElement(LAZY_COMPONENTS["@/pages/DankePage"]!)}</Suspense>}
                   />
                   <Route path="*" element={<NotFound />} />
                 </Route>

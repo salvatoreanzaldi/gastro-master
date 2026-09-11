@@ -186,6 +186,32 @@ export function buildComparisonPath(slug: string, lang: LangCode): string {
   return `/${lang}/${VERGLEICHE_SEGMENT[lang]}/${slug}`;
 }
 
+/**
+ * Segment-Lokalisierung für die /danke-Bestätigungsseite (Phase 2 des
+ * Kontaktformular-Umbaus). Gleiche Konvention wie VERGLEICHE_SEGMENT:
+ * DE/EN/IT bekommen einen echten Slug, FA/SI/RU fallen auf EN zurück.
+ *
+ * Bewusst NICHT in ROUTES: die Seite traegt noindex, und der Sitemap-
+ * Generator (scripts/generate-sitemap.mjs) parst ROUTES per Regex und nimmt
+ * jeden Eintrag ungefiltert auf — es gibt dort kein Ausschluss-Flag. Ueber
+ * ROUTES wuerde /danke also zwangslaeufig in der Sitemap landen und dem
+ * noindex widersprechen. Die Verdrahtung passiert deshalb wie bei den
+ * Vergleichsseiten direkt im Sprachbaum von App.tsx.
+ */
+export const DANKE_SEGMENT: Record<LangCode, string> = {
+  de: "danke",
+  en: "thank-you",
+  it: "grazie",
+  fa: "thank-you",
+  si: "thank-you",
+  ru: "thank-you",
+};
+
+/** Build a fully-prefixed localized thank-you URL, e.g. /en/thank-you */
+export function buildDankePath(lang: LangCode): string {
+  return `/${lang}/${DANKE_SEGMENT[lang]}`;
+}
+
 /** All DE paths (for backwards compatibility / sitemap legacy consumers) */
 export const ROUTE_PATHS = ROUTES.map((r) => r.slugs.de);
 
