@@ -8,7 +8,13 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import ConfettiBurst from "@/components/ui/confetti-burst";
-import checkmarkVideo from "@/assets/video/animations/häckchen-animation.mp4";
+// Dateiname bewusst ASCII-transliteriert (haeckchen statt häckchen, wie
+// ueber-uns.json & Co.): macOS legt Umlaute als NFD ab (a + kombinierendes
+// Trema), Vite uebernimmt das in den Asset-Namen und referenziert ihn als
+// %CC%88. Normalisiert irgendein Schritt der FTP-Auslieferung auf NFC
+// (%C3%A4), zeigt die URL ins Leere und das Video 404t — sichtbar erst nach
+// dem Deploy. Mit ASCII entfaellt die ganze Fehlerklasse.
+import checkmarkVideo from "@/assets/video/animations/haeckchen-animation.mp4";
 
 // Social Proof unterhalb der Bestaetigung — dieselbe Paarung wie auf der
 // Startseite (Index.tsx): Google-Bewertungs-Karussell inkl. "Bewerte uns auf
