@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, useRef, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { ClipboardCheck, PhoneCall, MessageSquareText } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,7 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import ConfettiBurst from "@/components/ui/confetti-burst";
+import checkmarkVideo from "@/assets/video/animations/häckchen-animation.mp4";
 
 // Social Proof unterhalb der Bestaetigung — dieselbe Paarung wie auf der
 // Startseite (Index.tsx): Google-Bewertungs-Karussell inkl. "Bewerte uns auf
@@ -33,6 +34,23 @@ const TrustedBrandsSection = lazy(() => import("@/components/landing/TrustedBran
 
 const STEP_ICONS = [ClipboardCheck, PhoneCall, MessageSquareText];
 
+/**
+ * Weicher Rand fuer das Checkmark-Video.
+ *
+ * Das Video bringt einen eigenen Hintergrund mit (#061f3c) — der ist dunkler
+ * als die Navy-Sektion (#0A264A), wodurch die quadratische Videoflaeche sonst
+ * als sichtbar dunklere Kachel auf dem Abschnitt steht. Die radiale Maske
+ * blendet den Rand zu transparent aus, sodass keine Kante bleibt.
+ *
+ * Der blaue Kreis im Video endet gemessen bei 66,2 % der halben Kantenlaenge;
+ * die Maske bleibt deshalb bis 68 % voll deckend und faengt erst danach an zu
+ * verlaufen — sonst wuerde der Kreisrand selbst weich. `closest-side` bezieht
+ * 100 % auf die Kantenmitte, die Ecken liegen daher bereits vollstaendig im
+ * transparenten Bereich.
+ */
+const VIDEO_FADE_MASK =
+  "radial-gradient(circle closest-side, #000 68%, rgba(0,0,0,0.55) 84%, transparent 98%)";
+
 const DankePage = () => {
   const { t } = useTranslation("common");
   const arr = (key: string) => {
@@ -41,6 +59,29 @@ const DankePage = () => {
   };
 
   const [showConfetti, setShowConfetti] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  /**
+   * prefers-reduced-motion: dann nicht abspielen, sondern direkt auf das Ende
+   * springen — der Besucher sieht sofort das fertige Haeckchen statt der
+   * Animation. Gleiche Haltung wie ConfettiBurst, das unter reduced-motion
+   * ebenfalls nichts zeichnet.
+   */
+  const handleVideoReady = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      v.pause();
+      // kleines Delta, weil currentTime === duration bei manchen Browsern
+      // auf 0 zurueckspringt statt den letzten Frame zu halten.
+      v.currentTime = Math.max(0, v.duration - 0.05);
+    }
+  };
+
+  /** Nach dem Durchlauf ausdruecklich anhalten — Video haelt den letzten Frame. */
+  const handleVideoEnded = () => {
+    videoRef.current?.pause();
+  };
 
   useSeoMeta({
     title: t("danke.seoTitle"),
@@ -64,20 +105,39 @@ const DankePage = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.45 }}
-              className="w-16 h-16 rounded-2xl bg-[#22C55E]/15 flex items-center justify-center mx-auto mb-7"
+              className="mx-auto mb-7 w-28 h-28 md:w-32 md:h-32"
             >
-              {/* Haken bewusst als SVG statt Icon-Font — identisch zu den
-                  Checkboxen im Kontaktformular. */}
-              <svg
-                className="w-8 h-8 text-[#22C55E]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={3}
+              {/*
+                Rein dekorative Erfolgs-Animation — laeuft einmal und bleibt auf
+                dem letzten Frame (Haeckchen) stehen.
+
+                Bewusst nicht steuerbar: kein `controls`, dazu
+                `pointer-events-none` (verhindert Klick-zum-Pausieren),
+                `tabIndex={-1}` (nicht fokussierbar, also kein Toggle per
+                Leertaste) und `disablePictureInPicture`. Der Besucher kann es
+                damit weder stoppen noch neu starten.
+
+                `aria-hidden`, weil die Aussage bereits in der H1 steht — ein
+                Screenreader soll hier nichts zusaetzlich vorlesen.
+              */}
+              <video
+                ref={videoRef}
+                src={checkmarkVideo}
+                autoPlay
+                muted
+                playsInline
+                preload="auto"
+                disablePictureInPicture
+                tabIndex={-1}
                 aria-hidden="true"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
+                onLoadedMetadata={handleVideoReady}
+                onEnded={handleVideoEnded}
+                className="w-full h-full object-contain pointer-events-none select-none"
+                style={{
+                  maskImage: VIDEO_FADE_MASK,
+                  WebkitMaskImage: VIDEO_FADE_MASK,
+                }}
+              />
             </motion.div>
 
             <motion.h1
