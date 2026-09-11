@@ -104,8 +104,26 @@ const DankePage = () => {
       <Navbar />
 
       <main className="flex-1">
-        {/* ── Bestaetigung (navy, wie die dunklen Sektionen der Seite) ────── */}
-        <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 pt-32 pb-16 md:pt-40 md:pb-20">
+        {/*
+          Navy liegt bewusst auf DIESEM Wrapper, nicht auf den beiden Sektionen
+          einzeln.
+
+          Vorher trug jede Sektion ihr eigenes bg-[#0A264A]. Bei gebrochenen
+          Device-Pixel-Ratios (Browser-Zoom, Windows-Skalierung 125/150 %)
+          rundet der Browser die Malflaechen beider Elemente unabhaengig — dabei
+          bleibt an der Naht ein Sub-Pixel-Streifen uebrig, den keine der beiden
+          Sektionen abdeckt. Durchgeschienen ist dort der weisse Hintergrund des
+          Seiten-Wrappers (bg-background), sichtbar als feine helle Linie.
+          Reproduziert bei dpr 1.1 / 1.25 / 1.3 / 1.5 / 1.75 / 2.25 / 2.5 / 2.75
+          (bei glatten 1x, 2x, 3x trat sie nicht auf — daher im normalen Test
+          unsichtbar).
+
+          Ein einziger durchgehender Hintergrund hat keine innere Kante und kann
+          deshalb auch keinen Spalt erzeugen.
+        */}
+        <div className="bg-[#0A264A]">
+        {/* ── Bestaetigung ─────────────────────────────────────────────────── */}
+        <section className="px-5 md:px-8 lg:px-16 pt-32 pb-16 md:pt-40 md:pb-20">
           <div className="max-w-3xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -170,7 +188,7 @@ const DankePage = () => {
         </section>
 
         {/* ── Was passiert jetzt? — Glasmorphism-Karten ───────────────────── */}
-        <section className="bg-[#0A264A] px-5 md:px-8 lg:px-16 pb-20 md:pb-28">
+        <section className="px-5 md:px-8 lg:px-16 pb-20 md:pb-28">
           <div className="max-w-5xl mx-auto">
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
@@ -209,6 +227,7 @@ const DankePage = () => {
             </div>
           </div>
         </section>
+        </div>
 
         {/* ── Social Proof: Google-Bewertungen + Kunden-Logos ─────────────── */}
         <Suspense fallback={null}>
