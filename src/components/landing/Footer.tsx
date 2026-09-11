@@ -196,8 +196,11 @@ const Footer = () => {
                   <Link to={hrefOf(l)} className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-2 transition-colors">
                     {labelOf(l)}
                   </Link>
+                  {/* Kind-Links (z. B. Druckertreiber unter Downloads) stehen
+                      buendig mit den uebrigen Links der Spalte — frueheres
+                      pl-4 rueckte sie sichtbar nach rechts aus der Flucht. */}
                   {(l.children ?? []).map((c) => (
-                    <Link key={c.deSlug} to={hrefOf(c)} className="block pl-4 text-primary-foreground/50 hover:text-primary-foreground text-sm py-1.5 transition-colors">
+                    <Link key={c.deSlug} to={hrefOf(c)} className="block text-primary-foreground/50 hover:text-primary-foreground text-sm py-1.5 transition-colors">
                       {labelOf(c)}
                     </Link>
                   ))}
@@ -304,8 +307,10 @@ const Footer = () => {
                   <Link to={hrefOf(l)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">
                     {labelOf(l)}
                   </Link>
+                  {/* ml-3 entfernt: Kind-Links sollen in derselben vertikalen
+                      Flucht stehen wie die uebrigen Links der Spalte. */}
                   {(l.children ?? []).length > 0 && (
-                    <ul className="mt-2 ml-3 space-y-2">
+                    <ul className="mt-2 space-y-2">
                       {l.children!.map((c) => (
                         <li key={c.deSlug}>
                           <Link to={hrefOf(c)} className="text-primary-foreground/50 hover:text-primary-foreground text-sm transition-colors duration-200">

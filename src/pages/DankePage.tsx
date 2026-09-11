@@ -111,7 +111,10 @@ const DankePage = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.45 }}
-              className="mx-auto mb-7 w-28 h-28 md:w-32 md:h-32"
+              // Die Fade-Maske arbeitet mit Prozentwerten auf `closest-side`
+              // und skaliert damit automatisch mit der Box — beim Vergroessern
+              // ist nichts an VIDEO_FADE_MASK nachzuziehen.
+              className="mx-auto mb-7 w-40 h-40 md:w-52 md:h-52"
             >
               {/*
                 Rein dekorative Erfolgs-Animation — laeuft einmal und bleibt auf
